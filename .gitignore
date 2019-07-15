@@ -1,0 +1,15 @@
+# System and IDE files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+.node_version
+node_modules
+
+\.DS_Store
+
+tmp/*
+
+npm-debug.log

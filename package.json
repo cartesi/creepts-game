@@ -1,0 +1,20 @@
+{
+    "name": "anuto",
+    "version": "0.0.1",
+    "description": "Tower defense game for Cartesi.io based on Anuto",
+    "devDependencies": {
+        "expose-loader": "0.7.5",
+        "ts-loader": "6.0.4",
+        "typescript": "3.5.3",
+        "webpack": "4.35.3",
+        "webpack-cli": "3.3.5",
+        "webpack-dev-server": "3.7.2"
+    },
+    "dependencies": {
+        "phaser": "3.18.1"
+    },
+    "scripts": {
+        "dev": "webpack --mode development && webpack-dev-server --mode development",
+        "build": "webpack --mode production && webpack-dev-server --mode production"
+    }
+}
