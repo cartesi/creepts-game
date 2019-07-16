@@ -12,5 +12,7 @@ export class GameConstants {
     public static readonly GAME_WIDTH = 768;
     public static readonly GAME_HEIGHT = 1024;
 
+    public static readonly CELLS_SIZE = 20;
+
     public static readonly SAVED_GAME_DATA_KEY = "anuto-data";
 }

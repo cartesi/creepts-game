@@ -106,9 +106,9 @@
             <key>freeSizeMode</key>
             <enum type="AlgorithmSettings::AlgorithmFreeSizeMode">Best</enum>
             <key>sizeConstraints</key>
-            <enum type="AlgorithmSettings::SizeConstraints">AnySize</enum>
+            <enum type="AlgorithmSettings::SizeConstraints">POT</enum>
             <key>forceSquared</key>
-            <false/>
+            <true/>
             <key>maxRects</key>
             <struct type="AlgorithmMaxRectsSettings">
                 <key>heuristic</key>
@@ -181,101 +181,17 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">texture_atlas_1/btn_difficulty_off.png</key>
+            <key type="filename">texture_atlas_1/btn_start_off.png</key>
+            <key type="filename">texture_atlas_1/btn_start_on.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>32,10,63,19</rect>
+                <rect>48,14,95,29</rect>
                 <key>scale9Paddings</key>
-                <rect>32,10,63,19</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">texture_atlas_1/btn_settings_off.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>7,7,14,14</rect>
-                <key>scale9Paddings</key>
-                <rect>7,7,14,14</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">texture_atlas_1/cell_flagged.png</key>
-            <key type="filename">texture_atlas_1/cell_front.png</key>
-            <key type="filename">texture_atlas_1/cursor_cell.png</key>
-            <key type="filename">texture_atlas_1/emoji_defeat.png</key>
-            <key type="filename">texture_atlas_1/emoji_scared.png</key>
-            <key type="filename">texture_atlas_1/emoji_victory.png</key>
-            <key type="filename">texture_atlas_1/mine-icon.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>10,10,20,20</rect>
-                <key>scale9Paddings</key>
-                <rect>10,10,20,20</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">texture_atlas_1/emoji_normal_01.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>11,11,23,23</rect>
-                <key>scale9Paddings</key>
-                <rect>11,11,23,23</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">texture_atlas_1/flagged_mine.png</key>
-            <key type="filename">texture_atlas_1/mine_exploded.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>10,10,19,19</rect>
-                <key>scale9Paddings</key>
-                <rect>10,10,19,19</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">texture_atlas_1/marker_btn_difficulty.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>33,11,65,22</rect>
-                <key>scale9Paddings</key>
-                <rect>33,11,65,22</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">texture_atlas_1/mine.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>7,7,13,13</rect>
-                <key>scale9Paddings</key>
-                <rect>7,7,13,13</rect>
+                <rect>48,14,95,29</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

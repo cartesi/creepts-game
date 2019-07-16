@@ -1,19 +1,11 @@
-declare module Anuto {
-    class CoreEngine {
-        static ticksCounter: number;
-        private static enemies;
-        private static towers;
-        static init(): void;
-        static update(): void;
-        newWave(): void;
-        addEnemy(enemy: Enemy): void;
-        addTower(tower: Tower, p: {
-            r: number;
-            c: number;
-        }): void;
+declare namespace Anuto {
+    class Bullet {
+        private speed;
+        constructor();
+        update(): void;
     }
 }
-declare module Anuto {
+declare namespace Anuto {
     class Enemy {
         type: number;
         life: number;
@@ -24,26 +16,80 @@ declare module Anuto {
         hit(damage: number): void;
     }
 }
-declare module Anuto {
-    class GameConstants {
+declare namespace Anuto {
+    class Engine {
+        ticksCounter: number;
+        waveActivated: boolean;
+        private enemies;
+        private towers;
+        private bullets;
+        constructor(gameConfig: Types.GameConfig);
+        update(): void;
+        newWave(config: Types.WaveConfig): void;
+        removeEnemy(enemy: Enemy): void;
+        addTower(type: string, p: {
+            r: number;
+            c: number;
+        }): void;
+        sellTower(tower: Tower): void;
+        addBullet(bullet: Bullet): void;
+        private checkCollisions;
+        private spawnEnemies;
     }
 }
-declare module Anuto {
+declare namespace Anuto.Constants {
+    const INITIAL_CREDITS = 500;
+    const TOWER_1 = "tower_1";
+    const TOWER_2 = "tower_2";
+    const TOWER_3 = "tower_3";
+    const TOWER_4 = "tower_4";
+}
+declare namespace Anuto {
     class GameVars {
         static credits: number;
         static score: number;
-        static waveActivated: boolean;
+        static level: number;
+        static cellsSize: number;
+        static boardDimensions: {
+            r: number;
+            c: number;
+        };
+        static maxEnemies: number;
     }
 }
-declare module Anuto {
+declare namespace Anuto {
     class Tower {
         type: string;
         level: number;
         damage: number;
         reload: number;
         range: number;
-        constructor();
+        value: number;
+        position: {
+            r: number;
+            c: number;
+        };
+        constructor(config: Types.TowerConfig);
+        destroy(): void;
         update(): void;
         upgrade(): void;
     }
+}
+declare namespace Anuto.Types {
+    type GameConfig = {
+        cellSize: number;
+    };
+    type WaveConfig = {
+        level: number;
+        towers: TowerConfig[];
+        totalEnemies: number;
+    };
+    type TowerConfig = {
+        type: string;
+        level: number;
+        position: {
+            r: number;
+            c: number;
+        };
+    };
 }

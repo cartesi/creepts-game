@@ -1,4 +1,4 @@
-module Anuto {
+namespace Anuto {
 
     export class Tower {
 
@@ -9,8 +9,15 @@ module Anuto {
         public range: number;
         public value: number;
 
-        constructor () {
-            
+        public position: {r: number, c: number};
+
+        constructor (config: Types.TowerConfig) {
+
+            this.type = config.type;
+            this.level = config.level;
+            this.position = config.position;
+
+            // sacar el resto de valores                                                                                                    
             this.value = 0;
         }
 

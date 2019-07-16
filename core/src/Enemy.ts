@@ -1,4 +1,4 @@
-module Anuto {
+namespace Anuto {
 
     export class Enemy {
 

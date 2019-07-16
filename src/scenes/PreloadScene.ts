@@ -33,6 +33,5 @@ export class PreloadScene extends Phaser.Scene {
     private loadAssets(): void {
 
         this.load.atlas("texture_atlas_1", "assets/texture_atlas_1.png", "assets/texture_atlas_1.json");
-        this.load.bitmapFont("russo-one-red", "assets/fonts/russo-one.png", "assets/fonts/russo-one.xml");
     }
 }
