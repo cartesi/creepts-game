@@ -1,6 +1,5 @@
 import { GameVars } from "../GameVars";
-import { GameManager } from "../GameManager";
-import { AnutoCoreEngine } from "../AnutoCoreEngine";
+import { GameManager } from "../GameManager"; 
 
 export class BootScene extends Phaser.Scene {
 
@@ -19,5 +18,6 @@ export class BootScene extends Phaser.Scene {
         GameVars.scaleY = 1;
 
         GameManager.init();
+       
     }
 }

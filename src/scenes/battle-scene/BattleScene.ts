@@ -1,7 +1,6 @@
 import { GUI } from "./GUI";
 import { HUD } from "./HUD";
 import { GameConstants } from "../../GameConstants";
-import { AnutoCoreEngine} from "../../AnutoCoreEngine";
 
 export class BattleScene extends Phaser.Scene {
 
@@ -19,9 +18,9 @@ export class BattleScene extends Phaser.Scene {
 
     public create(): void {
 
-        AnutoCoreEngine.init();
-
         this.t = 0;
+
+        Anuto.CoreEngine.init();
 
         const tmpBackground = this.add.graphics(this);
         tmpBackground.fillStyle(0xFFFFFF);
@@ -32,15 +31,17 @@ export class BattleScene extends Phaser.Scene {
 
         this.gui = new GUI(this);
         this.add.existing(this.gui);
+
+        console.log(Anuto.GameConstants.CONST1);
     }
 
     public update(time: number, delta: number): void {
 
         if (time - this.t > 100) {
 
-            AnutoCoreEngine.update();
-
             this.t = time;
+
+            Anuto.CoreEngine.update();
 
         } else {
             // move things

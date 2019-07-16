@@ -144,6 +144,8 @@ exports.Game = Game;
 "use strict";
 
 // javascript-obfuscator bundle.js --output bundle.js
+// especificaciones
+// https://docs.google.com/document/d/1Hd6C-gAsydmRAldb2iTRYEamLPxcfBlY51KNf9UOcQ4/edit#
 Object.defineProperty(exports, "__esModule", { value: true });
 var GameConstants = /** @class */ (function () {
     function GameConstants() {
@@ -154,7 +156,7 @@ var GameConstants = /** @class */ (function () {
     GameConstants.VERBOSE = false;
     GameConstants.GAME_WIDTH = 768;
     GameConstants.GAME_HEIGHT = 1024;
-    GameConstants.SAVED_GAME_DATA_KEY = "tower-defense-data";
+    GameConstants.SAVED_GAME_DATA_KEY = "anuto-data";
     return GameConstants;
 }());
 exports.GameConstants = GameConstants;
@@ -503,6 +505,8 @@ var BattleScene = /** @class */ (function (_super) {
         return _super.call(this, "BattleScene") || this;
     }
     BattleScene.prototype.create = function () {
+        this.t = 0;
+        Anuto.CoreEngine.init();
         var tmpBackground = this.add.graphics(this);
         tmpBackground.fillStyle(0xFFFFFF);
         tmpBackground.fillRect(0, 0, GameConstants_1.GameConstants.GAME_WIDTH, GameConstants_1.GameConstants.GAME_HEIGHT);
@@ -510,6 +514,15 @@ var BattleScene = /** @class */ (function (_super) {
         this.add.existing(this.hud);
         this.gui = new GUI_1.GUI(this);
         this.add.existing(this.gui);
+    };
+    BattleScene.prototype.update = function (time, delta) {
+        if (time - this.t > 100) {
+            this.t = time;
+            Anuto.CoreEngine.update();
+        }
+        else {
+            // move things
+        }
     };
     return BattleScene;
 }(Phaser.Scene));
