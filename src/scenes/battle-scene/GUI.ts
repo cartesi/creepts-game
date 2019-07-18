@@ -26,6 +26,8 @@ export class GUI extends Phaser.GameObjects.Container {
     }
 
     private onClick4x(): void {
+
+        console.log("CLICK!");
         
         this.timeStepMultiplierButton1x.visible = true;
         this.timeStepMultiplierButton4x.visible = false;

@@ -156,7 +156,9 @@ var GameConstants = /** @class */ (function () {
     GameConstants.VERBOSE = false;
     GameConstants.GAME_WIDTH = 768;
     GameConstants.GAME_HEIGHT = 1024;
-    GameConstants.CELLS_SIZE = 20;
+    GameConstants.TIME_STEP = 100;
+    GameConstants.BOARD_SIZE = { r: 10, c: 10 };
+    GameConstants.CELLS_SIZE = 50;
     GameConstants.SAVED_GAME_DATA_KEY = "anuto-data";
     return GameConstants;
 }());
@@ -483,19 +485,24 @@ exports.PreloadScene = PreloadScene;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
 var BattleManager = /** @class */ (function () {
     function BattleManager() {
     }
     BattleManager.init = function () {
         BattleManager.t = 0;
         var gameConfig = {
-            timeStep: 100
+            timeStep: GameConstants_1.GameConstants.TIME_STEP,
+            boardSize: GameConstants_1.GameConstants.BOARD_SIZE
         };
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig);
-        // TODO: attach the callbacks
+        BattleManager.anutoEngine.addEventListener(Anuto.Engine.EVENT_ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
     };
     BattleManager.update = function (time, delta) {
         BattleManager.anutoEngine.update();
+    };
+    BattleManager.setTimeStep = function (timeStep) {
+        BattleManager.anutoEngine.timeStep = timeStep;
     };
     BattleManager.newWave = function () {
         if (BattleManager.anutoEngine.waveActivated) {
@@ -508,8 +515,11 @@ var BattleManager = /** @class */ (function () {
         };
         BattleManager.anutoEngine.newWave(waveConfig);
     };
-    BattleManager.onEnemySpawned = function (type, position) {
-        //
+    BattleManager.addTower = function (position) {
+        return BattleManager.anutoEngine.addTower("tower 1", position);
+    };
+    BattleManager.onEnemySpawned = function (enemyType, p) {
+        console.log("ON ENEMY SPAWNED:", enemyType, p);
     };
     BattleManager.onEnemyHit = function (id, damage) {
         //
@@ -548,7 +558,7 @@ var GUI_1 = __webpack_require__(/*! ./GUI */ "./src/scenes/battle-scene/GUI.ts")
 var HUD_1 = __webpack_require__(/*! ./HUD */ "./src/scenes/battle-scene/HUD.ts");
 var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
 var BattleManager_1 = __webpack_require__(/*! ./BattleManager */ "./src/scenes/battle-scene/BattleManager.ts");
-var StageContainer_1 = __webpack_require__(/*! ./StageContainer */ "./src/scenes/battle-scene/StageContainer.ts");
+var BoardContainer_1 = __webpack_require__(/*! ./BoardContainer */ "./src/scenes/battle-scene/BoardContainer.ts");
 var BattleScene = /** @class */ (function (_super) {
     __extends(BattleScene, _super);
     function BattleScene() {
@@ -559,7 +569,7 @@ var BattleScene = /** @class */ (function (_super) {
         var tmpBackground = this.add.graphics(this);
         tmpBackground.fillStyle(0xFFFFFF);
         tmpBackground.fillRect(0, 0, GameConstants_1.GameConstants.GAME_WIDTH, GameConstants_1.GameConstants.GAME_HEIGHT);
-        this.stageContainer = new StageContainer_1.StageContainer(this);
+        this.stageContainer = new BoardContainer_1.BoardContainer(this);
         this.add.existing(this.stageContainer);
         this.hud = new HUD_1.HUD(this);
         this.add.existing(this.hud);
@@ -573,6 +583,175 @@ var BattleScene = /** @class */ (function (_super) {
     return BattleScene;
 }(Phaser.Scene));
 exports.BattleScene = BattleScene;
+
+
+/***/ }),
+
+/***/ "./src/scenes/battle-scene/Board.ts":
+/*!******************************************!*\
+  !*** ./src/scenes/battle-scene/Board.ts ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
+var Board = /** @class */ (function (_super) {
+    __extends(Board, _super);
+    function Board(scene) {
+        var _this = _super.call(this, scene) || this;
+        var tmpGraphics = new Phaser.GameObjects.Graphics(_this.scene);
+        _this.add(tmpGraphics);
+        tmpGraphics.lineStyle(1, 0x000000);
+        // graficos temporales
+        for (var i = 0; i < GameConstants_1.GameConstants.BOARD_SIZE.r + 1; i++) {
+            tmpGraphics.moveTo(0, i * GameConstants_1.GameConstants.CELLS_SIZE);
+            tmpGraphics.lineTo(GameConstants_1.GameConstants.CELLS_SIZE * GameConstants_1.GameConstants.BOARD_SIZE.r, i * GameConstants_1.GameConstants.CELLS_SIZE);
+            tmpGraphics.stroke();
+        }
+        for (var i = 0; i < GameConstants_1.GameConstants.BOARD_SIZE.c + 1; i++) {
+            tmpGraphics.moveTo(i * GameConstants_1.GameConstants.CELLS_SIZE, 0);
+            tmpGraphics.lineTo(i * GameConstants_1.GameConstants.CELLS_SIZE, GameConstants_1.GameConstants.BOARD_SIZE.r * GameConstants_1.GameConstants.CELLS_SIZE);
+            tmpGraphics.stroke();
+        }
+        return _this;
+    }
+    return Board;
+}(Phaser.GameObjects.Container));
+exports.Board = Board;
+
+
+/***/ }),
+
+/***/ "./src/scenes/battle-scene/BoardContainer.ts":
+/*!***************************************************!*\
+  !*** ./src/scenes/battle-scene/BoardContainer.ts ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var EnemyActor_1 = __webpack_require__(/*! ./EnemyActor */ "./src/scenes/battle-scene/EnemyActor.ts");
+var TowerActor_1 = __webpack_require__(/*! ./TowerActor */ "./src/scenes/battle-scene/TowerActor.ts");
+var Board_1 = __webpack_require__(/*! ./Board */ "./src/scenes/battle-scene/Board.ts");
+var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
+var BoardContainer = /** @class */ (function (_super) {
+    __extends(BoardContainer, _super);
+    function BoardContainer(scene) {
+        var _this = _super.call(this, scene) || this;
+        BoardContainer.currentInstance = _this;
+        _this.x = GameConstants_1.GameConstants.GAME_WIDTH / 2 - GameConstants_1.GameConstants.CELLS_SIZE * GameConstants_1.GameConstants.BOARD_SIZE.c / 2;
+        _this.y = GameConstants_1.GameConstants.GAME_HEIGHT / 2 - GameConstants_1.GameConstants.CELLS_SIZE * GameConstants_1.GameConstants.BOARD_SIZE.r / 2;
+        _this.enemies = [];
+        _this.towers = [];
+        _this.board = new Board_1.Board(_this.scene);
+        _this.add(_this.board);
+        // temporalmente añadimos una torre
+        _this.addTower(1, { r: 3, c: 2 });
+        _this.addTower(1, { r: 6, c: 2 });
+        return _this;
+    }
+    BoardContainer.prototype.update = function (time, delta) {
+        this.enemies.forEach(function (enemy) {
+            enemy.update(time, delta);
+        });
+        this.towers.forEach(function (tower) {
+            tower.update(time, delta);
+        });
+    };
+    BoardContainer.prototype.addEnemy = function (anutoEnemy, position) {
+        var enemy = new EnemyActor_1.EnemyActor(this.scene, anutoEnemy, position);
+        this.add(enemy);
+        this.enemies.push(enemy);
+    };
+    BoardContainer.prototype.addTower = function (id, position) {
+        var tower = new TowerActor_1.TowerActor(this.scene, id, position);
+        this.add(tower);
+        this.towers.push(tower);
+    };
+    BoardContainer.prototype.upgradeTower = function (id) {
+        //
+    };
+    BoardContainer.prototype.onEnemyHit = function (id, damage) {
+        //
+    };
+    return BoardContainer;
+}(Phaser.GameObjects.Container));
+exports.BoardContainer = BoardContainer;
+
+
+/***/ }),
+
+/***/ "./src/scenes/battle-scene/EnemyActor.ts":
+/*!***********************************************!*\
+  !*** ./src/scenes/battle-scene/EnemyActor.ts ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
+var EnemyActor = /** @class */ (function (_super) {
+    __extends(EnemyActor, _super);
+    function EnemyActor(scene, anutoEnemy, position) {
+        var _this = _super.call(this, scene) || this;
+        _this.id = anutoEnemy.id;
+        _this.anutoEnemy = anutoEnemy;
+        _this.x = GameConstants_1.GameConstants.CELLS_SIZE * (position.c + .5);
+        _this.y = GameConstants_1.GameConstants.CELLS_SIZE * (position.r + .5);
+        return _this;
+    }
+    EnemyActor.prototype.update = function (time, delta) {
+        console.log("UPDATE ENEMIGO:", this.id);
+    };
+    return EnemyActor;
+}(Phaser.GameObjects.Container));
+exports.EnemyActor = EnemyActor;
 
 
 /***/ }),
@@ -602,15 +781,34 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Utils_1 = __webpack_require__(/*! ../../utils/Utils */ "./src/utils/Utils.ts");
 var BattleManager_1 = __webpack_require__(/*! ./BattleManager */ "./src/scenes/battle-scene/BattleManager.ts");
+var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
 var GUI = /** @class */ (function (_super) {
     __extends(GUI, _super);
     function GUI(scene) {
         var _this = _super.call(this, scene) || this;
+        _this.timeStepMultiplierButton4x = new Utils_1.Button(_this.scene, 540, 35, "texture_atlas_1", "btn_4x_off", "btn_4x_on", true);
+        _this.timeStepMultiplierButton4x.onDown(_this.onClick4x, _this);
+        _this.add(_this.timeStepMultiplierButton4x);
+        _this.timeStepMultiplierButton1x = new Utils_1.Button(_this.scene, 540, 35, "texture_atlas_1", "btn_1x_off", "btn_1x_on", true);
+        _this.timeStepMultiplierButton1x.onDown(_this.onClick1x, _this);
+        _this.timeStepMultiplierButton1x.visible = false;
+        _this.add(_this.timeStepMultiplierButton1x);
         var nextWaveButton = new Utils_1.Button(_this.scene, 670, 35, "texture_atlas_1", "btn_start_off", "btn_start_on", true);
         nextWaveButton.onDown(_this.onClickNextWave, _this);
         _this.add(nextWaveButton);
         return _this;
     }
+    GUI.prototype.onClick4x = function () {
+        console.log("CLICK!");
+        this.timeStepMultiplierButton1x.visible = true;
+        this.timeStepMultiplierButton4x.visible = false;
+        BattleManager_1.BattleManager.setTimeStep(GameConstants_1.GameConstants.TIME_STEP / 4);
+    };
+    GUI.prototype.onClick1x = function () {
+        this.timeStepMultiplierButton1x.visible = false;
+        this.timeStepMultiplierButton4x.visible = true;
+        BattleManager_1.BattleManager.setTimeStep(GameConstants_1.GameConstants.TIME_STEP);
+    };
     GUI.prototype.onClickNextWave = function () {
         BattleManager_1.BattleManager.newWave();
     };
@@ -656,10 +854,10 @@ exports.HUD = HUD;
 
 /***/ }),
 
-/***/ "./src/scenes/battle-scene/StageContainer.ts":
-/*!***************************************************!*\
-  !*** ./src/scenes/battle-scene/StageContainer.ts ***!
-  \***************************************************/
+/***/ "./src/scenes/battle-scene/TowerActor.ts":
+/*!***********************************************!*\
+  !*** ./src/scenes/battle-scene/TowerActor.ts ***!
+  \***********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -679,37 +877,42 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var StageContainer = /** @class */ (function (_super) {
-    __extends(StageContainer, _super);
-    function StageContainer(scene) {
+var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
+var BattleManager_1 = __webpack_require__(/*! ./BattleManager */ "./src/scenes/battle-scene/BattleManager.ts");
+var TowerActor = /** @class */ (function (_super) {
+    __extends(TowerActor, _super);
+    function TowerActor(scene, id, position) {
         var _this = _super.call(this, scene) || this;
-        _this.enemies = [];
-        _this.towers = [];
+        _this.id = id;
+        _this.p = position;
+        _this.anutoTower = BattleManager_1.BattleManager.addTower(_this.p);
+        _this.x = GameConstants_1.GameConstants.CELLS_SIZE * (_this.p.c + .5);
+        _this.y = GameConstants_1.GameConstants.CELLS_SIZE * (_this.p.r + .5);
+        var tmpImage = new Phaser.GameObjects.Image(_this.scene, 0, 0, "texture_atlas_1", "tmp-tower");
+        tmpImage.setScale(GameConstants_1.GameConstants.CELLS_SIZE / tmpImage.width * .8);
+        tmpImage.setInteractive();
+        tmpImage.on("pointerdown", _this.onDownTower, _this);
+        _this.add(tmpImage);
+        _this.canon = new Phaser.GameObjects.Graphics(_this.scene);
+        _this.canon.lineStyle(2, 0x000000);
+        _this.canon.moveTo(0, 0);
+        _this.canon.lineTo(GameConstants_1.GameConstants.CELLS_SIZE * .5, 0);
+        _this.canon.stroke();
+        _this.add(_this.canon);
         return _this;
     }
-    StageContainer.prototype.update = function (time, delta) {
-        this.enemies.forEach(function (enemy) {
-            enemy.update(time, delta);
-        });
-        this.towers.forEach(function (tower) {
-            tower.update(time, delta);
-        });
-    };
-    StageContainer.prototype.addEnemy = function (id, position) {
+    TowerActor.prototype.update = function (time, delta) {
         //
     };
-    StageContainer.prototype.addTower = function (id, position) {
+    TowerActor.prototype.shoot = function () {
         //
     };
-    StageContainer.prototype.upgradeTower = function (id) {
+    TowerActor.prototype.onDownTower = function () {
         //
     };
-    StageContainer.prototype.onEnemyHit = function (id, damage) {
-        //
-    };
-    return StageContainer;
+    return TowerActor;
 }(Phaser.GameObjects.Container));
-exports.StageContainer = StageContainer;
+exports.TowerActor = TowerActor;
 
 
 /***/ }),
@@ -757,10 +960,10 @@ var Button = /** @class */ (function (_super) {
                 _this.setFrame(frameNameOff);
             }, _this);
             _this.on("pointerdown", function () {
-                _this.setFrame(frameNameOff);
+                _this.setFrame(frameNameOn);
             }, _this);
             _this.on("pointerup", function () {
-                _this.setFrame(frameNameOn);
+                _this.setFrame(frameNameOff);
             }, _this);
         }
         return _this;

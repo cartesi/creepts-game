@@ -17,10 +17,13 @@ declare namespace Anuto {
 }
 declare namespace Anuto {
     class Enemy {
-        type: number;
+        id: number;
         life: number;
         speed: number;
-        constructor();
+        x: number;
+        y: number;
+        creationTick: number;
+        constructor(id: number, creationTick: number);
         destroy(): void;
         update(): void;
         hit(damage: number): void;
@@ -28,12 +31,15 @@ declare namespace Anuto {
 }
 declare namespace Anuto {
     class Engine {
+        static readonly EVENT_ENEMY_SPAWNED = "enemy spawned";
         ticksCounter: number;
         waveActivated: boolean;
         private enemies;
         private towers;
         private bullets;
         private t;
+        private totalEnemies;
+        private callbacks;
         constructor(gameConfig: Types.GameConfig);
         update(): void;
         newWave(config: Types.WaveConfig): void;
@@ -44,8 +50,11 @@ declare namespace Anuto {
         }): Tower;
         sellTower(tower: Tower): void;
         addBullet(bullet: Bullet): void;
+        addEventListener(event: string, callbackFunction: Function, callbackScope: any): void;
+        removeEnentListener(event: string): void;
         private checkCollisions;
         private spawnEnemies;
+        private dispatchEvent;
         timeStep: number;
     }
 }
@@ -66,7 +75,7 @@ declare namespace Anuto {
             r: number;
             c: number;
         };
-        static maxEnemies: number;
+        static enemiesCounter: number;
     }
 }
 declare namespace Anuto {
@@ -81,13 +90,18 @@ declare namespace Anuto {
             r: number;
             c: number;
         };
-        constructor(config: Types.TowerConfig);
+        creationTick: number;
+        constructor(config: Types.TowerConfig, creationTick: number);
         destroy(): void;
         update(): void;
         upgrade(): void;
     }
 }
 declare namespace Anuto.Types {
+    type Callback = {
+        func: Function;
+        scope: any;
+    };
     type GameConfig = {
         timeStep: number;
         boardSize: {
@@ -101,7 +115,7 @@ declare namespace Anuto.Types {
         totalEnemies: number;
     };
     type TowerConfig = {
-        type: string;
+        id: string;
         level: number;
         position: {
             r: number;

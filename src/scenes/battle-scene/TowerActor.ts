@@ -5,31 +5,28 @@ export class TowerActor extends Phaser.GameObjects.Container {
 
     public id: number;
     public level: number;
-
     public p: {r: number, c: number};
 
     private canon: Phaser.GameObjects.Graphics;
-    private tower: Anuto.Tower;
+    private anutoTower: Anuto.Tower;
 
-    constructor(scene: Phaser.Scene, position: {r: number, c: number}) {
+    constructor(scene: Phaser.Scene, id: number, position: {r: number, c: number}) {
 
         super(scene);
 
+        this.id = id;
         this.p = position;
 
-        this.tower = BattleManager.addTower(this.p);
+        this.anutoTower = BattleManager.addTower(this.p);
 
         this.x = GameConstants.CELLS_SIZE * (this.p.c + .5);
         this.y = GameConstants.CELLS_SIZE * (this.p.r + .5);
 
-        const s =  GameConstants.CELLS_SIZE * .8;
-
-        const tmpGraphics = new Phaser.GameObjects.Graphics(this.scene);
-        tmpGraphics.fillStyle(0x0000FF);
-        tmpGraphics.fillRect(-s / 2, -s / 2, s,  s);
-        tmpGraphics.fillStyle(0xFFFFFF);
-        tmpGraphics.fillCircle(0, 0, 10);
-        this.add(tmpGraphics);
+        const tmpImage = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "tmp-tower");
+        tmpImage.setScale(GameConstants.CELLS_SIZE / tmpImage.width * .8);
+        tmpImage.setInteractive();
+        tmpImage.on("pointerdown", this.onDownTower, this);
+        this.add(tmpImage);
 
         this.canon = new Phaser.GameObjects.Graphics(this.scene);
         this.canon.lineStyle(2, 0x000000);
@@ -40,6 +37,14 @@ export class TowerActor extends Phaser.GameObjects.Container {
     }
 
     public update(time: number, delta: number): void {
+        //
+    }
+
+    public shoot(): void {
+        //
+    }
+
+    private onDownTower(): void {
         //
     }
 }

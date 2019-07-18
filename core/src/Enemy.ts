@@ -2,12 +2,22 @@ namespace Anuto {
 
     export class Enemy {
 
-        public type: number;
+        public id: number;
         public life: number;
         public speed: number;
+        public x: number;
+        public y: number;
+        public creationTick: number;
 
-        constructor () {
-            //
+        constructor (id: number, creationTick: number) {
+            
+            this.id = id;
+            this.life = 100;
+            this.speed = .1;
+            this.creationTick = creationTick;
+
+            this.x = 0;
+            this.y = 0;
         }
 
         public destroy(): void {
@@ -15,7 +25,8 @@ namespace Anuto {
         }
 
         public update(): void {
-            //
+
+            this.y += this.speed;
         }
 
         public hit(damage: number): void {

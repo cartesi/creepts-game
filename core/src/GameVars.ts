@@ -12,6 +12,6 @@ namespace Anuto {
         
         public static boardDimensions: {r: number, c: number};
        
-        public static maxEnemies: number;
+        public static enemiesCounter: number;
     }
 }

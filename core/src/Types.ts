@@ -1,5 +1,10 @@
 namespace Anuto.Types {
 
+    export type Callback = {
+        func: Function;
+        scope: any
+    };
+
     export type GameConfig = {
         timeStep: number;
         boardSize: {r: number, c: number};
@@ -12,7 +17,7 @@ namespace Anuto.Types {
     };
 
     export type TowerConfig = {
-        type: string;
+        id: string;
         level: number;
         position: {r: number, c: number};
     };

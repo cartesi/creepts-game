@@ -11,9 +11,11 @@ namespace Anuto {
 
         public position: {r: number, c: number};
 
-        constructor (config: Types.TowerConfig) {
+        public creationTick: number;
 
-            this.type = config.type;
+        constructor (config: Types.TowerConfig, creationTick: number) {
+
+            this.type = config.id;
             this.level = config.level;
             this.position = config.position;
 

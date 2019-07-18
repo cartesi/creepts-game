@@ -1,4 +1,5 @@
 import { GameConstants } from "../../GameConstants";
+import { BoardContainer } from "./BoardContainer";
 
 export class BattleManager {
 
@@ -15,8 +16,7 @@ export class BattleManager {
         };
 
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig);
-
-        // TODO: attach the callbacks
+        BattleManager.anutoEngine.addEventListener(Anuto.Engine.EVENT_ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
     }
 
     public static update(time: number, delta: number): void {
@@ -46,11 +46,13 @@ export class BattleManager {
 
     public static addTower(position: {r: number, c: number}): Anuto.Tower {
 
-        return BattleManager.anutoEngine.addTower( "tower 1", position);
+        return BattleManager.anutoEngine.addTower("tower 1", position);
     }
 
-    public static onEnemySpawned(type: string, position: {r: number, c: number}): void {
-        //
+    public static onEnemySpawned(anutoEnemy: Anuto.Enemy, p: {r: number, c: number} ): void {
+        
+        console.log("ON ENEMY SPAWNED:", anutoEnemy.id, p);
+        BoardContainer.currentInstance.addEnemy(anutoEnemy, p);
     }
 
     public static onEnemyHit(id: number, damage: number): void {

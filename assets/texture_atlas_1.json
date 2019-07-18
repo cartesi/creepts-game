@@ -115,6 +115,27 @@
 					}
 				},
 				{
+					"filename": "tmp-tower",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 100,
+						"h": 100
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 100,
+						"h": 100
+					},
+					"frame": {
+						"x": 1,
+						"y": 148,
+						"w": 100,
+						"h": 100
+					}
+				},
+				{
 					"filename": "btn_4x_on",
 					"rotated": false,
 					"trimmed": false,
@@ -129,8 +150,8 @@
 						"h": 47
 					},
 					"frame": {
-						"x": 1,
-						"y": 148,
+						"x": 103,
+						"y": 119,
 						"w": 48,
 						"h": 47
 					}
@@ -141,6 +162,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:90bfddde1825822bbeb39cf4a4124276:b3f8543809fa2b24b52032133d40da67:1bd3fbbbdaf54e41cf80e3e904578de4$"
+		"smartupdate": "$TexturePacker:SmartUpdate:ef56ffec62e40c812c9825ed7594ab57:988d32a989ff9fb0c875504eae9d3ecf:1bd3fbbbdaf54e41cf80e3e904578de4$"
 	}
 }

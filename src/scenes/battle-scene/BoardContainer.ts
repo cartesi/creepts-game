@@ -5,6 +5,8 @@ import { GameConstants } from "../../GameConstants";
 
 export class BoardContainer extends Phaser.GameObjects.Container {
 
+    public static currentInstance: BoardContainer;
+
     private board: Board;
     private enemies: EnemyActor[];
     private towers: TowerActor[];
@@ -12,6 +14,8 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     constructor(scene: Phaser.Scene) {
 
         super(scene);
+
+        BoardContainer.currentInstance = this;
 
         this.x = GameConstants.GAME_WIDTH / 2 - GameConstants.CELLS_SIZE * GameConstants.BOARD_SIZE.c / 2;
         this.y = GameConstants.GAME_HEIGHT / 2 - GameConstants.CELLS_SIZE * GameConstants.BOARD_SIZE.r / 2;
@@ -24,11 +28,8 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
 
         // temporalmente añadimos una torre
-        let tower = new TowerActor(this.scene, {r: 3, c: 2});
-        this.add(tower);
-
-        tower = new TowerActor(this.scene, {r: 6, c: 2});
-        this.add(tower);
+        this.addTower(1, {r: 3, c: 2});
+        this.addTower(1, {r: 6, c: 2});
     }
 
     public update(time: number, delta: number): void {
@@ -42,12 +43,20 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }); 
     }
 
-    public addEnemy(id: number, position: {r: number, c: number}): void {
-        //
+    public addEnemy(anutoEnemy: Anuto.Enemy, position: {r: number, c: number}): void {
+        
+        const enemy = new EnemyActor(this.scene, anutoEnemy, position);
+        this.add(enemy);
+
+        this.enemies.push(enemy);
     }
 
     public addTower(id: number, position: {r: number, c: number}): void {
-        //
+        
+        const tower = new TowerActor(this.scene, id, position);
+        this.add(tower);
+
+        this.towers.push(tower);
     }
 
     public upgradeTower(id: number): void {

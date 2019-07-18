@@ -21,11 +21,18 @@ var Anuto;
 var Anuto;
 (function (Anuto) {
     var Enemy = (function () {
-        function Enemy() {
+        function Enemy(id, creationTick) {
+            this.id = id;
+            this.life = 100;
+            this.speed = .1;
+            this.creationTick = creationTick;
+            this.x = 0;
+            this.y = 0;
         }
         Enemy.prototype.destroy = function () {
         };
         Enemy.prototype.update = function () {
+            this.y += this.speed;
         };
         Enemy.prototype.hit = function (damage) {
             this.life -= damage;
@@ -44,6 +51,8 @@ var Anuto;
             Anuto.GameVars.credits = 500;
             this.waveActivated = false;
             this.t = 0;
+            this.totalEnemies = 0;
+            this.callbacks = [];
             Anuto.GameVars.timeStep = gameConfig.timeStep;
             this.towers = [];
         }
@@ -53,7 +62,6 @@ var Anuto;
                 return;
             }
             this.t = t;
-            this.ticksCounter++;
             this.enemies.forEach(function (enemy) {
                 enemy.update();
             });
@@ -62,6 +70,7 @@ var Anuto;
             });
             this.checkCollisions();
             this.spawnEnemies();
+            this.ticksCounter++;
         };
         Engine.prototype.newWave = function (config) {
             Anuto.GameVars.level = config.level;
@@ -71,6 +80,8 @@ var Anuto;
             this.waveActivated = true;
             this.ticksCounter = 0;
             this.t = Date.now();
+            this.totalEnemies = config.totalEnemies;
+            Anuto.GameVars.enemiesCounter = 0;
             this.enemies = [];
             this.bullets = [];
         };
@@ -83,11 +94,11 @@ var Anuto;
         };
         Engine.prototype.addTower = function (type, p) {
             var towerConfig = {
-                type: type,
+                id: type,
                 level: 0,
                 position: p
             };
-            var tower = new Anuto.Tower(towerConfig);
+            var tower = new Anuto.Tower(towerConfig, this.ticksCounter);
             this.towers.push(tower);
             return tower;
         };
@@ -102,11 +113,26 @@ var Anuto;
         Engine.prototype.addBullet = function (bullet) {
             this.bullets.push(bullet);
         };
+        Engine.prototype.addEventListener = function (event, callbackFunction, callbackScope) {
+            this.callbacks[event] = { func: callbackFunction, scope: callbackScope };
+        };
+        Engine.prototype.removeEnentListener = function (event) {
+        };
         Engine.prototype.checkCollisions = function () {
         };
         Engine.prototype.spawnEnemies = function () {
-            var enemy = new Anuto.Enemy();
-            this.enemies.push(enemy);
+            if (this.ticksCounter % 25 === 0 && Anuto.GameVars.enemiesCounter < this.totalEnemies) {
+                var enemy = new Anuto.Enemy(1, this.ticksCounter);
+                this.enemies.push(enemy);
+                Anuto.GameVars.enemiesCounter++;
+                this.dispatchEvent(Engine.EVENT_ENEMY_SPAWNED, [enemy, { r: 0, c: 0 }]);
+            }
+        };
+        Engine.prototype.dispatchEvent = function (event, params) {
+            var callback = this.callbacks[event];
+            if (callback) {
+                callback.func.apply(callback.scope, params);
+            }
         };
         Object.defineProperty(Engine.prototype, "timeStep", {
             get: function () {
@@ -118,6 +144,7 @@ var Anuto;
             enumerable: true,
             configurable: true
         });
+        Engine.EVENT_ENEMY_SPAWNED = "enemy spawned";
         return Engine;
     }());
     Anuto.Engine = Engine;
@@ -145,8 +172,8 @@ var Anuto;
 var Anuto;
 (function (Anuto) {
     var Tower = (function () {
-        function Tower(config) {
-            this.type = config.type;
+        function Tower(config, creationTick) {
+            this.type = config.id;
             this.level = config.level;
             this.position = config.position;
             this.value = 0;

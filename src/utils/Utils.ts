@@ -23,11 +23,11 @@ export class Button extends Phaser.GameObjects.Image {
             }, this);
 
             this.on("pointerdown", () => {
-                this.setFrame(frameNameOff);
+                this.setFrame(frameNameOn);
             }, this);
 
             this.on("pointerup", () => {
-                this.setFrame(frameNameOn);
+                this.setFrame(frameNameOff);
             }, this);
         }
     }

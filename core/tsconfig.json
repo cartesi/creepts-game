@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
         "module": "amd",
-        "noImplicitAny": true,
+        "noImplicitAny": false,
+        "strict": false,
         "removeComments": true,
         "preserveConstEnums": true,
         "outFile": "../dist/anuto-core-engine.js",

@@ -1,22 +1,29 @@
+
 namespace Anuto {
 
     export class Engine {
 
+        public static readonly EVENT_ENEMY_SPAWNED = "enemy spawned";
+
         public ticksCounter: number;
         public waveActivated: boolean;
-
+       
         private enemies: Enemy[];
         private towers: Tower[];
         private bullets: Bullet[];
         private t: number;
-
+        private totalEnemies: number;
+        private callbacks: Types.Callback[];
+     
         constructor (gameConfig: Types.GameConfig) {
  
             GameVars.credits = 500;
 
             this.waveActivated = false;
             this.t = 0;
-
+            this.totalEnemies = 0;
+            this.callbacks = [];
+         
             GameVars.timeStep = gameConfig.timeStep;
 
             this.towers = [];
@@ -32,8 +39,6 @@ namespace Anuto {
 
             this.t = t;
 
-            this.ticksCounter ++;
-
             this.enemies.forEach(function (enemy) {
                 enemy.update();
             }); 
@@ -45,6 +50,8 @@ namespace Anuto {
             this.checkCollisions();
 
             this.spawnEnemies();
+
+            this.ticksCounter ++;
         }
 
         public newWave(config: Types.WaveConfig): void {
@@ -60,6 +67,9 @@ namespace Anuto {
             this.waveActivated = true;
             this.ticksCounter = 0;
             this.t = Date.now();
+            this.totalEnemies = config.totalEnemies;
+
+            GameVars.enemiesCounter = 0;
             
             this.enemies = [];
             this.bullets = [];
@@ -79,12 +89,12 @@ namespace Anuto {
         public addTower(type: string, p: {r: number, c: number}): Tower {
 
             const towerConfig: Types.TowerConfig = {
-                type: type,
+                id: type,
                 level: 0,
                 position: p
             };
 
-            const tower = new Tower(towerConfig);
+            const tower = new Tower(towerConfig, this.ticksCounter);
             this.towers.push(tower);
 
             return tower;
@@ -107,18 +117,40 @@ namespace Anuto {
             this.bullets.push(bullet);
         }
 
+        public addEventListener(event: string, callbackFunction: Function, callbackScope: any): void {
+            
+            this.callbacks[event] = {func: callbackFunction, scope: callbackScope};
+        }
+
+        public removeEnentListener(event: string): void {
+            //
+        }
+
         private checkCollisions(): void {
             //
         }
 
         private spawnEnemies(): void {
 
-            // TODO: do it when requieed
+            // de momento cada 25 ticks
+            if (this.ticksCounter % 25 === 0 && GameVars.enemiesCounter < this.totalEnemies) {
 
-            const enemy = new Enemy();
-            this.enemies.push(enemy);
+                const enemy = new Enemy(1, this.ticksCounter);
+                this.enemies.push(enemy);
 
-            // TODO: callback to inform that an enemy has been spawned
+                GameVars.enemiesCounter ++;
+
+                this.dispatchEvent(Engine.EVENT_ENEMY_SPAWNED, [enemy, {r: 0, c: 0}]);
+            }
+        }
+
+        private dispatchEvent(event: string, params?: any): void {
+
+            const callback = this.callbacks[event];
+
+            if (callback) {
+                callback.func.apply(callback.scope, params);
+            }
         }
 
         public get timeStep(): number {
