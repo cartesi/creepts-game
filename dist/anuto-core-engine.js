@@ -1,9 +1,18 @@
 var Anuto;
 (function (Anuto) {
     var Bullet = (function () {
-        function Bullet() {
+        function Bullet(p, angle, speed) {
+            this.x = p.c;
+            this.y = p.r;
+            this.dx = speed * Math.cos(angle);
+            this.dy = speed * Math.sin(angle);
         }
         Bullet.prototype.update = function () {
+            this.x += this.dx;
+            this.y += this.dy;
+        };
+        Bullet.prototype.getPositionNextTick = function () {
+            return { x: this.x + this.dx, y: this.y + this.dy };
         };
         return Bullet;
     }());
@@ -34,12 +43,16 @@ var Anuto;
         function Engine(gameConfig) {
             Anuto.GameVars.credits = 500;
             this.waveActivated = false;
-            Anuto.GameVars.cellsSize = gameConfig.cellSize;
+            this.t = 0;
+            Anuto.GameVars.timeStep = gameConfig.timeStep;
+            this.towers = [];
         }
         Engine.prototype.update = function () {
-            if (!this.waveActivated) {
+            var t = Date.now();
+            if (t - this.t < Anuto.GameVars.timeStep || !this.waveActivated) {
                 return;
             }
+            this.t = t;
             this.ticksCounter++;
             this.enemies.forEach(function (enemy) {
                 enemy.update();
@@ -57,6 +70,7 @@ var Anuto;
             }
             this.waveActivated = true;
             this.ticksCounter = 0;
+            this.t = Date.now();
             this.enemies = [];
             this.bullets = [];
         };
@@ -65,6 +79,7 @@ var Anuto;
             if (i !== -1) {
                 this.enemies.splice(i, 1);
             }
+            enemy.destroy();
         };
         Engine.prototype.addTower = function (type, p) {
             var towerConfig = {
@@ -74,6 +89,7 @@ var Anuto;
             };
             var tower = new Anuto.Tower(towerConfig);
             this.towers.push(tower);
+            return tower;
         };
         Engine.prototype.sellTower = function (tower) {
             var i = this.towers.indexOf(tower);
@@ -92,6 +108,16 @@ var Anuto;
             var enemy = new Anuto.Enemy();
             this.enemies.push(enemy);
         };
+        Object.defineProperty(Engine.prototype, "timeStep", {
+            get: function () {
+                return Anuto.GameVars.timeStep;
+            },
+            set: function (value) {
+                Anuto.GameVars.timeStep = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return Engine;
     }());
     Anuto.Engine = Engine;

@@ -156,6 +156,7 @@ var GameConstants = /** @class */ (function () {
     GameConstants.VERBOSE = false;
     GameConstants.GAME_WIDTH = 768;
     GameConstants.GAME_HEIGHT = 1024;
+    GameConstants.CELLS_SIZE = 20;
     GameConstants.SAVED_GAME_DATA_KEY = "anuto-data";
     return GameConstants;
 }());
@@ -464,11 +465,58 @@ var PreloadScene = /** @class */ (function (_super) {
     };
     PreloadScene.prototype.loadAssets = function () {
         this.load.atlas("texture_atlas_1", "assets/texture_atlas_1.png", "assets/texture_atlas_1.json");
-        this.load.bitmapFont("russo-one-red", "assets/fonts/russo-one.png", "assets/fonts/russo-one.xml");
     };
     return PreloadScene;
 }(Phaser.Scene));
 exports.PreloadScene = PreloadScene;
+
+
+/***/ }),
+
+/***/ "./src/scenes/battle-scene/BattleManager.ts":
+/*!**************************************************!*\
+  !*** ./src/scenes/battle-scene/BattleManager.ts ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var BattleManager = /** @class */ (function () {
+    function BattleManager() {
+    }
+    BattleManager.init = function () {
+        BattleManager.t = 0;
+        var gameConfig = {
+            timeStep: 100
+        };
+        BattleManager.anutoEngine = new Anuto.Engine(gameConfig);
+        // TODO: attach the callbacks
+    };
+    BattleManager.update = function (time, delta) {
+        BattleManager.anutoEngine.update();
+    };
+    BattleManager.newWave = function () {
+        if (BattleManager.anutoEngine.waveActivated) {
+            return;
+        }
+        var waveConfig = {
+            level: 0,
+            towers: [],
+            totalEnemies: 10
+        };
+        BattleManager.anutoEngine.newWave(waveConfig);
+    };
+    BattleManager.onEnemySpawned = function (type, position) {
+        //
+    };
+    BattleManager.onEnemyHit = function (id, damage) {
+        //
+    };
+    return BattleManager;
+}());
+exports.BattleManager = BattleManager;
 
 
 /***/ }),
@@ -499,30 +547,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var GUI_1 = __webpack_require__(/*! ./GUI */ "./src/scenes/battle-scene/GUI.ts");
 var HUD_1 = __webpack_require__(/*! ./HUD */ "./src/scenes/battle-scene/HUD.ts");
 var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
+var BattleManager_1 = __webpack_require__(/*! ./BattleManager */ "./src/scenes/battle-scene/BattleManager.ts");
+var StageContainer_1 = __webpack_require__(/*! ./StageContainer */ "./src/scenes/battle-scene/StageContainer.ts");
 var BattleScene = /** @class */ (function (_super) {
     __extends(BattleScene, _super);
     function BattleScene() {
         return _super.call(this, "BattleScene") || this;
     }
     BattleScene.prototype.create = function () {
-        this.t = 0;
-        Anuto.CoreEngine.init();
+        BattleManager_1.BattleManager.init();
         var tmpBackground = this.add.graphics(this);
         tmpBackground.fillStyle(0xFFFFFF);
         tmpBackground.fillRect(0, 0, GameConstants_1.GameConstants.GAME_WIDTH, GameConstants_1.GameConstants.GAME_HEIGHT);
+        this.stageContainer = new StageContainer_1.StageContainer(this);
+        this.add.existing(this.stageContainer);
         this.hud = new HUD_1.HUD(this);
         this.add.existing(this.hud);
         this.gui = new GUI_1.GUI(this);
         this.add.existing(this.gui);
     };
     BattleScene.prototype.update = function (time, delta) {
-        if (time - this.t > 100) {
-            this.t = time;
-            Anuto.CoreEngine.update();
-        }
-        else {
-            // move things
-        }
+        BattleManager_1.BattleManager.update(time, delta);
+        this.stageContainer.update(time, delta);
     };
     return BattleScene;
 }(Phaser.Scene));
@@ -554,11 +600,20 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var Utils_1 = __webpack_require__(/*! ../../utils/Utils */ "./src/utils/Utils.ts");
+var BattleManager_1 = __webpack_require__(/*! ./BattleManager */ "./src/scenes/battle-scene/BattleManager.ts");
 var GUI = /** @class */ (function (_super) {
     __extends(GUI, _super);
     function GUI(scene) {
-        return _super.call(this, scene) || this;
+        var _this = _super.call(this, scene) || this;
+        var nextWaveButton = new Utils_1.Button(_this.scene, 670, 35, "texture_atlas_1", "btn_start_off", "btn_start_on", true);
+        nextWaveButton.onDown(_this.onClickNextWave, _this);
+        _this.add(nextWaveButton);
+        return _this;
     }
+    GUI.prototype.onClickNextWave = function () {
+        BattleManager_1.BattleManager.newWave();
+    };
     return GUI;
 }(Phaser.GameObjects.Container));
 exports.GUI = GUI;
@@ -597,6 +652,190 @@ var HUD = /** @class */ (function (_super) {
     return HUD;
 }(Phaser.GameObjects.Container));
 exports.HUD = HUD;
+
+
+/***/ }),
+
+/***/ "./src/scenes/battle-scene/StageContainer.ts":
+/*!***************************************************!*\
+  !*** ./src/scenes/battle-scene/StageContainer.ts ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var StageContainer = /** @class */ (function (_super) {
+    __extends(StageContainer, _super);
+    function StageContainer(scene) {
+        var _this = _super.call(this, scene) || this;
+        _this.enemies = [];
+        _this.towers = [];
+        return _this;
+    }
+    StageContainer.prototype.update = function (time, delta) {
+        this.enemies.forEach(function (enemy) {
+            enemy.update(time, delta);
+        });
+        this.towers.forEach(function (tower) {
+            tower.update(time, delta);
+        });
+    };
+    StageContainer.prototype.addEnemy = function (id, position) {
+        //
+    };
+    StageContainer.prototype.addTower = function (id, position) {
+        //
+    };
+    StageContainer.prototype.upgradeTower = function (id) {
+        //
+    };
+    StageContainer.prototype.onEnemyHit = function (id, damage) {
+        //
+    };
+    return StageContainer;
+}(Phaser.GameObjects.Container));
+exports.StageContainer = StageContainer;
+
+
+/***/ }),
+
+/***/ "./src/utils/Utils.ts":
+/*!****************************!*\
+  !*** ./src/utils/Utils.ts ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var Button = /** @class */ (function (_super) {
+    __extends(Button, _super);
+    function Button(scene, x, y, textureAtlas, frameNameOff, frameNameOn, pixelPerfect) {
+        if (frameNameOn === void 0) { frameNameOn = frameNameOff; }
+        var _this = _super.call(this, scene, x, y, textureAtlas, frameNameOff) || this;
+        if (pixelPerfect) {
+            _this.setInteractive(_this.scene.input.makePixelPerfect(20));
+            _this.setInteractive({ pixelPerfect: true });
+        }
+        else {
+            _this.setInteractive();
+        }
+        if (frameNameOff !== frameNameOn) {
+            _this.on("pointerover", function () {
+                _this.setFrame(frameNameOn);
+            }, _this);
+            _this.on("pointerout", function () {
+                _this.setFrame(frameNameOff);
+            }, _this);
+            _this.on("pointerdown", function () {
+                _this.setFrame(frameNameOff);
+            }, _this);
+            _this.on("pointerup", function () {
+                _this.setFrame(frameNameOn);
+            }, _this);
+        }
+        return _this;
+    }
+    Button.prototype.setInflationTween = function (ratio, defaultScaleX, defaultScaleY, tween, tweenData) {
+        var _this = this;
+        if (defaultScaleX === void 0) { defaultScaleX = this.scaleX; }
+        if (defaultScaleY === void 0) { defaultScaleY = this.scaleY; }
+        this.setScale(defaultScaleX, defaultScaleY);
+        this.defaultScale = { x: defaultScaleX, y: defaultScaleY };
+        if (tween) {
+            if (!tweenData) {
+                tweenData = { ease: Phaser.Math.Easing.Cubic.Out, duration: 200 };
+            }
+        }
+        this.on("pointerover", function () {
+            if (tween) {
+                _this.scene.tweens.add({
+                    targets: [_this],
+                    scaleX: _this.defaultScale.x * ratio,
+                    scaleY: _this.defaultScale.y * ratio,
+                    ease: tweenData.ease,
+                    duration: tweenData.duration,
+                });
+            }
+            else {
+                _this.setScale(_this.defaultScale.x * ratio, _this.defaultScale.y * ratio);
+            }
+        }, this);
+        this.on("pointerout", function () {
+            if (tween) {
+                _this.scene.tweens.add({
+                    targets: [_this],
+                    scaleX: _this.defaultScale.x,
+                    scaleY: _this.defaultScale.y,
+                    ease: tweenData.ease,
+                    duration: tweenData.duration,
+                });
+            }
+            else {
+                _this.setScale(_this.defaultScale.x, _this.defaultScale.y);
+            }
+        }, this);
+        this.on("pointerdown", function () {
+            if (_this.scene.game.device.os.desktop) {
+                _this.setScale(_this.defaultScale.x, _this.defaultScale.y);
+            }
+            else {
+                _this.setScale(_this.defaultScale.x * ratio, _this.defaultScale.y * ratio);
+            }
+        }, this);
+        this.on("pointerup", function () {
+            if (_this.scene.game.device.os.desktop) {
+                _this.setScale(_this.defaultScale.x * ratio, _this.defaultScale.y * ratio);
+            }
+            else {
+                _this.setScale(_this.defaultScale.x, _this.defaultScale.y);
+            }
+        }, this);
+    };
+    Button.prototype.onUp = function (f, context) {
+        this.on("pointerup", f, context);
+    };
+    Button.prototype.onDown = function (f, context) {
+        this.on("pointerdown", f, context);
+    };
+    Button.prototype.onOver = function (f, context) {
+        this.on("pointerover", f, context);
+    };
+    Button.prototype.onOut = function (f, context) {
+        this.on("pointerout", f, context);
+    };
+    return Button;
+}(Phaser.GameObjects.Image));
+exports.Button = Button;
 
 
 /***/ })

@@ -10,20 +10,23 @@ export class BattleManager {
         BattleManager.t = 0;
 
         const gameConfig: Anuto.Types.GameConfig = {
-            cellSize: GameConstants.CELLS_SIZE
+            timeStep: GameConstants.TIME_STEP,
+            boardSize: GameConstants.BOARD_SIZE
         };
 
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig);
+
+        // TODO: attach the callbacks
     }
 
     public static update(time: number, delta: number): void {
 
-        if (time - BattleManager.t > 100) {
+        BattleManager.anutoEngine.update();
+    }
 
-            BattleManager.t = time;
+    public static setTimeStep(timeStep: number): void {
 
-            BattleManager.anutoEngine.update();
-        } 
+        BattleManager.anutoEngine.timeStep = timeStep;
     }
 
     public static newWave(): void {
@@ -39,6 +42,11 @@ export class BattleManager {
         };
 
         BattleManager.anutoEngine.newWave(waveConfig);
+    }
+
+    public static addTower(position: {r: number, c: number}): Anuto.Tower {
+
+        return BattleManager.anutoEngine.addTower( "tower 1", position);
     }
 
     public static onEnemySpawned(type: string, position: {r: number, c: number}): void {

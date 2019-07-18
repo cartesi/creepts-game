@@ -8,20 +8,29 @@ namespace Anuto {
         private enemies: Enemy[];
         private towers: Tower[];
         private bullets: Bullet[];
+        private t: number;
 
         constructor (gameConfig: Types.GameConfig) {
  
             GameVars.credits = 500;
 
             this.waveActivated = false;
-            GameVars.cellsSize = gameConfig.cellSize;
+            this.t = 0;
+
+            GameVars.timeStep = gameConfig.timeStep;
+
+            this.towers = [];
         }
 
         public update(): void {
 
-            if (!this.waveActivated) {
+            const t = Date.now();
+
+            if (t - this.t < GameVars.timeStep || !this.waveActivated) {
                 return;
             }
+
+            this.t = t;
 
             this.ticksCounter ++;
 
@@ -50,6 +59,7 @@ namespace Anuto {
 
             this.waveActivated = true;
             this.ticksCounter = 0;
+            this.t = Date.now();
             
             this.enemies = [];
             this.bullets = [];
@@ -62,9 +72,11 @@ namespace Anuto {
             if (i !== -1) {
                 this.enemies.splice(i, 1);
             }
+
+            enemy.destroy();
         }
 
-        public addTower(type: string, p: {r: number, c: number}): void {
+        public addTower(type: string, p: {r: number, c: number}): Tower {
 
             const towerConfig: Types.TowerConfig = {
                 type: type,
@@ -73,8 +85,9 @@ namespace Anuto {
             };
 
             const tower = new Tower(towerConfig);
-
             this.towers.push(tower);
+
+            return tower;
         }
 
         public sellTower(tower: Tower): void {
@@ -98,10 +111,24 @@ namespace Anuto {
             //
         }
 
-        private  spawnEnemies(): void {
+        private spawnEnemies(): void {
+
+            // TODO: do it when requieed
 
             const enemy = new Enemy();
             this.enemies.push(enemy);
+
+            // TODO: callback to inform that an enemy has been spawned
+        }
+
+        public get timeStep(): number {
+
+            return GameVars.timeStep;
+        }
+
+        public set timeStep(value: number) {
+
+            GameVars.timeStep = value;
         }
     }
 }

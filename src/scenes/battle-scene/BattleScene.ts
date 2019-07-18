@@ -2,7 +2,7 @@ import { GUI } from "./GUI";
 import { HUD } from "./HUD";
 import { GameConstants } from "../../GameConstants";
 import { BattleManager } from "./BattleManager";
-import { StageContainer } from "./StageContainer";
+import { BoardContainer } from "./BoardContainer";
 
 export class BattleScene extends Phaser.Scene {
 
@@ -10,7 +10,7 @@ export class BattleScene extends Phaser.Scene {
     
     public hud: HUD;
     public gui: GUI;
-    public stageContainer: StageContainer;
+    public stageContainer: BoardContainer;
 
     constructor() {
 
@@ -25,7 +25,7 @@ export class BattleScene extends Phaser.Scene {
         tmpBackground.fillStyle(0xFFFFFF);
         tmpBackground.fillRect(0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
 
-        this.stageContainer = new StageContainer(this);
+        this.stageContainer = new BoardContainer(this);
         this.add.existing(this.stageContainer);
         
         this.hud = new HUD(this);

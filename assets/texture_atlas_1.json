@@ -31,6 +31,48 @@
 					}
 				},
 				{
+					"filename": "btn_1x_off",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 48,
+						"h": 47
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 48,
+						"h": 47
+					},
+					"frame": {
+						"x": 193,
+						"y": 1,
+						"w": 48,
+						"h": 47
+					}
+				},
+				{
+					"filename": "btn_1x_on",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 48,
+						"h": 47
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 48,
+						"h": 47
+					},
+					"frame": {
+						"x": 193,
+						"y": 50,
+						"w": 48,
+						"h": 47
+					}
+				},
+				{
 					"filename": "btn_start_on",
 					"rotated": false,
 					"trimmed": false,
@@ -50,6 +92,48 @@
 						"w": 190,
 						"h": 57
 					}
+				},
+				{
+					"filename": "btn_4x_off",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 48,
+						"h": 47
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 48,
+						"h": 47
+					},
+					"frame": {
+						"x": 193,
+						"y": 99,
+						"w": 48,
+						"h": 47
+					}
+				},
+				{
+					"filename": "btn_4x_on",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 48,
+						"h": 47
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 48,
+						"h": 47
+					},
+					"frame": {
+						"x": 1,
+						"y": 148,
+						"w": 48,
+						"h": 47
+					}
 				}
 			]
 		}
@@ -57,6 +141,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:dcfaef63ca63d1f1948bd99d27947b96:cec8ba2fc866dc6f9a15f27e6196c67e:1bd3fbbbdaf54e41cf80e3e904578de4$"
+		"smartupdate": "$TexturePacker:SmartUpdate:90bfddde1825822bbeb39cf4a4124276:b3f8543809fa2b24b52032133d40da67:1bd3fbbbdaf54e41cf80e3e904578de4$"
 	}
 }

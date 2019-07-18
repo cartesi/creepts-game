@@ -1,7 +1,8 @@
 namespace Anuto.Types {
 
     export type GameConfig = {
-        cellSize: number;
+        timeStep: number;
+        boardSize: {r: number, c: number};
     };
 
     export type WaveConfig = {

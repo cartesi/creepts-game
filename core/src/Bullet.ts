@@ -8,10 +8,11 @@ namespace Anuto {
         private dx: number;
         private dy: number;
 
+        // bullet speed in cells / tick
         constructor (p: {r: number, c: number}, angle: number, speed: number) {
             
-            this.x = p.c * GameVars.cellsSize;
-            this.y = p.r * GameVars.cellsSize;
+            this.x = p.c;
+            this.y = p.r;
 
             this.dx = speed * Math.cos(angle);
             this.dy = speed * Math.sin(angle);

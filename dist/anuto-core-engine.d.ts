@@ -1,8 +1,18 @@
 declare namespace Anuto {
     class Bullet {
-        private speed;
-        constructor();
+        x: number;
+        y: number;
+        private dx;
+        private dy;
+        constructor(p: {
+            r: number;
+            c: number;
+        }, angle: number, speed: number);
         update(): void;
+        getPositionNextTick(): {
+            x: number;
+            y: number;
+        };
     }
 }
 declare namespace Anuto {
@@ -23,6 +33,7 @@ declare namespace Anuto {
         private enemies;
         private towers;
         private bullets;
+        private t;
         constructor(gameConfig: Types.GameConfig);
         update(): void;
         newWave(config: Types.WaveConfig): void;
@@ -30,11 +41,12 @@ declare namespace Anuto {
         addTower(type: string, p: {
             r: number;
             c: number;
-        }): void;
+        }): Tower;
         sellTower(tower: Tower): void;
         addBullet(bullet: Bullet): void;
         private checkCollisions;
         private spawnEnemies;
+        timeStep: number;
     }
 }
 declare namespace Anuto.Constants {
@@ -48,8 +60,8 @@ declare namespace Anuto {
     class GameVars {
         static credits: number;
         static score: number;
+        static timeStep: number;
         static level: number;
-        static cellsSize: number;
         static boardDimensions: {
             r: number;
             c: number;
@@ -77,7 +89,11 @@ declare namespace Anuto {
 }
 declare namespace Anuto.Types {
     type GameConfig = {
-        cellSize: number;
+        timeStep: number;
+        boardSize: {
+            r: number;
+            c: number;
+        };
     };
     type WaveConfig = {
         level: number;
