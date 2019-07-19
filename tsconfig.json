@@ -4,7 +4,10 @@
         "module": "CommonJS",
         "sourceMap": true,
         "noImplicitAny": false,
-        "strict": false
+        "strict": false,
+        "resolveJsonModule": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
     },
     "exclude": [
         "core"

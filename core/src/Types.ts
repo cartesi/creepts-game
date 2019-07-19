@@ -1,4 +1,17 @@
-namespace Anuto.Types {
+module Anuto.Types {
+
+    export type EnemyData = {
+        id: number,
+        name: string,
+        life: number,
+        speed: number
+    };
+
+    export type TowerData = {
+        id: number,
+        name: string,
+        price: number
+    };
 
     export type Callback = {
         func: Function;
@@ -7,6 +20,7 @@ namespace Anuto.Types {
 
     export type GameConfig = {
         timeStep: number;
+        credits: number;
         boardSize: {r: number, c: number};
     };
 

@@ -47,12 +47,12 @@ var Anuto;
 var Anuto;
 (function (Anuto) {
     var Engine = (function () {
-        function Engine(gameConfig) {
+        function Engine(gameConfig, enemyData, towerData) {
             Anuto.GameVars.credits = 500;
             this.waveActivated = false;
             this.t = 0;
             this.totalEnemies = 0;
-            this.callbacks = [];
+            this.eventDispatcher = new Anuto.EventDispatcher();
             Anuto.GameVars.timeStep = gameConfig.timeStep;
             this.towers = [];
         }
@@ -113,8 +113,11 @@ var Anuto;
         Engine.prototype.addBullet = function (bullet) {
             this.bullets.push(bullet);
         };
-        Engine.prototype.addEventListener = function (event, callbackFunction, callbackScope) {
-            this.callbacks[event] = { func: callbackFunction, scope: callbackScope };
+        Engine.prototype.addEventListener = function (type, listenerFunction, scope) {
+            this.eventDispatcher.addEventListener(type, listenerFunction, scope);
+        };
+        Engine.prototype.removeEventListener = function (type, listenerFunction) {
+            this.eventDispatcher.removeEventListener(type, listenerFunction);
         };
         Engine.prototype.removeEnentListener = function (event) {
         };
@@ -125,13 +128,7 @@ var Anuto;
                 var enemy = new Anuto.Enemy(1, this.ticksCounter);
                 this.enemies.push(enemy);
                 Anuto.GameVars.enemiesCounter++;
-                this.dispatchEvent(Engine.EVENT_ENEMY_SPAWNED, [enemy, { r: 0, c: 0 }]);
-            }
-        };
-        Engine.prototype.dispatchEvent = function (event, params) {
-            var callback = this.callbacks[event];
-            if (callback) {
-                callback.func.apply(callback.scope, params);
+                this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.EVENT_ENEMY_SPAWNED, [enemy, { r: 0, c: 0 }]));
             }
         };
         Object.defineProperty(Engine.prototype, "timeStep", {
@@ -144,7 +141,6 @@ var Anuto;
             enumerable: true,
             configurable: true
         });
-        Engine.EVENT_ENEMY_SPAWNED = "enemy spawned";
         return Engine;
     }());
     Anuto.Engine = Engine;
@@ -188,5 +184,62 @@ var Anuto;
         return Tower;
     }());
     Anuto.Tower = Tower;
+})(Anuto || (Anuto = {}));
+var Anuto;
+(function (Anuto) {
+    var Event = (function () {
+        function Event(type, params) {
+            this.type = type;
+            this.params = params;
+        }
+        Event.prototype.getParams = function () {
+            return this.params;
+        };
+        Event.prototype.getType = function () {
+            return this.type;
+        };
+        Event.EVENT_ENEMY_SPAWNED = "enemy spawned";
+        return Event;
+    }());
+    Anuto.Event = Event;
+})(Anuto || (Anuto = {}));
+var Anuto;
+(function (Anuto) {
+    var EventDispatcher = (function () {
+        function EventDispatcher() {
+            this.listeners = [];
+        }
+        EventDispatcher.prototype.hasEventListener = function (type, listener) {
+            var exists = false;
+            for (var i = 0; i < this.listeners.length; i++) {
+                if (this.listeners[i].type === type && this.listeners[i].listener === listener) {
+                    exists = true;
+                }
+            }
+            return exists;
+        };
+        EventDispatcher.prototype.addEventListener = function (type, listenerFunc, scope) {
+            if (this.hasEventListener(type, listenerFunc)) {
+                return;
+            }
+            this.listeners.push({ type: type, listener: listenerFunc, scope: scope });
+        };
+        EventDispatcher.prototype.removeEventListener = function (type, listenerFunc) {
+            for (var i = 0; i < this.listeners.length; i++) {
+                if (this.listeners[i].type === type && this.listeners[i].listener === listenerFunc) {
+                    this.listeners.splice(i, 1);
+                }
+            }
+        };
+        EventDispatcher.prototype.dispatchEvent = function (evt) {
+            for (var i = 0; i < this.listeners.length; i++) {
+                if (this.listeners[i].type === evt.getType()) {
+                    this.listeners[i].listener.apply(this.listeners[i].scope, evt.getParams());
+                }
+            }
+        };
+        return EventDispatcher;
+    }());
+    Anuto.EventDispatcher = EventDispatcher;
 })(Anuto || (Anuto = {}));
 //# sourceMappingURL=anuto-core-engine.js.map

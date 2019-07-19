@@ -1,4 +1,4 @@
-declare namespace Anuto {
+declare module Anuto {
     class Bullet {
         x: number;
         y: number;
@@ -15,7 +15,7 @@ declare namespace Anuto {
         };
     }
 }
-declare namespace Anuto {
+declare module Anuto {
     class Enemy {
         id: number;
         life: number;
@@ -29,9 +29,8 @@ declare namespace Anuto {
         hit(damage: number): void;
     }
 }
-declare namespace Anuto {
+declare module Anuto {
     class Engine {
-        static readonly EVENT_ENEMY_SPAWNED = "enemy spawned";
         ticksCounter: number;
         waveActivated: boolean;
         private enemies;
@@ -39,8 +38,8 @@ declare namespace Anuto {
         private bullets;
         private t;
         private totalEnemies;
-        private callbacks;
-        constructor(gameConfig: Types.GameConfig);
+        private eventDispatcher;
+        constructor(gameConfig: Types.GameConfig, enemyData: Types.EnemyData[], towerData: Types.TowerData[]);
         update(): void;
         newWave(config: Types.WaveConfig): void;
         removeEnemy(enemy: Enemy): void;
@@ -50,22 +49,22 @@ declare namespace Anuto {
         }): Tower;
         sellTower(tower: Tower): void;
         addBullet(bullet: Bullet): void;
-        addEventListener(event: string, callbackFunction: Function, callbackScope: any): void;
+        addEventListener(type: string, listenerFunction: Function, scope: any): void;
+        removeEventListener(type: string, listenerFunction: any): void;
         removeEnentListener(event: string): void;
         private checkCollisions;
         private spawnEnemies;
-        private dispatchEvent;
         timeStep: number;
     }
 }
-declare namespace Anuto.Constants {
+declare module Anuto.Constants {
     const INITIAL_CREDITS = 500;
     const TOWER_1 = "tower_1";
     const TOWER_2 = "tower_2";
     const TOWER_3 = "tower_3";
     const TOWER_4 = "tower_4";
 }
-declare namespace Anuto {
+declare module Anuto {
     class GameVars {
         static credits: number;
         static score: number;
@@ -78,7 +77,7 @@ declare namespace Anuto {
         static enemiesCounter: number;
     }
 }
-declare namespace Anuto {
+declare module Anuto {
     class Tower {
         type: string;
         level: number;
@@ -97,13 +96,25 @@ declare namespace Anuto {
         upgrade(): void;
     }
 }
-declare namespace Anuto.Types {
+declare module Anuto.Types {
+    type EnemyData = {
+        id: number;
+        name: string;
+        life: number;
+        speed: number;
+    };
+    type TowerData = {
+        id: number;
+        name: string;
+        price: number;
+    };
     type Callback = {
         func: Function;
         scope: any;
     };
     type GameConfig = {
         timeStep: number;
+        credits: number;
         boardSize: {
             r: number;
             c: number;
@@ -122,4 +133,24 @@ declare namespace Anuto.Types {
             c: number;
         };
     };
+}
+declare module Anuto {
+    class Event {
+        static readonly EVENT_ENEMY_SPAWNED = "enemy spawned";
+        private type;
+        private params;
+        constructor(type: string, params: any);
+        getParams(): any;
+        getType(): string;
+    }
+}
+declare module Anuto {
+    class EventDispatcher {
+        private listeners;
+        constructor();
+        hasEventListener(type: string, listener: Function): boolean;
+        addEventListener(type: string, listenerFunc: Function, scope: any): void;
+        removeEventListener(type: string, listenerFunc: Function): void;
+        dispatchEvent(evt: Event): void;
+    }
 }

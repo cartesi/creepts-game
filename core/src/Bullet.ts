@@ -1,4 +1,6 @@
-namespace Anuto {
+
+
+module Anuto {
 
     export class Bullet {
 

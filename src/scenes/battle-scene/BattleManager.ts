@@ -1,22 +1,27 @@
 import { GameConstants } from "../../GameConstants";
 import { BoardContainer } from "./BoardContainer";
+import { GameVars } from "../../GameVars";
+
+import enemyData from "../../../assets/config/enemies.json";
+import towerData from "../../../assets/config/towers.json";
 
 export class BattleManager {
 
-    private static t: number;
     private static anutoEngine: Anuto.Engine;
 
     public static init(): void {  
 
-        BattleManager.t = 0;
-
         const gameConfig: Anuto.Types.GameConfig = {
             timeStep: GameConstants.TIME_STEP,
+            credits: GameConstants.INITIAL_CREDITS,
             boardSize: GameConstants.BOARD_SIZE
         };
 
-        BattleManager.anutoEngine = new Anuto.Engine(gameConfig);
-        BattleManager.anutoEngine.addEventListener(Anuto.Engine.EVENT_ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
+        GameVars.enemyData = enemyData;
+        GameVars.towerData = towerData;
+
+        BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemyData, GameVars.towerData);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
     }
 
     public static update(time: number, delta: number): void {

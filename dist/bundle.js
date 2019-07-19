@@ -86,6 +86,28 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./assets/config/enemies.json":
+/*!************************************!*\
+  !*** ./assets/config/enemies.json ***!
+  \************************************/
+/*! exports provided: 0, 1, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("[{\"id\":1,\"name\":\"enemy 1\",\"life\":100,\"speed\":0.15},{\"id\":2,\"name\":\"enemy 2\",\"life\":200,\"speed\":0.1}]");
+
+/***/ }),
+
+/***/ "./assets/config/towers.json":
+/*!***********************************!*\
+  !*** ./assets/config/towers.json ***!
+  \***********************************/
+/*! exports provided: 0, 1, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("[{\"id\":1,\"name\":\"tower 1\",\"price\":150},{\"id\":2,\"name\":\"tower 2\",\"price\":200}]");
+
+/***/ }),
+
 /***/ "./node_modules/phaser/dist/phaser-arcade-physics.min.js":
 /*!***************************************************************!*\
   !*** ./node_modules/phaser/dist/phaser-arcade-physics.min.js ***!
@@ -158,6 +180,7 @@ var GameConstants = /** @class */ (function () {
     GameConstants.GAME_HEIGHT = 1024;
     GameConstants.TIME_STEP = 100;
     GameConstants.BOARD_SIZE = { r: 10, c: 10 };
+    GameConstants.INITIAL_CREDITS = 500;
     GameConstants.CELLS_SIZE = 50;
     GameConstants.SAVED_GAME_DATA_KEY = "anuto-data";
     return GameConstants;
@@ -484,19 +507,28 @@ exports.PreloadScene = PreloadScene;
 
 "use strict";
 
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
+var BoardContainer_1 = __webpack_require__(/*! ./BoardContainer */ "./src/scenes/battle-scene/BoardContainer.ts");
+var GameVars_1 = __webpack_require__(/*! ../../GameVars */ "./src/GameVars.ts");
+var enemies_json_1 = __importDefault(__webpack_require__(/*! ../../../assets/config/enemies.json */ "./assets/config/enemies.json"));
+var towers_json_1 = __importDefault(__webpack_require__(/*! ../../../assets/config/towers.json */ "./assets/config/towers.json"));
 var BattleManager = /** @class */ (function () {
     function BattleManager() {
     }
     BattleManager.init = function () {
-        BattleManager.t = 0;
         var gameConfig = {
             timeStep: GameConstants_1.GameConstants.TIME_STEP,
+            credits: GameConstants_1.GameConstants.INITIAL_CREDITS,
             boardSize: GameConstants_1.GameConstants.BOARD_SIZE
         };
-        BattleManager.anutoEngine = new Anuto.Engine(gameConfig);
-        BattleManager.anutoEngine.addEventListener(Anuto.Engine.EVENT_ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
+        GameVars_1.GameVars.enemyData = enemies_json_1.default;
+        GameVars_1.GameVars.towerData = towers_json_1.default;
+        BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars_1.GameVars.enemyData, GameVars_1.GameVars.towerData);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
     };
     BattleManager.update = function (time, delta) {
         BattleManager.anutoEngine.update();
@@ -518,8 +550,9 @@ var BattleManager = /** @class */ (function () {
     BattleManager.addTower = function (position) {
         return BattleManager.anutoEngine.addTower("tower 1", position);
     };
-    BattleManager.onEnemySpawned = function (enemyType, p) {
-        console.log("ON ENEMY SPAWNED:", enemyType, p);
+    BattleManager.onEnemySpawned = function (anutoEnemy, p) {
+        console.log("ON ENEMY SPAWNED:", anutoEnemy.id, p);
+        BoardContainer_1.BoardContainer.currentInstance.addEnemy(anutoEnemy, p);
     };
     BattleManager.onEnemyHit = function (id, damage) {
         //
@@ -569,8 +602,8 @@ var BattleScene = /** @class */ (function (_super) {
         var tmpBackground = this.add.graphics(this);
         tmpBackground.fillStyle(0xFFFFFF);
         tmpBackground.fillRect(0, 0, GameConstants_1.GameConstants.GAME_WIDTH, GameConstants_1.GameConstants.GAME_HEIGHT);
-        this.stageContainer = new BoardContainer_1.BoardContainer(this);
-        this.add.existing(this.stageContainer);
+        this.boardContainer = new BoardContainer_1.BoardContainer(this);
+        this.add.existing(this.boardContainer);
         this.hud = new HUD_1.HUD(this);
         this.add.existing(this.hud);
         this.gui = new GUI_1.GUI(this);
@@ -578,7 +611,7 @@ var BattleScene = /** @class */ (function (_super) {
     };
     BattleScene.prototype.update = function (time, delta) {
         BattleManager_1.BattleManager.update(time, delta);
-        this.stageContainer.update(time, delta);
+        this.boardContainer.update(time, delta);
     };
     return BattleScene;
 }(Phaser.Scene));
@@ -745,9 +778,10 @@ var EnemyActor = /** @class */ (function (_super) {
         _this.x = GameConstants_1.GameConstants.CELLS_SIZE * (position.c + .5);
         _this.y = GameConstants_1.GameConstants.CELLS_SIZE * (position.r + .5);
         return _this;
+        // console.log(this.anutoEnemy);
     }
     EnemyActor.prototype.update = function (time, delta) {
-        console.log("UPDATE ENEMIGO:", this.id);
+        // console.log("UPDATE ENEMIGO:", this.id, this.anutoEnemy.y);
     };
     return EnemyActor;
 }(Phaser.GameObjects.Container));

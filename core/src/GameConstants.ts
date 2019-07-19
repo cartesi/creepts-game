@@ -1,4 +1,4 @@
-namespace Anuto.Constants {
+module Anuto.Constants {
     
     export const INITIAL_CREDITS = 500;
 

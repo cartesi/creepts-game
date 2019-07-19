@@ -1,0 +1,13 @@
+[
+    {
+        "id": 1,
+        "name": "tower 1",
+        "price": 150
+    },
+    {
+        "id": 2,
+        "name": "tower 2",
+        "price": 200
+    }
+]
+
