@@ -23,7 +23,7 @@ declare module Anuto {
 }
 declare module Anuto {
     class Enemy {
-        private static id;
+        static id: number;
         type: string;
         id: number;
         life: number;
@@ -47,7 +47,6 @@ declare module Anuto {
         private t;
         private eventDispatcher;
         private enemiesSpawner;
-        private timeStepUpdated;
         constructor(gameConfig: Types.GameConfig, enemyData: any, towerData: Types.TowerData[]);
         update(): void;
         newWave(waveConfig: Types.WaveConfig): void;
@@ -69,11 +68,6 @@ declare module Anuto {
     }
 }
 declare module Anuto.Constants {
-    const INITIAL_CREDITS = 500;
-    const TOWER_1 = "tower_1";
-    const TOWER_2 = "tower_2";
-    const TOWER_3 = "tower_3";
-    const TOWER_4 = "tower_4";
 }
 declare module Anuto {
     class GameVars {
@@ -81,6 +75,8 @@ declare module Anuto {
         static score: number;
         static timeStep: number;
         static ticksCounter: number;
+        static enemyData: any;
+        static towerData: Types.TowerData[];
         static waveTotalEnemies: number;
         static level: number;
         static boardDimensions: {
@@ -88,8 +84,6 @@ declare module Anuto {
             c: number;
         };
         static enemiesCounter: number;
-        static enemyData: any;
-        static towerData: Types.TowerData[];
         static enemiesPathCells: {
             r: number;
             c: number;
@@ -106,6 +100,8 @@ declare module Anuto {
 }
 declare module Anuto {
     class Tower {
+        static id: number;
+        id: number;
         type: string;
         level: number;
         damage: number;
@@ -164,7 +160,6 @@ declare module Anuto {
         static readonly EVENT_ENEMY_SPAWNED = "enemy spawned";
         static readonly EVENT_ENEMY_KILLED = "enemy killed";
         static readonly EVENT_ENEMY_REACHED_EXIT = "enemy reached exit";
-        static readonly EVENT_TIME_FACTOR_UPDATED = "time factor updated";
         private type;
         private params;
         constructor(type: string, params?: any);

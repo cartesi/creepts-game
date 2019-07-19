@@ -25,7 +25,7 @@ var Anuto;
         }
         EnemiesSpawner.prototype.getEnemy = function () {
             var enemy = null;
-            if (Anuto.GameVars.ticksCounter % 50 === 0 && Anuto.GameVars.enemiesCounter < Anuto.GameVars.waveTotalEnemies) {
+            if (Anuto.GameVars.ticksCounter % 25 === 0 && Anuto.GameVars.enemiesCounter < Anuto.GameVars.waveTotalEnemies) {
                 enemy = new Anuto.Enemy("enemy_1", Anuto.GameVars.ticksCounter);
             }
             return enemy;
@@ -80,11 +80,12 @@ var Anuto;
             Anuto.GameVars.towerData = towerData;
             this.waveActivated = false;
             this.t = 0;
-            this.timeStepUpdated = false;
             Anuto.GameVars.waveTotalEnemies = 0;
             this.eventDispatcher = new Anuto.EventDispatcher();
             this.enemiesSpawner = new Anuto.EnemiesSpawner();
             Anuto.GameVars.ticksCounter = 0;
+            Anuto.Enemy.id = 0;
+            Anuto.Tower.id = 0;
             this.towers = [];
         }
         Engine.prototype.update = function () {
@@ -93,10 +94,6 @@ var Anuto;
                 return;
             }
             this.t = t;
-            if (this.timeStepUpdated) {
-                this.timeStepUpdated = false;
-                this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.EVENT_TIME_FACTOR_UPDATED, [Anuto.GameVars.timeStep]));
-            }
             this.enemies.forEach(function (enemy) {
                 enemy.update();
             });
@@ -188,7 +185,6 @@ var Anuto;
             },
             set: function (value) {
                 Anuto.GameVars.timeStep = value;
-                this.timeStepUpdated = true;
             },
             enumerable: true,
             configurable: true
@@ -196,17 +192,6 @@ var Anuto;
         return Engine;
     }());
     Anuto.Engine = Engine;
-})(Anuto || (Anuto = {}));
-var Anuto;
-(function (Anuto) {
-    var Constants;
-    (function (Constants) {
-        Constants.INITIAL_CREDITS = 500;
-        Constants.TOWER_1 = "tower_1";
-        Constants.TOWER_2 = "tower_2";
-        Constants.TOWER_3 = "tower_3";
-        Constants.TOWER_4 = "tower_4";
-    })(Constants = Anuto.Constants || (Anuto.Constants = {}));
 })(Anuto || (Anuto = {}));
 var Anuto;
 (function (Anuto) {
@@ -221,9 +206,12 @@ var Anuto;
 (function (Anuto) {
     var Tower = (function () {
         function Tower(config, creationTick) {
+            this.id = Tower.id;
+            Tower.id++;
             this.type = config.id;
             this.level = config.level;
             this.position = config.position;
+            this.creationTick = creationTick;
             this.value = 0;
         }
         Tower.prototype.destroy = function () {
@@ -233,6 +221,7 @@ var Anuto;
         Tower.prototype.upgrade = function () {
             this.level++;
         };
+        Tower.id = 0;
         return Tower;
     }());
     Anuto.Tower = Tower;
@@ -253,7 +242,6 @@ var Anuto;
         Event.EVENT_ENEMY_SPAWNED = "enemy spawned";
         Event.EVENT_ENEMY_KILLED = "enemy killed";
         Event.EVENT_ENEMY_REACHED_EXIT = "enemy reached exit";
-        Event.EVENT_TIME_FACTOR_UPDATED = "time factor updated";
         return Event;
     }());
     Anuto.Event = Event;

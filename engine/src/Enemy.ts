@@ -2,7 +2,7 @@ module Anuto {
 
     export class Enemy {
 
-        private static id = 0;
+        public static id = 0;
 
         public type: string;
         public id: number;

@@ -12,8 +12,6 @@ module Anuto {
         private t: number;
         private eventDispatcher: EventDispatcher;
         private enemiesSpawner: EnemiesSpawner;
-
-        private timeStepUpdated: boolean;
      
         constructor (gameConfig: Types.GameConfig, enemyData: any, towerData: Types.TowerData[]) {
 
@@ -31,13 +29,15 @@ module Anuto {
             
             this.waveActivated = false;
             this.t = 0;
-            this.timeStepUpdated = false;
             GameVars.waveTotalEnemies = 0;
 
             this.eventDispatcher = new EventDispatcher();
             this.enemiesSpawner = new EnemiesSpawner();
          
             GameVars.ticksCounter = 0;
+
+            Enemy.id = 0;
+            Tower.id = 0;
 
             this.towers = [];
         }
@@ -51,11 +51,6 @@ module Anuto {
             }
 
             this.t = t;
-
-            if (this.timeStepUpdated) {
-                this.timeStepUpdated = false;
-                this.eventDispatcher.dispatchEvent(new Event(Event.EVENT_TIME_FACTOR_UPDATED, [GameVars.timeStep]));
-            }
 
             this.enemies.forEach(function (enemy) {
                 enemy.update();
@@ -193,8 +188,6 @@ module Anuto {
         public set timeStep(value: number) {
 
             GameVars.timeStep = value;
-
-            this.timeStepUpdated = true;
         }
     }
 }

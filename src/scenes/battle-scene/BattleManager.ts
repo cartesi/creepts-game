@@ -36,7 +36,6 @@ export class BattleManager {
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemyData, GameVars.towerData);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_TIME_FACTOR_UPDATED, BattleManager.onTimeFactorUpdated, BattleManager);
     }
 
     public static update(time: number, delta: number): void {
@@ -45,6 +44,8 @@ export class BattleManager {
     }
 
     public static setTimeStepFactor(timeStepFactor: number): void {
+
+        GameVars.timeStepFactor = timeStepFactor;
 
         BattleManager.anutoEngine.timeStep = GameConstants.TIME_STEP / timeStepFactor;
     }
@@ -67,11 +68,6 @@ export class BattleManager {
     public static addTower(position: {r: number, c: number}): Anuto.Tower {
 
         return BattleManager.anutoEngine.addTower("tower 1", position);
-    }
-
-    private static onTimeFactorUpdated(timeStep: number): void {
-        
-        GameVars.timeStepFactor = GameConstants.TIME_STEP / timeStep;
     }
 
     private static onEnemySpawned(anutoEnemy: Anuto.Enemy, p: {r: number, c: number} ): void {
