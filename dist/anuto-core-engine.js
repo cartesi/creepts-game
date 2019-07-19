@@ -25,7 +25,7 @@ var Anuto;
         }
         EnemiesSpawner.prototype.getEnemy = function () {
             var enemy = null;
-            if (Anuto.GameVars.ticksCounter % 25 === 0 && Anuto.GameVars.enemiesCounter < Anuto.GameVars.waveTotalEnemies) {
+            if (Anuto.GameVars.ticksCounter % 50 === 0 && Anuto.GameVars.enemiesCounter < Anuto.GameVars.waveTotalEnemies) {
                 enemy = new Anuto.Enemy("enemy_1", Anuto.GameVars.ticksCounter);
             }
             return enemy;
@@ -38,24 +38,30 @@ var Anuto;
 (function (Anuto) {
     var Enemy = (function () {
         function Enemy(type, creationTick) {
+            this.id = Enemy.id;
+            Enemy.id++;
             this.type = type;
             this.life = Anuto.GameVars.enemyData.enemies[this.type].life;
             this.speed = Anuto.GameVars.enemyData.enemies[this.type].speed;
             this.creationTick = creationTick;
-            this.x = 0;
-            this.y = 0;
+            this.x = Anuto.GameVars.enemyStartPosition.c + .5;
+            this.y = Anuto.GameVars.enemyStartPosition.r + .5;
         }
         Enemy.prototype.destroy = function () {
         };
         Enemy.prototype.update = function () {
             this.y += this.speed;
+            if (this.y > Anuto.GameVars.enemyEndPosition.r + .5) {
+                Anuto.Engine.currentInstance.onEnemyReachedExit(this);
+            }
         };
         Enemy.prototype.hit = function (damage) {
             this.life -= damage;
             if (this.life <= 0) {
-                this.destroy();
+                Anuto.Engine.currentInstance.onEnemyKilled(this);
             }
         };
+        Enemy.id = 0;
         return Enemy;
     }());
     Anuto.Enemy = Enemy;
@@ -64,12 +70,17 @@ var Anuto;
 (function (Anuto) {
     var Engine = (function () {
         function Engine(gameConfig, enemyData, towerData) {
+            Engine.currentInstance = this;
             Anuto.GameVars.credits = gameConfig.credits;
             Anuto.GameVars.timeStep = gameConfig.timeStep;
+            Anuto.GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
+            Anuto.GameVars.enemyStartPosition = { r: Anuto.GameVars.enemiesPathCells[0].r - 1, c: Anuto.GameVars.enemiesPathCells[0].c };
+            Anuto.GameVars.enemyEndPosition = { r: Anuto.GameVars.enemiesPathCells[Anuto.GameVars.enemiesPathCells.length - 1].r + 1, c: Anuto.GameVars.enemiesPathCells[Anuto.GameVars.enemiesPathCells.length - 1].c };
             Anuto.GameVars.enemyData = enemyData;
             Anuto.GameVars.towerData = towerData;
             this.waveActivated = false;
             this.t = 0;
+            this.timeStepUpdated = false;
             Anuto.GameVars.waveTotalEnemies = 0;
             this.eventDispatcher = new Anuto.EventDispatcher();
             this.enemiesSpawner = new Anuto.EnemiesSpawner();
@@ -82,6 +93,10 @@ var Anuto;
                 return;
             }
             this.t = t;
+            if (this.timeStepUpdated) {
+                this.timeStepUpdated = false;
+                this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.EVENT_TIME_FACTOR_UPDATED, [Anuto.GameVars.timeStep]));
+            }
             this.enemies.forEach(function (enemy) {
                 enemy.update();
             });
@@ -133,6 +148,17 @@ var Anuto;
         Engine.prototype.addBullet = function (bullet) {
             this.bullets.push(bullet);
         };
+        Engine.prototype.onEnemyReachedExit = function (enemy) {
+            var i = this.enemies.indexOf(enemy);
+            this.enemies.splice(i, 1);
+            enemy.destroy();
+            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.EVENT_ENEMY_REACHED_EXIT, [enemy]));
+        };
+        Engine.prototype.onEnemyKilled = function (enemy) {
+            var i = this.enemies.indexOf(enemy);
+            this.enemies.splice(i, 1);
+            enemy.destroy();
+        };
         Engine.prototype.addEventListener = function (type, listenerFunction, scope) {
             this.eventDispatcher.addEventListener(type, listenerFunction, scope);
         };
@@ -145,7 +171,7 @@ var Anuto;
             var enemy = this.enemiesSpawner.getEnemy();
             if (enemy) {
                 this.enemies.push(enemy);
-                this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.EVENT_ENEMY_SPAWNED, [enemy, { r: 0, c: 0 }]));
+                this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.EVENT_ENEMY_SPAWNED, [enemy, Anuto.GameVars.enemyStartPosition]));
                 Anuto.GameVars.enemiesCounter++;
             }
         };
@@ -162,6 +188,7 @@ var Anuto;
             },
             set: function (value) {
                 Anuto.GameVars.timeStep = value;
+                this.timeStepUpdated = true;
             },
             enumerable: true,
             configurable: true
@@ -224,6 +251,9 @@ var Anuto;
             return this.type;
         };
         Event.EVENT_ENEMY_SPAWNED = "enemy spawned";
+        Event.EVENT_ENEMY_KILLED = "enemy killed";
+        Event.EVENT_ENEMY_REACHED_EXIT = "enemy reached exit";
+        Event.EVENT_TIME_FACTOR_UPDATED = "time factor updated";
         return Event;
     }());
     Anuto.Event = Event;

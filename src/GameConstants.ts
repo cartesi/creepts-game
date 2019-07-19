@@ -12,6 +12,8 @@ export class GameConstants {
     public static readonly GAME_WIDTH = 768;
     public static readonly GAME_HEIGHT = 1024;
 
+
+    // el tick del engine en milisegundos
     public static readonly TIME_STEP = 100;
     public static readonly BOARD_SIZE = {r: 10, c: 10};
     public static readonly INITIAL_CREDITS = 500;

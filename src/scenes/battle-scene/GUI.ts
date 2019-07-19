@@ -1,6 +1,5 @@
 import { Button } from "../../utils/Utils";
 import { BattleManager } from "./BattleManager";
-import { GameConstants } from "../../GameConstants";
 
 export class GUI extends Phaser.GameObjects.Container {
 
@@ -27,12 +26,10 @@ export class GUI extends Phaser.GameObjects.Container {
 
     private onClick4x(): void {
 
-        console.log("CLICK!");
-        
         this.timeStepMultiplierButton1x.visible = true;
         this.timeStepMultiplierButton4x.visible = false;
 
-        BattleManager.setTimeStep(GameConstants.TIME_STEP / 4);
+        BattleManager.setTimeStepFactor(4);
     }
 
     private onClick1x(): void {
@@ -40,7 +37,7 @@ export class GUI extends Phaser.GameObjects.Container {
         this.timeStepMultiplierButton1x.visible = false;
         this.timeStepMultiplierButton4x.visible = true;
 
-        BattleManager.setTimeStep(GameConstants.TIME_STEP);
+        BattleManager.setTimeStepFactor(1);
     }
 
     private onClickNextWave(): void {

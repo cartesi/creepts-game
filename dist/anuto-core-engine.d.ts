@@ -23,6 +23,7 @@ declare module Anuto {
 }
 declare module Anuto {
     class Enemy {
+        private static id;
         type: string;
         id: number;
         life: number;
@@ -38,6 +39,7 @@ declare module Anuto {
 }
 declare module Anuto {
     class Engine {
+        static currentInstance: Engine;
         waveActivated: boolean;
         private enemies;
         private towers;
@@ -45,6 +47,7 @@ declare module Anuto {
         private t;
         private eventDispatcher;
         private enemiesSpawner;
+        private timeStepUpdated;
         constructor(gameConfig: Types.GameConfig, enemyData: any, towerData: Types.TowerData[]);
         update(): void;
         newWave(waveConfig: Types.WaveConfig): void;
@@ -55,6 +58,8 @@ declare module Anuto {
         }): Tower;
         sellTower(tower: Tower): void;
         addBullet(bullet: Bullet): void;
+        onEnemyReachedExit(enemy: Enemy): void;
+        onEnemyKilled(enemy: Enemy): void;
         addEventListener(type: string, listenerFunction: Function, scope: any): void;
         removeEventListener(type: string, listenerFunction: any): void;
         private checkCollisions;
@@ -85,6 +90,18 @@ declare module Anuto {
         static enemiesCounter: number;
         static enemyData: any;
         static towerData: Types.TowerData[];
+        static enemiesPathCells: {
+            r: number;
+            c: number;
+        }[];
+        static enemyStartPosition: {
+            r: number;
+            c: number;
+        };
+        static enemyEndPosition: {
+            r: number;
+            c: number;
+        };
     }
 }
 declare module Anuto {
@@ -123,6 +140,10 @@ declare module Anuto.Types {
             r: number;
             c: number;
         };
+        enemiesPathCells: {
+            r: number;
+            c: number;
+        }[];
     };
     type WaveConfig = {
         level: number;
@@ -141,6 +162,9 @@ declare module Anuto.Types {
 declare module Anuto {
     class Event {
         static readonly EVENT_ENEMY_SPAWNED = "enemy spawned";
+        static readonly EVENT_ENEMY_KILLED = "enemy killed";
+        static readonly EVENT_ENEMY_REACHED_EXIT = "enemy reached exit";
+        static readonly EVENT_TIME_FACTOR_UPDATED = "time factor updated";
         private type;
         private params;
         constructor(type: string, params?: any);

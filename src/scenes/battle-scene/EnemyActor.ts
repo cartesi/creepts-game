@@ -1,18 +1,25 @@
 import { GameConstants } from "../../GameConstants";
+import { GameVars } from "../../GameVars";
 
 export class EnemyActor extends Phaser.GameObjects.Container {
 
     public type: string;
-
+    public id: number;
+   
     private img: Phaser.GameObjects.Graphics;
     private anutoEnemy: Anuto.Enemy;
+    private speed: number;
 
     constructor(scene: Phaser.Scene, anutoEnemy: Anuto.Enemy, position: {r: number, c: number}) {
 
         super(scene);
 
         this.anutoEnemy = anutoEnemy;
+        this.id = this.anutoEnemy.id;
         this.type = this.anutoEnemy.type;
+
+        // la velocidad en pixels por ticks
+        this.speed = this.anutoEnemy.speed * GameConstants.CELLS_SIZE * (1000 / 60) / GameConstants.TIME_STEP;
 
         if (this.type === "enemy_1") {
 
@@ -33,7 +40,12 @@ export class EnemyActor extends Phaser.GameObjects.Container {
     }
 
     public update(time: number, delta: number): void {
-        
-        // console.log("UPDATE ENEMIGO:", this.id, this.anutoEnemy.y);
+
+        // this.y += this.speed * delta / (1000 / 60) * GameVars.timeStepFactor;
+        // this.y = this.anutoEnemy.y * GameConstants.CELLS_SIZE;
+
+        let smoothFactor = GameVars.timeStepFactor === 4 ? .5 : .15;
+
+        this.y += (this.anutoEnemy.y * GameConstants.CELLS_SIZE - this.y) * smoothFactor;
     }
 }

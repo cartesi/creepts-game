@@ -6,7 +6,7 @@ export class GameVars {
     public static paused: boolean;
     public static enemyData: any;
     public static towerData: Anuto.Types.TowerData[];
-    static CELLS_SIZE: number;
+    public static timeStepFactor: number;
 
     public static padNumberToString(numberAsString: string): string {
 

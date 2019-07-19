@@ -14,14 +14,29 @@ export class BattleManager {
         const gameConfig: Anuto.Types.GameConfig = {
             timeStep: GameConstants.TIME_STEP,
             credits: GameConstants.INITIAL_CREDITS,
-            boardSize: GameConstants.BOARD_SIZE
+            boardSize: GameConstants.BOARD_SIZE,
+            enemiesPathCells : [
+                {r: 0, c: 5},
+                {r: 1, c: 5},
+                {r: 2, c: 5},
+                {r: 3, c: 5},
+                {r: 4, c: 5},
+                {r: 5, c: 5},
+                {r: 6, c: 5},
+                {r: 7, c: 5},
+                {r: 8, c: 5},
+                {r: 9, c: 5}
+            ]
         };
 
         GameVars.enemyData = enemyData;
         GameVars.towerData = towerData;
+        GameVars.timeStepFactor = 1;
 
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemyData, GameVars.towerData);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_TIME_FACTOR_UPDATED, BattleManager.onTimeFactorUpdated, BattleManager);
     }
 
     public static update(time: number, delta: number): void {
@@ -29,9 +44,9 @@ export class BattleManager {
         BattleManager.anutoEngine.update();
     }
 
-    public static setTimeStep(timeStep: number): void {
+    public static setTimeStepFactor(timeStepFactor: number): void {
 
-        BattleManager.anutoEngine.timeStep = timeStep;
+        BattleManager.anutoEngine.timeStep = GameConstants.TIME_STEP / timeStepFactor;
     }
 
     public static newWave(): void {
@@ -54,12 +69,22 @@ export class BattleManager {
         return BattleManager.anutoEngine.addTower("tower 1", position);
     }
 
-    public static onEnemySpawned(anutoEnemy: Anuto.Enemy, p: {r: number, c: number} ): void {
+    private static onTimeFactorUpdated(timeStep: number): void {
+        
+        GameVars.timeStepFactor = GameConstants.TIME_STEP / timeStep;
+    }
+
+    private static onEnemySpawned(anutoEnemy: Anuto.Enemy, p: {r: number, c: number} ): void {
         
         BoardContainer.currentInstance.addEnemy(anutoEnemy, p);
     }
 
-    public static onEnemyHit(id: number, damage: number): void {
+    private static onEnemyReachedExit(anutoEnemy: Anuto.Enemy): void {
+
+        BoardContainer.currentInstance.removeEnemy(anutoEnemy.id);
+    }
+
+    private static onEnemyHit(id: number, damage: number): void {
         //
     }
 }

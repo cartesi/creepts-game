@@ -2,6 +2,8 @@ module Anuto {
 
     export class Engine {
 
+        public static currentInstance: Engine;
+
         public waveActivated: boolean;
        
         private enemies: Enemy[];
@@ -10,23 +12,31 @@ module Anuto {
         private t: number;
         private eventDispatcher: EventDispatcher;
         private enemiesSpawner: EnemiesSpawner;
+
+        private timeStepUpdated: boolean;
      
         constructor (gameConfig: Types.GameConfig, enemyData: any, towerData: Types.TowerData[]) {
+
+            Engine.currentInstance = this;
  
             GameVars.credits = gameConfig.credits;
             GameVars.timeStep = gameConfig.timeStep;
+            GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
+
+            GameVars.enemyStartPosition = {r: GameVars.enemiesPathCells[0].r - 1, c: GameVars.enemiesPathCells[0].c};
+            GameVars.enemyEndPosition = {r: GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].r + 1, c: GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].c};
 
             GameVars.enemyData = enemyData;
             GameVars.towerData = towerData;
-
+            
             this.waveActivated = false;
             this.t = 0;
+            this.timeStepUpdated = false;
             GameVars.waveTotalEnemies = 0;
 
             this.eventDispatcher = new EventDispatcher();
             this.enemiesSpawner = new EnemiesSpawner();
          
-           
             GameVars.ticksCounter = 0;
 
             this.towers = [];
@@ -41,6 +51,11 @@ module Anuto {
             }
 
             this.t = t;
+
+            if (this.timeStepUpdated) {
+                this.timeStepUpdated = false;
+                this.eventDispatcher.dispatchEvent(new Event(Event.EVENT_TIME_FACTOR_UPDATED, [GameVars.timeStep]));
+            }
 
             this.enemies.forEach(function (enemy) {
                 enemy.update();
@@ -122,6 +137,22 @@ module Anuto {
             this.bullets.push(bullet);
         }
 
+        public onEnemyReachedExit(enemy: Enemy): void {
+
+            const i = this.enemies.indexOf(enemy);
+            this.enemies.splice(i, 1);
+            enemy.destroy();
+
+            this.eventDispatcher.dispatchEvent(new Event(Event.EVENT_ENEMY_REACHED_EXIT, [enemy]));
+        }
+
+        public onEnemyKilled(enemy: Enemy): void {
+
+            const i = this.enemies.indexOf(enemy);
+            this.enemies.splice(i, 1);
+            enemy.destroy();
+        }
+
         public addEventListener(type: string, listenerFunction: Function, scope: any): void {
             
             this.eventDispatcher.addEventListener(type, listenerFunction, scope);
@@ -143,7 +174,7 @@ module Anuto {
             if (enemy) {
 
                 this.enemies.push(enemy);
-                this.eventDispatcher.dispatchEvent(new Event(Event.EVENT_ENEMY_SPAWNED, [enemy, {r: 0, c: 0}]));
+                this.eventDispatcher.dispatchEvent(new Event(Event.EVENT_ENEMY_SPAWNED, [enemy, GameVars.enemyStartPosition]));
 
                 GameVars.enemiesCounter ++;
             }
@@ -162,6 +193,8 @@ module Anuto {
         public set timeStep(value: number) {
 
             GameVars.timeStep = value;
+
+            this.timeStepUpdated = true;
         }
     }
 }

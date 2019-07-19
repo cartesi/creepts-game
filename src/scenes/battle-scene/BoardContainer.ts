@@ -10,7 +10,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     private board: Board;
     private enemies: EnemyActor[];
     private towers: TowerActor[];
-    
+
     constructor(scene: Phaser.Scene) {
 
         super(scene);
@@ -26,14 +26,13 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.board = new Board(this.scene);
         this.add(this.board);
 
-
         // temporalmente añadimos una torre
         this.addTower(1, {r: 3, c: 2});
         this.addTower(1, {r: 6, c: 2});
     }
 
     public update(time: number, delta: number): void {
-        
+
         this.enemies.forEach(function (enemy) {
             enemy.update(time, delta);
         }); 
@@ -49,6 +48,23 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.add(enemy);
 
         this.enemies.push(enemy);
+    }
+
+    public removeEnemy(id: number): void {
+
+        let i: number;
+        for (i = 0; i < this.enemies.length; i ++) {
+            if (this.enemies[i].id === id) {
+               break; 
+            }
+        }
+
+        const enemy = this.enemies[i];
+
+        if (enemy) {
+            this.enemies.splice(i, 1);
+            enemy.destroy();
+        }
     }
 
     public addTower(id: number, position: {r: number, c: number}): void {

@@ -13,5 +13,8 @@ module Anuto {
 
         public static enemyData: any;
         public static towerData: Types.TowerData[];
+        public static enemiesPathCells: {r: number, c: number} [];
+        public static enemyStartPosition: {r: number, c: number};
+        public static enemyEndPosition: {r: number, c: number};
     }
 }
