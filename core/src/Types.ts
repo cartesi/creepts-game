@@ -1,12 +1,5 @@
 module Anuto.Types {
 
-    export type EnemyData = {
-        id: number,
-        name: string,
-        life: number,
-        speed: number
-    };
-
     export type TowerData = {
         id: number,
         name: string,

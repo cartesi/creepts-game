@@ -20,11 +20,27 @@ var Anuto;
 })(Anuto || (Anuto = {}));
 var Anuto;
 (function (Anuto) {
+    var EnemiesSpawner = (function () {
+        function EnemiesSpawner() {
+        }
+        EnemiesSpawner.prototype.getEnemy = function () {
+            var enemy = null;
+            if (Anuto.GameVars.ticksCounter % 25 === 0 && Anuto.GameVars.enemiesCounter < Anuto.GameVars.waveTotalEnemies) {
+                enemy = new Anuto.Enemy("enemy_1", Anuto.GameVars.ticksCounter);
+            }
+            return enemy;
+        };
+        return EnemiesSpawner;
+    }());
+    Anuto.EnemiesSpawner = EnemiesSpawner;
+})(Anuto || (Anuto = {}));
+var Anuto;
+(function (Anuto) {
     var Enemy = (function () {
-        function Enemy(id, creationTick) {
-            this.id = id;
-            this.life = 100;
-            this.speed = .1;
+        function Enemy(type, creationTick) {
+            this.type = type;
+            this.life = Anuto.GameVars.enemyData.enemies[this.type].life;
+            this.speed = Anuto.GameVars.enemyData.enemies[this.type].speed;
             this.creationTick = creationTick;
             this.x = 0;
             this.y = 0;
@@ -48,12 +64,16 @@ var Anuto;
 (function (Anuto) {
     var Engine = (function () {
         function Engine(gameConfig, enemyData, towerData) {
-            Anuto.GameVars.credits = 500;
+            Anuto.GameVars.credits = gameConfig.credits;
+            Anuto.GameVars.timeStep = gameConfig.timeStep;
+            Anuto.GameVars.enemyData = enemyData;
+            Anuto.GameVars.towerData = towerData;
             this.waveActivated = false;
             this.t = 0;
-            this.totalEnemies = 0;
+            Anuto.GameVars.waveTotalEnemies = 0;
             this.eventDispatcher = new Anuto.EventDispatcher();
-            Anuto.GameVars.timeStep = gameConfig.timeStep;
+            this.enemiesSpawner = new Anuto.EnemiesSpawner();
+            Anuto.GameVars.ticksCounter = 0;
             this.towers = [];
         }
         Engine.prototype.update = function () {
@@ -70,18 +90,18 @@ var Anuto;
             });
             this.checkCollisions();
             this.spawnEnemies();
-            this.ticksCounter++;
+            Anuto.GameVars.ticksCounter++;
         };
-        Engine.prototype.newWave = function (config) {
-            Anuto.GameVars.level = config.level;
+        Engine.prototype.newWave = function (waveConfig) {
+            Anuto.GameVars.level = waveConfig.level;
+            Anuto.GameVars.waveTotalEnemies = waveConfig.totalEnemies;
+            Anuto.GameVars.enemiesCounter = 0;
+            Anuto.GameVars.ticksCounter = 0;
             this.towers = [];
-            for (var i = 0; i < config.towers.length; i++) {
+            for (var i = 0; i < waveConfig.towers.length; i++) {
             }
             this.waveActivated = true;
-            this.ticksCounter = 0;
             this.t = Date.now();
-            this.totalEnemies = config.totalEnemies;
-            Anuto.GameVars.enemiesCounter = 0;
             this.enemies = [];
             this.bullets = [];
         };
@@ -98,7 +118,7 @@ var Anuto;
                 level: 0,
                 position: p
             };
-            var tower = new Anuto.Tower(towerConfig, this.ticksCounter);
+            var tower = new Anuto.Tower(towerConfig, Anuto.GameVars.ticksCounter);
             this.towers.push(tower);
             return tower;
         };
@@ -119,18 +139,23 @@ var Anuto;
         Engine.prototype.removeEventListener = function (type, listenerFunction) {
             this.eventDispatcher.removeEventListener(type, listenerFunction);
         };
-        Engine.prototype.removeEnentListener = function (event) {
-        };
         Engine.prototype.checkCollisions = function () {
         };
         Engine.prototype.spawnEnemies = function () {
-            if (this.ticksCounter % 25 === 0 && Anuto.GameVars.enemiesCounter < this.totalEnemies) {
-                var enemy = new Anuto.Enemy(1, this.ticksCounter);
+            var enemy = this.enemiesSpawner.getEnemy();
+            if (enemy) {
                 this.enemies.push(enemy);
-                Anuto.GameVars.enemiesCounter++;
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.EVENT_ENEMY_SPAWNED, [enemy, { r: 0, c: 0 }]));
+                Anuto.GameVars.enemiesCounter++;
             }
         };
+        Object.defineProperty(Engine.prototype, "ticksCounter", {
+            get: function () {
+                return Anuto.GameVars.ticksCounter;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Engine.prototype, "timeStep", {
             get: function () {
                 return Anuto.GameVars.timeStep;

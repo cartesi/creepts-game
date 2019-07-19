@@ -2,6 +2,7 @@ module Anuto {
 
     export class Enemy {
 
+        public type: string;
         public id: number;
         public life: number;
         public speed: number;
@@ -9,11 +10,12 @@ module Anuto {
         public y: number;
         public creationTick: number;
 
-        constructor (id: number, creationTick: number) {
+        constructor (type: string, creationTick: number) {
             
-            this.id = id;
-            this.life = 100;
-            this.speed = .1;
+            this.type = type;
+            this.life = GameVars.enemyData.enemies[this.type].life;
+            this.speed = GameVars.enemyData.enemies[this.type].speed;
+
             this.creationTick = creationTick;
 
             this.x = 0;

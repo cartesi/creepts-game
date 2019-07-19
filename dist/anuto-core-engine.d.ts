@@ -16,14 +16,21 @@ declare module Anuto {
     }
 }
 declare module Anuto {
+    class EnemiesSpawner {
+        constructor();
+        getEnemy(): Enemy;
+    }
+}
+declare module Anuto {
     class Enemy {
+        type: string;
         id: number;
         life: number;
         speed: number;
         x: number;
         y: number;
         creationTick: number;
-        constructor(id: number, creationTick: number);
+        constructor(type: string, creationTick: number);
         destroy(): void;
         update(): void;
         hit(damage: number): void;
@@ -31,17 +38,16 @@ declare module Anuto {
 }
 declare module Anuto {
     class Engine {
-        ticksCounter: number;
         waveActivated: boolean;
         private enemies;
         private towers;
         private bullets;
         private t;
-        private totalEnemies;
         private eventDispatcher;
-        constructor(gameConfig: Types.GameConfig, enemyData: Types.EnemyData[], towerData: Types.TowerData[]);
+        private enemiesSpawner;
+        constructor(gameConfig: Types.GameConfig, enemyData: any, towerData: Types.TowerData[]);
         update(): void;
-        newWave(config: Types.WaveConfig): void;
+        newWave(waveConfig: Types.WaveConfig): void;
         removeEnemy(enemy: Enemy): void;
         addTower(type: string, p: {
             r: number;
@@ -51,9 +57,9 @@ declare module Anuto {
         addBullet(bullet: Bullet): void;
         addEventListener(type: string, listenerFunction: Function, scope: any): void;
         removeEventListener(type: string, listenerFunction: any): void;
-        removeEnentListener(event: string): void;
         private checkCollisions;
         private spawnEnemies;
+        readonly ticksCounter: number;
         timeStep: number;
     }
 }
@@ -69,12 +75,16 @@ declare module Anuto {
         static credits: number;
         static score: number;
         static timeStep: number;
+        static ticksCounter: number;
+        static waveTotalEnemies: number;
         static level: number;
         static boardDimensions: {
             r: number;
             c: number;
         };
         static enemiesCounter: number;
+        static enemyData: any;
+        static towerData: Types.TowerData[];
     }
 }
 declare module Anuto {
@@ -97,12 +107,6 @@ declare module Anuto {
     }
 }
 declare module Anuto.Types {
-    type EnemyData = {
-        id: number;
-        name: string;
-        life: number;
-        speed: number;
-    };
     type TowerData = {
         id: number;
         name: string;
@@ -139,7 +143,7 @@ declare module Anuto {
         static readonly EVENT_ENEMY_SPAWNED = "enemy spawned";
         private type;
         private params;
-        constructor(type: string, params: any);
+        constructor(type: string, params?: any);
         getParams(): any;
         getType(): string;
     }

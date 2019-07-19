@@ -56,7 +56,6 @@ export class BattleManager {
 
     public static onEnemySpawned(anutoEnemy: Anuto.Enemy, p: {r: number, c: number} ): void {
         
-        console.log("ON ENEMY SPAWNED:", anutoEnemy.id, p);
         BoardContainer.currentInstance.addEnemy(anutoEnemy, p);
     }
 

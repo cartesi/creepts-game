@@ -12,7 +12,7 @@ module Anuto {
             
             if (GameVars.ticksCounter % 25 === 0 && GameVars.enemiesCounter < GameVars.waveTotalEnemies) {
 
-                enemy = new Enemy(1, GameVars.ticksCounter);
+                enemy = new Enemy("enemy_1", GameVars.ticksCounter);
             }
 
             return enemy;

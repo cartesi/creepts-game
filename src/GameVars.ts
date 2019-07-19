@@ -4,8 +4,9 @@ export class GameVars {
     public static gameData: GameData;
     public static currentScene: Phaser.Scene;
     public static paused: boolean;
-    public static enemyData: Anuto.Types.EnemyData[];
+    public static enemyData: any;
     public static towerData: Anuto.Types.TowerData[];
+    static CELLS_SIZE: number;
 
     public static padNumberToString(numberAsString: string): string {
 

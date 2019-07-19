@@ -1,15 +1,14 @@
-[
-    {
-        "id": 1,
-        "name": "enemy 1",
-        "life": 100,
-        "speed": 0.15
-    },
-    {
-        "id": 2,
-        "name": "enemy 2",
-        "life": 200,
-        "speed": 0.1
+{
+    "enemies": {
+        "enemy_1" : {
+            "id": 1,
+            "life": 80,
+            "speed": 0.15
+        },
+        "enemy_2" : {
+            "id": 1,
+            "life": 150,
+            "speed": 0.1
+        }
     }
-]
-
+}

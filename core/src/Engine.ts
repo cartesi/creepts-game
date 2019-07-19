@@ -11,9 +11,13 @@ module Anuto {
         private eventDispatcher: EventDispatcher;
         private enemiesSpawner: EnemiesSpawner;
      
-        constructor (gameConfig: Types.GameConfig, enemyData: Types.EnemyData[], towerData: Types.TowerData[]) {
+        constructor (gameConfig: Types.GameConfig, enemyData: any, towerData: Types.TowerData[]) {
  
-            GameVars.credits = 500;
+            GameVars.credits = gameConfig.credits;
+            GameVars.timeStep = gameConfig.timeStep;
+
+            GameVars.enemyData = enemyData;
+            GameVars.towerData = towerData;
 
             this.waveActivated = false;
             this.t = 0;
@@ -22,7 +26,7 @@ module Anuto {
             this.eventDispatcher = new EventDispatcher();
             this.enemiesSpawner = new EnemiesSpawner();
          
-            GameVars.timeStep = gameConfig.timeStep;
+           
             GameVars.ticksCounter = 0;
 
             this.towers = [];
@@ -53,25 +57,25 @@ module Anuto {
             GameVars.ticksCounter ++;
         }
 
-        public newWave(config: Types.WaveConfig): void {
+        public newWave(waveConfig: Types.WaveConfig): void {
 
-            GameVars.level = config.level;
+            GameVars.level = waveConfig.level;
 
+            GameVars.waveTotalEnemies = waveConfig.totalEnemies;
+            GameVars.enemiesCounter = 0;
+            GameVars.ticksCounter = 0;
+
+             // TODO: instanciar las torres
             this.towers = [];
 
-            for (let i = 0; i < config.towers.length; i ++) {
-                // TODO: instanciar las torres
+            for (let i = 0; i < waveConfig.towers.length; i ++) {
+               //
             }
 
             this.waveActivated = true;
 
-            GameVars.ticksCounter = 0;
-
             this.t = Date.now();
-            GameVars.waveTotalEnemies = config.totalEnemies;
-
-            GameVars.enemiesCounter = 0;
-            
+           
             this.enemies = [];
             this.bullets = [];
         }
@@ -139,7 +143,7 @@ module Anuto {
             if (enemy) {
 
                 this.enemies.push(enemy);
-                this.eventDispatcher.dispatchEvent(new Event(Event.EVENT_ENEMY_SPAWNED,  [enemy, {r: 0, c: 0}]));
+                this.eventDispatcher.dispatchEvent(new Event(Event.EVENT_ENEMY_SPAWNED, [enemy, {r: 0, c: 0}]));
 
                 GameVars.enemiesCounter ++;
             }

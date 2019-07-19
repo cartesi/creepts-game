@@ -10,5 +10,8 @@ module Anuto {
         public static level: number;
         public static boardDimensions: {r: number, c: number};
         public static enemiesCounter: number;
+
+        public static enemyData: any;
+        public static towerData: Types.TowerData[];
     }
 }

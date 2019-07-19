@@ -90,10 +90,10 @@
 /*!************************************!*\
   !*** ./assets/config/enemies.json ***!
   \************************************/
-/*! exports provided: 0, 1, default */
+/*! exports provided: enemies, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("[{\"id\":1,\"name\":\"enemy 1\",\"life\":100,\"speed\":0.15},{\"id\":2,\"name\":\"enemy 2\",\"life\":200,\"speed\":0.1}]");
+module.exports = JSON.parse("{\"enemies\":{\"enemy_1\":{\"id\":1,\"life\":100,\"speed\":0.15},\"enemy_2\":{\"id\":1,\"life\":150,\"speed\":0.1}}}");
 
 /***/ }),
 
@@ -551,7 +551,6 @@ var BattleManager = /** @class */ (function () {
         return BattleManager.anutoEngine.addTower("tower 1", position);
     };
     BattleManager.onEnemySpawned = function (anutoEnemy, p) {
-        console.log("ON ENEMY SPAWNED:", anutoEnemy.id, p);
         BoardContainer_1.BoardContainer.currentInstance.addEnemy(anutoEnemy, p);
     };
     BattleManager.onEnemyHit = function (id, damage) {
