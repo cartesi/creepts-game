@@ -5,7 +5,7 @@ export class GameVars {
     public static currentScene: Phaser.Scene;
     public static paused: boolean;
     public static enemyData: any;
-    public static towerData: Anuto.Types.TowerData[];
+    public static towerData: any;
     public static timeStepFactor: number;
 
     public static padNumberToString(numberAsString: string): string {

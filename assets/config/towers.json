@@ -1,13 +1,17 @@
-[
-    {
-        "id": 1,
-        "name": "tower 1",
-        "price": 150
-    },
-    {
-        "id": 2,
-        "name": "tower 2",
-        "price": 200
-    }
-]
 
+{
+    "towers": {
+                "tower_1" : {
+                    "price": 150,
+                    "damage": 100,
+                    "reload": 1,
+                    "range": 2.5
+                },
+                "tower_2" : {
+                    "price": 150,
+                    "damage": 100,
+                    "reload": 1,
+                    "range": 2.5
+                }
+    }
+}

@@ -2,6 +2,7 @@ import { EnemyActor } from "./actors/EnemyActor";
 import { TowerActor } from "./actors/TowerActor";
 import { Board } from "./Board";
 import { GameConstants } from "../../GameConstants";
+import { BulletActor } from "./actors/BulletActor";
 
 export class BoardContainer extends Phaser.GameObjects.Container {
 
@@ -10,6 +11,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     private board: Board;
     private enemies: EnemyActor[];
     private towers: TowerActor[];
+    private bullets: BulletActor[];
 
     constructor(scene: Phaser.Scene) {
 
@@ -22,13 +24,14 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         this.enemies = [];
         this.towers = [];
+        this.bullets = [];
 
         this.board = new Board(this.scene);
         this.add(this.board);
 
         // temporalmente añadimos una torre
-        this.addTower(1, {r: 3, c: 2});
-        this.addTower(1, {r: 6, c: 2});
+        this.addTower("tower_1", {r: 3, c: 2});
+        this.addTower("tower_1", {r: 6, c: 2});
     }
 
     public update(time: number, delta: number): void {
@@ -39,6 +42,10 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         this.towers.forEach(function (tower) {
             tower.update(time, delta);
+        }); 
+
+        this.bullets.forEach(function (bullet) {
+            bullet.update(time, delta);
         }); 
     }
 
@@ -67,12 +74,20 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    public addTower(id: number, position: {r: number, c: number}): void {
+    public addTower(name: string, position: {r: number, c: number}): void {
         
-        const tower = new TowerActor(this.scene, id, position);
+        const tower = new TowerActor(this.scene, name, position);
         this.add(tower);
 
         this.towers.push(tower);
+    }
+
+    public addBullet(anutoBullet: Anuto.Bullet): void {
+
+        const bullet = new BulletActor(this.scene, anutoBullet);
+        this.add(bullet);
+
+        this.bullets.push(bullet);
     }
 
     public upgradeTower(id: number): void {

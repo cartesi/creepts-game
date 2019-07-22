@@ -1,5 +1,3 @@
-
-
 module Anuto {
 
     export class Bullet {
@@ -14,7 +12,7 @@ module Anuto {
         private vy: number;
 
         // bullet speed in cells / tick
-        constructor (p: {r: number, c: number}, angle: number, speed: number) {
+        constructor (p: {r: number, c: number}, angle: number) {
             
             this.id = Bullet.id;
             Bullet.id ++;
@@ -22,8 +20,8 @@ module Anuto {
             this.x = p.c + .5;
             this.y = p.r + .5;
 
-            this.vx = speed * Math.cos(angle);
-            this.vy = speed * Math.sin(angle);
+            this.vx = GameConstants.BULLET_SPEED * Math.cos(angle);
+            this.vy = GameConstants.BULLET_SPEED * Math.sin(angle);
         }
 
         public update(): void {

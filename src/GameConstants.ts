@@ -6,7 +6,8 @@ export class GameConstants {
 
     public static readonly VERSION = "0.0";
     public static readonly DEVELOPMENT = false;
-    public static readonly DEBUG_MODE = false;
+    public static readonly SHOW_DEBUG_GEOMETRY = true;
+    public static readonly INTERPOLATE_TRAJECTORIES = true;
     public static readonly VERBOSE = false;
 
     public static readonly GAME_WIDTH = 768;

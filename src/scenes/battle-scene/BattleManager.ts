@@ -16,16 +16,16 @@ export class BattleManager {
             credits: GameConstants.INITIAL_CREDITS,
             boardSize: GameConstants.BOARD_SIZE,
             enemiesPathCells : [
-                {r: 0, c: 5},
-                {r: 1, c: 5},
-                {r: 2, c: 5},
-                {r: 3, c: 5},
-                {r: 4, c: 5},
-                {r: 5, c: 5},
-                {r: 6, c: 5},
-                {r: 7, c: 5},
-                {r: 8, c: 5},
-                {r: 9, c: 5}
+                {r: 0, c: 4},
+                {r: 1, c: 4},
+                {r: 2, c: 4},
+                {r: 3, c: 4},
+                {r: 4, c: 4},
+                {r: 5, c: 4},
+                {r: 6, c: 4},
+                {r: 7, c: 4},
+                {r: 8, c: 4},
+                {r: 9, c: 4}
             ]
         };
 
@@ -36,6 +36,8 @@ export class BattleManager {
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemyData, GameVars.towerData);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
+
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
     }
 
     public static update(time: number, delta: number): void {
@@ -65,9 +67,9 @@ export class BattleManager {
         BattleManager.anutoEngine.newWave(waveConfig);
     }
 
-    public static addTower(position: {r: number, c: number}): Anuto.Tower {
+    public static addTower(type, position: {r: number, c: number}): Anuto.Tower {
 
-        return BattleManager.anutoEngine.addTower("tower 1", position);
+        return BattleManager.anutoEngine.addTower(type, position);
     }
 
     private static onEnemySpawned(anutoEnemy: Anuto.Enemy, p: {r: number, c: number} ): void {
@@ -78,6 +80,11 @@ export class BattleManager {
     private static onEnemyReachedExit(anutoEnemy: Anuto.Enemy): void {
 
         BoardContainer.currentInstance.removeEnemy(anutoEnemy.id);
+    }
+
+    private static onBulletShot(abutoBullet: Anuto.Bullet, anutoTower: Anuto.Tower): void {
+
+        BoardContainer.currentInstance.addBullet(abutoBullet);
     }
 
     private static onEnemyHit(id: number, damage: number): void {

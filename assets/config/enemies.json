@@ -1,12 +1,10 @@
 {
     "enemies": {
                 "enemy_1" : {
-                    "id": 1,
                     "life": 80,
                     "speed": 0.1
                 },
                 "enemy_2" : {
-                    "id": 2,
                     "life": 150,
                     "speed": 0.075
                 }

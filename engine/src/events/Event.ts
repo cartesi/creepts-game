@@ -5,6 +5,7 @@ module Anuto {
         public static readonly EVENT_ENEMY_SPAWNED = "enemy spawned";
         public static readonly EVENT_ENEMY_KILLED = "enemy killed";
         public static readonly EVENT_ENEMY_REACHED_EXIT = "enemy reached exit";
+        public static readonly EVENT_BULLET_SHOT = "bullet shot";
 
         private type: string;
         private params: any;

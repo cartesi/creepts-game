@@ -20,13 +20,7 @@ module Anuto.Types {
 
     export type WaveConfig = {
         level: number;
-        towers: TowerConfig[];
+        towers: any;
         totalEnemies: number;
-    };
-
-    export type TowerConfig = {
-        id: string;
-        level: number;
-        position: {r: number, c: number};
     };
 }

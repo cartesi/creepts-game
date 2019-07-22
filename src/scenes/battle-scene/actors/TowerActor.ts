@@ -1,5 +1,6 @@
 import { GameConstants } from "../../../GameConstants";
 import { BattleManager } from "../BattleManager";
+import { GameVars } from "../../../GameVars";
 
 export class TowerActor extends Phaser.GameObjects.Container {
 
@@ -9,15 +10,16 @@ export class TowerActor extends Phaser.GameObjects.Container {
 
     private canon: Phaser.GameObjects.Graphics;
     private anutoTower: Anuto.Tower;
+    private rangeCircle: Phaser.GameObjects.Graphics;
 
-    constructor(scene: Phaser.Scene, id: number, position: {r: number, c: number}) {
+    constructor(scene: Phaser.Scene, type: string, position: {r: number, c: number}) {
 
         super(scene);
 
-        this.id = id;
+        this.id = GameVars.towerData.towers[type].id;
         this.p = position;
 
-        this.anutoTower = BattleManager.addTower(this.p);
+        this.anutoTower = BattleManager.addTower(type, this.p);
 
         this.x = GameConstants.CELLS_SIZE * (this.p.c + .5);
         this.y = GameConstants.CELLS_SIZE * (this.p.r + .5);
@@ -34,6 +36,13 @@ export class TowerActor extends Phaser.GameObjects.Container {
         this.canon.lineTo(GameConstants.CELLS_SIZE * .5, 0);
         this.canon.stroke();
         this.add(this.canon);
+
+        if (GameConstants.SHOW_DEBUG_GEOMETRY) {
+            this.rangeCircle = new Phaser.GameObjects.Graphics(this.scene);
+            this.rangeCircle.lineStyle(2, 0x00FF00);
+            this.rangeCircle.strokeCircle(0, 0, this.anutoTower.range * GameConstants.CELLS_SIZE);
+            this.add(this.rangeCircle);
+        }
     }
 
     public update(time: number, delta: number): void {

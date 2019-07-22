@@ -33,6 +33,8 @@ module Anuto {
 
         public update(): void {
 
+            // TODO: fijar a 5 decimales
+
             this.y += this.speed;
 
             if (this.y > GameVars.enemyEndPosition.r + .5) {
@@ -47,6 +49,14 @@ module Anuto {
             if (this.life <= 0) {
                 Engine.currentInstance.onEnemyKilled(this);
             }
+        }
+
+        public getNextPosition(ticks: number): {x: number, y: number} {
+
+            const x = this.x;
+            const y = this.y + this.speed * ticks;
+
+            return{x: x, y: y};
         }
     }
 }

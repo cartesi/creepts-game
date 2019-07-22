@@ -44,7 +44,14 @@ export class EnemyActor extends Phaser.GameObjects.Container {
 
     public update(time: number, delta: number): void {
 
-        let smoothFactor = GameVars.timeStepFactor === 4 ? .5 : .15;
+        let smoothFactor: number;
+
+        if (GameConstants.INTERPOLATE_TRAJECTORIES) {
+            smoothFactor = GameVars.timeStepFactor === 4 ? .5 : .15;
+        } else {
+            smoothFactor = 1;
+        }
+
         this.y += (this.anutoEnemy.y * GameConstants.CELLS_SIZE - this.y) * smoothFactor;
     }
 }

@@ -1,13 +1,15 @@
 declare module Anuto {
     class Bullet {
+        static id: number;
+        id: number;
         x: number;
         y: number;
-        private dx;
-        private dy;
+        private vx;
+        private vy;
         constructor(p: {
             r: number;
             c: number;
-        }, angle: number, speed: number);
+        }, angle: number);
         update(): void;
         getPositionNextTick(): {
             x: number;
@@ -35,19 +37,22 @@ declare module Anuto {
         destroy(): void;
         update(): void;
         hit(damage: number): void;
+        getNextPosition(ticks: number): {
+            x: number;
+            y: number;
+        };
     }
 }
 declare module Anuto {
     class Engine {
         static currentInstance: Engine;
         waveActivated: boolean;
-        private enemies;
         private towers;
         private bullets;
         private t;
         private eventDispatcher;
         private enemiesSpawner;
-        constructor(gameConfig: Types.GameConfig, enemyData: any, towerData: Types.TowerData[]);
+        constructor(gameConfig: Types.GameConfig, enemyData: any, towerData: any);
         update(): void;
         newWave(waveConfig: Types.WaveConfig): void;
         removeEnemy(enemy: Enemy): void;
@@ -56,7 +61,7 @@ declare module Anuto {
             c: number;
         }): Tower;
         sellTower(tower: Tower): void;
-        addBullet(bullet: Bullet): void;
+        addBullet(bullet: Bullet, tower: Tower): void;
         onEnemyReachedExit(enemy: Enemy): void;
         onEnemyKilled(enemy: Enemy): void;
         addEventListener(type: string, listenerFunction: Function, scope: any): void;
@@ -67,7 +72,11 @@ declare module Anuto {
         timeStep: number;
     }
 }
-declare module Anuto.Constants {
+declare module Anuto {
+    class GameConstants {
+        static readonly RELOAD_BASE_TICKS = 10;
+        static readonly BULLET_SPEED = 0.65;
+    }
 }
 declare module Anuto {
     class GameVars {
@@ -76,7 +85,7 @@ declare module Anuto {
         static timeStep: number;
         static ticksCounter: number;
         static enemyData: any;
-        static towerData: Types.TowerData[];
+        static towerData: any;
         static waveTotalEnemies: number;
         static level: number;
         static boardDimensions: {
@@ -96,6 +105,7 @@ declare module Anuto {
             r: number;
             c: number;
         };
+        static enemies: Enemy[];
     }
 }
 declare module Anuto {
@@ -112,11 +122,21 @@ declare module Anuto {
             r: number;
             c: number;
         };
+        x: number;
+        y: number;
         creationTick: number;
-        constructor(config: Types.TowerConfig, creationTick: number);
+        enemyWithinRange: Enemy;
+        private f;
+        private reloadTicks;
+        constructor(type: string, p: {
+            r: number;
+            c: number;
+        }, creationTick: number);
         destroy(): void;
         update(): void;
         upgrade(): void;
+        private shoot;
+        private getEnemyWithinRange;
     }
 }
 declare module Anuto.Types {
@@ -143,16 +163,8 @@ declare module Anuto.Types {
     };
     type WaveConfig = {
         level: number;
-        towers: TowerConfig[];
+        towers: any;
         totalEnemies: number;
-    };
-    type TowerConfig = {
-        id: string;
-        level: number;
-        position: {
-            r: number;
-            c: number;
-        };
     };
 }
 declare module Anuto {
@@ -160,6 +172,7 @@ declare module Anuto {
         static readonly EVENT_ENEMY_SPAWNED = "enemy spawned";
         static readonly EVENT_ENEMY_KILLED = "enemy killed";
         static readonly EVENT_ENEMY_REACHED_EXIT = "enemy reached exit";
+        static readonly EVENT_BULLET_SHOT = "bullet shot";
         private type;
         private params;
         constructor(type: string, params?: any);
@@ -175,5 +188,10 @@ declare module Anuto {
         addEventListener(type: string, listenerFunc: Function, scope: any): void;
         removeEventListener(type: string, listenerFunc: Function): void;
         dispatchEvent(evt: Event): void;
+    }
+}
+declare module Anuto {
+    class MathUtils {
+        static fixNumber(n: number): number;
     }
 }

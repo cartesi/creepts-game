@@ -101,10 +101,10 @@ module.exports = JSON.parse("{\"enemies\":{\"enemy_1\":{\"id\":1,\"life\":80,\"s
 /*!***********************************!*\
   !*** ./assets/config/towers.json ***!
   \***********************************/
-/*! exports provided: 0, 1, default */
+/*! exports provided: towers, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("[{\"id\":1,\"name\":\"tower 1\",\"price\":150},{\"id\":2,\"name\":\"tower 2\",\"price\":200}]");
+module.exports = JSON.parse("{\"towers\":{\"tower_1\":{\"id\":1,\"price\":150,\"damage\":100,\"reload\":1,\"range\":2.5},\"tower_2\":{\"price\":150,\"damage\":100,\"reload\":1,\"range\":2.5}}}");
 
 /***/ }),
 
@@ -563,8 +563,8 @@ var BattleManager = /** @class */ (function () {
         };
         BattleManager.anutoEngine.newWave(waveConfig);
     };
-    BattleManager.addTower = function (position) {
-        return BattleManager.anutoEngine.addTower("tower 1", position);
+    BattleManager.addTower = function (type, position) {
+        return BattleManager.anutoEngine.addTower(type, position);
     };
     BattleManager.onEnemySpawned = function (anutoEnemy, p) {
         BoardContainer_1.BoardContainer.currentInstance.addEnemy(anutoEnemy, p);
@@ -712,8 +712,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var EnemyActor_1 = __webpack_require__(/*! ./EnemyActor */ "./src/scenes/battle-scene/EnemyActor.ts");
-var TowerActor_1 = __webpack_require__(/*! ./TowerActor */ "./src/scenes/battle-scene/TowerActor.ts");
+var EnemyActor_1 = __webpack_require__(/*! ./actors/EnemyActor */ "./src/scenes/battle-scene/actors/EnemyActor.ts");
+var TowerActor_1 = __webpack_require__(/*! ./actors/TowerActor */ "./src/scenes/battle-scene/actors/TowerActor.ts");
 var Board_1 = __webpack_require__(/*! ./Board */ "./src/scenes/battle-scene/Board.ts");
 var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
 var BoardContainer = /** @class */ (function (_super) {
@@ -728,8 +728,8 @@ var BoardContainer = /** @class */ (function (_super) {
         _this.board = new Board_1.Board(_this.scene);
         _this.add(_this.board);
         // temporalmente añadimos una torre
-        _this.addTower(1, { r: 3, c: 2 });
-        _this.addTower(1, { r: 6, c: 2 });
+        _this.addTower("tower_1", { r: 3, c: 2 });
+        _this.addTower("tower_1", { r: 6, c: 2 });
         return _this;
     }
     BoardContainer.prototype.update = function (time, delta) {
@@ -758,8 +758,8 @@ var BoardContainer = /** @class */ (function (_super) {
             enemy.destroy();
         }
     };
-    BoardContainer.prototype.addTower = function (id, position) {
-        var tower = new TowerActor_1.TowerActor(this.scene, id, position);
+    BoardContainer.prototype.addTower = function (name, position) {
+        var tower = new TowerActor_1.TowerActor(this.scene, name, position);
         this.add(tower);
         this.towers.push(tower);
     };
@@ -772,65 +772,6 @@ var BoardContainer = /** @class */ (function (_super) {
     return BoardContainer;
 }(Phaser.GameObjects.Container));
 exports.BoardContainer = BoardContainer;
-
-
-/***/ }),
-
-/***/ "./src/scenes/battle-scene/EnemyActor.ts":
-/*!***********************************************!*\
-  !*** ./src/scenes/battle-scene/EnemyActor.ts ***!
-  \***********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
-var GameVars_1 = __webpack_require__(/*! ../../GameVars */ "./src/GameVars.ts");
-var EnemyActor = /** @class */ (function (_super) {
-    __extends(EnemyActor, _super);
-    function EnemyActor(scene, anutoEnemy, position) {
-        var _this = _super.call(this, scene) || this;
-        _this.anutoEnemy = anutoEnemy;
-        _this.id = _this.anutoEnemy.id;
-        _this.type = _this.anutoEnemy.type;
-        if (_this.type === "enemy_1") {
-            var s = GameConstants_1.GameConstants.CELLS_SIZE * .75;
-            _this.img = new Phaser.GameObjects.Graphics(_this.scene);
-            _this.img.fillStyle(0xFF0000);
-            _this.img.fillRect(-s / 2, -s / 2, s, s);
-        }
-        else if (_this.type === "enemy_1") {
-            //
-        }
-        _this.add(_this.img);
-        _this.x = GameConstants_1.GameConstants.CELLS_SIZE * (position.c + .5);
-        _this.y = GameConstants_1.GameConstants.CELLS_SIZE * (position.r + .5);
-        return _this;
-    }
-    EnemyActor.prototype.update = function (time, delta) {
-        // this.y += this.speed * delta / (1000 / 60) * GameVars.timeStepFactor;
-        // this.y = this.anutoEnemy.y * GameConstants.CELLS_SIZE;
-        var smoothFactor = GameVars_1.GameVars.timeStepFactor === 4 ? .5 : .15;
-        this.y += (this.anutoEnemy.y * GameConstants_1.GameConstants.CELLS_SIZE - this.y) * smoothFactor;
-    };
-    return EnemyActor;
-}(Phaser.GameObjects.Container));
-exports.EnemyActor = EnemyActor;
 
 
 /***/ }),
@@ -931,10 +872,10 @@ exports.HUD = HUD;
 
 /***/ }),
 
-/***/ "./src/scenes/battle-scene/TowerActor.ts":
-/*!***********************************************!*\
-  !*** ./src/scenes/battle-scene/TowerActor.ts ***!
-  \***********************************************/
+/***/ "./src/scenes/battle-scene/actors/EnemyActor.ts":
+/*!******************************************************!*\
+  !*** ./src/scenes/battle-scene/actors/EnemyActor.ts ***!
+  \******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -954,15 +895,126 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
-var BattleManager_1 = __webpack_require__(/*! ./BattleManager */ "./src/scenes/battle-scene/BattleManager.ts");
+var GameConstants_1 = __webpack_require__(/*! ../../../GameConstants */ "./src/GameConstants.ts");
+var GameVars_1 = __webpack_require__(/*! ../../../GameVars */ "./src/GameVars.ts");
+var LifeBar_1 = __webpack_require__(/*! ./LifeBar */ "./src/scenes/battle-scene/actors/LifeBar.ts");
+var EnemyActor = /** @class */ (function (_super) {
+    __extends(EnemyActor, _super);
+    function EnemyActor(scene, anutoEnemy, position) {
+        var _this = _super.call(this, scene) || this;
+        _this.anutoEnemy = anutoEnemy;
+        _this.id = _this.anutoEnemy.id;
+        _this.type = _this.anutoEnemy.type;
+        if (_this.type === "enemy_1") {
+            var s = GameConstants_1.GameConstants.CELLS_SIZE * .75;
+            _this.img = new Phaser.GameObjects.Graphics(_this.scene);
+            _this.img.fillStyle(0xFF0000);
+            _this.img.fillRect(-s / 2, -s / 2, s, s);
+        }
+        else if (_this.type === "enemy_1") {
+            //
+        }
+        _this.add(_this.img);
+        _this.lifeBar = new LifeBar_1.LifeBar(_this.scene);
+        _this.lifeBar.y = -26;
+        _this.lifeBar.x -= LifeBar_1.LifeBar.WIDTH / 2;
+        _this.add(_this.lifeBar);
+        _this.x = GameConstants_1.GameConstants.CELLS_SIZE * (position.c + .5);
+        _this.y = GameConstants_1.GameConstants.CELLS_SIZE * (position.r + .5);
+        return _this;
+    }
+    EnemyActor.prototype.update = function (time, delta) {
+        var smoothFactor = GameVars_1.GameVars.timeStepFactor === 4 ? .5 : .15;
+        this.y += (this.anutoEnemy.y * GameConstants_1.GameConstants.CELLS_SIZE - this.y) * smoothFactor;
+    };
+    return EnemyActor;
+}(Phaser.GameObjects.Container));
+exports.EnemyActor = EnemyActor;
+
+
+/***/ }),
+
+/***/ "./src/scenes/battle-scene/actors/LifeBar.ts":
+/*!***************************************************!*\
+  !*** ./src/scenes/battle-scene/actors/LifeBar.ts ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var LifeBar = /** @class */ (function (_super) {
+    __extends(LifeBar, _super);
+    function LifeBar(scene) {
+        var _this = _super.call(this, scene) || this;
+        var background = new Phaser.GameObjects.Graphics(_this.scene);
+        background.fillStyle(0xFF000);
+        background.fillRect(0, 0, 40, 4);
+        _this.add(background);
+        _this.bar = new Phaser.GameObjects.Graphics(_this.scene);
+        _this.bar.fillStyle(0xFF000);
+        _this.bar.fillRect(0, 0, 40, 4);
+        _this.add(_this.bar);
+        return _this;
+    }
+    LifeBar.prototype.updateValue = function (value) {
+        //
+    };
+    LifeBar.WIDTH = 40;
+    return LifeBar;
+}(Phaser.GameObjects.Container));
+exports.LifeBar = LifeBar;
+
+
+/***/ }),
+
+/***/ "./src/scenes/battle-scene/actors/TowerActor.ts":
+/*!******************************************************!*\
+  !*** ./src/scenes/battle-scene/actors/TowerActor.ts ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var GameConstants_1 = __webpack_require__(/*! ../../../GameConstants */ "./src/GameConstants.ts");
+var BattleManager_1 = __webpack_require__(/*! ../BattleManager */ "./src/scenes/battle-scene/BattleManager.ts");
+var GameVars_1 = __webpack_require__(/*! ../../../GameVars */ "./src/GameVars.ts");
 var TowerActor = /** @class */ (function (_super) {
     __extends(TowerActor, _super);
-    function TowerActor(scene, id, position) {
+    function TowerActor(scene, type, position) {
         var _this = _super.call(this, scene) || this;
-        _this.id = id;
+        _this.id = GameVars_1.GameVars.towerData.towers[type].id;
         _this.p = position;
-        _this.anutoTower = BattleManager_1.BattleManager.addTower(_this.p);
+        _this.anutoTower = BattleManager_1.BattleManager.addTower(type, _this.p);
         _this.x = GameConstants_1.GameConstants.CELLS_SIZE * (_this.p.c + .5);
         _this.y = GameConstants_1.GameConstants.CELLS_SIZE * (_this.p.r + .5);
         var tmpImage = new Phaser.GameObjects.Image(_this.scene, 0, 0, "texture_atlas_1", "tmp-tower");
@@ -971,7 +1023,7 @@ var TowerActor = /** @class */ (function (_super) {
         tmpImage.on("pointerdown", _this.onDownTower, _this);
         _this.add(tmpImage);
         _this.canon = new Phaser.GameObjects.Graphics(_this.scene);
-        _this.canon.lineStyle(2, 0x000000);
+        _this.canon.lineStyle(3, 0x000000);
         _this.canon.moveTo(0, 0);
         _this.canon.lineTo(GameConstants_1.GameConstants.CELLS_SIZE * .5, 0);
         _this.canon.stroke();
