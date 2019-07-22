@@ -2,7 +2,7 @@ module Anuto {
 
     export class Tower {
 
-        public static id = 0;
+        public static id: number;
 
         public id: number;
         public type: string;

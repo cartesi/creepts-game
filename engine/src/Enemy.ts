@@ -2,7 +2,7 @@ module Anuto {
 
     export class Enemy {
 
-        public static id = 0;
+        public static id: number;
 
         public type: string;
         public id: number;
@@ -45,7 +45,6 @@ module Anuto {
             this.life -= damage;
 
             if (this.life <= 0) {
-                // notificar al Engine
                 Engine.currentInstance.onEnemyKilled(this);
             }
         }

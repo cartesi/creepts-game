@@ -1,5 +1,5 @@
-import { EnemyActor } from "./EnemyActor";
-import { TowerActor } from "./TowerActor";
+import { EnemyActor } from "./actors/EnemyActor";
+import { TowerActor } from "./actors/TowerActor";
 import { Board } from "./Board";
 import { GameConstants } from "../../GameConstants";
 

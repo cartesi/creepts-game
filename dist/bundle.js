@@ -93,7 +93,7 @@
 /*! exports provided: enemies, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"enemies\":{\"enemy_1\":{\"id\":1,\"life\":100,\"speed\":0.15},\"enemy_2\":{\"id\":1,\"life\":150,\"speed\":0.1}}}");
+module.exports = JSON.parse("{\"enemies\":{\"enemy_1\":{\"id\":1,\"life\":80,\"speed\":0.1},\"enemy_2\":{\"id\":2,\"life\":150,\"speed\":0.075}}}");
 
 /***/ }),
 
@@ -178,6 +178,7 @@ var GameConstants = /** @class */ (function () {
     GameConstants.VERBOSE = false;
     GameConstants.GAME_WIDTH = 768;
     GameConstants.GAME_HEIGHT = 1024;
+    // el tick del engine en milisegundos
     GameConstants.TIME_STEP = 100;
     GameConstants.BOARD_SIZE = { r: 10, c: 10 };
     GameConstants.INITIAL_CREDITS = 500;
@@ -523,18 +524,33 @@ var BattleManager = /** @class */ (function () {
         var gameConfig = {
             timeStep: GameConstants_1.GameConstants.TIME_STEP,
             credits: GameConstants_1.GameConstants.INITIAL_CREDITS,
-            boardSize: GameConstants_1.GameConstants.BOARD_SIZE
+            boardSize: GameConstants_1.GameConstants.BOARD_SIZE,
+            enemiesPathCells: [
+                { r: 0, c: 5 },
+                { r: 1, c: 5 },
+                { r: 2, c: 5 },
+                { r: 3, c: 5 },
+                { r: 4, c: 5 },
+                { r: 5, c: 5 },
+                { r: 6, c: 5 },
+                { r: 7, c: 5 },
+                { r: 8, c: 5 },
+                { r: 9, c: 5 }
+            ]
         };
         GameVars_1.GameVars.enemyData = enemies_json_1.default;
         GameVars_1.GameVars.towerData = towers_json_1.default;
+        GameVars_1.GameVars.timeStepFactor = 1;
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars_1.GameVars.enemyData, GameVars_1.GameVars.towerData);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
     };
     BattleManager.update = function (time, delta) {
         BattleManager.anutoEngine.update();
     };
-    BattleManager.setTimeStep = function (timeStep) {
-        BattleManager.anutoEngine.timeStep = timeStep;
+    BattleManager.setTimeStepFactor = function (timeStepFactor) {
+        GameVars_1.GameVars.timeStepFactor = timeStepFactor;
+        BattleManager.anutoEngine.timeStep = GameConstants_1.GameConstants.TIME_STEP / timeStepFactor;
     };
     BattleManager.newWave = function () {
         if (BattleManager.anutoEngine.waveActivated) {
@@ -552,6 +568,9 @@ var BattleManager = /** @class */ (function () {
     };
     BattleManager.onEnemySpawned = function (anutoEnemy, p) {
         BoardContainer_1.BoardContainer.currentInstance.addEnemy(anutoEnemy, p);
+    };
+    BattleManager.onEnemyReachedExit = function (anutoEnemy) {
+        BoardContainer_1.BoardContainer.currentInstance.removeEnemy(anutoEnemy.id);
     };
     BattleManager.onEnemyHit = function (id, damage) {
         //
@@ -726,6 +745,19 @@ var BoardContainer = /** @class */ (function (_super) {
         this.add(enemy);
         this.enemies.push(enemy);
     };
+    BoardContainer.prototype.removeEnemy = function (id) {
+        var i;
+        for (i = 0; i < this.enemies.length; i++) {
+            if (this.enemies[i].id === id) {
+                break;
+            }
+        }
+        var enemy = this.enemies[i];
+        if (enemy) {
+            this.enemies.splice(i, 1);
+            enemy.destroy();
+        }
+    };
     BoardContainer.prototype.addTower = function (id, position) {
         var tower = new TowerActor_1.TowerActor(this.scene, id, position);
         this.add(tower);
@@ -768,19 +800,33 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
+var GameVars_1 = __webpack_require__(/*! ../../GameVars */ "./src/GameVars.ts");
 var EnemyActor = /** @class */ (function (_super) {
     __extends(EnemyActor, _super);
     function EnemyActor(scene, anutoEnemy, position) {
         var _this = _super.call(this, scene) || this;
-        _this.id = anutoEnemy.id;
         _this.anutoEnemy = anutoEnemy;
+        _this.id = _this.anutoEnemy.id;
+        _this.type = _this.anutoEnemy.type;
+        if (_this.type === "enemy_1") {
+            var s = GameConstants_1.GameConstants.CELLS_SIZE * .75;
+            _this.img = new Phaser.GameObjects.Graphics(_this.scene);
+            _this.img.fillStyle(0xFF0000);
+            _this.img.fillRect(-s / 2, -s / 2, s, s);
+        }
+        else if (_this.type === "enemy_1") {
+            //
+        }
+        _this.add(_this.img);
         _this.x = GameConstants_1.GameConstants.CELLS_SIZE * (position.c + .5);
         _this.y = GameConstants_1.GameConstants.CELLS_SIZE * (position.r + .5);
         return _this;
-        // console.log(this.anutoEnemy);
     }
     EnemyActor.prototype.update = function (time, delta) {
-        // console.log("UPDATE ENEMIGO:", this.id, this.anutoEnemy.y);
+        // this.y += this.speed * delta / (1000 / 60) * GameVars.timeStepFactor;
+        // this.y = this.anutoEnemy.y * GameConstants.CELLS_SIZE;
+        var smoothFactor = GameVars_1.GameVars.timeStepFactor === 4 ? .5 : .15;
+        this.y += (this.anutoEnemy.y * GameConstants_1.GameConstants.CELLS_SIZE - this.y) * smoothFactor;
     };
     return EnemyActor;
 }(Phaser.GameObjects.Container));
@@ -814,7 +860,6 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Utils_1 = __webpack_require__(/*! ../../utils/Utils */ "./src/utils/Utils.ts");
 var BattleManager_1 = __webpack_require__(/*! ./BattleManager */ "./src/scenes/battle-scene/BattleManager.ts");
-var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
 var GUI = /** @class */ (function (_super) {
     __extends(GUI, _super);
     function GUI(scene) {
@@ -832,15 +877,14 @@ var GUI = /** @class */ (function (_super) {
         return _this;
     }
     GUI.prototype.onClick4x = function () {
-        console.log("CLICK!");
         this.timeStepMultiplierButton1x.visible = true;
         this.timeStepMultiplierButton4x.visible = false;
-        BattleManager_1.BattleManager.setTimeStep(GameConstants_1.GameConstants.TIME_STEP / 4);
+        BattleManager_1.BattleManager.setTimeStepFactor(4);
     };
     GUI.prototype.onClick1x = function () {
         this.timeStepMultiplierButton1x.visible = false;
         this.timeStepMultiplierButton4x.visible = true;
-        BattleManager_1.BattleManager.setTimeStep(GameConstants_1.GameConstants.TIME_STEP);
+        BattleManager_1.BattleManager.setTimeStepFactor(1);
     };
     GUI.prototype.onClickNextWave = function () {
         BattleManager_1.BattleManager.newWave();

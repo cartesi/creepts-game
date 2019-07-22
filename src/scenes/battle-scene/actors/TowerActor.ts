@@ -1,5 +1,5 @@
-import { GameConstants } from "../../GameConstants";
-import { BattleManager } from "./BattleManager";
+import { GameConstants } from "../../../GameConstants";
+import { BattleManager } from "../BattleManager";
 
 export class TowerActor extends Phaser.GameObjects.Container {
 
@@ -29,7 +29,7 @@ export class TowerActor extends Phaser.GameObjects.Container {
         this.add(tmpImage);
 
         this.canon = new Phaser.GameObjects.Graphics(this.scene);
-        this.canon.lineStyle(2, 0x000000);
+        this.canon.lineStyle(3, 0x000000);
         this.canon.moveTo(0, 0);
         this.canon.lineTo(GameConstants.CELLS_SIZE * .5, 0);
         this.canon.stroke();

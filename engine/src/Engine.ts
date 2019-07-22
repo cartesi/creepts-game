@@ -38,6 +38,7 @@ module Anuto {
 
             Enemy.id = 0;
             Tower.id = 0;
+            Bullet.id = 0;
 
             this.towers = [];
         }
@@ -146,6 +147,8 @@ module Anuto {
             const i = this.enemies.indexOf(enemy);
             this.enemies.splice(i, 1);
             enemy.destroy();
+
+            this.eventDispatcher.dispatchEvent(new Event(Event.EVENT_ENEMY_KILLED, [enemy]));
         }
 
         public addEventListener(type: string, listenerFunction: Function, scope: any): void {
