@@ -90,6 +90,25 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.bullets.push(bullet);
     }
 
+    public removeBullet(anutoBullet: Anuto.Bullet): void {
+
+        let bullet: BulletActor = null;
+
+        for (let i = 0; i < this.bullets.length; i ++) {
+
+            if (this.bullets[i].anutoBullet.id === anutoBullet.id) {
+                bullet = this.bullets[i];
+                break;
+            }
+        }
+
+        if (bullet) {
+            const i = this.bullets.indexOf(bullet);
+            this.bullets.splice(i, 1);
+            bullet.destroy();
+        }
+    }
+
     public upgradeTower(id: number): void {
         //
     }

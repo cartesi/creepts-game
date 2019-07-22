@@ -2,10 +2,11 @@ module Anuto {
 
     export class Event {
 
-        public static readonly EVENT_ENEMY_SPAWNED = "enemy spawned";
-        public static readonly EVENT_ENEMY_KILLED = "enemy killed";
-        public static readonly EVENT_ENEMY_REACHED_EXIT = "enemy reached exit";
-        public static readonly EVENT_BULLET_SHOT = "bullet shot";
+        public static readonly ENEMY_SPAWNED = "enemy spawned";
+        public static readonly ENEMY_KILLED = "enemy killed";
+        public static readonly ENEMY_HIT = "enemy hit";
+        public static readonly ENEMY_REACHED_EXIT = "enemy reached exit";
+        public static readonly BULLET_SHOT = "bullet shot";
 
         private type: string;
         private params: any;

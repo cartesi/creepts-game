@@ -12,6 +12,8 @@ module Anuto {
         public y: number;
         public creationTick: number;
 
+        public boundingRadius: number;
+
         constructor (type: string, creationTick: number) {
             
             this.id = Enemy.id;
@@ -25,6 +27,8 @@ module Anuto {
 
             this.x = GameVars.enemyStartPosition.c + .5;
             this.y = GameVars.enemyStartPosition.r + .5;
+
+            this.boundingRadius = .35; // en proporcion al tamaño de las celdas
         }
 
         public destroy(): void {

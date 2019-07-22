@@ -93,7 +93,7 @@
 /*! exports provided: enemies, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"enemies\":{\"enemy_1\":{\"id\":1,\"life\":80,\"speed\":0.1},\"enemy_2\":{\"id\":2,\"life\":150,\"speed\":0.075}}}");
+module.exports = JSON.parse("{\"enemies\":{\"enemy_1\":{\"life\":80,\"speed\":0.1},\"enemy_2\":{\"life\":150,\"speed\":0.075}}}");
 
 /***/ }),
 
@@ -104,7 +104,7 @@ module.exports = JSON.parse("{\"enemies\":{\"enemy_1\":{\"id\":1,\"life\":80,\"s
 /*! exports provided: towers, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"towers\":{\"tower_1\":{\"id\":1,\"price\":150,\"damage\":100,\"reload\":1,\"range\":2.5},\"tower_2\":{\"price\":150,\"damage\":100,\"reload\":1,\"range\":2.5}}}");
+module.exports = JSON.parse("{\"towers\":{\"tower_1\":{\"price\":150,\"damage\":100,\"reload\":1,\"range\":2.5},\"tower_2\":{\"price\":150,\"damage\":100,\"reload\":1,\"range\":2.5}}}");
 
 /***/ }),
 
@@ -174,7 +174,8 @@ var GameConstants = /** @class */ (function () {
     }
     GameConstants.VERSION = "0.0";
     GameConstants.DEVELOPMENT = false;
-    GameConstants.DEBUG_MODE = false;
+    GameConstants.SHOW_DEBUG_GEOMETRY = true;
+    GameConstants.INTERPOLATE_TRAJECTORIES = true;
     GameConstants.VERBOSE = false;
     GameConstants.GAME_WIDTH = 768;
     GameConstants.GAME_HEIGHT = 1024;
@@ -526,24 +527,27 @@ var BattleManager = /** @class */ (function () {
             credits: GameConstants_1.GameConstants.INITIAL_CREDITS,
             boardSize: GameConstants_1.GameConstants.BOARD_SIZE,
             enemiesPathCells: [
-                { r: 0, c: 5 },
-                { r: 1, c: 5 },
-                { r: 2, c: 5 },
-                { r: 3, c: 5 },
-                { r: 4, c: 5 },
-                { r: 5, c: 5 },
-                { r: 6, c: 5 },
-                { r: 7, c: 5 },
-                { r: 8, c: 5 },
-                { r: 9, c: 5 }
+                { r: 0, c: 4 },
+                { r: 1, c: 4 },
+                { r: 2, c: 4 },
+                { r: 3, c: 4 },
+                { r: 4, c: 4 },
+                { r: 5, c: 4 },
+                { r: 6, c: 4 },
+                { r: 7, c: 4 },
+                { r: 8, c: 4 },
+                { r: 9, c: 4 }
             ]
         };
         GameVars_1.GameVars.enemyData = enemies_json_1.default;
         GameVars_1.GameVars.towerData = towers_json_1.default;
         GameVars_1.GameVars.timeStepFactor = 1;
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars_1.GameVars.enemyData, GameVars_1.GameVars.towerData);
-        BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_HIT, BattleManager.onEnemyHit, BattleManager);
     };
     BattleManager.update = function (time, delta) {
         BattleManager.anutoEngine.update();
@@ -572,8 +576,11 @@ var BattleManager = /** @class */ (function () {
     BattleManager.onEnemyReachedExit = function (anutoEnemy) {
         BoardContainer_1.BoardContainer.currentInstance.removeEnemy(anutoEnemy.id);
     };
-    BattleManager.onEnemyHit = function (id, damage) {
-        //
+    BattleManager.onBulletShot = function (anutoBullet, anutoTower) {
+        BoardContainer_1.BoardContainer.currentInstance.addBullet(anutoBullet);
+    };
+    BattleManager.onEnemyHit = function (anutoEnemy, anutoBullet) {
+        BoardContainer_1.BoardContainer.currentInstance.removeBullet(anutoBullet);
     };
     return BattleManager;
 }());
@@ -716,6 +723,7 @@ var EnemyActor_1 = __webpack_require__(/*! ./actors/EnemyActor */ "./src/scenes/
 var TowerActor_1 = __webpack_require__(/*! ./actors/TowerActor */ "./src/scenes/battle-scene/actors/TowerActor.ts");
 var Board_1 = __webpack_require__(/*! ./Board */ "./src/scenes/battle-scene/Board.ts");
 var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
+var BulletActor_1 = __webpack_require__(/*! ./actors/BulletActor */ "./src/scenes/battle-scene/actors/BulletActor.ts");
 var BoardContainer = /** @class */ (function (_super) {
     __extends(BoardContainer, _super);
     function BoardContainer(scene) {
@@ -725,6 +733,7 @@ var BoardContainer = /** @class */ (function (_super) {
         _this.y = GameConstants_1.GameConstants.GAME_HEIGHT / 2 - GameConstants_1.GameConstants.CELLS_SIZE * GameConstants_1.GameConstants.BOARD_SIZE.r / 2;
         _this.enemies = [];
         _this.towers = [];
+        _this.bullets = [];
         _this.board = new Board_1.Board(_this.scene);
         _this.add(_this.board);
         // temporalmente añadimos una torre
@@ -738,6 +747,9 @@ var BoardContainer = /** @class */ (function (_super) {
         });
         this.towers.forEach(function (tower) {
             tower.update(time, delta);
+        });
+        this.bullets.forEach(function (bullet) {
+            bullet.update(time, delta);
         });
     };
     BoardContainer.prototype.addEnemy = function (anutoEnemy, position) {
@@ -762,6 +774,25 @@ var BoardContainer = /** @class */ (function (_super) {
         var tower = new TowerActor_1.TowerActor(this.scene, name, position);
         this.add(tower);
         this.towers.push(tower);
+    };
+    BoardContainer.prototype.addBullet = function (anutoBullet) {
+        var bullet = new BulletActor_1.BulletActor(this.scene, anutoBullet);
+        this.add(bullet);
+        this.bullets.push(bullet);
+    };
+    BoardContainer.prototype.removeBullet = function (anutoBullet) {
+        var bullet = null;
+        for (var i = 0; i < this.bullets.length; i++) {
+            if (this.bullets[i].anutoBullet.id === anutoBullet.id) {
+                bullet = this.bullets[i];
+                break;
+            }
+        }
+        if (bullet) {
+            var i = this.bullets.indexOf(bullet);
+            this.bullets.splice(i, 1);
+            bullet.destroy();
+        }
     };
     BoardContainer.prototype.upgradeTower = function (id) {
         //
@@ -872,6 +903,57 @@ exports.HUD = HUD;
 
 /***/ }),
 
+/***/ "./src/scenes/battle-scene/actors/BulletActor.ts":
+/*!*******************************************************!*\
+  !*** ./src/scenes/battle-scene/actors/BulletActor.ts ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var GameConstants_1 = __webpack_require__(/*! ../../../GameConstants */ "./src/GameConstants.ts");
+var BulletActor = /** @class */ (function (_super) {
+    __extends(BulletActor, _super);
+    function BulletActor(scene, anutoBullet) {
+        var _this = _super.call(this, scene, 0, 0, "texture_atlas_1", "bullet") || this;
+        _this.anutoBullet = anutoBullet;
+        _this.x = _this.anutoBullet.x * GameConstants_1.GameConstants.CELLS_SIZE;
+        _this.y = _this.anutoBullet.y * GameConstants_1.GameConstants.CELLS_SIZE;
+        return _this;
+    }
+    BulletActor.prototype.update = function (time, delta) {
+        var smoothFactor;
+        if (GameConstants_1.GameConstants.INTERPOLATE_TRAJECTORIES) {
+            smoothFactor = .15;
+        }
+        else {
+            smoothFactor = 1;
+        }
+        this.x += (this.anutoBullet.x * GameConstants_1.GameConstants.CELLS_SIZE - this.x) * smoothFactor;
+        this.y += (this.anutoBullet.y * GameConstants_1.GameConstants.CELLS_SIZE - this.y) * smoothFactor;
+    };
+    return BulletActor;
+}(Phaser.GameObjects.Image));
+exports.BulletActor = BulletActor;
+
+
+/***/ }),
+
 /***/ "./src/scenes/battle-scene/actors/EnemyActor.ts":
 /*!******************************************************!*\
   !*** ./src/scenes/battle-scene/actors/EnemyActor.ts ***!
@@ -924,7 +1006,13 @@ var EnemyActor = /** @class */ (function (_super) {
         return _this;
     }
     EnemyActor.prototype.update = function (time, delta) {
-        var smoothFactor = GameVars_1.GameVars.timeStepFactor === 4 ? .5 : .15;
+        var smoothFactor;
+        if (GameConstants_1.GameConstants.INTERPOLATE_TRAJECTORIES) {
+            smoothFactor = GameVars_1.GameVars.timeStepFactor === 4 ? .5 : .15;
+        }
+        else {
+            smoothFactor = 1;
+        }
         this.y += (this.anutoEnemy.y * GameConstants_1.GameConstants.CELLS_SIZE - this.y) * smoothFactor;
     };
     return EnemyActor;
@@ -1028,6 +1116,12 @@ var TowerActor = /** @class */ (function (_super) {
         _this.canon.lineTo(GameConstants_1.GameConstants.CELLS_SIZE * .5, 0);
         _this.canon.stroke();
         _this.add(_this.canon);
+        if (GameConstants_1.GameConstants.SHOW_DEBUG_GEOMETRY) {
+            _this.rangeCircle = new Phaser.GameObjects.Graphics(_this.scene);
+            _this.rangeCircle.lineStyle(2, 0x00FF00);
+            _this.rangeCircle.strokeCircle(0, 0, _this.anutoTower.range * GameConstants_1.GameConstants.CELLS_SIZE);
+            _this.add(_this.rangeCircle);
+        }
         return _this;
     }
     TowerActor.prototype.update = function (time, delta) {

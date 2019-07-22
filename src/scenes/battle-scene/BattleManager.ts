@@ -34,10 +34,12 @@ export class BattleManager {
         GameVars.timeStepFactor = 1;
 
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemyData, GameVars.towerData);
-        BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
 
-        BattleManager.anutoEngine.addEventListener(Anuto.Event.EVENT_BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_HIT, BattleManager.onEnemyHit, BattleManager);
     }
 
     public static update(time: number, delta: number): void {
@@ -82,12 +84,13 @@ export class BattleManager {
         BoardContainer.currentInstance.removeEnemy(anutoEnemy.id);
     }
 
-    private static onBulletShot(abutoBullet: Anuto.Bullet, anutoTower: Anuto.Tower): void {
+    private static onBulletShot(anutoBullet: Anuto.Bullet, anutoTower: Anuto.Tower): void {
 
-        BoardContainer.currentInstance.addBullet(abutoBullet);
+        BoardContainer.currentInstance.addBullet(anutoBullet);
     }
 
-    private static onEnemyHit(id: number, damage: number): void {
-        //
+    private static onEnemyHit(anutoEnemy: Anuto.Enemy, anutoBullet: Anuto.Bullet): void {
+        
+        BoardContainer.currentInstance.removeBullet(anutoBullet);
     }
 }

@@ -2,7 +2,7 @@ import { GameConstants } from "../../../GameConstants";
 
 export class BulletActor extends Phaser.GameObjects.Image {
 
-    private anutoBullet: Anuto.Bullet;
+    public anutoBullet: Anuto.Bullet;
 
     constructor(scene: Phaser.Scene, anutoBullet: Anuto.Bullet) {
 
@@ -12,7 +12,6 @@ export class BulletActor extends Phaser.GameObjects.Image {
 
         this.x = this.anutoBullet.x * GameConstants.CELLS_SIZE;
         this.y = this.anutoBullet.y * GameConstants.CELLS_SIZE;
-
     }
 
     public update(time: number, delta: number): void {

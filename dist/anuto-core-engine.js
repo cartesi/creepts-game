@@ -1,14 +1,17 @@
 var Anuto;
 (function (Anuto) {
     var Bullet = (function () {
-        function Bullet(p, angle) {
+        function Bullet(p, angle, assignedEnemy) {
             this.id = Bullet.id;
             Bullet.id++;
             this.x = p.c + .5;
             this.y = p.r + .5;
+            this.assignedEnemy = assignedEnemy;
             this.vx = Anuto.GameConstants.BULLET_SPEED * Math.cos(angle);
             this.vy = Anuto.GameConstants.BULLET_SPEED * Math.sin(angle);
         }
+        Bullet.prototype.destroy = function () {
+        };
         Bullet.prototype.update = function () {
             this.x += this.vx;
             this.y += this.vy;
@@ -48,6 +51,7 @@ var Anuto;
             this.creationTick = creationTick;
             this.x = Anuto.GameVars.enemyStartPosition.c + .5;
             this.y = Anuto.GameVars.enemyStartPosition.r + .5;
+            this.boundingRadius = .35;
         }
         Enemy.prototype.destroy = function () {
         };
@@ -110,6 +114,7 @@ var Anuto;
             this.bullets.forEach(function (bullet) {
                 bullet.update();
             });
+            this.removeBullets();
             this.checkCollisions();
             this.spawnEnemies();
             Anuto.GameVars.ticksCounter++;
@@ -125,6 +130,7 @@ var Anuto;
             this.t = Date.now();
             Anuto.GameVars.enemies = [];
             this.bullets = [];
+            this.bulletsColliding = [];
         };
         Engine.prototype.removeEnemy = function (enemy) {
             var i = Anuto.GameVars.enemies.indexOf(enemy);
@@ -148,19 +154,19 @@ var Anuto;
         };
         Engine.prototype.addBullet = function (bullet, tower) {
             this.bullets.push(bullet);
-            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.EVENT_BULLET_SHOT, [bullet, tower]));
+            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.BULLET_SHOT, [bullet, tower]));
         };
         Engine.prototype.onEnemyReachedExit = function (enemy) {
             var i = Anuto.GameVars.enemies.indexOf(enemy);
             Anuto.GameVars.enemies.splice(i, 1);
             enemy.destroy();
-            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.EVENT_ENEMY_REACHED_EXIT, [enemy]));
+            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_REACHED_EXIT, [enemy]));
         };
         Engine.prototype.onEnemyKilled = function (enemy) {
             var i = Anuto.GameVars.enemies.indexOf(enemy);
             Anuto.GameVars.enemies.splice(i, 1);
             enemy.destroy();
-            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.EVENT_ENEMY_KILLED, [enemy]));
+            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_KILLED, [enemy]));
         };
         Engine.prototype.addEventListener = function (type, listenerFunction, scope) {
             this.eventDispatcher.addEventListener(type, listenerFunction, scope);
@@ -169,12 +175,34 @@ var Anuto;
             this.eventDispatcher.removeEventListener(type, listenerFunction);
         };
         Engine.prototype.checkCollisions = function () {
+            for (var i = 0; i < this.bullets.length; i++) {
+                var bullet = this.bullets[i];
+                var enemy = this.bullets[i].assignedEnemy;
+                var bp1 = { x: bullet.x, y: bullet.y };
+                var bp2 = bullet.getPositionNextTick();
+                var enemyPosition = { x: enemy.x, y: enemy.y };
+                var enemyHit = Anuto.MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
+                if (enemyHit) {
+                    this.bulletsColliding.push(bullet);
+                }
+            }
+        };
+        Engine.prototype.removeBullets = function () {
+            if (this.bulletsColliding.length > 0) {
+                for (var i = 0; i < this.bulletsColliding.length; i++) {
+                    var index = this.bullets.indexOf(this.bulletsColliding[i]);
+                    this.bullets.splice(index, 1);
+                    this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_HIT, [this.bulletsColliding[i].assignedEnemy, this.bulletsColliding[i]]));
+                    this.bulletsColliding[i].destroy();
+                }
+                this.bulletsColliding.length = 0;
+            }
         };
         Engine.prototype.spawnEnemies = function () {
             var enemy = this.enemiesSpawner.getEnemy();
             if (enemy) {
                 Anuto.GameVars.enemies.push(enemy);
-                this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.EVENT_ENEMY_SPAWNED, [enemy, Anuto.GameVars.enemyStartPosition]));
+                this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_SPAWNED, [enemy, Anuto.GameVars.enemyStartPosition]));
                 Anuto.GameVars.enemiesCounter++;
             }
         };
@@ -205,7 +233,7 @@ var Anuto;
         function GameConstants() {
         }
         GameConstants.RELOAD_BASE_TICKS = 10;
-        GameConstants.BULLET_SPEED = .65;
+        GameConstants.BULLET_SPEED = .5;
         return GameConstants;
     }());
     Anuto.GameConstants = GameConstants;
@@ -262,7 +290,7 @@ var Anuto;
                 var impactSquareDistance = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
                 if (this.range * this.range > impactSquareDistance) {
                     var angle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
-                    var bullet = new Anuto.Bullet(this.position, angle);
+                    var bullet = new Anuto.Bullet(this.position, angle, enemyData.enemy);
                     Anuto.Engine.currentInstance.addBullet(bullet, this);
                 }
                 else {
@@ -304,10 +332,11 @@ var Anuto;
         Event.prototype.getType = function () {
             return this.type;
         };
-        Event.EVENT_ENEMY_SPAWNED = "enemy spawned";
-        Event.EVENT_ENEMY_KILLED = "enemy killed";
-        Event.EVENT_ENEMY_REACHED_EXIT = "enemy reached exit";
-        Event.EVENT_BULLET_SHOT = "bullet shot";
+        Event.ENEMY_SPAWNED = "enemy spawned";
+        Event.ENEMY_KILLED = "enemy killed";
+        Event.ENEMY_HIT = "enemy hit";
+        Event.ENEMY_REACHED_EXIT = "enemy reached exit";
+        Event.BULLET_SHOT = "bullet shot";
         return Event;
     }());
     Anuto.Event = Event;
@@ -358,6 +387,58 @@ var Anuto;
         }
         MathUtils.fixNumber = function (n) {
             return isNaN(n) ? 0 : Math.round(1e5 * n) / 1e5;
+        };
+        MathUtils.isLineSegmentIntersectingCircle = function (p1, p2, c, r) {
+            var inside1 = MathUtils.isPointInsideCircle(p1.x, p1.y, c.x, c.y, r);
+            if (inside1) {
+                return true;
+            }
+            var inside2 = MathUtils.isPointInsideCircle(p2.x, p2.y, c.x, c.y, r);
+            if (inside2) {
+                return true;
+            }
+            var dx = p1.x - p2.x;
+            var dy = p1.y - p2.y;
+            var len = MathUtils.fixNumber(Math.sqrt(dx * dx + dy * dy));
+            var dot = ((c.x - p1.x) * (p2.x - p1.x) + (c.y - p1.y) * (p2.y - p1.y)) / (len * len);
+            var closestX = p1.x + (dot * (p2.x - p1.x));
+            var closestY = p1.y + (dot * (p2.y - p1.y));
+            var onSegment = MathUtils.isPointInLineSegment(p1.x, p1.y, p2.x, p2.y, closestX, closestY);
+            if (!onSegment) {
+                return false;
+            }
+            var distX = closestX - c.x;
+            var distY = closestY - c.y;
+            var distance = MathUtils.fixNumber(Math.sqrt((distX * distX) + (distY * distY)));
+            if (distance <= r) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        };
+        MathUtils.isPointInLineSegment = function (x1, y1, x2, y2, px, py) {
+            var d1 = MathUtils.fixNumber(Math.sqrt((px - x1) * (px - x1) + (py - y1) * (py - y1)));
+            var d2 = MathUtils.fixNumber(Math.sqrt((px - x2) * (px - x2) + (py - y2) * (py - y2)));
+            var lineLen = MathUtils.fixNumber(Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
+            var buffer = .1;
+            if (d1 + d2 >= lineLen - buffer && d1 + d2 <= lineLen + buffer) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        };
+        MathUtils.isPointInsideCircle = function (x, y, cx, cy, r) {
+            var dx = cx - x;
+            var dy = cy - y;
+            var d = MathUtils.fixNumber(Math.sqrt(dx * dx + dy * dy));
+            if (d <= r) {
+                return true;
+            }
+            else {
+                return false;
+            }
         };
         return MathUtils;
     }());

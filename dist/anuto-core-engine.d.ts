@@ -4,12 +4,14 @@ declare module Anuto {
         id: number;
         x: number;
         y: number;
+        assignedEnemy: Enemy;
         private vx;
         private vy;
         constructor(p: {
             r: number;
             c: number;
-        }, angle: number);
+        }, angle: number, assignedEnemy: Enemy);
+        destroy(): void;
         update(): void;
         getPositionNextTick(): {
             x: number;
@@ -33,6 +35,7 @@ declare module Anuto {
         x: number;
         y: number;
         creationTick: number;
+        boundingRadius: number;
         constructor(type: string, creationTick: number);
         destroy(): void;
         update(): void;
@@ -49,6 +52,7 @@ declare module Anuto {
         waveActivated: boolean;
         private towers;
         private bullets;
+        private bulletsColliding;
         private t;
         private eventDispatcher;
         private enemiesSpawner;
@@ -67,6 +71,7 @@ declare module Anuto {
         addEventListener(type: string, listenerFunction: Function, scope: any): void;
         removeEventListener(type: string, listenerFunction: any): void;
         private checkCollisions;
+        private removeBullets;
         private spawnEnemies;
         readonly ticksCounter: number;
         timeStep: number;
@@ -75,7 +80,7 @@ declare module Anuto {
 declare module Anuto {
     class GameConstants {
         static readonly RELOAD_BASE_TICKS = 10;
-        static readonly BULLET_SPEED = 0.65;
+        static readonly BULLET_SPEED = 0.5;
     }
 }
 declare module Anuto {
@@ -169,10 +174,11 @@ declare module Anuto.Types {
 }
 declare module Anuto {
     class Event {
-        static readonly EVENT_ENEMY_SPAWNED = "enemy spawned";
-        static readonly EVENT_ENEMY_KILLED = "enemy killed";
-        static readonly EVENT_ENEMY_REACHED_EXIT = "enemy reached exit";
-        static readonly EVENT_BULLET_SHOT = "bullet shot";
+        static readonly ENEMY_SPAWNED = "enemy spawned";
+        static readonly ENEMY_KILLED = "enemy killed";
+        static readonly ENEMY_HIT = "enemy hit";
+        static readonly ENEMY_REACHED_EXIT = "enemy reached exit";
+        static readonly BULLET_SHOT = "bullet shot";
         private type;
         private params;
         constructor(type: string, params?: any);
@@ -193,5 +199,17 @@ declare module Anuto {
 declare module Anuto {
     class MathUtils {
         static fixNumber(n: number): number;
+        static isLineSegmentIntersectingCircle(p1: {
+            x: number;
+            y: number;
+        }, p2: {
+            x: number;
+            y: number;
+        }, c: {
+            x: number;
+            y: number;
+        }, r: number): boolean;
+        static isPointInLineSegment(x1: number, y1: number, x2: number, y2: number, px: number, py: number): boolean;
+        static isPointInsideCircle(x: number, y: number, cx: number, cy: number, r: number): boolean;
     }
 }

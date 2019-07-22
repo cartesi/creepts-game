@@ -8,6 +8,7 @@ module Anuto {
        
         private towers: Tower[];
         private bullets: Bullet[];
+        private bulletsColliding: Bullet[];
         private t: number;
         private eventDispatcher: EventDispatcher;
         private enemiesSpawner: EnemiesSpawner;
@@ -52,6 +53,8 @@ module Anuto {
 
             this.t = t;
 
+           
+
             GameVars.enemies.forEach(function (enemy) {
                 enemy.update();
             }); 
@@ -63,9 +66,10 @@ module Anuto {
             this.bullets.forEach(function (bullet) {
                 bullet.update();
             }); 
+            
+            this.removeBullets();
 
             this.checkCollisions();
-
             this.spawnEnemies();
 
             GameVars.ticksCounter ++;
@@ -91,6 +95,7 @@ module Anuto {
            
             GameVars.enemies = [];
             this.bullets = [];
+            this.bulletsColliding = [];
         }
 
         public removeEnemy(enemy: Enemy): void {
@@ -128,7 +133,7 @@ module Anuto {
 
             this.bullets.push(bullet);
 
-            this.eventDispatcher.dispatchEvent(new Event(Event.EVENT_BULLET_SHOT, [bullet, tower]));
+            this.eventDispatcher.dispatchEvent(new Event(Event.BULLET_SHOT, [bullet, tower]));
         }
 
         public onEnemyReachedExit(enemy: Enemy): void {
@@ -137,7 +142,7 @@ module Anuto {
             GameVars.enemies.splice(i, 1);
             enemy.destroy();
 
-            this.eventDispatcher.dispatchEvent(new Event(Event.EVENT_ENEMY_REACHED_EXIT, [enemy]));
+            this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_REACHED_EXIT, [enemy]));
         }
 
         public onEnemyKilled(enemy: Enemy): void {
@@ -146,7 +151,7 @@ module Anuto {
             GameVars.enemies.splice(i, 1);
             enemy.destroy();
 
-            this.eventDispatcher.dispatchEvent(new Event(Event.EVENT_ENEMY_KILLED, [enemy]));
+            this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_KILLED, [enemy]));
         }
 
         public addEventListener(type: string, listenerFunction: Function, scope: any): void {
@@ -160,7 +165,41 @@ module Anuto {
         }
 
         private checkCollisions(): void {
-            //
+
+            
+            for (let i = 0; i < this.bullets.length; i ++) {
+                
+                const bullet = this.bullets[i];
+                const enemy = this.bullets[i].assignedEnemy;
+
+                const bp1 = {x: bullet.x, y: bullet.y};
+                const bp2 = bullet.getPositionNextTick();
+                const enemyPosition = {x: enemy.x, y: enemy.y};
+
+                const enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
+
+                if (enemyHit) {
+                    this.bulletsColliding.push(bullet);
+                }
+            } 
+        }
+
+        private removeBullets(): void {
+
+            if (this.bulletsColliding.length > 0) {
+
+                for (let i = 0; i < this.bulletsColliding.length; i ++) {
+                    // sacarlas del array
+                    const index = this.bullets.indexOf(this.bulletsColliding[i]);
+                    this.bullets.splice(index, 1);
+
+                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [this.bulletsColliding[i].assignedEnemy, this.bulletsColliding[i]]));
+
+                    this.bulletsColliding[i].destroy();
+                }
+
+                this.bulletsColliding.length = 0;
+            }
         }
 
         private spawnEnemies(): void {
@@ -170,7 +209,7 @@ module Anuto {
             if (enemy) {
 
                 GameVars.enemies.push(enemy);
-                this.eventDispatcher.dispatchEvent(new Event(Event.EVENT_ENEMY_SPAWNED, [enemy, GameVars.enemyStartPosition]));
+                this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_SPAWNED, [enemy, GameVars.enemyStartPosition]));
 
                 GameVars.enemiesCounter ++;
             }
