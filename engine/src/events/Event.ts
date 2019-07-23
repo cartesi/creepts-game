@@ -6,6 +6,7 @@ module Anuto {
         public static readonly ENEMY_KILLED = "enemy killed";
         public static readonly ENEMY_HIT = "enemy hit";
         public static readonly ENEMY_REACHED_EXIT = "enemy reached exit";
+        public static readonly WAVE_OVER = "wave over";
         public static readonly BULLET_SHOT = "bullet shot";
 
         private type: string;

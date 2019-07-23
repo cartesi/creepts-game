@@ -161,6 +161,9 @@ var Anuto;
             Anuto.GameVars.enemies.splice(i, 1);
             enemy.destroy();
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_REACHED_EXIT, [enemy]));
+            if (Anuto.GameVars.enemies.length === 0) {
+                this.waveOver();
+            }
         };
         Engine.prototype.onEnemyKilled = function (enemy) {
             var i = Anuto.GameVars.enemies.indexOf(enemy);
@@ -205,6 +208,10 @@ var Anuto;
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_SPAWNED, [enemy, Anuto.GameVars.enemyStartPosition]));
                 Anuto.GameVars.enemiesCounter++;
             }
+        };
+        Engine.prototype.waveOver = function () {
+            this.waveActivated = false;
+            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.WAVE_OVER));
         };
         Object.defineProperty(Engine.prototype, "ticksCounter", {
             get: function () {
@@ -336,6 +343,7 @@ var Anuto;
         Event.ENEMY_KILLED = "enemy killed";
         Event.ENEMY_HIT = "enemy hit";
         Event.ENEMY_REACHED_EXIT = "enemy reached exit";
+        Event.WAVE_OVER = "wave over";
         Event.BULLET_SHOT = "bullet shot";
         return Event;
     }());

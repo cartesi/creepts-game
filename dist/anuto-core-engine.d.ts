@@ -73,6 +73,7 @@ declare module Anuto {
         private checkCollisions;
         private removeBullets;
         private spawnEnemies;
+        private waveOver;
         readonly ticksCounter: number;
         timeStep: number;
     }
@@ -178,6 +179,7 @@ declare module Anuto {
         static readonly ENEMY_KILLED = "enemy killed";
         static readonly ENEMY_HIT = "enemy hit";
         static readonly ENEMY_REACHED_EXIT = "enemy reached exit";
+        static readonly WAVE_OVER = "wave over";
         static readonly BULLET_SHOT = "bullet shot";
         private type;
         private params;

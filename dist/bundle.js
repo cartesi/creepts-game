@@ -180,7 +180,7 @@ var GameConstants = /** @class */ (function () {
     GameConstants.GAME_WIDTH = 768;
     GameConstants.GAME_HEIGHT = 1024;
     // el tick del engine en milisegundos
-    GameConstants.TIME_STEP = 80;
+    GameConstants.TIME_STEP = 100;
     GameConstants.BOARD_SIZE = { r: 10, c: 10 };
     GameConstants.INITIAL_CREDITS = 500;
     GameConstants.CELLS_SIZE = 50;
@@ -548,6 +548,7 @@ var BattleManager = /** @class */ (function () {
         BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_HIT, BattleManager.onEnemyHit, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.WAVE_OVER, BattleManager.onWaveOver, BattleManager);
     };
     BattleManager.update = function (time, delta) {
         BattleManager.anutoEngine.update();
@@ -581,6 +582,9 @@ var BattleManager = /** @class */ (function () {
     };
     BattleManager.onEnemyHit = function (anutoEnemy, anutoBullet) {
         BoardContainer_1.BoardContainer.currentInstance.removeBullet(anutoBullet);
+    };
+    BattleManager.onWaveOver = function () {
+        //
     };
     return BattleManager;
 }());
@@ -637,6 +641,10 @@ var BattleScene = /** @class */ (function (_super) {
     BattleScene.prototype.update = function (time, delta) {
         BattleManager_1.BattleManager.update(time, delta);
         this.boardContainer.update(time, delta);
+        this.hud.update(time, delta);
+    };
+    BattleScene.prototype.onWaveOver = function () {
+        this.hud.onWaveOver();
     };
     return BattleScene;
 }(Phaser.Scene));
@@ -891,11 +899,21 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var BattleManager_1 = __webpack_require__(/*! ./BattleManager */ "./src/scenes/battle-scene/BattleManager.ts");
 var HUD = /** @class */ (function (_super) {
     __extends(HUD, _super);
     function HUD(scene) {
-        return _super.call(this, scene) || this;
+        var _this = _super.call(this, scene) || this;
+        _this.ticksLabel = new Phaser.GameObjects.Text(_this.scene, 10, 10, "ticks", { fontFamily: "Arial", fontSize: "17.5px", color: "#000000" });
+        _this.add(_this.ticksLabel);
+        return _this;
     }
+    HUD.prototype.update = function (ime, delta) {
+        this.ticksLabel.text = "ticks:" + BattleManager_1.BattleManager.anutoEngine.ticksCounter;
+    };
+    HUD.prototype.onWaveOver = function () {
+        //
+    };
     return HUD;
 }(Phaser.GameObjects.Container));
 exports.HUD = HUD;
@@ -939,7 +957,7 @@ var BulletActor = /** @class */ (function (_super) {
     BulletActor.prototype.update = function (time, delta) {
         var smoothFactor;
         if (GameConstants_1.GameConstants.INTERPOLATE_TRAJECTORIES) {
-            smoothFactor = .15;
+            smoothFactor = .3;
         }
         else {
             smoothFactor = 1;
@@ -1125,7 +1143,12 @@ var TowerActor = /** @class */ (function (_super) {
         return _this;
     }
     TowerActor.prototype.update = function (time, delta) {
-        //
+        if (this.anutoTower.enemyWithinRange) {
+            // girar el cañon hacia el enemigo
+            var dx = this.anutoTower.enemyWithinRange.x - this.p.c;
+            var dy = this.anutoTower.enemyWithinRange.y - this.p.r;
+            this.canon.rotation = Math.atan2(dy, dx);
+        }
     };
     TowerActor.prototype.shoot = function () {
         //

@@ -40,5 +40,11 @@ export class BattleScene extends Phaser.Scene {
         BattleManager.update(time, delta);
 
         this.boardContainer.update(time, delta);
+        this.hud.update(time, delta);
+    }
+
+    public onWaveOver(): void {
+
+        this.hud.onWaveOver();
     }
 }

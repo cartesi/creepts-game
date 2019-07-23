@@ -7,7 +7,7 @@ import towerData from "../../../assets/config/towers.json";
 
 export class BattleManager {
 
-    private static anutoEngine: Anuto.Engine;
+    public static anutoEngine: Anuto.Engine;
 
     public static init(): void {  
 
@@ -40,6 +40,8 @@ export class BattleManager {
         BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_HIT, BattleManager.onEnemyHit, BattleManager);
+
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.WAVE_OVER, BattleManager.onWaveOver, BattleManager);
     }
 
     public static update(time: number, delta: number): void {
@@ -92,5 +94,9 @@ export class BattleManager {
     private static onEnemyHit(anutoEnemy: Anuto.Enemy, anutoBullet: Anuto.Bullet): void {
         
         BoardContainer.currentInstance.removeBullet(anutoBullet);
+    }
+
+    private static onWaveOver(): void {
+        //
     }
 }

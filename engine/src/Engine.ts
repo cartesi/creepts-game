@@ -141,6 +141,10 @@ module Anuto {
             enemy.destroy();
 
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_REACHED_EXIT, [enemy]));
+
+            if (GameVars.enemies.length === 0) {
+                this.waveOver();
+            }
         }
 
         public onEnemyKilled(enemy: Enemy): void {
@@ -164,7 +168,6 @@ module Anuto {
 
         private checkCollisions(): void {
 
-            
             for (let i = 0; i < this.bullets.length; i ++) {
                 
                 const bullet = this.bullets[i];
@@ -211,6 +214,13 @@ module Anuto {
 
                 GameVars.enemiesCounter ++;
             }
+        }
+
+        private waveOver(): void {
+
+            this.waveActivated = false;
+
+            this.eventDispatcher.dispatchEvent(new Event(Event.WAVE_OVER));
         }
 
         public get ticksCounter(): number {
