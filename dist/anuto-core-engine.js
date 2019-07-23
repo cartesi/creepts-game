@@ -49,16 +49,25 @@ var Anuto;
             this.life = Anuto.GameVars.enemyData.enemies[this.type].life;
             this.speed = Anuto.GameVars.enemyData.enemies[this.type].speed;
             this.creationTick = creationTick;
-            this.x = Anuto.GameVars.enemiesPathCells[0].c + .5;
-            this.y = Anuto.GameVars.enemiesPathCells[0].r + .5;
+            this.l = 0;
+            var p = Anuto.Engine.getPathPosition(this.l);
+            this.x = p.x;
+            this.y = p.y;
             this.boundingRadius = .35;
         }
         Enemy.prototype.destroy = function () {
         };
         Enemy.prototype.update = function () {
-            this.y += this.speed;
-            if (this.y > Anuto.GameVars.enemiesPathCells[Anuto.GameVars.enemiesPathCells.length - 1].r + .5) {
+            this.l = Anuto.MathUtils.fixNumber(this.l + this.speed);
+            if (this.l >= Anuto.GameVars.enemiesPathCells.length - 1) {
+                this.x = Anuto.GameVars.enemiesPathCells[Anuto.GameVars.enemiesPathCells.length - 1].c;
+                this.y = Anuto.GameVars.enemiesPathCells[Anuto.GameVars.enemiesPathCells.length - 1].r;
                 Anuto.Engine.currentInstance.onEnemyReachedExit(this);
+            }
+            else {
+                var p = Anuto.Engine.getPathPosition(this.l);
+                this.x = p.x;
+                this.y = p.y;
             }
         };
         Enemy.prototype.hit = function (damage) {
@@ -97,6 +106,19 @@ var Anuto;
             Anuto.GameVars.ticksCounter = 0;
             this.towers = [];
         }
+        Engine.getPathPosition = function (l) {
+            var x;
+            var y;
+            var i = Math.floor(l);
+            var dl = Anuto.MathUtils.fixNumber(l - i);
+            x = Anuto.GameVars.enemiesPathCells[i].c + .5;
+            y = Anuto.GameVars.enemiesPathCells[i].r + .5;
+            var dx = Anuto.GameVars.enemiesPathCells[i + 1].c - Anuto.GameVars.enemiesPathCells[i].c;
+            var dy = Anuto.GameVars.enemiesPathCells[i + 1].r - Anuto.GameVars.enemiesPathCells[i].r;
+            x = Anuto.MathUtils.fixNumber(x + dx * dl);
+            y = Anuto.MathUtils.fixNumber(y + dy * dl);
+            return { x: x, y: y };
+        };
         Engine.prototype.update = function () {
             var t = Date.now();
             if (t - this.t < Anuto.GameVars.timeStep || !this.waveActivated) {
@@ -251,21 +273,6 @@ var Anuto;
         return GameVars;
     }());
     Anuto.GameVars = GameVars;
-})(Anuto || (Anuto = {}));
-var Anuto;
-(function (Anuto) {
-    var Path = (function () {
-        function Path() {
-        }
-        Path.init = function () {
-        };
-        Path.getPosition = function (l) {
-            var pos = { x: 0, y: 0 };
-            return pos;
-        };
-        return Path;
-    }());
-    Anuto.Path = Path;
 })(Anuto || (Anuto = {}));
 var Anuto;
 (function (Anuto) {

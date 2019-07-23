@@ -14,6 +14,8 @@ module Anuto {
 
         public boundingRadius: number;
 
+        private l: number;
+
         constructor (type: string, creationTick: number) {
             
             this.id = Enemy.id;
@@ -25,8 +27,12 @@ module Anuto {
 
             this.creationTick = creationTick;
 
-            this.x = GameVars.enemiesPathCells[0].c + .5;
-            this.y = GameVars.enemiesPathCells[0].r + .5; 
+            this.l = 0;
+
+            const p = Engine.getPathPosition(this.l);
+
+            this.x = p.x;
+            this.y = p.y; 
 
             this.boundingRadius = .35; // en proporcion al tamaño de las celdas
         }
@@ -37,12 +43,21 @@ module Anuto {
 
         public update(): void {
 
-            // TODO: fijar a 5 decimales
+            this.l = MathUtils.fixNumber(this.l + this.speed);
 
-            this.y += this.speed;
+            if (this.l >= GameVars.enemiesPathCells.length - 1) {
 
-            if (this.y > GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].r + .5) {
+                this.x = GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].c;
+                this.y = GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].r;
+
                 Engine.currentInstance.onEnemyReachedExit(this);
+
+            } else {
+
+                const p = Engine.getPathPosition(this.l);
+
+                this.x = p.x;
+                this.y = p.y;
             }
         }
 

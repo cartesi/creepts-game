@@ -36,6 +36,7 @@ declare module Anuto {
         y: number;
         creationTick: number;
         boundingRadius: number;
+        private l;
         constructor(type: string, creationTick: number);
         destroy(): void;
         update(): void;
@@ -56,6 +57,10 @@ declare module Anuto {
         private t;
         private eventDispatcher;
         private enemiesSpawner;
+        static getPathPosition(l: number): {
+            x: number;
+            y: number;
+        };
         constructor(gameConfig: Types.GameConfig, enemyData: any, towerData: any);
         update(): void;
         newWave(waveConfig: Types.WaveConfig): void;
@@ -103,20 +108,7 @@ declare module Anuto {
             r: number;
             c: number;
         }[];
-        static enemyEndPosition: {
-            r: number;
-            c: number;
-        };
         static enemies: Enemy[];
-    }
-}
-declare module Anuto {
-    class Path {
-        static init(): void;
-        static getPosition(l: number): {
-            x: number;
-            y: number;
-        };
     }
 }
 declare module Anuto {

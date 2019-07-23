@@ -12,6 +12,30 @@ module Anuto {
         private t: number;
         private eventDispatcher: EventDispatcher;
         private enemiesSpawner: EnemiesSpawner;
+
+        public static getPathPosition(l: number): {x: number, y: number} {
+
+            // TODO: FIJAR A 5 DECIMALES
+
+            let x: number;
+            let y: number;
+
+            const i = Math.floor(l);
+            const dl = MathUtils.fixNumber(l - i);
+
+            // interpolar entre i e i + 1
+
+            x = GameVars.enemiesPathCells[i].c + .5;
+            y = GameVars.enemiesPathCells[i].r + .5;
+
+            const dx = GameVars.enemiesPathCells[i + 1].c - GameVars.enemiesPathCells[i].c;
+            const dy = GameVars.enemiesPathCells[i + 1].r - GameVars.enemiesPathCells[i].r;
+
+            x = MathUtils.fixNumber(x + dx * dl);
+            y = MathUtils.fixNumber(y + dy * dl);
+
+            return {x: x, y: y};
+        }
      
         constructor (gameConfig: Types.GameConfig, enemyData: any, towerData: any) {
 

@@ -18,11 +18,8 @@ export class BattleManager {
             {r: 1, c: 4},
             {r: 1, c: 5},
             {r: 1, c: 6},
-
             {r: 2, c: 6},
             {r: 3, c: 6},
-
-            {r: 3, c: 4},
             {r: 3, c: 4},
             {r: 4, c: 4},
             {r: 5, c: 4},
