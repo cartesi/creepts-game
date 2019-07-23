@@ -47,6 +47,7 @@ module Anuto {
  
             GameVars.credits = gameConfig.credits;
             GameVars.timeStep = gameConfig.timeStep;
+            GameVars.paused = false;
             GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
 
             GameVars.enemyData = enemyData;
@@ -68,7 +69,7 @@ module Anuto {
 
             const t = Date.now();
 
-            if (t - this.t < GameVars.timeStep || !this.waveActivated) {
+            if (t - this.t < GameVars.timeStep || !this.waveActivated || GameVars.paused) {
                 return;
             }
 
@@ -257,6 +258,11 @@ module Anuto {
         public set timeStep(value: number) {
 
             GameVars.timeStep = value;
+        }
+
+        public set paused(value: boolean) {
+
+            GameVars.paused = value;
         }
     }
 }

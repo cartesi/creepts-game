@@ -41,7 +41,7 @@ declare module Anuto {
         destroy(): void;
         update(): void;
         hit(damage: number): void;
-        getNextPosition(ticks: number): {
+        getNextPosition(deltaTicks: number): {
             x: number;
             y: number;
         };
@@ -81,6 +81,7 @@ declare module Anuto {
         private waveOver;
         readonly ticksCounter: number;
         timeStep: number;
+        paused: boolean;
     }
 }
 declare module Anuto {
@@ -95,6 +96,7 @@ declare module Anuto {
         static score: number;
         static timeStep: number;
         static ticksCounter: number;
+        static paused: boolean;
         static enemyData: any;
         static turretData: any;
         static waveTotalEnemies: number;

@@ -136,7 +136,7 @@ module Anuto {
 
                 squareDist = MathUtils.fixNumber(dx * dx + dy * dy);
 
-                if (this.range * this.range > squareDist) {
+                if (this.range * this.range >= squareDist) {
                     enemy = GameVars.enemies[i];
                     break;
                 }

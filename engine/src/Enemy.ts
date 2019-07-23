@@ -34,7 +34,7 @@ module Anuto {
             this.x = p.x;
             this.y = p.y; 
 
-            this.boundingRadius = .35; // en proporcion al tamaño de las celdas
+            this.boundingRadius = .4; // en proporcion al tamaño de las celdas
         }
 
         public destroy(): void {
@@ -70,12 +70,13 @@ module Anuto {
             }
         }
 
-        public getNextPosition(ticks: number): {x: number, y: number} {
+        public getNextPosition(deltaTicks: number): {x: number, y: number} {
 
-            const x = this.x;
-            const y = this.y + this.speed * ticks;
+            let l = MathUtils.fixNumber(this.l + this.speed * deltaTicks);
 
-            return{x: x, y: y};
+            const p = Engine.getPathPosition(l);
+
+            return{x: p.x, y: p.y};
         }
     }
 }

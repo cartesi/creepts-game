@@ -20,6 +20,7 @@ export class BattleManager {
             {r: 1, c: 6},
             {r: 2, c: 6},
             {r: 3, c: 6},
+            {r: 3, c: 5},
             {r: 3, c: 4},
             {r: 4, c: 4},
             {r: 5, c: 4},
@@ -40,6 +41,7 @@ export class BattleManager {
         GameVars.enemyData = enemyData;
         GameVars.turretData = turretData;
         GameVars.timeStepFactor = 1;
+        GameVars.paused = false;
 
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemyData, GameVars.turretData);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
@@ -55,6 +57,20 @@ export class BattleManager {
     public static update(time: number, delta: number): void {
 
         BattleManager.anutoEngine.update();
+    }
+
+    public static pause(): void {
+
+        GameVars.paused = true;
+
+        this.anutoEngine.paused = true;
+    }
+
+    public static resume(): void {
+
+        GameVars.paused = false;
+
+        this.anutoEngine.paused = false;
     }
 
     public static setTimeStepFactor(timeStepFactor: number): void {

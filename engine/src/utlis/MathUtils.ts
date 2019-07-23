@@ -41,6 +41,7 @@ module Anuto {
             const distance = MathUtils.fixNumber(Math.sqrt((distX * distX) + (distY * distY)));
 
             if (distance <= r) {
+                console.log("COCOFRUT");
                 return true;
             } else {
                 return false;

@@ -53,7 +53,7 @@ var Anuto;
             var p = Anuto.Engine.getPathPosition(this.l);
             this.x = p.x;
             this.y = p.y;
-            this.boundingRadius = .35;
+            this.boundingRadius = .4;
         }
         Enemy.prototype.destroy = function () {
         };
@@ -76,10 +76,10 @@ var Anuto;
                 Anuto.Engine.currentInstance.onEnemyKilled(this);
             }
         };
-        Enemy.prototype.getNextPosition = function (ticks) {
-            var x = this.x;
-            var y = this.y + this.speed * ticks;
-            return { x: x, y: y };
+        Enemy.prototype.getNextPosition = function (deltaTicks) {
+            var l = Anuto.MathUtils.fixNumber(this.l + this.speed * deltaTicks);
+            var p = Anuto.Engine.getPathPosition(l);
+            return { x: p.x, y: p.y };
         };
         return Enemy;
     }());
@@ -95,6 +95,7 @@ var Anuto;
             Anuto.Bullet.id = 0;
             Anuto.GameVars.credits = gameConfig.credits;
             Anuto.GameVars.timeStep = gameConfig.timeStep;
+            Anuto.GameVars.paused = false;
             Anuto.GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
             Anuto.GameVars.enemyData = enemyData;
             Anuto.GameVars.turretData = turretData;
@@ -121,7 +122,7 @@ var Anuto;
         };
         Engine.prototype.update = function () {
             var t = Date.now();
-            if (t - this.t < Anuto.GameVars.timeStep || !this.waveActivated) {
+            if (t - this.t < Anuto.GameVars.timeStep || !this.waveActivated || Anuto.GameVars.paused) {
                 return;
             }
             this.t = t;
@@ -250,6 +251,13 @@ var Anuto;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Engine.prototype, "paused", {
+            set: function (value) {
+                Anuto.GameVars.paused = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return Engine;
     }());
     Anuto.Engine = Engine;
@@ -347,7 +355,7 @@ var Anuto;
                 var dx = this.x - Anuto.GameVars.enemies[i].x;
                 var dy = this.y - Anuto.GameVars.enemies[i].y;
                 squareDist = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
-                if (this.range * this.range > squareDist) {
+                if (this.range * this.range >= squareDist) {
                     enemy = Anuto.GameVars.enemies[i];
                     break;
                 }
@@ -451,6 +459,7 @@ var Anuto;
             var distY = closestY - c.y;
             var distance = MathUtils.fixNumber(Math.sqrt((distX * distX) + (distY * distY)));
             if (distance <= r) {
+                console.log("COCOFRUT");
                 return true;
             }
             else {
