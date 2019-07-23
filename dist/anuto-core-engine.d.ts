@@ -103,15 +103,20 @@ declare module Anuto {
             r: number;
             c: number;
         }[];
-        static enemyStartPosition: {
-            r: number;
-            c: number;
-        };
         static enemyEndPosition: {
             r: number;
             c: number;
         };
         static enemies: Enemy[];
+    }
+}
+declare module Anuto {
+    class Path {
+        static init(): void;
+        static getPosition(l: number): {
+            x: number;
+            y: number;
+        };
     }
 }
 declare module Anuto {

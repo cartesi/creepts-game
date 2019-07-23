@@ -11,22 +11,33 @@ export class BattleManager {
 
     public static init(): void {  
 
+        GameVars.enemiesPathCells = [
+            {r: -1, c: 3},
+            {r: 0, c: 3},
+            {r: 1, c: 3},
+            {r: 1, c: 4},
+            {r: 1, c: 5},
+            {r: 1, c: 6},
+
+            {r: 2, c: 6},
+            {r: 3, c: 6},
+
+            {r: 3, c: 4},
+            {r: 3, c: 4},
+            {r: 4, c: 4},
+            {r: 5, c: 4},
+            {r: 6, c: 4},
+            {r: 7, c: 4},
+            {r: 8, c: 4},
+            {r: 9, c: 4},
+            {r: 10, c: 4}
+        ];
+
         const gameConfig: Anuto.Types.GameConfig = {
             timeStep: GameConstants.TIME_STEP,
             credits: GameConstants.INITIAL_CREDITS,
             boardSize: GameConstants.BOARD_SIZE,
-            enemiesPathCells : [
-                {r: 0, c: 4},
-                {r: 1, c: 4},
-                {r: 2, c: 4},
-                {r: 3, c: 4},
-                {r: 4, c: 4},
-                {r: 5, c: 4},
-                {r: 6, c: 4},
-                {r: 7, c: 4},
-                {r: 8, c: 4},
-                {r: 9, c: 4}
-            ]
+            enemiesPathCells : GameVars.enemiesPathCells
         };
 
         GameVars.enemyData = enemyData;

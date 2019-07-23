@@ -25,8 +25,8 @@ module Anuto {
 
             this.creationTick = creationTick;
 
-            this.x = GameVars.enemyStartPosition.c + .5;
-            this.y = GameVars.enemyStartPosition.r + .5;
+            this.x = GameVars.enemiesPathCells[0].c + .5;
+            this.y = GameVars.enemiesPathCells[0].r + .5; 
 
             this.boundingRadius = .35; // en proporcion al tamaño de las celdas
         }
@@ -41,7 +41,7 @@ module Anuto {
 
             this.y += this.speed;
 
-            if (this.y > GameVars.enemyEndPosition.r + .5) {
+            if (this.y > GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].r + .5) {
                 Engine.currentInstance.onEnemyReachedExit(this);
             }
         }

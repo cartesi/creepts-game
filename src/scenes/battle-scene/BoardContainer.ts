@@ -3,6 +3,7 @@ import { TowerActor } from "./actors/TowerActor";
 import { Board } from "./Board";
 import { GameConstants } from "../../GameConstants";
 import { BulletActor } from "./actors/BulletActor";
+import { GameVars } from "../../GameVars";
 
 export class BoardContainer extends Phaser.GameObjects.Container {
 
@@ -28,6 +29,10 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         this.board = new Board(this.scene);
         this.add(this.board);
+
+        if (GameConstants.SHOW_DEBUG_GEOMETRY) {
+            this.drawDebugGeometry();
+        }
 
         // temporalmente añadimos una torre
         this.addTower("tower_1", {r: 3, c: 2});
@@ -115,5 +120,29 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
     public onEnemyHit(id: number, damage: number): void {
         //
+    }
+
+    private drawDebugGeometry(): void {
+        
+        const path = new Phaser.GameObjects.Graphics(this.scene);
+
+        path.lineStyle(2, 0xFFA500);
+
+        for (let i = 0; i < GameVars.enemiesPathCells.length - 1; i ++) {
+
+            let x = (GameVars.enemiesPathCells[i].c + .5) * GameConstants.CELLS_SIZE;
+            let y = (GameVars.enemiesPathCells[i].r + .5) * GameConstants.CELLS_SIZE;
+            
+            path.moveTo(x, y);
+
+            x = (GameVars.enemiesPathCells[i + 1].c + .5) * GameConstants.CELLS_SIZE;
+            y = (GameVars.enemiesPathCells[i + 1].r + .5) * GameConstants.CELLS_SIZE;
+
+            path.lineTo(x, y);
+
+            path.stroke();
+        }
+
+        this.add(path);
     }
 }

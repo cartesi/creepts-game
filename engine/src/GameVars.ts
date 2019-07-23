@@ -13,7 +13,8 @@ module Anuto {
         public static boardDimensions: {r: number, c: number};
         public static enemiesCounter: number;
         public static enemiesPathCells: {r: number, c: number} [];
-        public static enemyStartPosition: {r: number, c: number};
+       
+       
         public static enemyEndPosition: {r: number, c: number};
 
 

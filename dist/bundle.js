@@ -904,12 +904,12 @@ var HUD = /** @class */ (function (_super) {
     __extends(HUD, _super);
     function HUD(scene) {
         var _this = _super.call(this, scene) || this;
-        _this.ticksLabel = new Phaser.GameObjects.Text(_this.scene, 10, 10, "ticks", { fontFamily: "Arial", fontSize: "17.5px", color: "#000000" });
+        _this.ticksLabel = new Phaser.GameObjects.Text(_this.scene, 15, 15, "ticks: " + BattleManager_1.BattleManager.anutoEngine.ticksCounter, { fontFamily: "Arial", fontSize: "25px", color: "#000000" });
         _this.add(_this.ticksLabel);
         return _this;
     }
     HUD.prototype.update = function (ime, delta) {
-        this.ticksLabel.text = "ticks:" + BattleManager_1.BattleManager.anutoEngine.ticksCounter;
+        this.ticksLabel.text = "ticks: " + BattleManager_1.BattleManager.anutoEngine.ticksCounter;
     };
     HUD.prototype.onWaveOver = function () {
         //

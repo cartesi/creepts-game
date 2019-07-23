@@ -49,15 +49,15 @@ var Anuto;
             this.life = Anuto.GameVars.enemyData.enemies[this.type].life;
             this.speed = Anuto.GameVars.enemyData.enemies[this.type].speed;
             this.creationTick = creationTick;
-            this.x = Anuto.GameVars.enemyStartPosition.c + .5;
-            this.y = Anuto.GameVars.enemyStartPosition.r + .5;
+            this.x = Anuto.GameVars.enemiesPathCells[0].c + .5;
+            this.y = Anuto.GameVars.enemiesPathCells[0].r + .5;
             this.boundingRadius = .35;
         }
         Enemy.prototype.destroy = function () {
         };
         Enemy.prototype.update = function () {
             this.y += this.speed;
-            if (this.y > Anuto.GameVars.enemyEndPosition.r + .5) {
+            if (this.y > Anuto.GameVars.enemiesPathCells[Anuto.GameVars.enemiesPathCells.length - 1].r + .5) {
                 Anuto.Engine.currentInstance.onEnemyReachedExit(this);
             }
         };
@@ -87,8 +87,6 @@ var Anuto;
             Anuto.GameVars.credits = gameConfig.credits;
             Anuto.GameVars.timeStep = gameConfig.timeStep;
             Anuto.GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
-            Anuto.GameVars.enemyStartPosition = { r: Anuto.GameVars.enemiesPathCells[0].r - 1, c: Anuto.GameVars.enemiesPathCells[0].c };
-            Anuto.GameVars.enemyEndPosition = { r: Anuto.GameVars.enemiesPathCells[Anuto.GameVars.enemiesPathCells.length - 1].r + 1, c: Anuto.GameVars.enemiesPathCells[Anuto.GameVars.enemiesPathCells.length - 1].c };
             Anuto.GameVars.enemyData = enemyData;
             Anuto.GameVars.towerData = towerData;
             this.waveActivated = false;
@@ -205,7 +203,7 @@ var Anuto;
             var enemy = this.enemiesSpawner.getEnemy();
             if (enemy) {
                 Anuto.GameVars.enemies.push(enemy);
-                this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_SPAWNED, [enemy, Anuto.GameVars.enemyStartPosition]));
+                this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_SPAWNED, [enemy, Anuto.GameVars.enemiesPathCells[0]]));
                 Anuto.GameVars.enemiesCounter++;
             }
         };
@@ -253,6 +251,21 @@ var Anuto;
         return GameVars;
     }());
     Anuto.GameVars = GameVars;
+})(Anuto || (Anuto = {}));
+var Anuto;
+(function (Anuto) {
+    var Path = (function () {
+        function Path() {
+        }
+        Path.init = function () {
+        };
+        Path.getPosition = function (l) {
+            var pos = { x: 0, y: 0 };
+            return pos;
+        };
+        return Path;
+    }());
+    Anuto.Path = Path;
 })(Anuto || (Anuto = {}));
 var Anuto;
 (function (Anuto) {

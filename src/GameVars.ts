@@ -7,22 +7,8 @@ export class GameVars {
     public static enemyData: any;
     public static towerData: any;
     public static timeStepFactor: number;
-
-    public static padNumberToString(numberAsString: string): string {
-
-        let answer = numberAsString;
-
-        if (numberAsString.length === 1) {
-            answer = "000" + numberAsString;
-        } else if (numberAsString.length === 2) {
-            answer = "00" + numberAsString;
-        } else if (numberAsString.length === 3) {
-            answer = "0" + numberAsString;
-        }
-
-        return answer;
-    }
-
+    public static enemiesPathCells: {r: number, c: number} [];
+   
     public static formatTime(timeInSeconds: number): { str: string, h: string, m: string, s: string } {
 
         if (isNaN(timeInSeconds) || timeInSeconds > 24 * 3600) {

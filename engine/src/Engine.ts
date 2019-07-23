@@ -25,8 +25,8 @@ module Anuto {
             GameVars.timeStep = gameConfig.timeStep;
             GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
 
-            GameVars.enemyStartPosition = {r: GameVars.enemiesPathCells[0].r - 1, c: GameVars.enemiesPathCells[0].c};
-            GameVars.enemyEndPosition = {r: GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].r + 1, c: GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].c};
+            // GameVars.enemyStartPosition = {r: GameVars.enemiesPathCells[0].r - 1, c: GameVars.enemiesPathCells[0].c};
+            // GameVars.enemyEndPosition = {r: GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].r + 1, c: GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].c};
 
             GameVars.enemyData = enemyData;
             GameVars.towerData = towerData;
@@ -210,7 +210,7 @@ module Anuto {
             if (enemy) {
 
                 GameVars.enemies.push(enemy);
-                this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_SPAWNED, [enemy, GameVars.enemyStartPosition]));
+                this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_SPAWNED, [enemy, GameVars.enemiesPathCells[0]]));
 
                 GameVars.enemiesCounter ++;
             }
