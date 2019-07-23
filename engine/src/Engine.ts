@@ -47,6 +47,7 @@ module Anuto {
  
             GameVars.credits = gameConfig.credits;
             GameVars.timeStep = gameConfig.timeStep;
+            GameVars.runningInClientSide = true;
             GameVars.paused = false;
             GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
 
@@ -67,13 +68,16 @@ module Anuto {
 
         public update(): void {
 
-            const t = Date.now();
+            if (GameVars.runningInClientSide) {
 
-            if (t - this.t < GameVars.timeStep || !this.waveActivated || GameVars.paused) {
-                return;
+                const t = Date.now();
+
+                if (t - this.t < GameVars.timeStep || !this.waveActivated || GameVars.paused) {
+                    return;
+                }
+    
+                this.t = t;
             }
-
-            this.t = t;
 
             this.removeBullets();
 

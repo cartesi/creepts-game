@@ -7,17 +7,17 @@ var Anuto;
             this.x = p.c + .5;
             this.y = p.r + .5;
             this.assignedEnemy = assignedEnemy;
-            this.vx = Anuto.GameConstants.BULLET_SPEED * Math.cos(angle);
-            this.vy = Anuto.GameConstants.BULLET_SPEED * Math.sin(angle);
+            this.vx = Anuto.MathUtils.fixNumber(Anuto.GameConstants.BULLET_SPEED * Math.cos(angle));
+            this.vy = Anuto.MathUtils.fixNumber(Anuto.GameConstants.BULLET_SPEED * Math.sin(angle));
         }
         Bullet.prototype.destroy = function () {
         };
         Bullet.prototype.update = function () {
-            this.x += this.vx;
-            this.y += this.vy;
+            this.x = Anuto.MathUtils.fixNumber(this.x + this.vx);
+            this.y = Anuto.MathUtils.fixNumber(this.y + this.vy);
         };
         Bullet.prototype.getPositionNextTick = function () {
-            return { x: this.x + this.vx, y: this.y + this.vy };
+            return { x: Anuto.MathUtils.fixNumber(this.x + this.vx), y: Anuto.MathUtils.fixNumber(this.y + this.vy) };
         };
         return Bullet;
     }());
@@ -95,6 +95,7 @@ var Anuto;
             Anuto.Bullet.id = 0;
             Anuto.GameVars.credits = gameConfig.credits;
             Anuto.GameVars.timeStep = gameConfig.timeStep;
+            Anuto.GameVars.runningInClientSide = true;
             Anuto.GameVars.paused = false;
             Anuto.GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
             Anuto.GameVars.enemyData = enemyData;
@@ -121,11 +122,13 @@ var Anuto;
             return { x: x, y: y };
         };
         Engine.prototype.update = function () {
-            var t = Date.now();
-            if (t - this.t < Anuto.GameVars.timeStep || !this.waveActivated || Anuto.GameVars.paused) {
-                return;
+            if (Anuto.GameVars.runningInClientSide) {
+                var t = Date.now();
+                if (t - this.t < Anuto.GameVars.timeStep || !this.waveActivated || Anuto.GameVars.paused) {
+                    return;
+                }
+                this.t = t;
             }
-            this.t = t;
             this.removeBullets();
             this.checkCollisions();
             this.spawnEnemies();
@@ -459,7 +462,6 @@ var Anuto;
             var distY = closestY - c.y;
             var distance = MathUtils.fixNumber(Math.sqrt((distX * distX) + (distY * distY)));
             if (distance <= r) {
-                console.log("COCOFRUT");
                 return true;
             }
             else {

@@ -23,8 +23,8 @@ module Anuto {
             
             this.assignedEnemy = assignedEnemy;
 
-            this.vx = GameConstants.BULLET_SPEED * Math.cos(angle);
-            this.vy = GameConstants.BULLET_SPEED * Math.sin(angle);
+            this.vx = MathUtils.fixNumber(GameConstants.BULLET_SPEED * Math.cos(angle));
+            this.vy = MathUtils.fixNumber( GameConstants.BULLET_SPEED * Math.sin(angle));
         }
 
         public destroy(): void {
@@ -33,13 +33,13 @@ module Anuto {
 
         public update(): void {
             
-            this.x += this.vx;
-            this.y += this.vy;
+            this.x = MathUtils.fixNumber(this.x + this.vx);
+            this.y = MathUtils.fixNumber(this.y + this.vy);
         }
 
         public getPositionNextTick(): {x: number, y: number} {
 
-            return {x: this.x + this.vx, y: this.y + this.vy};
+            return {x: MathUtils.fixNumber(this.x + this.vx), y: MathUtils.fixNumber(this.y + this.vy)};
         }
     }
 }

@@ -96,6 +96,7 @@ declare module Anuto {
         static score: number;
         static timeStep: number;
         static ticksCounter: number;
+        static runningInClientSide: boolean;
         static paused: boolean;
         static enemyData: any;
         static turretData: any;

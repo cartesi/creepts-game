@@ -6,6 +6,7 @@ module Anuto {
         public static score: number;
         public static timeStep: number;
         public static ticksCounter: number;
+        public static runningInClientSide: boolean;
         public static paused: boolean;
         public static enemyData: any;
         public static turretData: any;
