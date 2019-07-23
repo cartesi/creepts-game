@@ -53,7 +53,10 @@ module Anuto {
 
             this.t = t;
 
-           
+            this.removeBullets();
+
+            this.checkCollisions();
+            this.spawnEnemies();
 
             GameVars.enemies.forEach(function (enemy) {
                 enemy.update();
@@ -66,11 +69,6 @@ module Anuto {
             this.bullets.forEach(function (bullet) {
                 bullet.update();
             }); 
-            
-            this.removeBullets();
-
-            this.checkCollisions();
-            this.spawnEnemies();
 
             GameVars.ticksCounter ++;
         }

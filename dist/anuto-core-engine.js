@@ -105,6 +105,9 @@ var Anuto;
                 return;
             }
             this.t = t;
+            this.removeBullets();
+            this.checkCollisions();
+            this.spawnEnemies();
             Anuto.GameVars.enemies.forEach(function (enemy) {
                 enemy.update();
             });
@@ -114,9 +117,6 @@ var Anuto;
             this.bullets.forEach(function (bullet) {
                 bullet.update();
             });
-            this.removeBullets();
-            this.checkCollisions();
-            this.spawnEnemies();
             Anuto.GameVars.ticksCounter++;
         };
         Engine.prototype.newWave = function (waveConfig) {

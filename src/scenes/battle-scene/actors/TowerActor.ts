@@ -46,7 +46,13 @@ export class TowerActor extends Phaser.GameObjects.Container {
     }
 
     public update(time: number, delta: number): void {
-        //
+        
+        if (this.anutoTower.enemyWithinRange) {
+            // girar el cañon hacia el enemigo
+            const dx = this.anutoTower.enemyWithinRange.x - this.p.c;
+            const dy = this.anutoTower.enemyWithinRange.y - this.p.r;
+            this.canon.rotation = Math.atan2(dy, dx);
+        }
     }
 
     public shoot(): void {

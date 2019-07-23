@@ -180,7 +180,7 @@ var GameConstants = /** @class */ (function () {
     GameConstants.GAME_WIDTH = 768;
     GameConstants.GAME_HEIGHT = 1024;
     // el tick del engine en milisegundos
-    GameConstants.TIME_STEP = 100;
+    GameConstants.TIME_STEP = 80;
     GameConstants.BOARD_SIZE = { r: 10, c: 10 };
     GameConstants.INITIAL_CREDITS = 500;
     GameConstants.CELLS_SIZE = 50;

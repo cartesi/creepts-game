@@ -19,7 +19,7 @@ export class BulletActor extends Phaser.GameObjects.Image {
         let smoothFactor: number;
 
         if (GameConstants.INTERPOLATE_TRAJECTORIES) {
-            smoothFactor = .15;
+            smoothFactor = .3;
         } else {
             smoothFactor = 1;
         }
