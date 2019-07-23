@@ -97,14 +97,14 @@ module.exports = JSON.parse("{\"enemies\":{\"enemy_1\":{\"life\":80,\"speed\":0.
 
 /***/ }),
 
-/***/ "./assets/config/towers.json":
-/*!***********************************!*\
-  !*** ./assets/config/towers.json ***!
-  \***********************************/
-/*! exports provided: towers, default */
+/***/ "./assets/config/turrets.json":
+/*!************************************!*\
+  !*** ./assets/config/turrets.json ***!
+  \************************************/
+/*! exports provided: turrets, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"towers\":{\"tower_1\":{\"price\":150,\"damage\":100,\"reload\":1,\"range\":2.5},\"tower_2\":{\"price\":150,\"damage\":100,\"reload\":1,\"range\":2.5}}}");
+module.exports = JSON.parse("{\"turrets\":{\"turret_1\":{\"price\":150,\"damage\":100,\"reload\":1,\"range\":2.5},\"turret_2\":{\"price\":150,\"damage\":100,\"reload\":1,\"range\":2.5}}}");
 
 /***/ }),
 
@@ -279,19 +279,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var GameVars = /** @class */ (function () {
     function GameVars() {
     }
-    GameVars.padNumberToString = function (numberAsString) {
-        var answer = numberAsString;
-        if (numberAsString.length === 1) {
-            answer = "000" + numberAsString;
-        }
-        else if (numberAsString.length === 2) {
-            answer = "00" + numberAsString;
-        }
-        else if (numberAsString.length === 3) {
-            answer = "0" + numberAsString;
-        }
-        return answer;
-    };
     GameVars.formatTime = function (timeInSeconds) {
         if (isNaN(timeInSeconds) || timeInSeconds > 24 * 3600) {
             return { str: "0:00:00", h: "00", m: "00", s: "00" };
@@ -517,32 +504,39 @@ var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/Game
 var BoardContainer_1 = __webpack_require__(/*! ./BoardContainer */ "./src/scenes/battle-scene/BoardContainer.ts");
 var GameVars_1 = __webpack_require__(/*! ../../GameVars */ "./src/GameVars.ts");
 var enemies_json_1 = __importDefault(__webpack_require__(/*! ../../../assets/config/enemies.json */ "./assets/config/enemies.json"));
-var towers_json_1 = __importDefault(__webpack_require__(/*! ../../../assets/config/towers.json */ "./assets/config/towers.json"));
+var turrets_json_1 = __importDefault(__webpack_require__(/*! ../../../assets/config/turrets.json */ "./assets/config/turrets.json"));
 var BattleManager = /** @class */ (function () {
     function BattleManager() {
     }
     BattleManager.init = function () {
+        GameVars_1.GameVars.enemiesPathCells = [
+            { r: -1, c: 3 },
+            { r: 0, c: 3 },
+            { r: 1, c: 3 },
+            { r: 1, c: 4 },
+            { r: 1, c: 5 },
+            { r: 1, c: 6 },
+            { r: 2, c: 6 },
+            { r: 3, c: 6 },
+            { r: 3, c: 4 },
+            { r: 4, c: 4 },
+            { r: 5, c: 4 },
+            { r: 6, c: 4 },
+            { r: 7, c: 4 },
+            { r: 8, c: 4 },
+            { r: 9, c: 4 },
+            { r: 10, c: 4 }
+        ];
         var gameConfig = {
             timeStep: GameConstants_1.GameConstants.TIME_STEP,
             credits: GameConstants_1.GameConstants.INITIAL_CREDITS,
             boardSize: GameConstants_1.GameConstants.BOARD_SIZE,
-            enemiesPathCells: [
-                { r: 0, c: 4 },
-                { r: 1, c: 4 },
-                { r: 2, c: 4 },
-                { r: 3, c: 4 },
-                { r: 4, c: 4 },
-                { r: 5, c: 4 },
-                { r: 6, c: 4 },
-                { r: 7, c: 4 },
-                { r: 8, c: 4 },
-                { r: 9, c: 4 }
-            ]
+            enemiesPathCells: GameVars_1.GameVars.enemiesPathCells
         };
         GameVars_1.GameVars.enemyData = enemies_json_1.default;
-        GameVars_1.GameVars.towerData = towers_json_1.default;
+        GameVars_1.GameVars.turretData = turrets_json_1.default;
         GameVars_1.GameVars.timeStepFactor = 1;
-        BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars_1.GameVars.enemyData, GameVars_1.GameVars.towerData);
+        BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars_1.GameVars.enemyData, GameVars_1.GameVars.turretData);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
@@ -563,13 +557,13 @@ var BattleManager = /** @class */ (function () {
         }
         var waveConfig = {
             level: 0,
-            towers: [],
+            turrets: [],
             totalEnemies: 10
         };
         BattleManager.anutoEngine.newWave(waveConfig);
     };
-    BattleManager.addTower = function (type, position) {
-        return BattleManager.anutoEngine.addTower(type, position);
+    BattleManager.addTurret = function (type, position) {
+        return BattleManager.anutoEngine.addTurret(type, position);
     };
     BattleManager.onEnemySpawned = function (anutoEnemy, p) {
         BoardContainer_1.BoardContainer.currentInstance.addEnemy(anutoEnemy, p);
@@ -577,7 +571,7 @@ var BattleManager = /** @class */ (function () {
     BattleManager.onEnemyReachedExit = function (anutoEnemy) {
         BoardContainer_1.BoardContainer.currentInstance.removeEnemy(anutoEnemy.id);
     };
-    BattleManager.onBulletShot = function (anutoBullet, anutoTower) {
+    BattleManager.onBulletShot = function (anutoBullet, anutoTurret) {
         BoardContainer_1.BoardContainer.currentInstance.addBullet(anutoBullet);
     };
     BattleManager.onEnemyHit = function (anutoEnemy, anutoBullet) {
@@ -728,10 +722,11 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var EnemyActor_1 = __webpack_require__(/*! ./actors/EnemyActor */ "./src/scenes/battle-scene/actors/EnemyActor.ts");
-var TowerActor_1 = __webpack_require__(/*! ./actors/TowerActor */ "./src/scenes/battle-scene/actors/TowerActor.ts");
+var TurretActor_1 = __webpack_require__(/*! ./actors/TurretActor */ "./src/scenes/battle-scene/actors/TurretActor.ts");
 var Board_1 = __webpack_require__(/*! ./Board */ "./src/scenes/battle-scene/Board.ts");
 var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
 var BulletActor_1 = __webpack_require__(/*! ./actors/BulletActor */ "./src/scenes/battle-scene/actors/BulletActor.ts");
+var GameVars_1 = __webpack_require__(/*! ../../GameVars */ "./src/GameVars.ts");
 var BoardContainer = /** @class */ (function (_super) {
     __extends(BoardContainer, _super);
     function BoardContainer(scene) {
@@ -744,6 +739,9 @@ var BoardContainer = /** @class */ (function (_super) {
         _this.bullets = [];
         _this.board = new Board_1.Board(_this.scene);
         _this.add(_this.board);
+        if (GameConstants_1.GameConstants.SHOW_DEBUG_GEOMETRY) {
+            _this.drawDebugGeometry();
+        }
         // temporalmente añadimos una torre
         _this.addTower("tower_1", { r: 3, c: 2 });
         _this.addTower("tower_1", { r: 6, c: 2 });
@@ -779,7 +777,7 @@ var BoardContainer = /** @class */ (function (_super) {
         }
     };
     BoardContainer.prototype.addTower = function (name, position) {
-        var tower = new TowerActor_1.TowerActor(this.scene, name, position);
+        var tower = new TurretActor_1.TurretActor(this.scene, name, position);
         this.add(tower);
         this.towers.push(tower);
     };
@@ -807,6 +805,20 @@ var BoardContainer = /** @class */ (function (_super) {
     };
     BoardContainer.prototype.onEnemyHit = function (id, damage) {
         //
+    };
+    BoardContainer.prototype.drawDebugGeometry = function () {
+        var path = new Phaser.GameObjects.Graphics(this.scene);
+        path.lineStyle(2, 0xFFA500);
+        for (var i = 0; i < GameVars_1.GameVars.enemiesPathCells.length - 1; i++) {
+            var x = (GameVars_1.GameVars.enemiesPathCells[i].c + .5) * GameConstants_1.GameConstants.CELLS_SIZE;
+            var y = (GameVars_1.GameVars.enemiesPathCells[i].r + .5) * GameConstants_1.GameConstants.CELLS_SIZE;
+            path.moveTo(x, y);
+            x = (GameVars_1.GameVars.enemiesPathCells[i + 1].c + .5) * GameConstants_1.GameConstants.CELLS_SIZE;
+            y = (GameVars_1.GameVars.enemiesPathCells[i + 1].r + .5) * GameConstants_1.GameConstants.CELLS_SIZE;
+            path.lineTo(x, y);
+            path.stroke();
+        }
+        this.add(path);
     };
     return BoardContainer;
 }(Phaser.GameObjects.Container));
@@ -1031,6 +1043,7 @@ var EnemyActor = /** @class */ (function (_super) {
         else {
             smoothFactor = 1;
         }
+        this.x += (this.anutoEnemy.x * GameConstants_1.GameConstants.CELLS_SIZE - this.x) * smoothFactor;
         this.y += (this.anutoEnemy.y * GameConstants_1.GameConstants.CELLS_SIZE - this.y) * smoothFactor;
     };
     return EnemyActor;
@@ -1088,10 +1101,10 @@ exports.LifeBar = LifeBar;
 
 /***/ }),
 
-/***/ "./src/scenes/battle-scene/actors/TowerActor.ts":
-/*!******************************************************!*\
-  !*** ./src/scenes/battle-scene/actors/TowerActor.ts ***!
-  \******************************************************/
+/***/ "./src/scenes/battle-scene/actors/TurretActor.ts":
+/*!*******************************************************!*\
+  !*** ./src/scenes/battle-scene/actors/TurretActor.ts ***!
+  \*******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1114,19 +1127,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var GameConstants_1 = __webpack_require__(/*! ../../../GameConstants */ "./src/GameConstants.ts");
 var BattleManager_1 = __webpack_require__(/*! ../BattleManager */ "./src/scenes/battle-scene/BattleManager.ts");
 var GameVars_1 = __webpack_require__(/*! ../../../GameVars */ "./src/GameVars.ts");
-var TowerActor = /** @class */ (function (_super) {
-    __extends(TowerActor, _super);
-    function TowerActor(scene, type, position) {
+var TurretActor = /** @class */ (function (_super) {
+    __extends(TurretActor, _super);
+    function TurretActor(scene, type, position) {
         var _this = _super.call(this, scene) || this;
-        _this.id = GameVars_1.GameVars.towerData.towers[type].id;
+        _this.id = GameVars_1.GameVars.turretData.turrets[type].id;
         _this.p = position;
-        _this.anutoTower = BattleManager_1.BattleManager.addTower(type, _this.p);
+        _this.anutoTurret = BattleManager_1.BattleManager.addTurret(type, _this.p);
         _this.x = GameConstants_1.GameConstants.CELLS_SIZE * (_this.p.c + .5);
         _this.y = GameConstants_1.GameConstants.CELLS_SIZE * (_this.p.r + .5);
         var tmpImage = new Phaser.GameObjects.Image(_this.scene, 0, 0, "texture_atlas_1", "tmp-tower");
         tmpImage.setScale(GameConstants_1.GameConstants.CELLS_SIZE / tmpImage.width * .8);
         tmpImage.setInteractive();
-        tmpImage.on("pointerdown", _this.onDownTower, _this);
+        tmpImage.on("pointerdown", _this.onDownTurret, _this);
         _this.add(tmpImage);
         _this.canon = new Phaser.GameObjects.Graphics(_this.scene);
         _this.canon.lineStyle(3, 0x000000);
@@ -1137,28 +1150,28 @@ var TowerActor = /** @class */ (function (_super) {
         if (GameConstants_1.GameConstants.SHOW_DEBUG_GEOMETRY) {
             _this.rangeCircle = new Phaser.GameObjects.Graphics(_this.scene);
             _this.rangeCircle.lineStyle(2, 0x00FF00);
-            _this.rangeCircle.strokeCircle(0, 0, _this.anutoTower.range * GameConstants_1.GameConstants.CELLS_SIZE);
+            _this.rangeCircle.strokeCircle(0, 0, _this.anutoTurret.range * GameConstants_1.GameConstants.CELLS_SIZE);
             _this.add(_this.rangeCircle);
         }
         return _this;
     }
-    TowerActor.prototype.update = function (time, delta) {
-        if (this.anutoTower.enemyWithinRange) {
+    TurretActor.prototype.update = function (time, delta) {
+        if (this.anutoTurret.enemyWithinRange) {
             // girar el cañon hacia el enemigo
-            var dx = this.anutoTower.enemyWithinRange.x - this.p.c;
-            var dy = this.anutoTower.enemyWithinRange.y - this.p.r;
+            var dx = this.anutoTurret.enemyWithinRange.x - this.p.c;
+            var dy = this.anutoTurret.enemyWithinRange.y - this.p.r;
             this.canon.rotation = Math.atan2(dy, dx);
         }
     };
-    TowerActor.prototype.shoot = function () {
+    TurretActor.prototype.shoot = function () {
         //
     };
-    TowerActor.prototype.onDownTower = function () {
+    TurretActor.prototype.onDownTurret = function () {
         //
     };
-    return TowerActor;
+    return TurretActor;
 }(Phaser.GameObjects.Container));
-exports.TowerActor = TowerActor;
+exports.TurretActor = TurretActor;
 
 
 /***/ }),

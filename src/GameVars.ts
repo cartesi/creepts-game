@@ -5,7 +5,7 @@ export class GameVars {
     public static currentScene: Phaser.Scene;
     public static paused: boolean;
     public static enemyData: any;
-    public static towerData: any;
+    public static turretData: any;
     public static timeStepFactor: number;
     public static enemiesPathCells: {r: number, c: number} [];
    

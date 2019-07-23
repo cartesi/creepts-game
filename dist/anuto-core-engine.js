@@ -88,23 +88,23 @@ var Anuto;
 var Anuto;
 (function (Anuto) {
     var Engine = (function () {
-        function Engine(gameConfig, enemyData, towerData) {
+        function Engine(gameConfig, enemyData, turretData) {
             Engine.currentInstance = this;
-            Anuto.Tower.id = 0;
+            Anuto.Turret.id = 0;
             Anuto.Enemy.id = 0;
             Anuto.Bullet.id = 0;
             Anuto.GameVars.credits = gameConfig.credits;
             Anuto.GameVars.timeStep = gameConfig.timeStep;
             Anuto.GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
             Anuto.GameVars.enemyData = enemyData;
-            Anuto.GameVars.towerData = towerData;
+            Anuto.GameVars.turretData = turretData;
             this.waveActivated = false;
             this.t = 0;
             Anuto.GameVars.waveTotalEnemies = 0;
             this.eventDispatcher = new Anuto.EventDispatcher();
             this.enemiesSpawner = new Anuto.EnemiesSpawner();
             Anuto.GameVars.ticksCounter = 0;
-            this.towers = [];
+            this.turrets = [];
         }
         Engine.getPathPosition = function (l) {
             var x;
@@ -131,8 +131,8 @@ var Anuto;
             Anuto.GameVars.enemies.forEach(function (enemy) {
                 enemy.update();
             });
-            this.towers.forEach(function (tower) {
-                tower.update();
+            this.turrets.forEach(function (turret) {
+                turret.update();
             });
             this.bullets.forEach(function (bullet) {
                 bullet.update();
@@ -144,7 +144,7 @@ var Anuto;
             Anuto.GameVars.waveTotalEnemies = waveConfig.totalEnemies;
             Anuto.GameVars.enemiesCounter = 0;
             Anuto.GameVars.ticksCounter = 0;
-            for (var i = 0; i < waveConfig.towers.length; i++) {
+            for (var i = 0; i < waveConfig.turrets.length; i++) {
             }
             this.waveActivated = true;
             this.t = Date.now();
@@ -159,22 +159,22 @@ var Anuto;
             }
             enemy.destroy();
         };
-        Engine.prototype.addTower = function (type, p) {
-            var tower = new Anuto.Tower(type, p, Anuto.GameVars.ticksCounter);
-            this.towers.push(tower);
-            return tower;
+        Engine.prototype.addTurret = function (type, p) {
+            var turret = new Anuto.Turret(type, p, Anuto.GameVars.ticksCounter);
+            this.turrets.push(turret);
+            return turret;
         };
-        Engine.prototype.sellTower = function (tower) {
-            var i = this.towers.indexOf(tower);
+        Engine.prototype.sellTurret = function (turret) {
+            var i = this.turrets.indexOf(turret);
             if (i !== -1) {
-                this.towers.splice(i, 1);
+                this.turrets.splice(i, 1);
             }
-            Anuto.GameVars.credits += tower.value;
-            tower.destroy();
+            Anuto.GameVars.credits += turret.value;
+            turret.destroy();
         };
-        Engine.prototype.addBullet = function (bullet, tower) {
+        Engine.prototype.addBullet = function (bullet, turret) {
             this.bullets.push(bullet);
-            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.BULLET_SHOT, [bullet, tower]));
+            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.BULLET_SHOT, [bullet, turret]));
         };
         Engine.prototype.onEnemyReachedExit = function (enemy) {
             var i = Anuto.GameVars.enemies.indexOf(enemy);
@@ -276,36 +276,46 @@ var Anuto;
 })(Anuto || (Anuto = {}));
 var Anuto;
 (function (Anuto) {
-    var Tower = (function () {
-        function Tower(type, p, creationTick) {
-            this.id = Tower.id;
-            Tower.id++;
+    var Turret = (function () {
+        function Turret(type, p, creationTick) {
+            this.id = Turret.id;
+            Turret.id++;
             this.type = type;
             this.f = 0;
             this.level = 1;
+            this.gunLoaded = false;
             this.position = p;
             this.x = this.position.c + .5;
             this.y = this.position.r + .5;
-            this.damage = Anuto.GameVars.towerData.towers[type].damage;
-            this.range = Anuto.GameVars.towerData.towers[type].range;
-            this.reload = Anuto.GameVars.towerData.towers[type].reload;
+            this.damage = Anuto.GameVars.turretData.turrets[type].damage;
+            this.range = Anuto.GameVars.turretData.turrets[type].range;
+            this.reload = Anuto.GameVars.turretData.turrets[type].reload;
             this.creationTick = creationTick;
             this.reloadTicks = Math.floor(Anuto.GameConstants.RELOAD_BASE_TICKS * this.reload);
             this.value = 0;
         }
-        Tower.prototype.destroy = function () {
+        Turret.prototype.destroy = function () {
         };
-        Tower.prototype.update = function () {
-            this.f++;
-            if (this.f === this.reloadTicks) {
-                this.shoot();
-                this.f = 0;
+        Turret.prototype.update = function () {
+            if (this.gunLoaded) {
+                var hasTurretShot = this.shoot();
+                if (hasTurretShot) {
+                    this.gunLoaded = false;
+                }
+            }
+            else {
+                this.f++;
+                if (this.f === this.reloadTicks) {
+                    this.gunLoaded = true;
+                    this.f = 0;
+                }
             }
         };
-        Tower.prototype.upgrade = function () {
+        Turret.prototype.upgrade = function () {
             this.level++;
         };
-        Tower.prototype.shoot = function () {
+        Turret.prototype.shoot = function () {
+            var ret = false;
             var enemyData = this.getEnemyWithinRange();
             if (enemyData.enemy) {
                 this.enemyWithinRange = enemyData.enemy;
@@ -319,6 +329,7 @@ var Anuto;
                     var angle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
                     var bullet = new Anuto.Bullet(this.position, angle, enemyData.enemy);
                     Anuto.Engine.currentInstance.addBullet(bullet, this);
+                    ret = true;
                 }
                 else {
                     this.enemyWithinRange = null;
@@ -327,8 +338,9 @@ var Anuto;
             else {
                 this.enemyWithinRange = null;
             }
+            return ret;
         };
-        Tower.prototype.getEnemyWithinRange = function () {
+        Turret.prototype.getEnemyWithinRange = function () {
             var enemy = null;
             var squareDist = 1e10;
             for (var i = 0; i < Anuto.GameVars.enemies.length; i++) {
@@ -342,9 +354,9 @@ var Anuto;
             }
             return { enemy: enemy, squareDist: squareDist };
         };
-        return Tower;
+        return Turret;
     }());
-    Anuto.Tower = Tower;
+    Anuto.Turret = Turret;
 })(Anuto || (Anuto = {}));
 var Anuto;
 (function (Anuto) {

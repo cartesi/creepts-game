@@ -51,7 +51,7 @@ declare module Anuto {
     class Engine {
         static currentInstance: Engine;
         waveActivated: boolean;
-        private towers;
+        private turrets;
         private bullets;
         private bulletsColliding;
         private t;
@@ -61,16 +61,16 @@ declare module Anuto {
             x: number;
             y: number;
         };
-        constructor(gameConfig: Types.GameConfig, enemyData: any, towerData: any);
+        constructor(gameConfig: Types.GameConfig, enemyData: any, turretData: any);
         update(): void;
         newWave(waveConfig: Types.WaveConfig): void;
         removeEnemy(enemy: Enemy): void;
-        addTower(type: string, p: {
+        addTurret(type: string, p: {
             r: number;
             c: number;
-        }): Tower;
-        sellTower(tower: Tower): void;
-        addBullet(bullet: Bullet, tower: Tower): void;
+        }): Turret;
+        sellTurret(turret: Turret): void;
+        addBullet(bullet: Bullet, turret: Turret): void;
         onEnemyReachedExit(enemy: Enemy): void;
         onEnemyKilled(enemy: Enemy): void;
         addEventListener(type: string, listenerFunction: Function, scope: any): void;
@@ -96,7 +96,7 @@ declare module Anuto {
         static timeStep: number;
         static ticksCounter: number;
         static enemyData: any;
-        static towerData: any;
+        static turretData: any;
         static waveTotalEnemies: number;
         static level: number;
         static boardDimensions: {
@@ -112,7 +112,7 @@ declare module Anuto {
     }
 }
 declare module Anuto {
-    class Tower {
+    class Turret {
         static id: number;
         id: number;
         type: string;
@@ -131,6 +131,7 @@ declare module Anuto {
         enemyWithinRange: Enemy;
         private f;
         private reloadTicks;
+        private gunLoaded;
         constructor(type: string, p: {
             r: number;
             c: number;
@@ -143,11 +144,6 @@ declare module Anuto {
     }
 }
 declare module Anuto.Types {
-    type TowerData = {
-        id: number;
-        name: string;
-        price: number;
-    };
     type Callback = {
         func: Function;
         scope: any;
@@ -166,7 +162,7 @@ declare module Anuto.Types {
     };
     type WaveConfig = {
         level: number;
-        towers: any;
+        turrets: any;
         totalEnemies: number;
     };
 }

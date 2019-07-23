@@ -6,7 +6,7 @@ module Anuto {
 
         public waveActivated: boolean;
        
-        private towers: Tower[];
+        private turrets: Turret[];
         private bullets: Bullet[];
         private bulletsColliding: Bullet[];
         private t: number;
@@ -37,11 +37,11 @@ module Anuto {
             return {x: x, y: y};
         }
      
-        constructor (gameConfig: Types.GameConfig, enemyData: any, towerData: any) {
+        constructor (gameConfig: Types.GameConfig, enemyData: any, turretData: any) {
 
             Engine.currentInstance = this;
 
-            Tower.id = 0;
+            Turret.id = 0;
             Enemy.id = 0;
             Bullet.id = 0;
  
@@ -49,11 +49,8 @@ module Anuto {
             GameVars.timeStep = gameConfig.timeStep;
             GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
 
-            // GameVars.enemyStartPosition = {r: GameVars.enemiesPathCells[0].r - 1, c: GameVars.enemiesPathCells[0].c};
-            // GameVars.enemyEndPosition = {r: GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].r + 1, c: GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].c};
-
             GameVars.enemyData = enemyData;
-            GameVars.towerData = towerData;
+            GameVars.turretData = turretData;
             
             this.waveActivated = false;
             this.t = 0;
@@ -64,7 +61,7 @@ module Anuto {
          
             GameVars.ticksCounter = 0;
 
-            this.towers = [];
+            this.turrets = [];
         }
 
         public update(): void {
@@ -86,8 +83,8 @@ module Anuto {
                 enemy.update();
             }); 
 
-            this.towers.forEach(function (tower) {
-                tower.update();
+            this.turrets.forEach(function (turret) {
+                turret.update();
             }); 
 
             this.bullets.forEach(function (bullet) {
@@ -107,7 +104,7 @@ module Anuto {
 
             // TODO: instanciar las torres que hubiesen
 
-            for (let i = 0; i < waveConfig.towers.length; i ++) {
+            for (let i = 0; i < waveConfig.turrets.length; i ++) {
                //
             }
 
@@ -131,31 +128,31 @@ module Anuto {
             enemy.destroy();
         }
 
-        public addTower(type: string, p: {r: number, c: number}): Tower {
+        public addTurret(type: string, p: {r: number, c: number}): Turret {
 
-            const tower = new Tower(type, p, GameVars.ticksCounter);
-            this.towers.push(tower);
+            const turret = new Turret(type, p, GameVars.ticksCounter);
+            this.turrets.push(turret);
 
-            return tower;
+            return turret;
         }
 
-        public sellTower(tower: Tower): void {
+        public sellTurret(turret: Turret): void {
 
-            const i = this.towers.indexOf(tower);
+            const i = this.turrets.indexOf(turret);
 
             if (i !== -1) {
-                this.towers.splice(i, 1);
+                this.turrets.splice(i, 1);
             }
 
-            GameVars.credits += tower.value;
-            tower.destroy();
+            GameVars.credits += turret.value;
+            turret.destroy();
         }
 
-        public addBullet(bullet: Bullet, tower: Tower): void {
+        public addBullet(bullet: Bullet, turret: Turret): void {
 
             this.bullets.push(bullet);
 
-            this.eventDispatcher.dispatchEvent(new Event(Event.BULLET_SHOT, [bullet, tower]));
+            this.eventDispatcher.dispatchEvent(new Event(Event.BULLET_SHOT, [bullet, turret]));
         }
 
         public onEnemyReachedExit(enemy: Enemy): void {
@@ -214,7 +211,7 @@ module Anuto {
             if (this.bulletsColliding.length > 0) {
 
                 for (let i = 0; i < this.bulletsColliding.length; i ++) {
-                    // sacarlas del array
+
                     const index = this.bullets.indexOf(this.bulletsColliding[i]);
                     this.bullets.splice(index, 1);
 

@@ -3,7 +3,7 @@ import { BoardContainer } from "./BoardContainer";
 import { GameVars } from "../../GameVars";
 
 import enemyData from "../../../assets/config/enemies.json";
-import towerData from "../../../assets/config/towers.json";
+import turretData from "../../../assets/config/turrets.json";
 
 export class BattleManager {
 
@@ -38,10 +38,10 @@ export class BattleManager {
         };
 
         GameVars.enemyData = enemyData;
-        GameVars.towerData = towerData;
+        GameVars.turretData = turretData;
         GameVars.timeStepFactor = 1;
 
-        BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemyData, GameVars.towerData);
+        BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemyData, GameVars.turretData);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
 
@@ -72,16 +72,16 @@ export class BattleManager {
         
         const waveConfig: Anuto.Types.WaveConfig = {
             level: 0,
-            towers: [],
+            turrets: [],
             totalEnemies: 10
         };
 
         BattleManager.anutoEngine.newWave(waveConfig);
     }
 
-    public static addTower(type, position: {r: number, c: number}): Anuto.Tower {
+    public static addTurret(type, position: {r: number, c: number}): Anuto.Turret {
 
-        return BattleManager.anutoEngine.addTower(type, position);
+        return BattleManager.anutoEngine.addTurret(type, position);
     }
 
     private static onEnemySpawned(anutoEnemy: Anuto.Enemy, p: {r: number, c: number} ): void {
@@ -94,7 +94,7 @@ export class BattleManager {
         BoardContainer.currentInstance.removeEnemy(anutoEnemy.id);
     }
 
-    private static onBulletShot(anutoBullet: Anuto.Bullet, anutoTower: Anuto.Tower): void {
+    private static onBulletShot(anutoBullet: Anuto.Bullet, anutoTurret: Anuto.Turret): void {
 
         BoardContainer.currentInstance.addBullet(anutoBullet);
     }

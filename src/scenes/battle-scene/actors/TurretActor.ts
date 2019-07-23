@@ -2,24 +2,24 @@ import { GameConstants } from "../../../GameConstants";
 import { BattleManager } from "../BattleManager";
 import { GameVars } from "../../../GameVars";
 
-export class TowerActor extends Phaser.GameObjects.Container {
+export class TurretActor extends Phaser.GameObjects.Container {
 
     public id: number;
     public level: number;
     public p: {r: number, c: number};
 
     private canon: Phaser.GameObjects.Graphics;
-    private anutoTower: Anuto.Tower;
+    private anutoTurret: Anuto.Turret;
     private rangeCircle: Phaser.GameObjects.Graphics;
 
     constructor(scene: Phaser.Scene, type: string, position: {r: number, c: number}) {
 
         super(scene);
 
-        this.id = GameVars.towerData.towers[type].id;
+        this.id = GameVars.turretData.turrets[type].id;
         this.p = position;
 
-        this.anutoTower = BattleManager.addTower(type, this.p);
+        this.anutoTurret = BattleManager.addTurret(type, this.p);
 
         this.x = GameConstants.CELLS_SIZE * (this.p.c + .5);
         this.y = GameConstants.CELLS_SIZE * (this.p.r + .5);
@@ -27,7 +27,7 @@ export class TowerActor extends Phaser.GameObjects.Container {
         const tmpImage = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "tmp-tower");
         tmpImage.setScale(GameConstants.CELLS_SIZE / tmpImage.width * .8);
         tmpImage.setInteractive();
-        tmpImage.on("pointerdown", this.onDownTower, this);
+        tmpImage.on("pointerdown", this.onDownTurret, this);
         this.add(tmpImage);
 
         this.canon = new Phaser.GameObjects.Graphics(this.scene);
@@ -40,17 +40,17 @@ export class TowerActor extends Phaser.GameObjects.Container {
         if (GameConstants.SHOW_DEBUG_GEOMETRY) {
             this.rangeCircle = new Phaser.GameObjects.Graphics(this.scene);
             this.rangeCircle.lineStyle(2, 0x00FF00);
-            this.rangeCircle.strokeCircle(0, 0, this.anutoTower.range * GameConstants.CELLS_SIZE);
+            this.rangeCircle.strokeCircle(0, 0, this.anutoTurret.range * GameConstants.CELLS_SIZE);
             this.add(this.rangeCircle);
         }
     }
 
     public update(time: number, delta: number): void {
         
-        if (this.anutoTower.enemyWithinRange) {
+        if (this.anutoTurret.enemyWithinRange) {
             // girar el cañon hacia el enemigo
-            const dx = this.anutoTower.enemyWithinRange.x - this.p.c;
-            const dy = this.anutoTower.enemyWithinRange.y - this.p.r;
+            const dx = this.anutoTurret.enemyWithinRange.x - this.p.c;
+            const dy = this.anutoTurret.enemyWithinRange.y - this.p.r;
             this.canon.rotation = Math.atan2(dy, dx);
         }
     }
@@ -59,7 +59,7 @@ export class TowerActor extends Phaser.GameObjects.Container {
         //
     }
 
-    private onDownTower(): void {
+    private onDownTurret(): void {
         //
     }
 }

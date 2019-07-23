@@ -1,11 +1,5 @@
 module Anuto.Types {
 
-    export type TowerData = {
-        id: number,
-        name: string,
-        price: number
-    };
-
     export type Callback = {
         func: Function;
         scope: any
@@ -20,7 +14,7 @@ module Anuto.Types {
 
     export type WaveConfig = {
         level: number;
-        towers: any;
+        turrets: any;
         totalEnemies: number;
     };
 }

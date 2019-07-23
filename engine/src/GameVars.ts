@@ -7,7 +7,7 @@ module Anuto {
         public static timeStep: number;
         public static ticksCounter: number;
         public static enemyData: any;
-        public static towerData: any;
+        public static turretData: any;
         public static waveTotalEnemies: number;
         public static level: number;
         public static boardDimensions: {r: number, c: number};

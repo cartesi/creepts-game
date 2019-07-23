@@ -1,13 +1,13 @@
 
 {
-    "towers": {
-                "tower_1" : {
+    "turrets": {
+                "turret_1" : {
                     "price": 150,
                     "damage": 100,
                     "reload": 1,
                     "range": 2.5
                 },
-                "tower_2" : {
+                "turret_2" : {
                     "price": 150,
                     "damage": 100,
                     "reload": 1,

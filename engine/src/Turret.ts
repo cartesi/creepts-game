@@ -1,6 +1,6 @@
 module Anuto {
 
-    export class Tower {
+    export class Turret {
 
         public static id: number;
 
@@ -21,23 +21,25 @@ module Anuto {
 
         private f: number;
         private reloadTicks: number;
+        private gunLoaded: boolean;
 
         constructor (type: string, p: {r: number, c: number}, creationTick: number) {
 
-            this.id = Tower.id;
-            Tower.id ++;
+            this.id = Turret.id;
+            Turret.id ++;
 
             this.type = type;
             this.f = 0;
             this.level = 1;
+            this.gunLoaded = false;
 
             this.position = p;
             this.x = this.position.c + .5;
             this.y = this.position.r + .5;
 
-            this.damage = GameVars.towerData.towers[type].damage;
-            this.range = GameVars.towerData.towers[type].range;
-            this.reload = GameVars.towerData.towers[type].reload;
+            this.damage = GameVars.turretData.turrets[type].damage;
+            this.range = GameVars.turretData.turrets[type].range;
+            this.reload = GameVars.turretData.turrets[type].reload;
 
             this.creationTick = creationTick;
 
@@ -52,12 +54,23 @@ module Anuto {
         }
 
         public update(): void {
-            
-            this.f ++;
 
-            if (this.f === this.reloadTicks) {
-                this.shoot();
-                this.f = 0;
+            if (this.gunLoaded) {
+
+                const hasTurretShot = this.shoot();
+
+                if (hasTurretShot) {
+                    this.gunLoaded = false;
+                }
+
+            } else {
+
+                this.f ++;
+
+                if (this.f === this.reloadTicks) {
+                    this.gunLoaded = true;
+                    this.f = 0;
+                }
             }
         }
 
@@ -66,7 +79,9 @@ module Anuto {
             this.level ++;
         }
 
-        private shoot(): void {
+        private shoot(): boolean {
+
+            let ret = false;
 
             const enemyData = this.getEnemyWithinRange();
 
@@ -96,6 +111,8 @@ module Anuto {
 
                     Engine.currentInstance.addBullet(bullet, this);
 
+                    ret = true;
+
                 } else {
                     this.enemyWithinRange = null;
                 }
@@ -103,6 +120,8 @@ module Anuto {
             } else {
                 this.enemyWithinRange = null;
             }
+
+            return ret;
         }
 
         private getEnemyWithinRange(): {enemy: Enemy, squareDist: number} {
