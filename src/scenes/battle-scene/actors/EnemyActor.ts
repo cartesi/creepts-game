@@ -27,13 +27,13 @@ export class EnemyActor extends Phaser.GameObjects.Container {
             this.img.fillStyle(0xFF0000);
             this.img.fillRect(-s / 2, -s / 2, s, s);
 
-        } else if (this.type === "enemy_1") {
+        } else if (this.type === "enemy_2") {
             //
         }
 
         this.add(this.img);
 
-        this.lifeBar = new LifeBar(this.scene);
+        this.lifeBar = new LifeBar(this.scene, this.anutoEnemy.life);
         this.lifeBar.y = -26;
         this.lifeBar.x -= LifeBar.WIDTH / 2;
         this.add(this.lifeBar);

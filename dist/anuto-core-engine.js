@@ -148,7 +148,6 @@ var Anuto;
             Anuto.GameVars.ticksCounter++;
         };
         Engine.prototype.newWave = function (waveConfig) {
-            console.log("wave started");
             Anuto.GameVars.level = waveConfig.level;
             Anuto.GameVars.waveTotalEnemies = waveConfig.totalEnemies;
             Anuto.GameVars.enemiesCounter = 0;
@@ -242,7 +241,6 @@ var Anuto;
             }
         };
         Engine.prototype.waveOver = function () {
-            console.log("wave over, num ticks:", Anuto.GameVars.ticksCounter + 1);
             this.waveActivated = false;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.WAVE_OVER));
         };
