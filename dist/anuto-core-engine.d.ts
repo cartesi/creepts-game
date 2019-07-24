@@ -5,12 +5,13 @@ declare module Anuto {
         x: number;
         y: number;
         assignedEnemy: Enemy;
+        damage: number;
         private vx;
         private vy;
         constructor(p: {
             r: number;
             c: number;
-        }, angle: number, assignedEnemy: Enemy);
+        }, angle: number, assignedEnemy: Enemy, damage: number);
         destroy(): void;
         update(): void;
         getPositionNextTick(): {
@@ -76,7 +77,7 @@ declare module Anuto {
         addEventListener(type: string, listenerFunction: Function, scope: any): void;
         removeEventListener(type: string, listenerFunction: any): void;
         private checkCollisions;
-        private removeBullets;
+        private removeBulletsAndAccountDamage;
         private spawnEnemies;
         private waveOver;
         readonly ticksCounter: number;
@@ -153,6 +154,7 @@ declare module Anuto.Types {
     };
     type GameConfig = {
         timeStep: number;
+        runningInClientSide: boolean;
         credits: number;
         boardSize: {
             r: number;

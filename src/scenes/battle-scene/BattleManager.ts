@@ -33,6 +33,7 @@ export class BattleManager {
 
         const gameConfig: Anuto.Types.GameConfig = {
             timeStep: GameConstants.TIME_STEP,
+            runningInClientSide: true,
             credits: GameConstants.INITIAL_CREDITS,
             boardSize: GameConstants.BOARD_SIZE,
             enemiesPathCells : GameVars.enemiesPathCells
@@ -44,6 +45,7 @@ export class BattleManager {
         GameVars.paused = false;
 
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemyData, GameVars.turretData);
+        
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
 

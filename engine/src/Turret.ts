@@ -11,11 +11,9 @@ module Anuto {
         public reload: number;
         public range: number;
         public value: number;
-
         public position: {r: number, c: number};
         public x: number;
         public y: number;
-
         public creationTick: number;
         public enemyWithinRange: Enemy;
 

@@ -7,6 +7,7 @@ module Anuto.Types {
 
     export type GameConfig = {
         timeStep: number;
+        runningInClientSide: boolean;
         credits: number;
         boardSize: {r: number, c: number}; 
         enemiesPathCells: {r: number, c: number} [];

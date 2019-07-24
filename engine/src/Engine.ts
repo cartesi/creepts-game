@@ -47,7 +47,7 @@ module Anuto {
  
             GameVars.credits = gameConfig.credits;
             GameVars.timeStep = gameConfig.timeStep;
-            GameVars.runningInClientSide = true;
+            GameVars.runningInClientSide = gameConfig.runningInClientSide;
             GameVars.paused = false;
             GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
 
@@ -72,11 +72,15 @@ module Anuto {
 
                 const t = Date.now();
 
-                if (t - this.t < GameVars.timeStep || !this.waveActivated || GameVars.paused) {
+                if (t - this.t < GameVars.timeStep) {
                     return;
                 }
     
                 this.t = t;
+            }
+
+            if (!this.waveActivated || GameVars.paused) {
+                return;
             }
 
             this.removeBulletsAndAccountDamage();
@@ -100,6 +104,8 @@ module Anuto {
         }
 
         public newWave(waveConfig: Types.WaveConfig): void {
+
+            console.log("wave started");
 
             GameVars.level = waveConfig.level;
 
@@ -249,6 +255,7 @@ module Anuto {
 
         private waveOver(): void {
 
+            console.log("wave over, num ticks:", GameVars.ticksCounter + 1);
             this.waveActivated = false;
 
             this.eventDispatcher.dispatchEvent(new Event(Event.WAVE_OVER));

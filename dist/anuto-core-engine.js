@@ -1,12 +1,13 @@
 var Anuto;
 (function (Anuto) {
     var Bullet = (function () {
-        function Bullet(p, angle, assignedEnemy) {
+        function Bullet(p, angle, assignedEnemy, damage) {
             this.id = Bullet.id;
             Bullet.id++;
             this.x = p.c + .5;
             this.y = p.r + .5;
             this.assignedEnemy = assignedEnemy;
+            this.damage = damage;
             this.vx = Anuto.MathUtils.fixNumber(Anuto.GameConstants.BULLET_SPEED * Math.cos(angle));
             this.vy = Anuto.MathUtils.fixNumber(Anuto.GameConstants.BULLET_SPEED * Math.sin(angle));
         }
@@ -95,7 +96,7 @@ var Anuto;
             Anuto.Bullet.id = 0;
             Anuto.GameVars.credits = gameConfig.credits;
             Anuto.GameVars.timeStep = gameConfig.timeStep;
-            Anuto.GameVars.runningInClientSide = true;
+            Anuto.GameVars.runningInClientSide = gameConfig.runningInClientSide;
             Anuto.GameVars.paused = false;
             Anuto.GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
             Anuto.GameVars.enemyData = enemyData;
@@ -124,12 +125,15 @@ var Anuto;
         Engine.prototype.update = function () {
             if (Anuto.GameVars.runningInClientSide) {
                 var t = Date.now();
-                if (t - this.t < Anuto.GameVars.timeStep || !this.waveActivated || Anuto.GameVars.paused) {
+                if (t - this.t < Anuto.GameVars.timeStep) {
                     return;
                 }
                 this.t = t;
             }
-            this.removeBullets();
+            if (!this.waveActivated || Anuto.GameVars.paused) {
+                return;
+            }
+            this.removeBulletsAndAccountDamage();
             this.checkCollisions();
             this.spawnEnemies();
             Anuto.GameVars.enemies.forEach(function (enemy) {
@@ -144,6 +148,7 @@ var Anuto;
             Anuto.GameVars.ticksCounter++;
         };
         Engine.prototype.newWave = function (waveConfig) {
+            console.log("wave started");
             Anuto.GameVars.level = waveConfig.level;
             Anuto.GameVars.waveTotalEnemies = waveConfig.totalEnemies;
             Anuto.GameVars.enemiesCounter = 0;
@@ -214,13 +219,16 @@ var Anuto;
                 }
             }
         };
-        Engine.prototype.removeBullets = function () {
+        Engine.prototype.removeBulletsAndAccountDamage = function () {
             if (this.bulletsColliding.length > 0) {
                 for (var i = 0; i < this.bulletsColliding.length; i++) {
-                    var index = this.bullets.indexOf(this.bulletsColliding[i]);
+                    var bullet = this.bulletsColliding[i];
+                    var enemy = bullet.assignedEnemy;
+                    enemy.hit(bullet.damage);
+                    var index = this.bullets.indexOf(bullet);
                     this.bullets.splice(index, 1);
-                    this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_HIT, [this.bulletsColliding[i].assignedEnemy, this.bulletsColliding[i]]));
-                    this.bulletsColliding[i].destroy();
+                    this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_HIT, [enemy, bullet]));
+                    bullet.destroy();
                 }
                 this.bulletsColliding.length = 0;
             }
@@ -234,6 +242,7 @@ var Anuto;
             }
         };
         Engine.prototype.waveOver = function () {
+            console.log("wave over, num ticks:", Anuto.GameVars.ticksCounter + 1);
             this.waveActivated = false;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.WAVE_OVER));
         };
@@ -338,7 +347,7 @@ var Anuto;
                 var impactSquareDistance = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
                 if (this.range * this.range > impactSquareDistance) {
                     var angle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
-                    var bullet = new Anuto.Bullet(this.position, angle, enemyData.enemy);
+                    var bullet = new Anuto.Bullet(this.position, angle, enemyData.enemy, this.damage);
                     Anuto.Engine.currentInstance.addBullet(bullet, this);
                     ret = true;
                 }

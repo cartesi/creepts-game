@@ -104,7 +104,7 @@ module.exports = JSON.parse("{\"enemies\":{\"enemy_1\":{\"life\":80,\"speed\":0.
 /*! exports provided: turrets, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"turrets\":{\"turret_1\":{\"price\":150,\"damage\":100,\"reload\":1,\"range\":2.5},\"turret_2\":{\"price\":150,\"damage\":100,\"reload\":1,\"range\":2.5}}}");
+module.exports = JSON.parse("{\"turrets\":{\"turret_1\":{\"price\":150,\"damage\":10,\"reload\":1,\"range\":2.5},\"turret_2\":{\"price\":150,\"damage\":10,\"reload\":1,\"range\":2.5}}}");
 
 /***/ }),
 
@@ -585,6 +585,7 @@ var BattleManager = /** @class */ (function () {
         BoardContainer_1.BoardContainer.currentInstance.addBullet(anutoBullet);
     };
     BattleManager.onEnemyHit = function (anutoEnemy, anutoBullet) {
+        BoardContainer_1.BoardContainer.currentInstance.onEnemyHit(anutoEnemy);
         BoardContainer_1.BoardContainer.currentInstance.removeBullet(anutoBullet);
     };
     BattleManager.onWaveOver = function () {
@@ -796,6 +797,19 @@ var BoardContainer = /** @class */ (function (_super) {
         this.add(bullet);
         this.bullets.push(bullet);
     };
+    BoardContainer.prototype.onEnemyHit = function (anutoEnemy) {
+        // encontrar el enemigo en cuestion
+        var enemy = null;
+        for (var i = 0; this.enemies.length; i++) {
+            if (this.enemies[i].id === anutoEnemy.id) {
+                enemy = this.enemies[i];
+                break;
+            }
+        }
+        if (enemy) {
+            enemy.hit();
+        }
+    };
     BoardContainer.prototype.removeBullet = function (anutoBullet) {
         var bullet = null;
         for (var i = 0; i < this.bullets.length; i++) {
@@ -811,9 +825,6 @@ var BoardContainer = /** @class */ (function (_super) {
         }
     };
     BoardContainer.prototype.upgradeTower = function (id) {
-        //
-    };
-    BoardContainer.prototype.onEnemyHit = function (id, damage) {
         //
     };
     BoardContainer.prototype.drawDebugGeometry = function () {
@@ -1067,6 +1078,9 @@ var EnemyActor = /** @class */ (function (_super) {
         }
         this.x += (this.anutoEnemy.x * GameConstants_1.GameConstants.CELLS_SIZE - this.x) * smoothFactor;
         this.y += (this.anutoEnemy.y * GameConstants_1.GameConstants.CELLS_SIZE - this.y) * smoothFactor;
+    };
+    EnemyActor.prototype.hit = function () {
+        this.lifeBar.updateValue(this.anutoEnemy.life);
     };
     return EnemyActor;
 }(Phaser.GameObjects.Container));
