@@ -185,6 +185,8 @@
             <key type="filename">texture_atlas_1/btn_1x_on.png</key>
             <key type="filename">texture_atlas_1/btn_4x_off.png</key>
             <key type="filename">texture_atlas_1/btn_4x_on.png</key>
+            <key type="filename">texture_atlas_1/btn_pause_off.png</key>
+            <key type="filename">texture_atlas_1/btn_pause_on.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

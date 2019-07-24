@@ -95,6 +95,23 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.bullets.push(bullet);
     }
 
+    public onEnemyHit(anutoEnemy: Anuto.Enemy): void {
+        
+        // encontrar el enemigo en cuestion
+        let enemy: EnemyActor = null;
+
+        for (let i = 0; this.enemies.length; i ++) {
+            if (this.enemies[i].id === anutoEnemy.id) {
+                enemy = this.enemies[i];
+                break;
+            }
+        }
+
+        if (enemy) {
+            enemy.hit();
+        }
+    }
+
     public removeBullet(anutoBullet: Anuto.Bullet): void {
 
         let bullet: BulletActor = null;
@@ -114,13 +131,12 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
+
     public upgradeTower(id: number): void {
         //
     }
 
-    public onEnemyHit(id: number, damage: number): void {
-        //
-    }
+   
 
     private drawDebugGeometry(): void {
         

@@ -107,7 +107,7 @@ module Anuto {
                 if (this.range * this.range > impactSquareDistance) {
 
                     const angle =  MathUtils.fixNumber(Math.atan2(dy, dx));
-                    const bullet = new Bullet(this.position, angle, enemyData.enemy);
+                    const bullet = new Bullet(this.position, angle, enemyData.enemy, this.damage);
 
                     Engine.currentInstance.addBullet(bullet, this);
 

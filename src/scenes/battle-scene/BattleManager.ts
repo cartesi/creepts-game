@@ -116,6 +116,8 @@ export class BattleManager {
     }
 
     private static onEnemyHit(anutoEnemy: Anuto.Enemy, anutoBullet: Anuto.Bullet): void {
+
+        BoardContainer.currentInstance.onEnemyHit(anutoEnemy);
         
         BoardContainer.currentInstance.removeBullet(anutoBullet);
     }

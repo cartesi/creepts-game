@@ -79,7 +79,7 @@ module Anuto {
                 this.t = t;
             }
 
-            this.removeBullets();
+            this.removeBulletsAndAccountDamage();
 
             this.checkCollisions();
             this.spawnEnemies();
@@ -211,18 +211,23 @@ module Anuto {
             } 
         }
 
-        private removeBullets(): void {
+        private removeBulletsAndAccountDamage(): void {
 
             if (this.bulletsColliding.length > 0) {
 
                 for (let i = 0; i < this.bulletsColliding.length; i ++) {
 
-                    const index = this.bullets.indexOf(this.bulletsColliding[i]);
+                    const bullet = this.bulletsColliding[i];
+                    const enemy = bullet.assignedEnemy;
+
+                    enemy.hit(bullet.damage);
+
+                    const index = this.bullets.indexOf(bullet);
                     this.bullets.splice(index, 1);
 
-                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [this.bulletsColliding[i].assignedEnemy, this.bulletsColliding[i]]));
+                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [enemy, bullet]));
 
-                    this.bulletsColliding[i].destroy();
+                    bullet.destroy();
                 }
 
                 this.bulletsColliding.length = 0;

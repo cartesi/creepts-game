@@ -3,13 +3,13 @@
     "turrets": {
                 "turret_1" : {
                     "price": 150,
-                    "damage": 100,
+                    "damage": 10,
                     "reload": 1,
                     "range": 2.5
                 },
                 "turret_2" : {
                     "price": 150,
-                    "damage": 100,
+                    "damage": 10,
                     "reload": 1,
                     "range": 2.5
                 }
