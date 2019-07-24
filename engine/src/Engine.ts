@@ -19,17 +19,26 @@ module Anuto {
             let y: number;
 
             const i = Math.floor(l);
-            const dl = MathUtils.fixNumber(l - i);
 
-            // interpolar entre i e i + 1
-            x = GameVars.enemiesPathCells[i].c + .5;
-            y = GameVars.enemiesPathCells[i].r + .5;
+            if (i === GameVars.enemiesPathCells.length - 1) {
 
-            const dx = GameVars.enemiesPathCells[i + 1].c - GameVars.enemiesPathCells[i].c;
-            const dy = GameVars.enemiesPathCells[i + 1].r - GameVars.enemiesPathCells[i].r;
+                x = GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].c;
+                y = GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].r;
 
-            x = MathUtils.fixNumber(x + dx * dl);
-            y = MathUtils.fixNumber(y + dy * dl);
+            } else {
+
+                const dl = MathUtils.fixNumber(l - i);
+
+                // interpolar entre i e i + 1
+                x = GameVars.enemiesPathCells[i].c + .5;
+                y = GameVars.enemiesPathCells[i].r + .5;
+    
+                const dx = GameVars.enemiesPathCells[i + 1].c - GameVars.enemiesPathCells[i].c;
+                const dy = GameVars.enemiesPathCells[i + 1].r - GameVars.enemiesPathCells[i].r;
+    
+                x = MathUtils.fixNumber(x + dx * dl);
+                y = MathUtils.fixNumber(y + dy * dl);
+            }
 
             return {x: x, y: y};
         }

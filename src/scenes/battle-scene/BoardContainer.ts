@@ -37,6 +37,8 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         // temporalmente añadimos una torre
         this.addTower("turret_1", {r: 3, c: 2});
         this.addTower("turret_1", {r: 6, c: 2});
+
+        this.addTower("turret_1", {r: 8, c: 6});
     }
 
     public update(time: number, delta: number): void {
@@ -98,17 +100,23 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     public onEnemyHit(anutoEnemy: Anuto.Enemy): void {
         
         // encontrar el enemigo en cuestion
-        let enemy: EnemyActor = null;
-
-        for (let i = 0; this.enemies.length; i ++) {
-            if (this.enemies[i].id === anutoEnemy.id) {
-                enemy = this.enemies[i];
-                break;
-            }
-        }
+        let enemy: EnemyActor = this.getEnemyByID(anutoEnemy.id);
 
         if (enemy) {
             enemy.hit();
+        }
+    }
+
+    public onEnemyKilled(anutoEnemy: Anuto.Enemy): void {
+
+        let enemy: EnemyActor = this.getEnemyByID(anutoEnemy.id);
+
+        if (enemy) {
+
+            const i = this.enemies.indexOf(enemy);
+            this.enemies.splice(i, 1);
+
+            enemy.destroy();
         }
     }
 
@@ -136,7 +144,19 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         //
     }
 
-   
+    private getEnemyByID(id: number): EnemyActor {
+
+        let enemy = null;
+
+        for (let i = 0; i < this.enemies.length; i ++) {
+            if (this.enemies[i].id === id) {
+                enemy = this.enemies[i];
+                break;
+            }
+        }
+
+        return enemy;
+    }
 
     private drawDebugGeometry(): void {
         

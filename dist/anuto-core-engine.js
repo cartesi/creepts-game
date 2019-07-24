@@ -113,13 +113,19 @@ var Anuto;
             var x;
             var y;
             var i = Math.floor(l);
-            var dl = Anuto.MathUtils.fixNumber(l - i);
-            x = Anuto.GameVars.enemiesPathCells[i].c + .5;
-            y = Anuto.GameVars.enemiesPathCells[i].r + .5;
-            var dx = Anuto.GameVars.enemiesPathCells[i + 1].c - Anuto.GameVars.enemiesPathCells[i].c;
-            var dy = Anuto.GameVars.enemiesPathCells[i + 1].r - Anuto.GameVars.enemiesPathCells[i].r;
-            x = Anuto.MathUtils.fixNumber(x + dx * dl);
-            y = Anuto.MathUtils.fixNumber(y + dy * dl);
+            if (i === Anuto.GameVars.enemiesPathCells.length - 1) {
+                x = Anuto.GameVars.enemiesPathCells[Anuto.GameVars.enemiesPathCells.length - 1].c;
+                y = Anuto.GameVars.enemiesPathCells[Anuto.GameVars.enemiesPathCells.length - 1].r;
+            }
+            else {
+                var dl = Anuto.MathUtils.fixNumber(l - i);
+                x = Anuto.GameVars.enemiesPathCells[i].c + .5;
+                y = Anuto.GameVars.enemiesPathCells[i].r + .5;
+                var dx = Anuto.GameVars.enemiesPathCells[i + 1].c - Anuto.GameVars.enemiesPathCells[i].c;
+                var dy = Anuto.GameVars.enemiesPathCells[i + 1].r - Anuto.GameVars.enemiesPathCells[i].r;
+                x = Anuto.MathUtils.fixNumber(x + dx * dl);
+                y = Anuto.MathUtils.fixNumber(y + dy * dl);
+            }
             return { x: x, y: y };
         };
         Engine.prototype.update = function () {

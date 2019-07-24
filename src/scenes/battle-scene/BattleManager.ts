@@ -52,6 +52,8 @@ export class BattleManager {
         BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_HIT, BattleManager.onEnemyHit, BattleManager);
 
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_KILLED, BattleManager.onEnemyKilled, BattleManager);
+
         BattleManager.anutoEngine.addEventListener(Anuto.Event.WAVE_OVER, BattleManager.onWaveOver, BattleManager);
     }
 
@@ -121,6 +123,13 @@ export class BattleManager {
         BoardContainer.currentInstance.onEnemyHit(anutoEnemy);
         
         BoardContainer.currentInstance.removeBullet(anutoBullet);
+    }
+
+    private static onEnemyKilled(anutoEnemy: Anuto.Enemy): void {
+
+        console.log("enemy killed");
+
+        BoardContainer.currentInstance.onEnemyKilled(anutoEnemy);
     }
 
     private static onWaveOver(): void {
