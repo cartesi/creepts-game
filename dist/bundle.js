@@ -173,7 +173,7 @@ var GameConstants = /** @class */ (function () {
     function GameConstants() {
     }
     GameConstants.VERSION = "0.0";
-    GameConstants.DEVELOPMENT = false;
+    GameConstants.DEVELOPMENT = true;
     GameConstants.SHOW_DEBUG_GEOMETRY = true;
     GameConstants.INTERPOLATE_TRAJECTORIES = true;
     GameConstants.VERBOSE = false;
@@ -530,6 +530,7 @@ var BattleManager = /** @class */ (function () {
         ];
         var gameConfig = {
             timeStep: GameConstants_1.GameConstants.TIME_STEP,
+            runningInClientSide: true,
             credits: GameConstants_1.GameConstants.INITIAL_CREDITS,
             boardSize: GameConstants_1.GameConstants.BOARD_SIZE,
             enemiesPathCells: GameVars_1.GameVars.enemiesPathCells
@@ -542,8 +543,8 @@ var BattleManager = /** @class */ (function () {
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_HIT, BattleManager.onEnemyHit, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_KILLED, BattleManager.onEnemyKilled, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.WAVE_OVER, BattleManager.onWaveOver, BattleManager);
     };
     BattleManager.update = function (time, delta) {
@@ -587,6 +588,9 @@ var BattleManager = /** @class */ (function () {
     BattleManager.onEnemyHit = function (anutoEnemy, anutoBullet) {
         BoardContainer_1.BoardContainer.currentInstance.onEnemyHit(anutoEnemy);
         BoardContainer_1.BoardContainer.currentInstance.removeBullet(anutoBullet);
+    };
+    BattleManager.onEnemyKilled = function (anutoEnemy) {
+        BoardContainer_1.BoardContainer.currentInstance.onEnemyKilled(anutoEnemy);
     };
     BattleManager.onWaveOver = function () {
         //
@@ -756,6 +760,7 @@ var BoardContainer = /** @class */ (function (_super) {
         // temporalmente añadimos una torre
         _this.addTower("turret_1", { r: 3, c: 2 });
         _this.addTower("turret_1", { r: 6, c: 2 });
+        _this.addTower("turret_1", { r: 8, c: 6 });
         return _this;
     }
     BoardContainer.prototype.update = function (time, delta) {
@@ -799,15 +804,17 @@ var BoardContainer = /** @class */ (function (_super) {
     };
     BoardContainer.prototype.onEnemyHit = function (anutoEnemy) {
         // encontrar el enemigo en cuestion
-        var enemy = null;
-        for (var i = 0; this.enemies.length; i++) {
-            if (this.enemies[i].id === anutoEnemy.id) {
-                enemy = this.enemies[i];
-                break;
-            }
-        }
+        var enemy = this.getEnemyByID(anutoEnemy.id);
         if (enemy) {
             enemy.hit();
+        }
+    };
+    BoardContainer.prototype.onEnemyKilled = function (anutoEnemy) {
+        var enemy = this.getEnemyByID(anutoEnemy.id);
+        if (enemy) {
+            var i = this.enemies.indexOf(enemy);
+            this.enemies.splice(i, 1);
+            enemy.destroy();
         }
     };
     BoardContainer.prototype.removeBullet = function (anutoBullet) {
@@ -826,6 +833,16 @@ var BoardContainer = /** @class */ (function (_super) {
     };
     BoardContainer.prototype.upgradeTower = function (id) {
         //
+    };
+    BoardContainer.prototype.getEnemyByID = function (id) {
+        var enemy = null;
+        for (var i = 0; i < this.enemies.length; i++) {
+            if (this.enemies[i].id === id) {
+                enemy = this.enemies[i];
+                break;
+            }
+        }
+        return enemy;
     };
     BoardContainer.prototype.drawDebugGeometry = function () {
         var path = new Phaser.GameObjects.Graphics(this.scene);
@@ -945,16 +962,27 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var BattleManager_1 = __webpack_require__(/*! ./BattleManager */ "./src/scenes/battle-scene/BattleManager.ts");
+var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
 var HUD = /** @class */ (function (_super) {
     __extends(HUD, _super);
     function HUD(scene) {
         var _this = _super.call(this, scene) || this;
-        _this.ticksLabel = new Phaser.GameObjects.Text(_this.scene, 15, 15, "ticks: " + BattleManager_1.BattleManager.anutoEngine.ticksCounter, { fontFamily: "Arial", fontSize: "25px", color: "#000000" });
-        _this.add(_this.ticksLabel);
+        _this.creditsLabel = new Phaser.GameObjects.Text(_this.scene, 15, 15, "credits: " + BattleManager_1.BattleManager.anutoEngine.credits, { fontFamily: "Arial", fontSize: "25px", color: "#000000" });
+        _this.add(_this.creditsLabel);
+        if (GameConstants_1.GameConstants.DEVELOPMENT) {
+            _this.ticksLabel = new Phaser.GameObjects.Text(_this.scene, 15, GameConstants_1.GameConstants.GAME_HEIGHT - 35, "ticks: " + BattleManager_1.BattleManager.anutoEngine.ticksCounter, { fontFamily: "Arial", fontSize: "25px", color: "#000000" });
+            _this.add(_this.ticksLabel);
+        }
+        else {
+            _this.ticksLabel = null;
+        }
         return _this;
     }
     HUD.prototype.update = function (ime, delta) {
-        this.ticksLabel.text = "ticks: " + BattleManager_1.BattleManager.anutoEngine.ticksCounter;
+        this.creditsLabel.text = "credits: " + BattleManager_1.BattleManager.anutoEngine.credits;
+        if (this.ticksLabel) {
+            this.ticksLabel.text = "ticks: " + BattleManager_1.BattleManager.anutoEngine.ticksCounter;
+        }
     };
     HUD.prototype.onWaveOver = function () {
         //
@@ -1056,11 +1084,11 @@ var EnemyActor = /** @class */ (function (_super) {
             _this.img.fillStyle(0xFF0000);
             _this.img.fillRect(-s / 2, -s / 2, s, s);
         }
-        else if (_this.type === "enemy_1") {
+        else if (_this.type === "enemy_2") {
             //
         }
         _this.add(_this.img);
-        _this.lifeBar = new LifeBar_1.LifeBar(_this.scene);
+        _this.lifeBar = new LifeBar_1.LifeBar(_this.scene, _this.anutoEnemy.life);
         _this.lifeBar.y = -26;
         _this.lifeBar.x -= LifeBar_1.LifeBar.WIDTH / 2;
         _this.add(_this.lifeBar);
@@ -1114,20 +1142,21 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var LifeBar = /** @class */ (function (_super) {
     __extends(LifeBar, _super);
-    function LifeBar(scene) {
+    function LifeBar(scene, totalLife) {
         var _this = _super.call(this, scene) || this;
+        _this.totalLife = totalLife;
         var background = new Phaser.GameObjects.Graphics(_this.scene);
-        background.fillStyle(0xFF000);
+        background.fillStyle(0x000000);
         background.fillRect(0, 0, 40, 4);
         _this.add(background);
         _this.bar = new Phaser.GameObjects.Graphics(_this.scene);
-        _this.bar.fillStyle(0xFF000);
+        _this.bar.fillStyle(0x00FF00);
         _this.bar.fillRect(0, 0, 40, 4);
         _this.add(_this.bar);
         return _this;
     }
-    LifeBar.prototype.updateValue = function (value) {
-        //
+    LifeBar.prototype.updateValue = function (life) {
+        this.bar.scaleX = life / this.totalLife;
     };
     LifeBar.WIDTH = 40;
     return LifeBar;

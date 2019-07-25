@@ -2,11 +2,13 @@
     "enemies": {
                 "enemy_1" : {
                     "life": 80,
-                    "speed": 0.1
+                    "speed": 0.1,
+                    "value": 20
                 },
                 "enemy_2" : {
                     "life": 150,
-                    "speed": 0.075
+                    "speed": 0.075,
+                    "value": 20
                 }
     }
 }

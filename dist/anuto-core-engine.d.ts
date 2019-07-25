@@ -36,6 +36,7 @@ declare module Anuto {
         x: number;
         y: number;
         creationTick: number;
+        value: number;
         boundingRadius: number;
         private l;
         constructor(type: string, creationTick: number);
@@ -81,6 +82,7 @@ declare module Anuto {
         private spawnEnemies;
         private waveOver;
         readonly ticksCounter: number;
+        readonly credits: number;
         timeStep: number;
         paused: boolean;
     }

@@ -33,8 +33,8 @@ module Anuto {
                 x = GameVars.enemiesPathCells[i].c + .5;
                 y = GameVars.enemiesPathCells[i].r + .5;
     
-                const dx = GameVars.enemiesPathCells[i + 1].c - GameVars.enemiesPathCells[i].c;
-                const dy = GameVars.enemiesPathCells[i + 1].r - GameVars.enemiesPathCells[i].r;
+                const dx = MathUtils.fixNumber(GameVars.enemiesPathCells[i + 1].c - GameVars.enemiesPathCells[i].c);
+                const dy = MathUtils.fixNumber(GameVars.enemiesPathCells[i + 1].r - GameVars.enemiesPathCells[i].r);
     
                 x = MathUtils.fixNumber(x + dx * dl);
                 y = MathUtils.fixNumber(y + dy * dl);
@@ -189,6 +189,8 @@ module Anuto {
             GameVars.enemies.splice(i, 1);
             enemy.destroy();
 
+            GameVars.credits += enemy.value;
+
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_KILLED, [enemy]));
         }
 
@@ -267,6 +269,11 @@ module Anuto {
         public get ticksCounter(): number {
 
             return GameVars.ticksCounter;
+        }
+
+        public get credits(): number {
+
+            return GameVars.credits;
         }
 
         public get timeStep(): number {

@@ -48,6 +48,7 @@ var Anuto;
             Enemy.id++;
             this.type = type;
             this.life = Anuto.GameVars.enemyData.enemies[this.type].life;
+            this.value = Anuto.GameVars.enemyData.enemies[this.type].value;
             this.speed = Anuto.GameVars.enemyData.enemies[this.type].speed;
             this.creationTick = creationTick;
             this.l = 0;
@@ -121,8 +122,8 @@ var Anuto;
                 var dl = Anuto.MathUtils.fixNumber(l - i);
                 x = Anuto.GameVars.enemiesPathCells[i].c + .5;
                 y = Anuto.GameVars.enemiesPathCells[i].r + .5;
-                var dx = Anuto.GameVars.enemiesPathCells[i + 1].c - Anuto.GameVars.enemiesPathCells[i].c;
-                var dy = Anuto.GameVars.enemiesPathCells[i + 1].r - Anuto.GameVars.enemiesPathCells[i].r;
+                var dx = Anuto.MathUtils.fixNumber(Anuto.GameVars.enemiesPathCells[i + 1].c - Anuto.GameVars.enemiesPathCells[i].c);
+                var dy = Anuto.MathUtils.fixNumber(Anuto.GameVars.enemiesPathCells[i + 1].r - Anuto.GameVars.enemiesPathCells[i].r);
                 x = Anuto.MathUtils.fixNumber(x + dx * dl);
                 y = Anuto.MathUtils.fixNumber(y + dy * dl);
             }
@@ -203,6 +204,7 @@ var Anuto;
             var i = Anuto.GameVars.enemies.indexOf(enemy);
             Anuto.GameVars.enemies.splice(i, 1);
             enemy.destroy();
+            Anuto.GameVars.credits += enemy.value;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_KILLED, [enemy]));
         };
         Engine.prototype.addEventListener = function (type, listenerFunction, scope) {
@@ -253,6 +255,13 @@ var Anuto;
         Object.defineProperty(Engine.prototype, "ticksCounter", {
             get: function () {
                 return Anuto.GameVars.ticksCounter;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Engine.prototype, "credits", {
+            get: function () {
+                return Anuto.GameVars.credits;
             },
             enumerable: true,
             configurable: true

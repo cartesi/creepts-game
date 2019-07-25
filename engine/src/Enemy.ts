@@ -11,7 +11,7 @@ module Anuto {
         public x: number;
         public y: number;
         public creationTick: number;
-
+        public value: number;
         public boundingRadius: number;
 
         private l: number;
@@ -23,6 +23,7 @@ module Anuto {
 
             this.type = type;
             this.life = GameVars.enemyData.enemies[this.type].life;
+            this.value = GameVars.enemyData.enemies[this.type].value;
             this.speed = GameVars.enemyData.enemies[this.type].speed;
 
             this.creationTick = creationTick;

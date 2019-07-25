@@ -127,8 +127,6 @@ export class BattleManager {
 
     private static onEnemyKilled(anutoEnemy: Anuto.Enemy): void {
 
-        console.log("enemy killed");
-
         BoardContainer.currentInstance.onEnemyKilled(anutoEnemy);
     }
 
