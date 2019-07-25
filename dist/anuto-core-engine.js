@@ -206,6 +206,9 @@ var Anuto;
             enemy.destroy();
             Anuto.GameVars.credits += enemy.value;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_KILLED, [enemy]));
+            if (Anuto.GameVars.enemies.length === 0) {
+                this.waveOver();
+            }
         };
         Engine.prototype.addEventListener = function (type, listenerFunction, scope) {
             this.eventDispatcher.addEventListener(type, listenerFunction, scope);

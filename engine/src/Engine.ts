@@ -192,6 +192,10 @@ module Anuto {
             GameVars.credits += enemy.value;
 
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_KILLED, [enemy]));
+
+            if (GameVars.enemies.length === 0) {
+                this.waveOver();
+            }
         }
 
         public addEventListener(type: string, listenerFunction: Function, scope: any): void {
