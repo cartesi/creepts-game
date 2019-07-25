@@ -62,7 +62,6 @@ module Anuto {
             
             this.waveActivated = false;
             this.t = 0;
-            GameVars.waveTotalEnemies = 0;
 
             this.eventDispatcher = new EventDispatcher();
             this.enemiesSpawner = new EnemiesSpawner();
@@ -113,8 +112,7 @@ module Anuto {
 
             GameVars.level = waveConfig.level;
 
-            GameVars.waveTotalEnemies = waveConfig.totalEnemies;
-            GameVars.enemiesCounter = 0;
+            GameVars.waveEnemies = waveConfig.enemies;
             GameVars.ticksCounter = 0;
 
             // TODO: instanciar las torres que hubiesen
@@ -258,8 +256,6 @@ module Anuto {
 
                 GameVars.enemies.push(enemy);
                 this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_SPAWNED, [enemy, GameVars.enemiesPathCells[0]]));
-
-                GameVars.enemiesCounter ++;
             }
         }
 

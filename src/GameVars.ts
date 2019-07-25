@@ -4,8 +4,10 @@ export class GameVars {
     public static gameData: GameData;
     public static currentScene: Phaser.Scene;
     public static paused: boolean;
-    public static enemyData: any;
-    public static turretData: any;
+    public static enemiesData: any;
+    public static turretsData: any;
+    public static wavesData: any;
+    public static currentWave: number;
     public static timeStepFactor: number;
     public static enemiesPathCells: {r: number, c: number} [];
    

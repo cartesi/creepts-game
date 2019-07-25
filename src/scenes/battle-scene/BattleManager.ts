@@ -2,8 +2,9 @@ import { GameConstants } from "../../GameConstants";
 import { BoardContainer } from "./BoardContainer";
 import { GameVars } from "../../GameVars";
 
-import enemyData from "../../../assets/config/enemies.json";
-import turretData from "../../../assets/config/turrets.json";
+import enemiesData from "../../../assets/config/enemies.json";
+import turretsData from "../../../assets/config/turrets.json";
+import wavesData from "../../../assets/config/waves.json";
 
 export class BattleManager {
 
@@ -21,21 +22,20 @@ export class BattleManager {
             enemiesPathCells : GameVars.enemiesPathCells
         };
 
-        GameVars.enemyData = enemyData;
-        GameVars.turretData = turretData;
+        GameVars.enemiesData = enemiesData.enemies;
+        GameVars.turretsData = turretsData.turrets;
+        GameVars.wavesData = wavesData.waves;
+
         GameVars.timeStepFactor = 1;
         GameVars.paused = false;
 
-        BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemyData, GameVars.turretData);
+        BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData);
         
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
-
         BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_HIT, BattleManager.onEnemyHit, BattleManager);
-
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_KILLED, BattleManager.onEnemyKilled, BattleManager);
-
         BattleManager.anutoEngine.addEventListener(Anuto.Event.WAVE_OVER, BattleManager.onWaveOver, BattleManager);
     }
 
@@ -71,10 +71,13 @@ export class BattleManager {
             return;
         }
         
+        // TODO: ver como se gestiona esto despues
+        GameVars.currentWave = 1;
+
         const waveConfig: Anuto.Types.WaveConfig = {
             level: 0,
             turrets: [],
-            totalEnemies: 10
+            enemies: GameVars.wavesData["wave_2"]
         };
 
         BattleManager.anutoEngine.newWave(waveConfig);

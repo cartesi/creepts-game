@@ -16,7 +16,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
         super(scene);
 
-        this.id = GameVars.turretData.turrets[type].id;
+        this.id = GameVars.turretsData[type].id;
         this.p = position;
 
         this.anutoTurret = BattleManager.addTurret(type, this.p);

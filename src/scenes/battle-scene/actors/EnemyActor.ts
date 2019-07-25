@@ -28,7 +28,10 @@ export class EnemyActor extends Phaser.GameObjects.Container {
             this.img.fillRect(-s / 2, -s / 2, s, s);
 
         } else if (this.type === "enemy_2") {
-            //
+            
+            this.img = new Phaser.GameObjects.Graphics(this.scene);
+            this.img.fillStyle(0xAB2A3E);
+            this.img.fillCircle(0, 0, GameConstants.CELLS_SIZE * .4);
         }
 
         this.add(this.img);

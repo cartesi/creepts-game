@@ -103,13 +103,12 @@ declare module Anuto {
         static paused: boolean;
         static enemyData: any;
         static turretData: any;
-        static waveTotalEnemies: number;
+        static waveEnemies: string[];
         static level: number;
         static boardDimensions: {
             r: number;
             c: number;
         };
-        static enemiesCounter: number;
         static enemiesPathCells: {
             r: number;
             c: number;
@@ -170,7 +169,7 @@ declare module Anuto.Types {
     type WaveConfig = {
         level: number;
         turrets: any;
-        totalEnemies: number;
+        enemies: string[];
     };
 }
 declare module Anuto {

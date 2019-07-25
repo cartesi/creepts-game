@@ -16,6 +16,6 @@ module Anuto.Types {
     export type WaveConfig = {
         level: number;
         turrets: any;
-        totalEnemies: number;
+        enemies: string[];
     };
 }

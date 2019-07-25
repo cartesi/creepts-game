@@ -22,9 +22,9 @@ module Anuto {
             Enemy.id ++;
 
             this.type = type;
-            this.life = GameVars.enemyData.enemies[this.type].life;
-            this.value = GameVars.enemyData.enemies[this.type].value;
-            this.speed = GameVars.enemyData.enemies[this.type].speed;
+            this.life = GameVars.enemyData[this.type].life;
+            this.value = GameVars.enemyData[this.type].value;
+            this.speed = GameVars.enemyData[this.type].speed;
 
             this.creationTick = creationTick;
 

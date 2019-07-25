@@ -10,10 +10,9 @@ module Anuto {
         public static paused: boolean;
         public static enemyData: any;
         public static turretData: any;
-        public static waveTotalEnemies: number;
+        public static waveEnemies: string[];
         public static level: number;
         public static boardDimensions: {r: number, c: number};
-        public static enemiesCounter: number;
         public static enemiesPathCells: {r: number, c: number} [];
         public static enemies: Enemy[];
     }

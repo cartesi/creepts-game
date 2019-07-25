@@ -10,9 +10,9 @@ module Anuto {
 
             let enemy: Enemy = null;
             
-            if (GameVars.ticksCounter % 25 === 0 && GameVars.enemiesCounter < GameVars.waveTotalEnemies) {
+            if (GameVars.ticksCounter % 25 === 0 && GameVars.waveEnemies.length > 0) {
 
-                enemy = new Enemy("enemy_1", GameVars.ticksCounter);
+                enemy = new Enemy(GameVars.waveEnemies.shift(), GameVars.ticksCounter);
             }
 
             return enemy;

@@ -35,9 +35,9 @@ module Anuto {
             this.x = this.position.c + .5;
             this.y = this.position.r + .5;
 
-            this.damage = GameVars.turretData.turrets[type].damage;
-            this.range = GameVars.turretData.turrets[type].range;
-            this.reload = GameVars.turretData.turrets[type].reload;
+            this.damage = GameVars.turretData[type].damage;
+            this.range = GameVars.turretData[type].range;
+            this.reload = GameVars.turretData[type].reload;
 
             this.creationTick = creationTick;
 
