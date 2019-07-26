@@ -1,8 +1,8 @@
-import { EnemyActor } from "./actors/EnemyActor";
-import { TurretActor } from "./actors/TurretActor";
+import { EnemyActor } from "./enemy-actors/EnemyActor";
+import { TurretActor } from "./turret-actors/TurretActor";
 import { Board } from "./Board";
 import { GameConstants } from "../../GameConstants";
-import { BulletActor } from "./actors/BulletActor";
+import { BulletActor } from "./turret-actors/BulletActor";
 import { GameVars } from "../../GameVars";
 
 export class BoardContainer extends Phaser.GameObjects.Container {

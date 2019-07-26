@@ -5,8 +5,6 @@ module Anuto {
         constructor (creationTick: number) {
 
             super(GameConstants.ENEMY_SOLDIER, creationTick);
-
-            console.log("soldier instanciado");
         }
 
         public update(): void {

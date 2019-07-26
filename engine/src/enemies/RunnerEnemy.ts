@@ -5,8 +5,6 @@ module Anuto {
         constructor (creationTick: number) {
             
             super(GameConstants.ENEMY_RUNNER, creationTick);
-
-            console.log("runner instanciado");
         }
 
         public update(): void {

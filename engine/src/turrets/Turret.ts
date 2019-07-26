@@ -17,9 +17,10 @@ module Anuto {
         public creationTick: number;
         public enemyWithinRange: Enemy;
 
-        private f: number;
-        private reloadTicks: number;
-        private gunLoaded: boolean;
+        protected f: number;
+        protected reloadTicks: number;
+        protected readyToShoot: boolean;
+        protected justShot: boolean;
 
         constructor (type: string, p: {r: number, c: number}, creationTick: number) {
 
@@ -29,7 +30,8 @@ module Anuto {
             this.type = type;
             this.f = 0;
             this.level = 1;
-            this.gunLoaded = false;
+            this.readyToShoot = false;
+            this.justShot = false;
 
             this.position = p;
             this.x = this.position.c + .5;
@@ -53,12 +55,12 @@ module Anuto {
 
         public update(): void {
 
-            if (this.gunLoaded) {
+            if (this.readyToShoot) {
 
-                const hasTurretShot = this.shoot();
+                this.shoot();
 
-                if (hasTurretShot) {
-                    this.gunLoaded = false;
+                if (this.justShot) {
+                    this.readyToShoot = false;
                 }
 
             } else {
@@ -66,7 +68,7 @@ module Anuto {
                 this.f ++;
 
                 if (this.f === this.reloadTicks) {
-                    this.gunLoaded = true;
+                    this.readyToShoot = true;
                     this.f = 0;
                 }
             }
@@ -77,54 +79,15 @@ module Anuto {
             this.level ++;
         }
 
-        private shoot(): boolean {
+        protected shoot(): void {
 
-            let ret = false;
-
-            const enemyData = this.getEnemyWithinRange();
-
-            if (enemyData.enemy) {
-
-                this.enemyWithinRange = enemyData.enemy;
-
-                // a que distancia esta?
-                const d = MathUtils.fixNumber(Math.sqrt(enemyData.squareDist));
-
-                // cuantos ticks va a tardar la bala en llegar?
-                const ticksToImpact = Math.floor(MathUtils.fixNumber(d / GameConstants.BULLET_SPEED));
-
-                // encontrar la posicion de la torre dentro de estos ticks
-                const impactPosition = this.enemyWithinRange.getNextPosition(ticksToImpact);
-
-                // la posicion de impacto sigue estando dentro del radio de accion?
-                const dx = impactPosition.x - this.x;
-                const dy = impactPosition.y - this.y;
-
-                const impactSquareDistance = MathUtils.fixNumber(dx * dx + dy * dy);
-
-                if (this.range * this.range > impactSquareDistance) {
-
-                    const angle =  MathUtils.fixNumber(Math.atan2(dy, dx));
-                    const bullet = new Bullet(this.position, angle, enemyData.enemy, this.damage);
-
-                    Engine.currentInstance.addBullet(bullet, this);
-
-                    ret = true;
-
-                } else {
-                    this.enemyWithinRange = null;
-                }
-
-            } else {
-                this.enemyWithinRange = null;
-            }
-
-            return ret;
+            // override
         }
 
-        private getEnemyWithinRange(): {enemy: Enemy, squareDist: number} {
+        // TODO: hacer que se puedan pillar varios
+        protected getEnemiesWithinRange(): {enemy: Enemy, squareDist: number} []{
 
-            let enemy: Enemy = null;
+            let enemies: {enemy: Enemy, squareDist: number} [] = [];
             let squareDist = 1e10;
 
             for (let i = 0; i < GameVars.enemies.length; i ++) {
@@ -135,12 +98,11 @@ module Anuto {
                 squareDist = MathUtils.fixNumber(dx * dx + dy * dy);
 
                 if (this.range * this.range >= squareDist) {
-                    enemy = GameVars.enemies[i];
-                    break;
+                    enemies.push({enemy: GameVars.enemies[i], squareDist: squareDist});
                 }
             }
 
-            return {enemy: enemy, squareDist: squareDist};
+            return enemies;
         }
     }
 }

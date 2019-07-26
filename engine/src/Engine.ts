@@ -166,6 +166,8 @@ module Anuto {
                 default:
             }
 
+            this.turrets.push(turret);
+
             return turret;
         }
 
