@@ -98,12 +98,16 @@ declare module Anuto {
         static credits: number;
         static score: number;
         static timeStep: number;
+        static enemySpawningDeltaTicks: number;
         static ticksCounter: number;
         static runningInClientSide: boolean;
         static paused: boolean;
         static enemyData: any;
         static turretData: any;
-        static waveEnemies: string[];
+        static waveEnemies: {
+            "type": string;
+            "t": number;
+        }[];
         static level: number;
         static boardDimensions: {
             r: number;
@@ -156,6 +160,7 @@ declare module Anuto.Types {
     type GameConfig = {
         timeStep: number;
         runningInClientSide: boolean;
+        enemySpawningDeltaTicks: number;
         credits: number;
         boardSize: {
             r: number;
@@ -169,7 +174,10 @@ declare module Anuto.Types {
     type WaveConfig = {
         level: number;
         turrets: any;
-        enemies: string[];
+        enemies: {
+            "type": string;
+            "t": number;
+        }[];
     };
 }
 declare module Anuto {

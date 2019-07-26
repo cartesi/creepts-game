@@ -10,9 +10,14 @@ module Anuto {
 
             let enemy: Enemy = null;
             
-            if (GameVars.ticksCounter % 25 === 0 && GameVars.waveEnemies.length > 0) {
+            if (GameVars.ticksCounter % GameVars.enemySpawningDeltaTicks === 0 && GameVars.waveEnemies.length > 0) {
 
-                enemy = new Enemy(GameVars.waveEnemies.shift(), GameVars.ticksCounter);
+                const nextEnemyData = GameVars.waveEnemies[0];
+                
+                if (nextEnemyData.t === GameVars.ticksCounter / GameVars.enemySpawningDeltaTicks) {
+                    enemy = new Enemy(nextEnemyData.type, GameVars.ticksCounter);
+                    GameVars.waveEnemies.splice(0, 1);
+                }
             }
 
             return enemy;

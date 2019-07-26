@@ -17,6 +17,7 @@ export class BattleManager {
         const gameConfig: Anuto.Types.GameConfig = {
             timeStep: GameConstants.TIME_STEP,
             runningInClientSide: true,
+            enemySpawningDeltaTicks: GameConstants.ENEMY_SPAWNING_DELTA_TICKS,
             credits: GameConstants.INITIAL_CREDITS,
             boardSize: GameConstants.BOARD_SIZE,
             enemiesPathCells : GameVars.enemiesPathCells

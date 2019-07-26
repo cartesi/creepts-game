@@ -36,6 +36,8 @@ module Anuto {
             this.y = p.y; 
 
             this.boundingRadius = .4; // en proporcion al tamaño de las celdas
+
+            
         }
 
         public destroy(): void {

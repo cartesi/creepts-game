@@ -8,6 +8,7 @@ module Anuto.Types {
     export type GameConfig = {
         timeStep: number;
         runningInClientSide: boolean;
+        enemySpawningDeltaTicks: number;
         credits: number;
         boardSize: {r: number, c: number}; 
         enemiesPathCells: {r: number, c: number} [];
@@ -16,6 +17,6 @@ module Anuto.Types {
     export type WaveConfig = {
         level: number;
         turrets: any;
-        enemies: string[];
+        enemies: {"type": string, "t": number} [];
     };
 }

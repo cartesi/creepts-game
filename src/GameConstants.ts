@@ -15,6 +15,7 @@ export class GameConstants {
 
     // el tick del engine en milisegundos
     public static readonly TIME_STEP = 100;
+    public static readonly ENEMY_SPAWNING_DELTA_TICKS = 10;
     public static readonly BOARD_SIZE = {r: 15, c: 10};
     public static readonly INITIAL_CREDITS = 500;
     public static readonly CELLS_SIZE = 50;

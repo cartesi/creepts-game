@@ -51,9 +51,10 @@ module Anuto {
             Enemy.id = 0;
             Bullet.id = 0;
  
+            GameVars.runningInClientSide = gameConfig.runningInClientSide;
             GameVars.credits = gameConfig.credits;
             GameVars.timeStep = gameConfig.timeStep;
-            GameVars.runningInClientSide = gameConfig.runningInClientSide;
+            GameVars.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
             GameVars.paused = false;
             GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
 

@@ -1,28 +1,28 @@
 {
     "waves": {
                 "wave_1" : [
-                                "soldier", 
-                                "soldier",
-                                "soldier",
-                                "soldier",
-                                "soldier",
-                                "soldier",
-                                "soldier",
-                                "soldier",
-                                "soldier",
-                                "soldier"
+                                {"type": "soldier",     "t": 0},
+                                {"type": "soldier",     "t": 1},
+                                {"type": "soldier",     "t": 2},
+                                {"type": "soldier",     "t": 3},
+                                {"type": "soldier",     "t": 8},
+                                {"type": "soldier",     "t": 9},
+                                {"type": "soldier",     "t": 10},
+                                {"type": "soldier",     "t": 11},
+                                {"type": "soldier",     "t": 12},
+                                {"type": "soldier",     "t": 15}
                 ],
                 "wave_2" : [
-                                "soldier",
-                                "soldier",
-                                "soldier",
-                                "soldier",
-                                "soldier",
-                                "soldier",
-                                "runner",
-                                "runner",
-                                "runner",
-                                "soldier"
+                                {"type": "soldier",     "t": 0},
+                                {"type": "soldier",     "t": 1},
+                                {"type": "soldier",     "t": 2},
+                                {"type": "soldier",     "t": 3},
+                                {"type": "soldier",     "t": 4},
+                                {"type": "runner",      "t": 10},
+                                {"type": "runner",      "t": 12},
+                                {"type": "runner",      "t": 14},
+                                {"type": "runner",      "t": 16},
+                                {"type": "soldier",     "t": 18}
                 ]
     }
 }

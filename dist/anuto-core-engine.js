@@ -31,8 +31,13 @@ var Anuto;
         }
         EnemiesSpawner.prototype.getEnemy = function () {
             var enemy = null;
-            if (Anuto.GameVars.ticksCounter % 25 === 0 && Anuto.GameVars.waveEnemies.length > 0) {
-                enemy = new Anuto.Enemy(Anuto.GameVars.waveEnemies.shift(), Anuto.GameVars.ticksCounter);
+            if (Anuto.GameVars.ticksCounter % Anuto.GameVars.enemySpawningDeltaTicks === 0 && Anuto.GameVars.waveEnemies.length > 0) {
+                var nextEnemyData = Anuto.GameVars.waveEnemies[0];
+                if (nextEnemyData.t === Anuto.GameVars.ticksCounter / Anuto.GameVars.enemySpawningDeltaTicks) {
+                    console.log("nextEnemyData.t:", nextEnemyData.t, "GameVars.ticksCounter:", Anuto.GameVars.ticksCounter);
+                    enemy = new Anuto.Enemy(nextEnemyData.type, Anuto.GameVars.ticksCounter);
+                    Anuto.GameVars.waveEnemies.splice(0, 1);
+                }
             }
             return enemy;
         };
@@ -95,9 +100,10 @@ var Anuto;
             Anuto.Turret.id = 0;
             Anuto.Enemy.id = 0;
             Anuto.Bullet.id = 0;
+            Anuto.GameVars.runningInClientSide = gameConfig.runningInClientSide;
             Anuto.GameVars.credits = gameConfig.credits;
             Anuto.GameVars.timeStep = gameConfig.timeStep;
-            Anuto.GameVars.runningInClientSide = gameConfig.runningInClientSide;
+            Anuto.GameVars.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
             Anuto.GameVars.paused = false;
             Anuto.GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
             Anuto.GameVars.enemyData = enemyData;
