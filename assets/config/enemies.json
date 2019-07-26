@@ -1,11 +1,26 @@
 {
     "enemies": {
-                "enemy_1" : {
+                "soldier" : {
                     "life": 80,
                     "speed": 0.1,
                     "value": 20
                 },
-                "enemy_2" : {
+                "runner" : {
+                    "life": 150,
+                    "speed": 0.075,
+                    "value": 40
+                },
+                "healer" : {
+                    "life": 150,
+                    "speed": 0.075,
+                    "value": 40
+                },
+                "blob" : {
+                    "life": 150,
+                    "speed": 0.075,
+                    "value": 40
+                },
+                "flier" : {
                     "life": 150,
                     "speed": 0.075,
                     "value": 40

@@ -19,7 +19,7 @@ export class EnemyActor extends Phaser.GameObjects.Container {
         this.id = this.anutoEnemy.id;
         this.type = this.anutoEnemy.type;
 
-        if (this.type === "enemy_1") {
+        if (this.type === GameConstants.ENEMY_SOLDIER) {
 
             let s = GameConstants.CELLS_SIZE * .75;
             
@@ -27,7 +27,7 @@ export class EnemyActor extends Phaser.GameObjects.Container {
             this.img.fillStyle(0xFF0000);
             this.img.fillRect(-s / 2, -s / 2, s, s);
 
-        } else if (this.type === "enemy_2") {
+        } else if (this.type === GameConstants.ENEMY_RUNNER) {
             
             this.img = new Phaser.GameObjects.Graphics(this.scene);
             this.img.fillStyle(0xAB2A3E);

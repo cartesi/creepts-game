@@ -20,9 +20,12 @@ export class GameConstants {
     public static readonly CELLS_SIZE = 50;
     
     // los nombres de los enemigos
-    public static readonly ENEMY_1 = "enemy_1";
-    public static readonly ENEMY_2 = "enemy_2";
-    
+    public static readonly ENEMY_SOLDIER = "soldier";
+    public static readonly ENEMY_RUNNER = "runner";
+    public static readonly ENEMY_HEALER = "healer";
+    public static readonly ENEMY_BLOB = "blob";
+    public static readonly ENEMY_FLIER = "flier";
+
     // los caminos de los enemigos
     public static readonly ENEMY_PATH_1 = [
                                             {r: -1, c: 3},
@@ -88,8 +91,6 @@ export class GameConstants {
                                             {r: 14, c: 4},
                                             {r: 15, c: 4},
                                         ];
-
-
 
     public static readonly SAVED_GAME_DATA_KEY = "anuto-data";
 }

@@ -143,6 +143,9 @@ module Anuto {
 
         public addTurret(type: string, p: {r: number, c: number}): Turret {
 
+            // TODO: comprobar q se puede poner una torreta o sea no hay torreta ni camino y que hay creditos suficientes
+            // mandar null o hacer saltar un error
+
             const turret = new Turret(type, p, GameVars.ticksCounter);
             this.turrets.push(turret);
 
