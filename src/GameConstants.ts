@@ -20,13 +20,6 @@ export class GameConstants {
     public static readonly INITIAL_CREDITS = 500;
     public static readonly CELLS_SIZE = 50;
     
-    // los nombres de los enemigos
-    public static readonly ENEMY_SOLDIER = "soldier";
-    public static readonly ENEMY_RUNNER = "runner";
-    public static readonly ENEMY_HEALER = "healer";
-    public static readonly ENEMY_BLOB = "blob";
-    public static readonly ENEMY_FLIER = "flier";
-
     // los caminos de los enemigos
     public static readonly ENEMY_PATH_1 = [
                                             {r: -1, c: 3},

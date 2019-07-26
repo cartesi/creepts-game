@@ -115,7 +115,7 @@ module.exports = JSON.parse("{\"turrets\":{\"turret_1\":{\"price\":150,\"damage\
 /*! exports provided: waves, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"waves\":{\"wave_1\":[\"soldier\",\"soldier\",\"soldier\",\"soldier\",\"soldier\",\"soldier\",\"soldier\",\"soldier\",\"soldier\",\"soldier\"],\"wave_2\":[\"soldier\",\"soldier\",\"soldier\",\"soldier\",\"soldier\",\"soldier\",\"runner\",\"runner\",\"runner\",\"soldier\"]}}");
+module.exports = JSON.parse("{\"waves\":{\"wave_1\":[{\"type\":\"soldier\",\"t\":0},{\"type\":\"soldier\",\"t\":1},{\"type\":\"soldier\",\"t\":2},{\"type\":\"soldier\",\"t\":3},{\"type\":\"soldier\",\"t\":8},{\"type\":\"soldier\",\"t\":9},{\"type\":\"soldier\",\"t\":10},{\"type\":\"soldier\",\"t\":11},{\"type\":\"soldier\",\"t\":12},{\"type\":\"soldier\",\"t\":15}],\"wave_2\":[{\"type\":\"soldier\",\"t\":0},{\"type\":\"soldier\",\"t\":1},{\"type\":\"soldier\",\"t\":2},{\"type\":\"soldier\",\"t\":3},{\"type\":\"soldier\",\"t\":4},{\"type\":\"runner\",\"t\":10},{\"type\":\"runner\",\"t\":12},{\"type\":\"runner\",\"t\":14},{\"type\":\"runner\",\"t\":16},{\"type\":\"soldier\",\"t\":18}]}}");
 
 /***/ }),
 
@@ -192,15 +192,10 @@ var GameConstants = /** @class */ (function () {
     GameConstants.GAME_HEIGHT = 1024;
     // el tick del engine en milisegundos
     GameConstants.TIME_STEP = 100;
+    GameConstants.ENEMY_SPAWNING_DELTA_TICKS = 10;
     GameConstants.BOARD_SIZE = { r: 15, c: 10 };
     GameConstants.INITIAL_CREDITS = 500;
     GameConstants.CELLS_SIZE = 50;
-    // los nombres de los enemigos
-    GameConstants.ENEMY_SOLDIER = "soldier";
-    GameConstants.ENEMY_RUNNER = "runner";
-    GameConstants.ENEMY_HEALER = "healer";
-    GameConstants.ENEMY_BLOB = "blob";
-    GameConstants.ENEMY_FLIER = "flier";
     // los caminos de los enemigos
     GameConstants.ENEMY_PATH_1 = [
         { r: -1, c: 3 },
@@ -595,6 +590,7 @@ var BattleManager = /** @class */ (function () {
         var gameConfig = {
             timeStep: GameConstants_1.GameConstants.TIME_STEP,
             runningInClientSide: true,
+            enemySpawningDeltaTicks: GameConstants_1.GameConstants.ENEMY_SPAWNING_DELTA_TICKS,
             credits: GameConstants_1.GameConstants.INITIAL_CREDITS,
             boardSize: GameConstants_1.GameConstants.BOARD_SIZE,
             enemiesPathCells: GameVars_1.GameVars.enemiesPathCells
@@ -1146,13 +1142,13 @@ var EnemyActor = /** @class */ (function (_super) {
         _this.anutoEnemy = anutoEnemy;
         _this.id = _this.anutoEnemy.id;
         _this.type = _this.anutoEnemy.type;
-        if (_this.type === GameConstants_1.GameConstants.ENEMY_SOLDIER) {
+        if (_this.type === Anuto.GameConstants.ENEMY_SOLDIER) {
             var s = GameConstants_1.GameConstants.CELLS_SIZE * .75;
             _this.img = new Phaser.GameObjects.Graphics(_this.scene);
             _this.img.fillStyle(0xFF0000);
             _this.img.fillRect(-s / 2, -s / 2, s, s);
         }
-        else if (_this.type === GameConstants_1.GameConstants.ENEMY_RUNNER) {
+        else if (_this.type === Anuto.GameConstants.ENEMY_RUNNER) {
             _this.img = new Phaser.GameObjects.Graphics(_this.scene);
             _this.img.fillStyle(0xAB2A3E);
             _this.img.fillCircle(0, 0, GameConstants_1.GameConstants.CELLS_SIZE * .4);

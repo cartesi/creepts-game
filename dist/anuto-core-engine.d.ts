@@ -21,9 +21,35 @@ declare module Anuto {
     }
 }
 declare module Anuto {
-    class EnemiesSpawner {
-        constructor();
-        getEnemy(): Enemy;
+    class Turret {
+        static id: number;
+        id: number;
+        type: string;
+        level: number;
+        damage: number;
+        reload: number;
+        range: number;
+        value: number;
+        position: {
+            r: number;
+            c: number;
+        };
+        x: number;
+        y: number;
+        creationTick: number;
+        enemyWithinRange: Enemy;
+        private f;
+        private reloadTicks;
+        private gunLoaded;
+        constructor(type: string, p: {
+            r: number;
+            c: number;
+        }, creationTick: number);
+        destroy(): void;
+        update(): void;
+        upgrade(): void;
+        private shoot;
+        private getEnemyWithinRange;
     }
 }
 declare module Anuto {
@@ -91,6 +117,15 @@ declare module Anuto {
     class GameConstants {
         static readonly RELOAD_BASE_TICKS = 10;
         static readonly BULLET_SPEED = 0.5;
+        static readonly ENEMY_SOLDIER = "soldier";
+        static readonly ENEMY_RUNNER = "runner";
+        static readonly ENEMY_HEALER = "healer";
+        static readonly ENEMY_BLOB = "blob";
+        static readonly ENEMY_FLIER = "flier";
+        static readonly TURRET_PROJECTILE = "projectile";
+        static readonly TURRET_LASER = "laser";
+        static readonly TURRET_LAUNCH = "launch";
+        static readonly TURRET_GLUE = "glue";
     }
 }
 declare module Anuto {
@@ -118,38 +153,6 @@ declare module Anuto {
             c: number;
         }[];
         static enemies: Enemy[];
-    }
-}
-declare module Anuto {
-    class Turret {
-        static id: number;
-        id: number;
-        type: string;
-        level: number;
-        damage: number;
-        reload: number;
-        range: number;
-        value: number;
-        position: {
-            r: number;
-            c: number;
-        };
-        x: number;
-        y: number;
-        creationTick: number;
-        enemyWithinRange: Enemy;
-        private f;
-        private reloadTicks;
-        private gunLoaded;
-        constructor(type: string, p: {
-            r: number;
-            c: number;
-        }, creationTick: number);
-        destroy(): void;
-        update(): void;
-        upgrade(): void;
-        private shoot;
-        private getEnemyWithinRange;
     }
 }
 declare module Anuto.Types {
@@ -181,6 +184,41 @@ declare module Anuto.Types {
     };
 }
 declare module Anuto {
+    class BlobEnemy extends Enemy {
+        constructor(creationTick: number);
+        update(): void;
+    }
+}
+declare module Anuto {
+    class EnemiesSpawner {
+        constructor();
+        getEnemy(): Enemy;
+    }
+}
+declare module Anuto {
+    class FlierEnemy extends Enemy {
+        constructor(creationTick: number);
+        update(): void;
+    }
+}
+declare module Anuto {
+    class HealerEnemy extends Enemy {
+        constructor(creationTick: number);
+    }
+}
+declare module Anuto {
+    class RunnerEnemy extends Enemy {
+        constructor(creationTick: number);
+        update(): void;
+    }
+}
+declare module Anuto {
+    class SoldierEnemy extends Enemy {
+        constructor(creationTick: number);
+        update(): void;
+    }
+}
+declare module Anuto {
     class Event {
         static readonly ENEMY_SPAWNED = "enemy spawned";
         static readonly ENEMY_KILLED = "enemy killed";
@@ -203,6 +241,42 @@ declare module Anuto {
         addEventListener(type: string, listenerFunc: Function, scope: any): void;
         removeEventListener(type: string, listenerFunc: Function): void;
         dispatchEvent(evt: Event): void;
+    }
+}
+declare module Anuto {
+    class GlueTurret extends Turret {
+        constructor(p: {
+            r: number;
+            c: number;
+        }, creationTick: number);
+        update(): void;
+    }
+}
+declare module Anuto {
+    class LaserTurret extends Turret {
+        constructor(p: {
+            r: number;
+            c: number;
+        }, creationTick: number);
+        update(): void;
+    }
+}
+declare module Anuto {
+    class LaunchTurret extends Turret {
+        constructor(p: {
+            r: number;
+            c: number;
+        }, creationTick: number);
+        update(): void;
+    }
+}
+declare module Anuto {
+    class ProjectileTurret extends Turret {
+        constructor(p: {
+            r: number;
+            c: number;
+        }, creationTick: number);
+        update(): void;
     }
 }
 declare module Anuto {

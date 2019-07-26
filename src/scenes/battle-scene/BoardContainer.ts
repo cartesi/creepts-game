@@ -35,10 +35,10 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
 
         // temporalmente añadimos una torre
-        this.addTower("turret_1", {r: 3, c: 2});
-        this.addTower("turret_1", {r: 6, c: 2});
-        this.addTower("turret_1", {r: 8, c: 6});
-        this.addTower("turret_1", {r: 11, c: 2});
+        this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, {r: 3, c: 2});
+        this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, {r: 6, c: 2});
+        this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, {r: 8, c: 6});
+        this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, {r: 11, c: 2});
     }
 
     public update(time: number, delta: number): void {
@@ -81,9 +81,9 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    public addTower(name: string, position: {r: number, c: number}): void {
+    public addTower(type: string, position: {r: number, c: number}): void {
         
-        const tower = new TurretActor(this.scene, name, position);
+        const tower = new TurretActor(this.scene, type, position);
         this.add(tower);
 
         this.towers.push(tower);

@@ -1,3 +1,5 @@
+/// <reference path="./turrets/Turret.ts"/>
+/// <reference path="./enemies/Enemy.ts"/>
 module Anuto {
 
     export class Engine {
@@ -146,9 +148,23 @@ module Anuto {
 
             // TODO: comprobar q se puede poner una torreta o sea no hay torreta ni camino y que hay creditos suficientes
             // mandar null o hacer saltar un error
+            let turret: Turret = null;
 
-            const turret = new Turret(type, p, GameVars.ticksCounter);
-            this.turrets.push(turret);
+            switch (type) {
+                case GameConstants.TURRET_PROJECTILE:
+                    turret = new ProjectileTurret(p, GameVars.ticksCounter);
+                    break;
+                case GameConstants.TURRET_LASER:
+                    turret = new LaserTurret(p, GameVars.ticksCounter);
+                    break;
+                case GameConstants.TURRET_LAUNCH:
+                    turret = new LaunchTurret(p, GameVars.ticksCounter);
+                    break;
+                case GameConstants.TURRET_GLUE:
+                    turret = new GlueTurret(p, GameVars.ticksCounter);
+                    break;
+                default:
+            }
 
             return turret;
         }
