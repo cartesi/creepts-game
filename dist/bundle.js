@@ -104,7 +104,7 @@ module.exports = JSON.parse("{\"enemies\":{\"soldier\":{\"life\":80,\"speed\":0.
 /*! exports provided: turrets, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"turrets\":{\"turret_1\":{\"price\":150,\"damage\":10,\"reload\":1,\"range\":2.5},\"turret_2\":{\"price\":150,\"damage\":10,\"reload\":1,\"range\":2.5}}}");
+module.exports = JSON.parse("{\"turrets\":{\"projectile\":{\"price\":150,\"damage\":10,\"reload\":1,\"range\":2.5},\"laser\":{\"price\":250,\"damage\":10,\"reload\":1,\"range\":2.5},\"launch\":{\"price\":300,\"damage\":10,\"reload\":1,\"range\":2.5},\"glue\":{\"price\":500,\"damage\":10,\"reload\":1,\"range\":2.5}}}");
 
 /***/ }),
 
@@ -799,11 +799,11 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var EnemyActor_1 = __webpack_require__(/*! ./actors/EnemyActor */ "./src/scenes/battle-scene/actors/EnemyActor.ts");
-var TurretActor_1 = __webpack_require__(/*! ./actors/TurretActor */ "./src/scenes/battle-scene/actors/TurretActor.ts");
+var EnemyActor_1 = __webpack_require__(/*! ./enemy-actors/EnemyActor */ "./src/scenes/battle-scene/enemy-actors/EnemyActor.ts");
+var TurretActor_1 = __webpack_require__(/*! ./turret-actors/TurretActor */ "./src/scenes/battle-scene/turret-actors/TurretActor.ts");
 var Board_1 = __webpack_require__(/*! ./Board */ "./src/scenes/battle-scene/Board.ts");
 var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
-var BulletActor_1 = __webpack_require__(/*! ./actors/BulletActor */ "./src/scenes/battle-scene/actors/BulletActor.ts");
+var BulletActor_1 = __webpack_require__(/*! ./turret-actors/BulletActor */ "./src/scenes/battle-scene/turret-actors/BulletActor.ts");
 var GameVars_1 = __webpack_require__(/*! ../../GameVars */ "./src/GameVars.ts");
 var BoardContainer = /** @class */ (function (_super) {
     __extends(BoardContainer, _super);
@@ -821,10 +821,10 @@ var BoardContainer = /** @class */ (function (_super) {
             _this.drawDebugGeometry();
         }
         // temporalmente añadimos una torre
-        _this.addTower("turret_1", { r: 3, c: 2 });
-        _this.addTower("turret_1", { r: 6, c: 2 });
-        _this.addTower("turret_1", { r: 8, c: 6 });
-        _this.addTower("turret_1", { r: 11, c: 2 });
+        _this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, { r: 3, c: 2 });
+        _this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, { r: 6, c: 2 });
+        _this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, { r: 8, c: 6 });
+        _this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, { r: 11, c: 2 });
         return _this;
     }
     BoardContainer.prototype.update = function (time, delta) {
@@ -856,8 +856,8 @@ var BoardContainer = /** @class */ (function (_super) {
             enemy.destroy();
         }
     };
-    BoardContainer.prototype.addTower = function (name, position) {
-        var tower = new TurretActor_1.TurretActor(this.scene, name, position);
+    BoardContainer.prototype.addTower = function (type, position) {
+        var tower = new TurretActor_1.TurretActor(this.scene, type, position);
         this.add(tower);
         this.towers.push(tower);
     };
@@ -1058,61 +1058,10 @@ exports.HUD = HUD;
 
 /***/ }),
 
-/***/ "./src/scenes/battle-scene/actors/BulletActor.ts":
-/*!*******************************************************!*\
-  !*** ./src/scenes/battle-scene/actors/BulletActor.ts ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var GameConstants_1 = __webpack_require__(/*! ../../../GameConstants */ "./src/GameConstants.ts");
-var BulletActor = /** @class */ (function (_super) {
-    __extends(BulletActor, _super);
-    function BulletActor(scene, anutoBullet) {
-        var _this = _super.call(this, scene, 0, 0, "texture_atlas_1", "bullet") || this;
-        _this.anutoBullet = anutoBullet;
-        _this.x = _this.anutoBullet.x * GameConstants_1.GameConstants.CELLS_SIZE;
-        _this.y = _this.anutoBullet.y * GameConstants_1.GameConstants.CELLS_SIZE;
-        return _this;
-    }
-    BulletActor.prototype.update = function (time, delta) {
-        var smoothFactor;
-        if (GameConstants_1.GameConstants.INTERPOLATE_TRAJECTORIES) {
-            smoothFactor = .3;
-        }
-        else {
-            smoothFactor = 1;
-        }
-        this.x += (this.anutoBullet.x * GameConstants_1.GameConstants.CELLS_SIZE - this.x) * smoothFactor;
-        this.y += (this.anutoBullet.y * GameConstants_1.GameConstants.CELLS_SIZE - this.y) * smoothFactor;
-    };
-    return BulletActor;
-}(Phaser.GameObjects.Image));
-exports.BulletActor = BulletActor;
-
-
-/***/ }),
-
-/***/ "./src/scenes/battle-scene/actors/EnemyActor.ts":
-/*!******************************************************!*\
-  !*** ./src/scenes/battle-scene/actors/EnemyActor.ts ***!
-  \******************************************************/
+/***/ "./src/scenes/battle-scene/enemy-actors/EnemyActor.ts":
+/*!************************************************************!*\
+  !*** ./src/scenes/battle-scene/enemy-actors/EnemyActor.ts ***!
+  \************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1134,7 +1083,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var GameConstants_1 = __webpack_require__(/*! ../../../GameConstants */ "./src/GameConstants.ts");
 var GameVars_1 = __webpack_require__(/*! ../../../GameVars */ "./src/GameVars.ts");
-var LifeBar_1 = __webpack_require__(/*! ./LifeBar */ "./src/scenes/battle-scene/actors/LifeBar.ts");
+var LifeBar_1 = __webpack_require__(/*! ./LifeBar */ "./src/scenes/battle-scene/enemy-actors/LifeBar.ts");
 var EnemyActor = /** @class */ (function (_super) {
     __extends(EnemyActor, _super);
     function EnemyActor(scene, anutoEnemy, position) {
@@ -1183,10 +1132,10 @@ exports.EnemyActor = EnemyActor;
 
 /***/ }),
 
-/***/ "./src/scenes/battle-scene/actors/LifeBar.ts":
-/*!***************************************************!*\
-  !*** ./src/scenes/battle-scene/actors/LifeBar.ts ***!
-  \***************************************************/
+/***/ "./src/scenes/battle-scene/enemy-actors/LifeBar.ts":
+/*!*********************************************************!*\
+  !*** ./src/scenes/battle-scene/enemy-actors/LifeBar.ts ***!
+  \*********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1232,10 +1181,61 @@ exports.LifeBar = LifeBar;
 
 /***/ }),
 
-/***/ "./src/scenes/battle-scene/actors/TurretActor.ts":
-/*!*******************************************************!*\
-  !*** ./src/scenes/battle-scene/actors/TurretActor.ts ***!
-  \*******************************************************/
+/***/ "./src/scenes/battle-scene/turret-actors/BulletActor.ts":
+/*!**************************************************************!*\
+  !*** ./src/scenes/battle-scene/turret-actors/BulletActor.ts ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var GameConstants_1 = __webpack_require__(/*! ../../../GameConstants */ "./src/GameConstants.ts");
+var BulletActor = /** @class */ (function (_super) {
+    __extends(BulletActor, _super);
+    function BulletActor(scene, anutoBullet) {
+        var _this = _super.call(this, scene, 0, 0, "texture_atlas_1", "bullet") || this;
+        _this.anutoBullet = anutoBullet;
+        _this.x = _this.anutoBullet.x * GameConstants_1.GameConstants.CELLS_SIZE;
+        _this.y = _this.anutoBullet.y * GameConstants_1.GameConstants.CELLS_SIZE;
+        return _this;
+    }
+    BulletActor.prototype.update = function (time, delta) {
+        var smoothFactor;
+        if (GameConstants_1.GameConstants.INTERPOLATE_TRAJECTORIES) {
+            smoothFactor = .3;
+        }
+        else {
+            smoothFactor = 1;
+        }
+        this.x += (this.anutoBullet.x * GameConstants_1.GameConstants.CELLS_SIZE - this.x) * smoothFactor;
+        this.y += (this.anutoBullet.y * GameConstants_1.GameConstants.CELLS_SIZE - this.y) * smoothFactor;
+    };
+    return BulletActor;
+}(Phaser.GameObjects.Image));
+exports.BulletActor = BulletActor;
+
+
+/***/ }),
+
+/***/ "./src/scenes/battle-scene/turret-actors/TurretActor.ts":
+/*!**************************************************************!*\
+  !*** ./src/scenes/battle-scene/turret-actors/TurretActor.ts ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 

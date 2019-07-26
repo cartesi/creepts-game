@@ -8,19 +8,19 @@
                     "range": 2.5
                 },
                 "laser" : {
-                    "price": 150,
+                    "price": 250,
                     "damage": 10,
                     "reload": 1,
                     "range": 2.5
                 },
                 "launch" : {
-                    "price": 150,
+                    "price": 300,
                     "damage": 10,
                     "reload": 1,
                     "range": 2.5
                 },
                 "glue" : {
-                    "price": 150,
+                    "price": 500,
                     "damage": 10,
                     "reload": 1,
                     "range": 2.5

@@ -199,6 +199,20 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">texture_atlas_1/btn_reset_off.png</key>
+            <key type="filename">texture_atlas_1/btn_reset_on.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>40,12,80,24</rect>
+                <key>scale9Paddings</key>
+                <rect>40,12,80,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">texture_atlas_1/btn_start_off.png</key>
             <key type="filename">texture_atlas_1/btn_start_on.png</key>
             <struct type="IndividualSpriteSettings">

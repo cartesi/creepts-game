@@ -54,9 +54,9 @@ var Anuto;
             this.damage = Anuto.GameVars.turretData[type].damage;
             this.range = Anuto.GameVars.turretData[type].range;
             this.reload = Anuto.GameVars.turretData[type].reload;
+            this.value = Anuto.GameVars.turretData[type].price;
             this.creationTick = creationTick;
             this.reloadTicks = Math.floor(Anuto.GameConstants.RELOAD_BASE_TICKS * this.reload);
-            this.value = 0;
         }
         Turret.prototype.destroy = function () {
         };
@@ -213,7 +213,7 @@ var Anuto;
         };
         Engine.prototype.newWave = function (waveConfig) {
             Anuto.GameVars.level = waveConfig.level;
-            Anuto.GameVars.waveEnemies = waveConfig.enemies;
+            Anuto.GameVars.waveEnemies = waveConfig.enemies.slice(0);
             Anuto.GameVars.ticksCounter = 0;
             for (var i = 0; i < waveConfig.turrets.length; i++) {
             }
@@ -248,6 +248,7 @@ var Anuto;
                 default:
             }
             this.turrets.push(turret);
+            Anuto.GameVars.credits -= turret.value;
             return turret;
         };
         Engine.prototype.sellTurret = function (turret) {

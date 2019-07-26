@@ -42,6 +42,11 @@ export class GameManager {
         GameVars.currentScene.scene.start("BattleScene");
     }
 
+    public static reset(): void {
+
+        GameManager.enterBattleScene();
+    }
+
     public static writeGameData(): void {
 
         GameManager.setGameStorageData(

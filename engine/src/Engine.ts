@@ -115,11 +115,12 @@ module Anuto {
 
             GameVars.level = waveConfig.level;
 
-            GameVars.waveEnemies = waveConfig.enemies;
+            // hay q clonar el array
+            GameVars.waveEnemies = waveConfig.enemies.slice(0); 
+ 
             GameVars.ticksCounter = 0;
 
             // TODO: instanciar las torres que hubiesen
-
             for (let i = 0; i < waveConfig.turrets.length; i ++) {
                //
             }
@@ -167,6 +168,8 @@ module Anuto {
             }
 
             this.turrets.push(turret);
+
+            GameVars.credits -= turret.value;
 
             return turret;
         }

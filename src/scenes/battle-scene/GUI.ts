@@ -1,6 +1,7 @@
 import { Button } from "../../utils/Utils";
 import { BattleManager } from "./BattleManager";
 import { GameVars } from "../../GameVars";
+import { GameManager } from "../../GameManager";
 
 export class GUI extends Phaser.GameObjects.Container {
 
@@ -23,6 +24,10 @@ export class GUI extends Phaser.GameObjects.Container {
         const nextWaveButton = new Button(this.scene, 610, 35, "texture_atlas_1", "btn_start_off", "btn_start_on", true);
         nextWaveButton.onDown(this.onClickNextWave, this);
         this.add(nextWaveButton);
+
+        const resetButton = new Button(this.scene, 610, 95, "texture_atlas_1", "btn_reset_off", "btn_reset_on", true);
+        resetButton.onDown(this.onClickReset, this);
+        this.add(resetButton);
 
         const pauseButton = new Button(this.scene, 735, 35, "texture_atlas_1", "btn_pause_off", "btn_pause_on", true);
         pauseButton.onDown(this.onClickPauseWave, this);
@@ -57,5 +62,10 @@ export class GUI extends Phaser.GameObjects.Container {
     private onClickNextWave(): void {
         
         BattleManager.newWave();
+    }
+
+    private onClickReset(): void {
+
+        GameManager.reset();
     }
 }

@@ -40,13 +40,11 @@ module Anuto {
             this.damage = GameVars.turretData[type].damage;
             this.range = GameVars.turretData[type].range;
             this.reload = GameVars.turretData[type].reload;
+            this.value =  GameVars.turretData[type].price;
 
             this.creationTick = creationTick;
 
             this.reloadTicks = Math.floor(GameConstants.RELOAD_BASE_TICKS * this.reload);
-
-            // sacar el resto de valores                                                                                                    
-            this.value = 0;
         }
 
         public destroy(): void {
@@ -77,6 +75,8 @@ module Anuto {
         public upgrade(): void {
             
             this.level ++;
+
+            // TODO: actualizar el valor de la torreta
         }
 
         protected shoot(): void {
