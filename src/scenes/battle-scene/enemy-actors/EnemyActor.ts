@@ -7,9 +7,9 @@ export class EnemyActor extends Phaser.GameObjects.Container {
     public type: string;
     public id: number;
    
-    private img: Phaser.GameObjects.Graphics;
-    private lifeBar: LifeBar;
-    private anutoEnemy: Anuto.Enemy;
+    protected img: Phaser.GameObjects.Graphics;
+    protected lifeBar: LifeBar;
+    protected anutoEnemy: Anuto.Enemy;
 
     constructor(scene: Phaser.Scene, anutoEnemy: Anuto.Enemy, position: {r: number, c: number}) {
 
@@ -18,23 +18,6 @@ export class EnemyActor extends Phaser.GameObjects.Container {
         this.anutoEnemy = anutoEnemy;
         this.id = this.anutoEnemy.id;
         this.type = this.anutoEnemy.type;
-
-        if (this.type === Anuto.GameConstants.ENEMY_SOLDIER) {
-
-            let s = GameConstants.CELLS_SIZE * .75;
-            
-            this.img = new Phaser.GameObjects.Graphics(this.scene);
-            this.img.fillStyle(0xFF0000);
-            this.img.fillRect(-s / 2, -s / 2, s, s);
-
-        } else if (this.type === Anuto.GameConstants.ENEMY_RUNNER) {
-            
-            this.img = new Phaser.GameObjects.Graphics(this.scene);
-            this.img.fillStyle(0xAB2A3E);
-            this.img.fillCircle(0, 0, GameConstants.CELLS_SIZE * .4);
-        }
-
-        this.add(this.img);
 
         this.lifeBar = new LifeBar(this.scene, this.anutoEnemy.life);
         this.lifeBar.y = -26;

@@ -4,6 +4,11 @@ import { Board } from "./Board";
 import { GameConstants } from "../../GameConstants";
 import { BulletActor } from "./turret-actors/BulletActor";
 import { GameVars } from "../../GameVars";
+import { SoldierEnemyActor } from "./enemy-actors/SoldierEnemyActor";
+import { RunnerEnemyActor } from "./enemy-actors/RunnerEnemyActor";
+import { HealerEnemyActor } from "./enemy-actors/HealerEnemyActor";
+import { BlobEnemyActor } from "./enemy-actors/BlobEnemyActor";
+import { FlierEnemyActor } from "./enemy-actors/FlierEnemyActor";
 
 export class BoardContainer extends Phaser.GameObjects.Container {
 
@@ -57,11 +62,33 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     }
 
     public addEnemy(anutoEnemy: Anuto.Enemy, position: {r: number, c: number}): void {
-        
-        const enemy = new EnemyActor(this.scene, anutoEnemy, position);
-        this.add(enemy);
 
-        this.enemies.push(enemy);
+        let enemyActor: EnemyActor = null;
+
+        switch (anutoEnemy.type) {
+
+            case Anuto.GameConstants.ENEMY_SOLDIER:
+                enemyActor = new SoldierEnemyActor(this.scene, anutoEnemy, position);
+                break;
+            case Anuto.GameConstants.ENEMY_RUNNER:
+                enemyActor = new RunnerEnemyActor(this.scene, anutoEnemy, position);
+                break;
+            case Anuto.GameConstants.ENEMY_HEALER:
+                enemyActor = new HealerEnemyActor(this.scene, anutoEnemy, position);
+                break;
+            case Anuto.GameConstants.ENEMY_BLOB:
+                enemyActor = new BlobEnemyActor(this.scene, anutoEnemy, position);
+                break;
+            case Anuto.GameConstants.ENEMY_FLIER:
+                enemyActor = new FlierEnemyActor(this.scene, anutoEnemy, position);
+                break;
+            default:
+        }
+        
+        if (enemyActor) {
+            this.add(enemyActor);
+            this.enemies.push(enemyActor);
+        }
     }
 
     public removeEnemy(id: number): void {

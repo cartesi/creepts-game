@@ -84,7 +84,7 @@ export class BattleManager {
         BattleManager.anutoEngine.newWave(waveConfig);
     }
 
-    public static addTurret(type, position: {r: number, c: number}): Anuto.Turret {
+    public static addTurret(type: string, position: {r: number, c: number}): Anuto.Turret {
 
         return BattleManager.anutoEngine.addTurret(type, position);
     }
