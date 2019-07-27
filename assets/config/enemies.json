@@ -11,9 +11,9 @@
                     "value": 40
                 },
                 "healer" : {
-                    "life": 150,
-                    "speed": 0.075,
-                    "value": 40
+                    "life": 200,
+                    "speed": 0.085,
+                    "value": 4050
                 },
                 "blob" : {
                     "life": 150,

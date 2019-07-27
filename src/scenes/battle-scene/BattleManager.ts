@@ -78,7 +78,7 @@ export class BattleManager {
         const waveConfig: Anuto.Types.WaveConfig = {
             level: 0,
             turrets: [],
-            enemies: GameVars.wavesData["wave_2"]
+            enemies: GameVars.wavesData["wave_3"]
         };
 
         BattleManager.anutoEngine.newWave(waveConfig);

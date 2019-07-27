@@ -80,7 +80,6 @@ module Anuto {
         }
 
         protected shoot(): void {
-
             // override
         }
 

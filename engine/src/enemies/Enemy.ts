@@ -14,7 +14,8 @@ module Anuto {
         public value: number;
         public boundingRadius: number;
 
-        private l: number;
+        protected l: number;
+        protected enemyData: any;
 
         constructor (type: string, creationTick: number) {
             
@@ -22,9 +23,11 @@ module Anuto {
             Enemy.id ++;
 
             this.type = type;
-            this.life = GameVars.enemyData[this.type].life;
-            this.value = GameVars.enemyData[this.type].value;
-            this.speed = GameVars.enemyData[this.type].speed;
+            this.enemyData = GameVars.enemyData[this.type];
+
+            this.life =  this.enemyData.life;
+            this.value = this.enemyData.value;
+            this.speed = this.enemyData.speed;
 
             this.creationTick = creationTick;
 
@@ -69,6 +72,11 @@ module Anuto {
             if (this.life <= 0) {
                 Engine.currentInstance.onEnemyKilled(this);
             }
+        }
+
+        public restoreHealth(): void {
+
+            this.life = this.enemyData.life;
         }
 
         public getNextPosition(deltaTicks: number): {x: number, y: number} {

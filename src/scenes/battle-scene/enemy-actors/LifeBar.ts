@@ -20,8 +20,6 @@ export class LifeBar extends Phaser.GameObjects.Container {
         this.bar.fillStyle(0x00FF00);
         this.bar.fillRect(0, 0, 40, 4);
         this.add(this.bar);
-
-       
     }
 
     public updateValue(life: number): void {

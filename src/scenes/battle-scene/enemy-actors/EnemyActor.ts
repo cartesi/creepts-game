@@ -40,10 +40,12 @@ export class EnemyActor extends Phaser.GameObjects.Container {
 
         this.x += (this.anutoEnemy.x * GameConstants.CELLS_SIZE - this.x) * smoothFactor;
         this.y += (this.anutoEnemy.y * GameConstants.CELLS_SIZE - this.y) * smoothFactor;
+
+        this.lifeBar.updateValue(this.anutoEnemy.life);
     }
 
     public hit(): void {
 
-        this.lifeBar.updateValue(this.anutoEnemy.life);
+        // de momento nada
     }
 }

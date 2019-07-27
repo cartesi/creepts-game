@@ -21,6 +21,12 @@ declare module Anuto {
     }
 }
 declare module Anuto {
+    class EnemiesSpawner {
+        constructor();
+        getEnemy(): Enemy;
+    }
+}
+declare module Anuto {
     class Turret {
         static id: number;
         id: number;
@@ -68,11 +74,13 @@ declare module Anuto {
         creationTick: number;
         value: number;
         boundingRadius: number;
-        private l;
+        protected l: number;
+        protected enemyData: any;
         constructor(type: string, creationTick: number);
         destroy(): void;
         update(): void;
         hit(damage: number): void;
+        restoreHealth(): void;
         getNextPosition(deltaTicks: number): {
             x: number;
             y: number;
@@ -130,6 +138,9 @@ declare module Anuto {
         static readonly TURRET_LASER = "laser";
         static readonly TURRET_LAUNCH = "launch";
         static readonly TURRET_GLUE = "glue";
+        static readonly HEALER_HEALING_TICKS = 100;
+        static readonly HEALER_STOP_TICKS = 30;
+        static readonly HEALER_HEALING_RADIUS = 2;
     }
 }
 declare module Anuto {
@@ -194,12 +205,6 @@ declare module Anuto {
     }
 }
 declare module Anuto {
-    class EnemiesSpawner {
-        constructor();
-        getEnemy(): Enemy;
-    }
-}
-declare module Anuto {
     class FlierEnemy extends Enemy {
         constructor(creationTick: number);
         update(): void;
@@ -207,7 +212,11 @@ declare module Anuto {
 }
 declare module Anuto {
     class HealerEnemy extends Enemy {
+        healing: boolean;
+        private f;
         constructor(creationTick: number);
+        update(): void;
+        private heal;
     }
 }
 declare module Anuto {

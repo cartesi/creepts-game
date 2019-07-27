@@ -17,5 +17,10 @@ module Anuto {
         public static readonly TURRET_LASER = "laser";
         public static readonly TURRET_LAUNCH = "launch";
         public static readonly TURRET_GLUE = "glue";
+
+        // caracteristicas de los enemigos
+        public static readonly HEALER_HEALING_TICKS = 100;
+        public static readonly HEALER_STOP_TICKS = 30;
+        public static readonly HEALER_HEALING_RADIUS = 2;
     }
 }

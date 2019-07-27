@@ -23,6 +23,19 @@
                                 {"type": "runner",      "t": 14},
                                 {"type": "runner",      "t": 16},
                                 {"type": "soldier",     "t": 18}
+                ],
+                "wave_3" : [
+                                {"type": "soldier",     "t": 0},
+                                {"type": "soldier",     "t": 1},
+                                {"type": "healer",      "t": 2},
+                                {"type": "soldier",     "t": 3},
+                                {"type": "healer",      "t": 4},
+                                {"type": "runner",      "t": 5},
+                                {"type": "runner",      "t": 6},
+                                {"type": "runner",      "t": 7},
+                                {"type": "runner",      "t": 14},
+                                {"type": "runner",      "t": 16},
+                                {"type": "soldier",     "t": 18}
                 ]
     }
 }
