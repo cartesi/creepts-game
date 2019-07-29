@@ -80,19 +80,21 @@ var Anuto;
         function Turret(type, p, creationTick) {
             this.id = Turret.id;
             Turret.id++;
+            this.creationTick = creationTick;
             this.type = type;
             this.f = 0;
             this.level = 1;
+            this.position = p;
+            this.fixedTarget = false;
+            this.shootingStrategy = Anuto.GameConstants.STRATEGY_SHOOT_STRONGEST;
             this.readyToShoot = false;
             this.justShot = false;
-            this.position = p;
             this.x = this.position.c + .5;
             this.y = this.position.r + .5;
             this.damage = Anuto.GameVars.turretData[type].damage;
             this.range = Anuto.GameVars.turretData[type].range;
             this.reload = Anuto.GameVars.turretData[type].reload;
             this.value = Anuto.GameVars.turretData[type].price;
-            this.creationTick = creationTick;
             this.reloadTicks = Math.floor(Anuto.GameConstants.RELOAD_BASE_TICKS * this.reload);
         }
         Turret.prototype.destroy = function () {
@@ -101,6 +103,7 @@ var Anuto;
             if (this.readyToShoot) {
                 this.shoot();
                 if (this.justShot) {
+                    this.justShot = false;
                     this.readyToShoot = false;
                 }
             }
@@ -121,11 +124,36 @@ var Anuto;
             var enemies = [];
             var squareDist = 1e10;
             for (var i = 0; i < Anuto.GameVars.enemies.length; i++) {
-                var dx = this.x - Anuto.GameVars.enemies[i].x;
-                var dy = this.y - Anuto.GameVars.enemies[i].y;
-                squareDist = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
-                if (this.range * this.range >= squareDist) {
-                    enemies.push({ enemy: Anuto.GameVars.enemies[i], squareDist: squareDist });
+                if (Anuto.GameVars.enemies[i].life > 0) {
+                    var dx = this.x - Anuto.GameVars.enemies[i].x;
+                    var dy = this.y - Anuto.GameVars.enemies[i].y;
+                    squareDist = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
+                    if (this.range * this.range >= squareDist) {
+                        enemies.push({ enemy: Anuto.GameVars.enemies[i], squareDist: squareDist });
+                    }
+                }
+            }
+            if (enemies.length > 1 && (this.type === Anuto.GameConstants.TURRET_PROJECTILE || this.type === Anuto.GameConstants.TURRET_LASER)) {
+                switch (this.shootingStrategy) {
+                    case Anuto.GameConstants.STRATEGY_SHOOT_LAST:
+                        enemies = enemies.sort(function (e1, e2) { return e1.enemy.l - e2.enemy.l; });
+                        break;
+                    case Anuto.GameConstants.STRATEGY_SHOOT_CLOSEST:
+                        enemies = enemies.sort(function (e1, e2) { return e1.squareDist - e2.squareDist; });
+                        break;
+                    case Anuto.GameConstants.STRATEGY_SHOOT_WEAKEST:
+                        enemies = enemies.sort(function (e1, e2) { return e1.enemy.life - e2.enemy.life; });
+                        break;
+                    case Anuto.GameConstants.STRATEGY_SHOOT_STRONGEST:
+                        enemies = enemies.sort(function (e1, e2) { return e2.enemy.life - e1.enemy.life; });
+                        break;
+                    case Anuto.GameConstants.STRATEGY_SHOOT_FIRST:
+                        enemies = enemies.sort(function (e1, e2) { return e2.enemy.l - e1.enemy.l; });
+                        break;
+                    default:
+                }
+                if (this.id === 2 && enemies.length > 1) {
+                    console.log(enemies);
                 }
             }
             return enemies;
@@ -418,6 +446,11 @@ var Anuto;
         GameConstants.TURRET_LASER = "laser";
         GameConstants.TURRET_LAUNCH = "launch";
         GameConstants.TURRET_GLUE = "glue";
+        GameConstants.STRATEGY_SHOOT_CLOSEST = "shoot closest";
+        GameConstants.STRATEGY_SHOOT_WEAKEST = "shoot weakest";
+        GameConstants.STRATEGY_SHOOT_STRONGEST = "shoot strongest";
+        GameConstants.STRATEGY_SHOOT_FIRST = "shoot first";
+        GameConstants.STRATEGY_SHOOT_LAST = "shoot last";
         GameConstants.HEALER_HEALING_TICKS = 100;
         GameConstants.HEALER_STOP_TICKS = 30;
         GameConstants.HEALER_HEALING_RADIUS = 2;

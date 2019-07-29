@@ -13,8 +13,8 @@ module Anuto {
         public creationTick: number;
         public value: number;
         public boundingRadius: number;
-
-        protected l: number;
+        public l: number;
+        
         protected enemyData: any;
 
         constructor (type: string, creationTick: number) {

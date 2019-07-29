@@ -18,6 +18,13 @@ module Anuto {
         public static readonly TURRET_LAUNCH = "launch";
         public static readonly TURRET_GLUE = "glue";
 
+        // estrategia de disparo
+        public static readonly STRATEGY_SHOOT_CLOSEST = "shoot closest";
+        public static readonly STRATEGY_SHOOT_WEAKEST = "shoot weakest";
+        public static readonly STRATEGY_SHOOT_STRONGEST = "shoot strongest";
+        public static readonly STRATEGY_SHOOT_FIRST = "shoot first";
+        public static readonly STRATEGY_SHOOT_LAST = "shoot last";
+
         // caracteristicas de los enemigos
         public static readonly HEALER_HEALING_TICKS = 100;
         public static readonly HEALER_STOP_TICKS = 30;

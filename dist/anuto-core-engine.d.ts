@@ -30,8 +30,11 @@ declare module Anuto {
     class Turret {
         static id: number;
         id: number;
+        creationTick: number;
         type: string;
         level: number;
+        x: number;
+        y: number;
         damage: number;
         reload: number;
         range: number;
@@ -40,10 +43,9 @@ declare module Anuto {
             r: number;
             c: number;
         };
-        x: number;
-        y: number;
-        creationTick: number;
         enemyWithinRange: Enemy;
+        shootingStrategy: string;
+        fixedTarget: boolean;
         protected f: number;
         protected reloadTicks: number;
         protected readyToShoot: boolean;
@@ -74,7 +76,7 @@ declare module Anuto {
         creationTick: number;
         value: number;
         boundingRadius: number;
-        protected l: number;
+        l: number;
         protected enemyData: any;
         constructor(type: string, creationTick: number);
         destroy(): void;
@@ -138,6 +140,11 @@ declare module Anuto {
         static readonly TURRET_LASER = "laser";
         static readonly TURRET_LAUNCH = "launch";
         static readonly TURRET_GLUE = "glue";
+        static readonly STRATEGY_SHOOT_CLOSEST = "shoot closest";
+        static readonly STRATEGY_SHOOT_WEAKEST = "shoot weakest";
+        static readonly STRATEGY_SHOOT_STRONGEST = "shoot strongest";
+        static readonly STRATEGY_SHOOT_FIRST = "shoot first";
+        static readonly STRATEGY_SHOOT_LAST = "shoot last";
         static readonly HEALER_HEALING_TICKS = 100;
         static readonly HEALER_STOP_TICKS = 30;
         static readonly HEALER_HEALING_RADIUS = 2;
