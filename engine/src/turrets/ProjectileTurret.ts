@@ -9,6 +9,18 @@ module Anuto {
 
         public update(): void {
 
+            if (this.fixedTarget) {
+                if (this.enemiesWithinRange.length > 0) {
+                    if (this.enemiesWithinRange.indexOf(this.followedEnemy) === -1) {
+                        this.followedEnemy = this.enemiesWithinRange[0];
+                    }   
+                } else {
+                    this.followedEnemy = null;
+                }
+            } else {
+                this.followedEnemy = this.enemiesWithinRange[0];
+            }
+
             super.update();
         }
 
@@ -16,25 +28,14 @@ module Anuto {
 
             super.shoot();
 
-            // TODO: HACER AQUI LO DEL FIXED ENEMY
+            let enemy: Enemy;
 
-            // let enemy: Enemy;
-
-            // if(this.fixedTarget) {
-
-            // if (!this.followedEnemy) {
-            //     // mirar si sigue dentro del los enemigos dentro del radio de accion
-            //     if(this.enemiesWithinRange.indexOf(this.followednemy) === -1) {
-            //         this.followednemy = this.enemiesWithinRange[0];
-            //         enemy = this.followedENemy;
-            //     }
-            // }
-            // } else {
-                // enemy = this.enemiesWithinRange[0];
-            // }
-
-            const enemy = this.enemiesWithinRange[0];
-
+            if (this.fixedTarget) {
+                enemy = this.followedEnemy || this.enemiesWithinRange[0];
+            } else {
+                enemy = this.enemiesWithinRange[0];
+            }
+        
             const d = MathUtils.fixNumber(Math.sqrt((this.x - enemy.x) * (this.x - enemy.x) +  (this.y - enemy.y) * (this.y - enemy.y)));
 
             // cuantos ticks va a tardar la bala en llegar?

@@ -86,9 +86,10 @@ var Anuto;
             this.level = 1;
             this.position = p;
             this.fixedTarget = true;
-            this.shootingStrategy = Anuto.GameConstants.STRATEGY_SHOOT_LAST;
+            this.shootingStrategy = Anuto.GameConstants.STRATEGY_SHOOT_FIRST;
             this.readyToShoot = false;
             this.enemiesWithinRange = [];
+            this.followedEnemy = null;
             this.x = this.position.c + .5;
             this.y = this.position.r + .5;
             this.damage = Anuto.GameVars.turretData[type].damage;
@@ -625,11 +626,30 @@ var Anuto;
             return _super.call(this, Anuto.GameConstants.TURRET_PROJECTILE, p, creationTick) || this;
         }
         ProjectileTurret.prototype.update = function () {
+            if (this.fixedTarget) {
+                if (this.enemiesWithinRange.length > 0) {
+                    if (this.enemiesWithinRange.indexOf(this.followedEnemy) === -1) {
+                        this.followedEnemy = this.enemiesWithinRange[0];
+                    }
+                }
+                else {
+                    this.followedEnemy = null;
+                }
+            }
+            else {
+                this.followedEnemy = this.enemiesWithinRange[0];
+            }
             _super.prototype.update.call(this);
         };
         ProjectileTurret.prototype.shoot = function () {
             _super.prototype.shoot.call(this);
-            var enemy = this.enemiesWithinRange[0];
+            var enemy;
+            if (this.fixedTarget) {
+                enemy = this.followedEnemy || this.enemiesWithinRange[0];
+            }
+            else {
+                enemy = this.enemiesWithinRange[0];
+            }
             var d = Anuto.MathUtils.fixNumber(Math.sqrt((this.x - enemy.x) * (this.x - enemy.x) + (this.y - enemy.y) * (this.y - enemy.y)));
             var ticksToImpact = Math.floor(Anuto.MathUtils.fixNumber(d / Anuto.GameConstants.BULLET_SPEED));
             var impactPosition = enemy.getNextPosition(ticksToImpact);

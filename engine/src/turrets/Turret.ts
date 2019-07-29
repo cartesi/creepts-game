@@ -18,6 +18,7 @@ module Anuto {
         public shootingStrategy: string;
         public fixedTarget: boolean;
         public enemiesWithinRange: Enemy[];
+        public followedEnemy: Enemy;
 
         protected f: number;
         protected reloadTicks: number;
@@ -38,6 +39,7 @@ module Anuto {
             this.shootingStrategy = GameConstants.STRATEGY_SHOOT_FIRST;
             this.readyToShoot = false;
             this.enemiesWithinRange = [];
+            this.followedEnemy = null;
 
             this.x = this.position.c + .5;
             this.y = this.position.r + .5;

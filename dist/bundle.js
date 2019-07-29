@@ -1535,12 +1535,13 @@ var TurretActor = /** @class */ (function (_super) {
     }
     TurretActor.prototype.update = function (time, delta) {
         if (this.anutoTurret.enemiesWithinRange.length > 0) {
+            // TODO: EN REALIDAD NO ESTA APUNTANDO AL ACTOR SI NO AL ENEMIGO DEL CORE
             // girar el cañon hacia el enemigo
-            // TODO: no esta apuntando al actor!!
-            var enemy = this.anutoTurret.enemiesWithinRange[0];
-            var dx = enemy.x - this.p.c;
-            var dy = enemy.y - this.p.r;
-            this.canon.rotation = Math.atan2(dy, dx);
+            if (this.anutoTurret.followedEnemy) {
+                var dx = this.anutoTurret.followedEnemy.x - this.p.c;
+                var dy = this.anutoTurret.followedEnemy.y - this.p.r;
+                this.canon.rotation = Math.atan2(dy, dx);
+            }
         }
     };
     TurretActor.prototype.shoot = function () {

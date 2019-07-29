@@ -46,6 +46,7 @@ declare module Anuto {
         shootingStrategy: string;
         fixedTarget: boolean;
         enemiesWithinRange: Enemy[];
+        followedEnemy: Enemy;
         protected f: number;
         protected reloadTicks: number;
         protected readyToShoot: boolean;
