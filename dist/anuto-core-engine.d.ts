@@ -199,36 +199,12 @@ declare module Anuto.Types {
     };
 }
 declare module Anuto {
-    class BlobEnemy extends Enemy {
-        constructor(creationTick: number);
-        update(): void;
-    }
-}
-declare module Anuto {
-    class FlierEnemy extends Enemy {
-        constructor(creationTick: number);
-        update(): void;
-    }
-}
-declare module Anuto {
     class HealerEnemy extends Enemy {
         healing: boolean;
         private f;
         constructor(creationTick: number);
         update(): void;
         private heal;
-    }
-}
-declare module Anuto {
-    class RunnerEnemy extends Enemy {
-        constructor(creationTick: number);
-        update(): void;
-    }
-}
-declare module Anuto {
-    class SoldierEnemy extends Enemy {
-        constructor(creationTick: number);
-        update(): void;
     }
 }
 declare module Anuto {

@@ -7,23 +7,23 @@
                 },
                 "runner" : {
                     "life": 150,
-                    "speed": 0.075,
+                    "speed": 0.2,
                     "value": 40
                 },
                 "healer" : {
                     "life": 200,
                     "speed": 0.085,
-                    "value": 4050
+                    "value": 80
                 },
                 "blob" : {
-                    "life": 150,
-                    "speed": 0.075,
-                    "value": 40
+                    "life": 250,
+                    "speed": 0.045,
+                    "value": 90
                 },
                 "flier" : {
                     "life": 150,
                     "speed": 0.075,
-                    "value": 40
+                    "value": 120
                 }
     }
 }

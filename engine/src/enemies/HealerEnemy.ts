@@ -10,7 +10,9 @@ module Anuto {
             
             super(GameConstants.ENEMY_HEALER, creationTick);
 
-            this.f = 0;
+            // para que no se paren todos en el mismo lugar y al mismo tiempo
+            this.f = GameConstants.HEALER_HEALING_TICKS - creationTick % GameConstants.HEALER_HEALING_TICKS;
+
             this.healing = false;
         }
 
@@ -22,7 +24,7 @@ module Anuto {
 
                 this.heal();
 
-                if (this.f  === GameConstants.HEALER_STOP_TICKS) {
+                if (this.f === GameConstants.HEALER_STOP_TICKS) {
                     this.f = 0;
                     this.healing = false;
                 }
@@ -31,7 +33,8 @@ module Anuto {
 
                 super.update();
 
-                if (this.f === GameConstants.HEALER_HEALING_TICKS) {
+                // no cura si ya esta muy cerca de la salida
+                if (this.f === GameConstants.HEALER_HEALING_TICKS && this.l < GameVars.enemiesPathCells.length - 2) {
                     this.f = 0;
                     this.healing = true;
                 }

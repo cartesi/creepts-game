@@ -10,7 +10,7 @@ export class HealerEnemyActor extends EnemyActor {
         const s = GameConstants.CELLS_SIZE * .35;
 
         this.img = new Phaser.GameObjects.Graphics(this.scene);
-        this.img.lineStyle(5, 0xcb2929);
+        this.img.lineStyle(7, 0xcb2929);
         this.img.strokeTriangle(-s, s, s, s, 0, -s);
         this.add(this.img);
     }

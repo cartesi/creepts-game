@@ -49,19 +49,19 @@ var Anuto;
                 if (nextEnemyData.t === Anuto.GameVars.ticksCounter / Anuto.GameVars.enemySpawningDeltaTicks) {
                     switch (nextEnemyData.type) {
                         case Anuto.GameConstants.ENEMY_SOLDIER:
-                            enemy = new Anuto.SoldierEnemy(Anuto.GameVars.ticksCounter);
+                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_SOLDIER, Anuto.GameVars.ticksCounter);
                             break;
                         case Anuto.GameConstants.ENEMY_RUNNER:
-                            enemy = new Anuto.RunnerEnemy(Anuto.GameVars.ticksCounter);
+                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_RUNNER, Anuto.GameVars.ticksCounter);
                             break;
                         case Anuto.GameConstants.ENEMY_HEALER:
                             enemy = new Anuto.HealerEnemy(Anuto.GameVars.ticksCounter);
                             break;
                         case Anuto.GameConstants.ENEMY_BLOB:
-                            enemy = new Anuto.BlobEnemy(Anuto.GameVars.ticksCounter);
+                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_BLOB, Anuto.GameVars.ticksCounter);
                             break;
                         case Anuto.GameConstants.ENEMY_FLIER:
-                            enemy = new Anuto.FlierEnemy(Anuto.GameVars.ticksCounter);
+                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_FLIER, Anuto.GameVars.ticksCounter);
                             break;
                         default:
                     }
@@ -436,39 +436,11 @@ var Anuto;
 })(Anuto || (Anuto = {}));
 var Anuto;
 (function (Anuto) {
-    var BlobEnemy = (function (_super) {
-        __extends(BlobEnemy, _super);
-        function BlobEnemy(creationTick) {
-            return _super.call(this, Anuto.GameConstants.ENEMY_BLOB, creationTick) || this;
-        }
-        BlobEnemy.prototype.update = function () {
-            _super.prototype.update.call(this);
-        };
-        return BlobEnemy;
-    }(Anuto.Enemy));
-    Anuto.BlobEnemy = BlobEnemy;
-})(Anuto || (Anuto = {}));
-var Anuto;
-(function (Anuto) {
-    var FlierEnemy = (function (_super) {
-        __extends(FlierEnemy, _super);
-        function FlierEnemy(creationTick) {
-            return _super.call(this, Anuto.GameConstants.ENEMY_FLIER, creationTick) || this;
-        }
-        FlierEnemy.prototype.update = function () {
-            _super.prototype.update.call(this);
-        };
-        return FlierEnemy;
-    }(Anuto.Enemy));
-    Anuto.FlierEnemy = FlierEnemy;
-})(Anuto || (Anuto = {}));
-var Anuto;
-(function (Anuto) {
     var HealerEnemy = (function (_super) {
         __extends(HealerEnemy, _super);
         function HealerEnemy(creationTick) {
             var _this = _super.call(this, Anuto.GameConstants.ENEMY_HEALER, creationTick) || this;
-            _this.f = 0;
+            _this.f = Anuto.GameConstants.HEALER_HEALING_TICKS - creationTick % Anuto.GameConstants.HEALER_HEALING_TICKS;
             _this.healing = false;
             return _this;
         }
@@ -483,7 +455,7 @@ var Anuto;
             }
             else {
                 _super.prototype.update.call(this);
-                if (this.f === Anuto.GameConstants.HEALER_HEALING_TICKS) {
+                if (this.f === Anuto.GameConstants.HEALER_HEALING_TICKS && this.l < Anuto.GameVars.enemiesPathCells.length - 2) {
                     this.f = 0;
                     this.healing = true;
                 }
@@ -506,34 +478,6 @@ var Anuto;
         return HealerEnemy;
     }(Anuto.Enemy));
     Anuto.HealerEnemy = HealerEnemy;
-})(Anuto || (Anuto = {}));
-var Anuto;
-(function (Anuto) {
-    var RunnerEnemy = (function (_super) {
-        __extends(RunnerEnemy, _super);
-        function RunnerEnemy(creationTick) {
-            return _super.call(this, Anuto.GameConstants.ENEMY_RUNNER, creationTick) || this;
-        }
-        RunnerEnemy.prototype.update = function () {
-            _super.prototype.update.call(this);
-        };
-        return RunnerEnemy;
-    }(Anuto.Enemy));
-    Anuto.RunnerEnemy = RunnerEnemy;
-})(Anuto || (Anuto = {}));
-var Anuto;
-(function (Anuto) {
-    var SoldierEnemy = (function (_super) {
-        __extends(SoldierEnemy, _super);
-        function SoldierEnemy(creationTick) {
-            return _super.call(this, Anuto.GameConstants.ENEMY_SOLDIER, creationTick) || this;
-        }
-        SoldierEnemy.prototype.update = function () {
-            _super.prototype.update.call(this);
-        };
-        return SoldierEnemy;
-    }(Anuto.Enemy));
-    Anuto.SoldierEnemy = SoldierEnemy;
 })(Anuto || (Anuto = {}));
 var Anuto;
 (function (Anuto) {

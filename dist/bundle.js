@@ -93,7 +93,7 @@
 /*! exports provided: enemies, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"enemies\":{\"soldier\":{\"life\":80,\"speed\":0.1,\"value\":20},\"runner\":{\"life\":150,\"speed\":0.075,\"value\":40},\"healer\":{\"life\":150,\"speed\":0.075,\"value\":40},\"blob\":{\"life\":150,\"speed\":0.075,\"value\":40},\"flier\":{\"life\":150,\"speed\":0.075,\"value\":40}}}");
+module.exports = JSON.parse("{\"enemies\":{\"soldier\":{\"life\":80,\"speed\":0.1,\"value\":20},\"runner\":{\"life\":150,\"speed\":0.075,\"value\":40},\"healer\":{\"life\":200,\"speed\":0.085,\"value\":4050},\"blob\":{\"life\":150,\"speed\":0.075,\"value\":40},\"flier\":{\"life\":150,\"speed\":0.075,\"value\":40}}}");
 
 /***/ }),
 
@@ -115,7 +115,7 @@ module.exports = JSON.parse("{\"turrets\":{\"projectile\":{\"price\":150,\"damag
 /*! exports provided: waves, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"waves\":{\"wave_1\":[{\"type\":\"soldier\",\"t\":0},{\"type\":\"soldier\",\"t\":1},{\"type\":\"soldier\",\"t\":2},{\"type\":\"soldier\",\"t\":3},{\"type\":\"soldier\",\"t\":8},{\"type\":\"soldier\",\"t\":9},{\"type\":\"soldier\",\"t\":10},{\"type\":\"soldier\",\"t\":11},{\"type\":\"soldier\",\"t\":12},{\"type\":\"soldier\",\"t\":15}],\"wave_2\":[{\"type\":\"soldier\",\"t\":0},{\"type\":\"soldier\",\"t\":1},{\"type\":\"soldier\",\"t\":2},{\"type\":\"soldier\",\"t\":3},{\"type\":\"soldier\",\"t\":4},{\"type\":\"runner\",\"t\":10},{\"type\":\"runner\",\"t\":12},{\"type\":\"runner\",\"t\":14},{\"type\":\"runner\",\"t\":16},{\"type\":\"soldier\",\"t\":18}]}}");
+module.exports = JSON.parse("{\"waves\":{\"wave_1\":[{\"type\":\"soldier\",\"t\":0},{\"type\":\"soldier\",\"t\":1},{\"type\":\"soldier\",\"t\":2},{\"type\":\"soldier\",\"t\":3},{\"type\":\"soldier\",\"t\":8},{\"type\":\"soldier\",\"t\":9},{\"type\":\"soldier\",\"t\":10},{\"type\":\"soldier\",\"t\":11},{\"type\":\"soldier\",\"t\":12},{\"type\":\"soldier\",\"t\":15}],\"wave_2\":[{\"type\":\"soldier\",\"t\":0},{\"type\":\"soldier\",\"t\":1},{\"type\":\"soldier\",\"t\":2},{\"type\":\"soldier\",\"t\":3},{\"type\":\"soldier\",\"t\":4},{\"type\":\"runner\",\"t\":10},{\"type\":\"runner\",\"t\":12},{\"type\":\"runner\",\"t\":14},{\"type\":\"runner\",\"t\":16},{\"type\":\"soldier\",\"t\":18}],\"wave_3\":[{\"type\":\"soldier\",\"t\":0},{\"type\":\"soldier\",\"t\":1},{\"type\":\"healer\",\"t\":2},{\"type\":\"soldier\",\"t\":3},{\"type\":\"runner\",\"t\":4},{\"type\":\"runner\",\"t\":5},{\"type\":\"runner\",\"t\":6},{\"type\":\"healer\",\"t\":7},{\"type\":\"runner\",\"t\":14},{\"type\":\"runner\",\"t\":16},{\"type\":\"soldier\",\"t\":18}]}}");
 
 /***/ }),
 
@@ -635,7 +635,7 @@ var BattleManager = /** @class */ (function () {
         var waveConfig = {
             level: 0,
             turrets: [],
-            enemies: GameVars_1.GameVars.wavesData["wave_2"]
+            enemies: GameVars_1.GameVars.wavesData["wave_3"]
         };
         BattleManager.anutoEngine.newWave(waveConfig);
     };
@@ -1161,27 +1161,12 @@ var EnemyActor = /** @class */ (function (_super) {
         _this.anutoEnemy = anutoEnemy;
         _this.id = _this.anutoEnemy.id;
         _this.type = _this.anutoEnemy.type;
-        if (_this.type === Anuto.GameConstants.ENEMY_SOLDIER) {
-            var s = GameConstants_1.GameConstants.CELLS_SIZE * .75;
-            _this.img = new Phaser.GameObjects.Graphics(_this.scene);
-            _this.img.fillStyle(0xFF0000);
-            _this.img.fillRect(-s / 2, -s / 2, s, s);
-        }
-        else if (_this.type === Anuto.GameConstants.ENEMY_RUNNER) {
-            _this.img = new Phaser.GameObjects.Graphics(_this.scene);
-            _this.img.fillStyle(0xAB2A3E);
-            _this.img.fillCircle(0, 0, GameConstants_1.GameConstants.CELLS_SIZE * .4);
-        }
-        _this.add(_this.img);
         _this.lifeBar = new LifeBar_1.LifeBar(_this.scene, _this.anutoEnemy.life);
         _this.lifeBar.y = -26;
         _this.lifeBar.x -= LifeBar_1.LifeBar.WIDTH / 2;
         _this.add(_this.lifeBar);
         _this.x = GameConstants_1.GameConstants.CELLS_SIZE * (position.c + .5);
         _this.y = GameConstants_1.GameConstants.CELLS_SIZE * (position.r + .5);
-        // para que todos no sigan exactamente la misma trayectoria
-        _this.dx = (-1 + 2 * Math.random()) * .09;
-        _this.dy = (-1 + 2 * Math.random()) * .09;
         return _this;
     }
     EnemyActor.prototype.update = function (time, delta) {
@@ -1192,11 +1177,12 @@ var EnemyActor = /** @class */ (function (_super) {
         else {
             smoothFactor = 1;
         }
-        this.x += ((this.anutoEnemy.x + this.dx) * GameConstants_1.GameConstants.CELLS_SIZE - this.x) * smoothFactor;
-        this.y += ((this.anutoEnemy.y + this.dy) * GameConstants_1.GameConstants.CELLS_SIZE - this.y) * smoothFactor;
+        this.x += (this.anutoEnemy.x * GameConstants_1.GameConstants.CELLS_SIZE - this.x) * smoothFactor;
+        this.y += (this.anutoEnemy.y * GameConstants_1.GameConstants.CELLS_SIZE - this.y) * smoothFactor;
+        this.lifeBar.updateValue(this.anutoEnemy.life);
     };
     EnemyActor.prototype.hit = function () {
-        this.lifeBar.updateValue(this.anutoEnemy.life);
+        // de momento nada
     };
     return EnemyActor;
 }(Phaser.GameObjects.Container));
@@ -1265,11 +1251,28 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var EnemyActor_1 = __webpack_require__(/*! ./EnemyActor */ "./src/scenes/battle-scene/enemy-actors/EnemyActor.ts");
+var GameConstants_1 = __webpack_require__(/*! ../../../GameConstants */ "./src/GameConstants.ts");
 var HealerEnemyActor = /** @class */ (function (_super) {
     __extends(HealerEnemyActor, _super);
     function HealerEnemyActor(scene, anutoEnemy, position) {
-        return _super.call(this, scene, anutoEnemy, position) || this;
+        var _this = _super.call(this, scene, anutoEnemy, position) || this;
+        var s = GameConstants_1.GameConstants.CELLS_SIZE * .35;
+        _this.img = new Phaser.GameObjects.Graphics(_this.scene);
+        _this.img.lineStyle(7, 0xcb2929);
+        _this.img.strokeTriangle(-s, s, s, s, 0, -s);
+        _this.add(_this.img);
+        return _this;
     }
+    HealerEnemyActor.prototype.update = function (time, delta) {
+        _super.prototype.update.call(this, time, delta);
+        var anutoEnemy = this.anutoEnemy;
+        if (anutoEnemy.healing) {
+            this.img.alpha = .5;
+        }
+        else {
+            this.img.alpha = 1;
+        }
+    };
     return HealerEnemyActor;
 }(EnemyActor_1.EnemyActor));
 exports.HealerEnemyActor = HealerEnemyActor;
@@ -1350,10 +1353,17 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var EnemyActor_1 = __webpack_require__(/*! ./EnemyActor */ "./src/scenes/battle-scene/enemy-actors/EnemyActor.ts");
+var GameConstants_1 = __webpack_require__(/*! ../../../GameConstants */ "./src/GameConstants.ts");
 var RunnerEnemyActor = /** @class */ (function (_super) {
     __extends(RunnerEnemyActor, _super);
     function RunnerEnemyActor(scene, anutoEnemy, position) {
-        return _super.call(this, scene, anutoEnemy, position) || this;
+        var _this = _super.call(this, scene, anutoEnemy, position) || this;
+        _this.img = new Phaser.GameObjects.Graphics(_this.scene);
+        _this.img.fillStyle(0xAB2A3E);
+        _this.img.fillCircle(0, 0, GameConstants_1.GameConstants.CELLS_SIZE * .4);
+        _this.add(_this.img);
+        _this.visible = false;
+        return _this;
     }
     return RunnerEnemyActor;
 }(EnemyActor_1.EnemyActor));
@@ -1386,10 +1396,18 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var EnemyActor_1 = __webpack_require__(/*! ./EnemyActor */ "./src/scenes/battle-scene/enemy-actors/EnemyActor.ts");
+var GameConstants_1 = __webpack_require__(/*! ../../../GameConstants */ "./src/GameConstants.ts");
 var SoldierEnemyActor = /** @class */ (function (_super) {
     __extends(SoldierEnemyActor, _super);
     function SoldierEnemyActor(scene, anutoEnemy, position) {
-        return _super.call(this, scene, anutoEnemy, position) || this;
+        var _this = _super.call(this, scene, anutoEnemy, position) || this;
+        var s = GameConstants_1.GameConstants.CELLS_SIZE * .75;
+        _this.img = new Phaser.GameObjects.Graphics(_this.scene);
+        _this.img.fillStyle(0xFF0000);
+        _this.img.fillRect(-s / 2, -s / 2, s, s);
+        _this.add(_this.img);
+        _this.visible = false;
+        return _this;
     }
     return SoldierEnemyActor;
 }(EnemyActor_1.EnemyActor));
