@@ -43,13 +43,12 @@ declare module Anuto {
             r: number;
             c: number;
         };
-        enemyWithinRange: Enemy;
         shootingStrategy: string;
         fixedTarget: boolean;
+        enemiesWithinRange: Enemy[];
         protected f: number;
         protected reloadTicks: number;
         protected readyToShoot: boolean;
-        protected justShot: boolean;
         constructor(type: string, p: {
             r: number;
             c: number;
@@ -58,10 +57,7 @@ declare module Anuto {
         update(): void;
         upgrade(): void;
         protected shoot(): void;
-        protected getEnemiesWithinRange(): {
-            enemy: Enemy;
-            squareDist: number;
-        }[];
+        protected getEnemiesWithinRange(): Enemy[];
     }
 }
 declare module Anuto {

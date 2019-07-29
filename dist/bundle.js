@@ -1534,11 +1534,12 @@ var TurretActor = /** @class */ (function (_super) {
         return _this;
     }
     TurretActor.prototype.update = function (time, delta) {
-        if (this.anutoTurret.enemyWithinRange) {
+        if (this.anutoTurret.enemiesWithinRange.length > 0) {
             // girar el cañon hacia el enemigo
             // TODO: no esta apuntando al actor!!
-            var dx = this.anutoTurret.enemyWithinRange.x - this.p.c;
-            var dy = this.anutoTurret.enemyWithinRange.y - this.p.r;
+            var enemy = this.anutoTurret.enemiesWithinRange[0];
+            var dx = enemy.x - this.p.c;
+            var dy = enemy.y - this.p.r;
             this.canon.rotation = Math.atan2(dy, dx);
         }
     };

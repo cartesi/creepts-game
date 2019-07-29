@@ -16,45 +16,49 @@ module Anuto {
 
             super.shoot();
 
-            this.justShot = false;
+            // TODO: HACER AQUI LO DEL FIXED ENEMY
 
-            const enemyData = this.getEnemiesWithinRange();
+            // let enemy: Enemy;
 
-            if (enemyData.length > 0) {
+            // if(this.fixedTarget) {
 
-                // TODO: ahora pillamos al primero
-                this.enemyWithinRange = enemyData[0].enemy;
+            // if (!this.followedEnemy) {
+            //     // mirar si sigue dentro del los enemigos dentro del radio de accion
+            //     if(this.enemiesWithinRange.indexOf(this.followednemy) === -1) {
+            //         this.followednemy = this.enemiesWithinRange[0];
+            //         enemy = this.followedENemy;
+            //     }
+            // }
+            // } else {
+                // enemy = this.enemiesWithinRange[0];
+            // }
 
-                // a que distancia esta?
-                const d = MathUtils.fixNumber(Math.sqrt(enemyData[0].squareDist));
+            const enemy = this.enemiesWithinRange[0];
 
-                // cuantos ticks va a tardar la bala en llegar?
-                const ticksToImpact = Math.floor(MathUtils.fixNumber(d / GameConstants.BULLET_SPEED));
+            const d = MathUtils.fixNumber(Math.sqrt((this.x - enemy.x) * (this.x - enemy.x) +  (this.y - enemy.y) * (this.y - enemy.y)));
 
-                // encontrar la posicion de la torre dentro de estos ticks
-                const impactPosition = this.enemyWithinRange.getNextPosition(ticksToImpact);
+            // cuantos ticks va a tardar la bala en llegar?
+            const ticksToImpact = Math.floor(MathUtils.fixNumber(d / GameConstants.BULLET_SPEED));
 
-                // la posicion de impacto sigue estando dentro del radio de accion?
-                const dx = impactPosition.x - this.x;
-                const dy = impactPosition.y - this.y;
+            // encontrar la posicion de la torre dentro de estos ticks
+            const impactPosition = enemy.getNextPosition(ticksToImpact);
 
-                const impactSquareDistance = MathUtils.fixNumber(dx * dx + dy * dy);
+            // la posicion de impacto sigue estando dentro del radio de accion?
+            const dx = impactPosition.x - this.x;
+            const dy = impactPosition.y - this.y;
 
-                if (this.range * this.range > impactSquareDistance) {
+            const impactSquareDistance = MathUtils.fixNumber(dx * dx + dy * dy);
 
-                    const angle =  MathUtils.fixNumber(Math.atan2(dy, dx));
-                    const bullet = new Bullet(this.position, angle, enemyData[0].enemy, this.damage);
+            if (this.range * this.range > impactSquareDistance) {
 
-                    Engine.currentInstance.addBullet(bullet, this);
+                const angle =  MathUtils.fixNumber(Math.atan2(dy, dx));
+                const bullet = new Bullet(this.position, angle, enemy, this.damage);
 
-                    this.justShot = true;
-
-                } else {
-                    this.enemyWithinRange = null;
-                }
+                Engine.currentInstance.addBullet(bullet, this);
 
             } else {
-                this.enemyWithinRange = null;
+                // no se dispara y se vuelve a estar disponible para disparar
+                this.readyToShoot = true;
             }
         }
     }

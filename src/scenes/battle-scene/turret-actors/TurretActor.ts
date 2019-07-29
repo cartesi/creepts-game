@@ -47,11 +47,14 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
     public update(time: number, delta: number): void {
         
-        if (this.anutoTurret.enemyWithinRange) {
+        if (this.anutoTurret.enemiesWithinRange.length > 0) {
             // girar el cañon hacia el enemigo
             // TODO: no esta apuntando al actor!!
-            const dx = this.anutoTurret.enemyWithinRange.x - this.p.c;
-            const dy = this.anutoTurret.enemyWithinRange.y - this.p.r;
+
+            const enemy = this.anutoTurret.enemiesWithinRange[0];
+
+            const dx = enemy.x - this.p.c;
+            const dy = enemy.y - this.p.r;
             this.canon.rotation = Math.atan2(dy, dx);
         }
     }

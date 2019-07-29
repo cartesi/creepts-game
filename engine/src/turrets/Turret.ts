@@ -15,14 +15,13 @@ module Anuto {
         public range: number;
         public value: number;
         public position: {r: number, c: number};
-        public enemyWithinRange: Enemy;
         public shootingStrategy: string;
         public fixedTarget: boolean;
+        public enemiesWithinRange: Enemy[];
 
         protected f: number;
         protected reloadTicks: number;
         protected readyToShoot: boolean;
-        protected justShot: boolean;
         
         constructor (type: string, p: {r: number, c: number}, creationTick: number) {
 
@@ -38,7 +37,7 @@ module Anuto {
             this.fixedTarget = true;
             this.shootingStrategy = GameConstants.STRATEGY_SHOOT_FIRST;
             this.readyToShoot = false;
-            this.justShot = false;
+            this.enemiesWithinRange = [];
 
             this.x = this.position.c + .5;
             this.y = this.position.r + .5;
@@ -57,15 +56,15 @@ module Anuto {
 
         public update(): void {
 
+            this.enemiesWithinRange = this.getEnemiesWithinRange();
+
             if (this.readyToShoot) {
 
-                this.shoot();
-
-                if (this.justShot) {
-                    this.justShot = false;
+                if (this.enemiesWithinRange.length > 0) {
                     this.readyToShoot = false;
+                    this.shoot();
                 }
-
+            
             } else {
 
                 this.f ++;
@@ -85,54 +84,62 @@ module Anuto {
         }
 
         protected shoot(): void {
+
             // override
         }
 
         // TODO: hacer que se puedan pillar varios
-        protected getEnemiesWithinRange(): {enemy: Enemy, squareDist: number} []{
+        protected getEnemiesWithinRange(): Enemy [] {
 
-            let enemies: {enemy: Enemy, squareDist: number} [] = [];
-            let squareDist = 0;
-
+            let enemiesAndDistances: {enemy: Enemy, squareDist: number} [] = [];
+            let squaredRange = MathUtils.fixNumber(this.range * this.range);
+            
             for (let i = 0; i < GameVars.enemies.length; i ++) {
 
                 if (GameVars.enemies[i].life > 0) {
+
                     const dx = this.x - GameVars.enemies[i].x;
                     const dy = this.y - GameVars.enemies[i].y;
 
-                    squareDist = MathUtils.fixNumber(dx * dx + dy * dy);
+                    const squaredDist = MathUtils.fixNumber(dx * dx + dy * dy);
 
-                    if (this.range * this.range >= squareDist) {
-                        enemies.push({enemy: GameVars.enemies[i], squareDist: squareDist});
+                    if (squaredRange >= squaredDist) {
+                        enemiesAndDistances.push({enemy: GameVars.enemies[i], squareDist: squaredDist});
                     }
                 }
             }
 
-            if (enemies.length > 1 && (this.type === GameConstants.TURRET_PROJECTILE || this.type === GameConstants.TURRET_LASER)) {
+            if (enemiesAndDistances.length > 1 && (this.type === GameConstants.TURRET_PROJECTILE || this.type === GameConstants.TURRET_LASER)) {
                 
-                // hacer un sort segun la estrategia
+                // ordenar a los enemigos dentro del radio de acción según la estrategia de disparo
                 switch (this.shootingStrategy) {
 
                     case GameConstants.STRATEGY_SHOOT_LAST:
-                        enemies = enemies.sort((e1, e2) => e1.enemy.l - e2.enemy.l);
+                        enemiesAndDistances = enemiesAndDistances.sort((e1, e2) => e1.enemy.l - e2.enemy.l);
                         break;
                     case GameConstants.STRATEGY_SHOOT_CLOSEST:
-                        enemies = enemies.sort((e1, e2) => e1.squareDist - e2.squareDist);
+                        enemiesAndDistances = enemiesAndDistances.sort((e1, e2) => e1.squareDist - e2.squareDist);
                         break;
                     case GameConstants.STRATEGY_SHOOT_WEAKEST:
-                        enemies = enemies.sort((e1, e2) => e1.enemy.life - e2.enemy.life);
+                        enemiesAndDistances = enemiesAndDistances.sort((e1, e2) => e1.enemy.life - e2.enemy.life);
                         break;
                     case GameConstants.STRATEGY_SHOOT_STRONGEST:
-                        enemies = enemies.sort((e1, e2) => e2.enemy.life - e1.enemy.life);
+                        enemiesAndDistances = enemiesAndDistances.sort((e1, e2) => e2.enemy.life - e1.enemy.life);
                         break;
                     case GameConstants.STRATEGY_SHOOT_FIRST:
-                        enemies = enemies.sort((e1, e2) => e2.enemy.l - e1.enemy.l);
+                        enemiesAndDistances = enemiesAndDistances.sort((e1, e2) => e2.enemy.l - e1.enemy.l);
                         break;
                     default:
                 }
             }
 
-            return enemies;
+            const e: Enemy[] = [];
+
+            for (let i = 0; i < enemiesAndDistances.length; i ++) {
+                e.push(enemiesAndDistances[i].enemy);
+            }
+
+            return e;
         }
     }
 }
