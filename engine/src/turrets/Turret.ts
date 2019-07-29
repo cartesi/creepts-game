@@ -93,7 +93,7 @@ module Anuto {
         // TODO: hacer que se puedan pillar varios
         protected getEnemiesWithinRange(): Enemy [] {
 
-            let enemiesAndDistances: {enemy: Enemy, squareDist: number} [] = [];
+            let enemiesAndSquaredDistances: {enemy: Enemy, squareDist: number} [] = [];
             let squaredRange = MathUtils.fixNumber(this.range * this.range);
             
             for (let i = 0; i < GameVars.enemies.length; i ++) {
@@ -106,30 +106,30 @@ module Anuto {
                     const squaredDist = MathUtils.fixNumber(dx * dx + dy * dy);
 
                     if (squaredRange >= squaredDist) {
-                        enemiesAndDistances.push({enemy: GameVars.enemies[i], squareDist: squaredDist});
+                        enemiesAndSquaredDistances.push({enemy: GameVars.enemies[i], squareDist: squaredDist});
                     }
                 }
             }
 
-            if (enemiesAndDistances.length > 1 && (this.type === GameConstants.TURRET_PROJECTILE || this.type === GameConstants.TURRET_LASER)) {
+            if (enemiesAndSquaredDistances.length > 1 && (this.type === GameConstants.TURRET_PROJECTILE || this.type === GameConstants.TURRET_LASER)) {
                 
                 // ordenar a los enemigos dentro del radio de acción según la estrategia de disparo
                 switch (this.shootingStrategy) {
 
                     case GameConstants.STRATEGY_SHOOT_LAST:
-                        enemiesAndDistances = enemiesAndDistances.sort((e1, e2) => e1.enemy.l - e2.enemy.l);
+                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort((e1, e2) => e1.enemy.l - e2.enemy.l);
                         break;
                     case GameConstants.STRATEGY_SHOOT_CLOSEST:
-                        enemiesAndDistances = enemiesAndDistances.sort((e1, e2) => e1.squareDist - e2.squareDist);
+                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort((e1, e2) => e1.squareDist - e2.squareDist);
                         break;
                     case GameConstants.STRATEGY_SHOOT_WEAKEST:
-                        enemiesAndDistances = enemiesAndDistances.sort((e1, e2) => e1.enemy.life - e2.enemy.life);
+                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort((e1, e2) => e1.enemy.life - e2.enemy.life);
                         break;
                     case GameConstants.STRATEGY_SHOOT_STRONGEST:
-                        enemiesAndDistances = enemiesAndDistances.sort((e1, e2) => e2.enemy.life - e1.enemy.life);
+                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort((e1, e2) => e2.enemy.life - e1.enemy.life);
                         break;
                     case GameConstants.STRATEGY_SHOOT_FIRST:
-                        enemiesAndDistances = enemiesAndDistances.sort((e1, e2) => e2.enemy.l - e1.enemy.l);
+                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort((e1, e2) => e2.enemy.l - e1.enemy.l);
                         break;
                     default:
                 }
@@ -137,8 +137,8 @@ module Anuto {
 
             const e: Enemy[] = [];
 
-            for (let i = 0; i < enemiesAndDistances.length; i ++) {
-                e.push(enemiesAndDistances[i].enemy);
+            for (let i = 0; i < enemiesAndSquaredDistances.length; i ++) {
+                e.push(enemiesAndSquaredDistances[i].enemy);
             }
 
             return e;

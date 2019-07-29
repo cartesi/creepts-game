@@ -52,8 +52,8 @@ export class TurretActor extends Phaser.GameObjects.Container {
             // TODO: EN REALIDAD NO ESTA APUNTANDO AL ACTOR SI NO AL ENEMIGO DEL CORE
             // girar el cañon hacia el enemigo
             if (this.anutoTurret.followedEnemy) {
-                const dx = this.anutoTurret.followedEnemy.x - this.p.c;
-                const dy = this.anutoTurret.followedEnemy.y - this.p.r;
+                const dx = this.anutoTurret.followedEnemy.x - (this.p.c + .5);
+                const dy = this.anutoTurret.followedEnemy.y - (this.p.r + .5);
                 this.canon.rotation = Math.atan2(dy, dx);
             }
         }
