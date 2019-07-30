@@ -5,6 +5,24 @@ export class GameManager {
 
     public static init(): void {  
 
+        if (GameVars.currentScene.sys.game.device.os.desktop) {
+            GameVars.scaleY = 1;
+            GameVars.scaleCorrectionFactor = 1;
+        } else {
+
+            GameVars.currentScene.game.scale.displaySize = GameVars.currentScene.game.scale.parentSize;
+            GameVars.currentScene.game.scale.refresh();
+
+            const aspectRatio = window.innerHeight / window.innerWidth;
+            GameVars.scaleY = (GameConstants.GAME_HEIGHT / GameConstants.GAME_WIDTH) / aspectRatio;
+
+            if (aspectRatio > 1.5) {
+                GameVars.scaleCorrectionFactor = 1.2;
+            } else {
+                GameVars.scaleCorrectionFactor = 1;
+            }
+        }
+
         GameManager.readGameData();
     }
 

@@ -8,6 +8,7 @@ module Anuto {
         public creationTick: number;
         public type: string;
         public level: number;
+        public grade: number;
         public x: number;
         public y: number;
         public damage: number;

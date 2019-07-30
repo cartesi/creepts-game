@@ -25,8 +25,11 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         BoardContainer.currentInstance = this;
 
-        this.x = GameConstants.GAME_WIDTH / 2 - GameConstants.CELLS_SIZE * GameConstants.BOARD_SIZE.c / 2;
-        this.y = GameConstants.GAME_HEIGHT / 2 - GameConstants.CELLS_SIZE * GameConstants.BOARD_SIZE.r / 2;
+        this.x = GameConstants.GAME_WIDTH / 2;
+        this.y = GameConstants.GAME_HEIGHT / 2 + GameConstants.CELLS_SIZE * .75 * GameVars.scaleY;
+
+        this.scaleX = GameVars.scaleCorrectionFactor;
+        this.scaleY = GameVars.scaleCorrectionFactor * GameVars.scaleY;
 
         this.enemies = [];
         this.towers = [];
@@ -86,7 +89,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
         
         if (enemyActor) {
-            this.add(enemyActor);
+            this.board.add(enemyActor);
             this.enemies.push(enemyActor);
         }
     }
@@ -111,7 +114,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     public addTower(type: string, position: {r: number, c: number}): void {
         
         const tower = new TurretActor(this.scene, type, position);
-        this.add(tower);
+        this.board.add(tower);
 
         this.towers.push(tower);
     }
@@ -119,7 +122,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     public addBullet(anutoBullet: Anuto.Bullet): void {
 
         const bullet = new BulletActor(this.scene, anutoBullet);
-        this.add(bullet);
+        this.board.add(bullet);
 
         this.bullets.push(bullet);
     }
@@ -206,6 +209,6 @@ export class BoardContainer extends Phaser.GameObjects.Container {
             path.stroke();
         }
 
-        this.add(path);
+        this.board.add(path);
     }
 }

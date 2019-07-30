@@ -1,6 +1,7 @@
 export class GameVars {
 
     public static scaleY: number;
+    public static scaleCorrectionFactor: number;
     public static gameData: GameData;
     public static currentScene: Phaser.Scene;
     public static paused: boolean;

@@ -6,6 +6,9 @@ export class Board extends Phaser.GameObjects.Container {
 
         super(scene);
 
+        this.x = - GameConstants.CELLS_SIZE * GameConstants.BOARD_SIZE.c / 2;
+        this.y = - GameConstants.CELLS_SIZE * GameConstants.BOARD_SIZE.r / 2;
+
         const tmpGraphics = new Phaser.GameObjects.Graphics(this.scene);
         this.add(tmpGraphics);
 
