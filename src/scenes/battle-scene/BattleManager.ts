@@ -38,6 +38,8 @@ export class BattleManager {
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_HIT, BattleManager.onEnemyHit, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_KILLED, BattleManager.onEnemyKilled, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.WAVE_OVER, BattleManager.onWaveOver, BattleManager);
+
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.LASER_SHOT, BattleManager.onLaserShot, BattleManager);
     }
 
     public static update(time: number, delta: number): void {
@@ -89,6 +91,11 @@ export class BattleManager {
         return BattleManager.anutoEngine.addTurret(type, position);
     }
 
+    public static improveTurret(id: number): void {
+
+        BattleManager.anutoEngine.improveTurret(id);
+    }
+
     private static onEnemySpawned(anutoEnemy: Anuto.Enemy, p: {r: number, c: number} ): void {
         
         BoardContainer.currentInstance.addEnemy(anutoEnemy, p);
@@ -104,11 +111,18 @@ export class BattleManager {
         BoardContainer.currentInstance.addBullet(anutoBullet);
     }
 
-    private static onEnemyHit(anutoEnemy: Anuto.Enemy, anutoBullet: Anuto.Bullet): void {
+    private static onLaserShot(laserTurret: Anuto.LaserTurret, enemy: Anuto.Enemy): void {
+
+        console.log("laser shot:", laserTurret, enemy);
+    }
+
+    private static onEnemyHit(anutoEnemy: Anuto.Enemy, anutoBullet?: Anuto.Bullet): void {
 
         BoardContainer.currentInstance.onEnemyHit(anutoEnemy);
         
-        BoardContainer.currentInstance.removeBullet(anutoBullet);
+        if (anutoBullet) {
+            BoardContainer.currentInstance.removeBullet(anutoBullet);
+        } 
     }
 
     private static onEnemyKilled(anutoEnemy: Anuto.Enemy): void {

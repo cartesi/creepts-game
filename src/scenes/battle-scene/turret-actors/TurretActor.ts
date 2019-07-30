@@ -1,6 +1,5 @@
 import { GameConstants } from "../../../GameConstants";
 import { BattleManager } from "../BattleManager";
-import { GameVars } from "../../../GameVars";
 
 export class TurretActor extends Phaser.GameObjects.Container {
 
@@ -16,19 +15,14 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
         super(scene);
 
-        this.id = GameVars.turretsData[type].id;
         this.p = position;
-
+        this.name = type;
+        
         this.anutoTurret = BattleManager.addTurret(type, this.p);
+        this.id = this.anutoTurret.id;
 
         this.x = GameConstants.CELLS_SIZE * (this.p.c + .5);
         this.y = GameConstants.CELLS_SIZE * (this.p.r + .5);
-
-        const tmpImage = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "tmp-tower");
-        tmpImage.setScale(GameConstants.CELLS_SIZE / tmpImage.width * .8);
-        tmpImage.setInteractive();
-        tmpImage.on("pointerdown", this.onDownTurret, this);
-        this.add(tmpImage);
 
         this.canon = new Phaser.GameObjects.Graphics(this.scene);
         this.canon.lineStyle(3, 0x000000);
@@ -63,7 +57,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
         //
     }
 
-    private onDownTurret(): void {
+    protected onDownTurret(): void {
         //
     }
 }

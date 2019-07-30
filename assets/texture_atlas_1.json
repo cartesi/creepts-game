@@ -52,7 +52,7 @@
 					}
 				},
 				{
-					"filename": "tmp-tower",
+					"filename": "tmp-laser-turret",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -157,28 +157,28 @@
 					}
 				},
 				{
-					"filename": "btn_1x_on",
+					"filename": "tmp-projectile-turret",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 48,
-						"h": 47
+						"w": 100,
+						"h": 100
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 48,
-						"h": 47
+						"w": 100,
+						"h": 100
 					},
 					"frame": {
 						"x": 375,
 						"y": 103,
-						"w": 48,
-						"h": 47
+						"w": 100,
+						"h": 100
 					}
 				},
 				{
-					"filename": "btn_4x_off",
+					"filename": "btn_1x_on",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -199,6 +199,27 @@
 					}
 				},
 				{
+					"filename": "btn_4x_off",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 48,
+						"h": 47
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 48,
+						"h": 47
+					},
+					"frame": {
+						"x": 1,
+						"y": 205,
+						"w": 48,
+						"h": 47
+					}
+				},
+				{
 					"filename": "btn_4x_on",
 					"rotated": false,
 					"trimmed": false,
@@ -213,8 +234,8 @@
 						"h": 47
 					},
 					"frame": {
-						"x": 425,
-						"y": 103,
+						"x": 1,
+						"y": 110,
 						"w": 48,
 						"h": 47
 					}
@@ -234,8 +255,8 @@
 						"h": 47
 					},
 					"frame": {
-						"x": 375,
-						"y": 152,
+						"x": 1,
+						"y": 254,
 						"w": 48,
 						"h": 47
 					}
@@ -255,8 +276,8 @@
 						"h": 47
 					},
 					"frame": {
-						"x": 425,
-						"y": 152,
+						"x": 1,
+						"y": 303,
 						"w": 48,
 						"h": 47
 					}
@@ -267,6 +288,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:37f599b3c40d43022144eae008c60682:46a2edde2860a28da3ab2e0c5c96b7b5:1bd3fbbbdaf54e41cf80e3e904578de4$"
+		"smartupdate": "$TexturePacker:SmartUpdate:604b263f36f5ce950798f6c03fb51ed4:b0de857de49476c680693b2faafef360:1bd3fbbbdaf54e41cf80e3e904578de4$"
 	}
 }

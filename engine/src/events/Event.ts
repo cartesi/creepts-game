@@ -8,6 +8,7 @@ module Anuto {
         public static readonly ENEMY_REACHED_EXIT = "enemy reached exit";
         public static readonly WAVE_OVER = "wave over";
         public static readonly BULLET_SHOT = "bullet shot";
+        public static readonly LASER_SHOT = "laser shot";
 
         private type: string;
         private params: any;

@@ -193,6 +193,14 @@ module Anuto {
             this.eventDispatcher.dispatchEvent(new Event(Event.BULLET_SHOT, [bullet, turret]));
         }
 
+        public addLaserRay(laserTurret: LaserTurret, enemy: Enemy): void {
+            
+            enemy.hit(laserTurret.damage);
+
+            this.eventDispatcher.dispatchEvent(new Event(Event.LASER_SHOT, [laserTurret, enemy]));
+            this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [enemy]));
+        }
+
         public onEnemyReachedExit(enemy: Enemy): void {
 
             const i = GameVars.enemies.indexOf(enemy);
@@ -218,6 +226,28 @@ module Anuto {
 
             if (GameVars.enemies.length === 0) {
                 this.waveOver();
+            }
+        }
+
+        public improveTurret(id: number): void {
+
+            const turret = this.getTurretById(id);
+
+            console.log(id);
+
+            if (turret.level < 10 && GameVars.credits >= turret.priceImprovement) {
+                GameVars.credits -= turret.priceImprovement;
+                turret.improve();
+            }
+        }
+
+        public upgradeTurret(id: number) {
+
+            const turret = this.getTurretById(id);
+
+            if (turret.grade < 3 && turret.priceImprovement) {
+                GameVars.credits -= turret.priceImprovement;
+                turret.upgrade();
             }
         }
 
@@ -289,6 +319,20 @@ module Anuto {
             this.waveActivated = false;
 
             this.eventDispatcher.dispatchEvent(new Event(Event.WAVE_OVER));
+        }
+
+        private getTurretById(id: number): Turret {
+
+            let turret: Turret = null;
+
+            for (let i = 0; i < this.turrets.length; i ++) {
+                if (this.turrets[i].id === id) {
+                    turret = this.turrets[i];
+                    break;
+                }
+            }
+
+            return turret;
         }
 
         public get ticksCounter(): number {

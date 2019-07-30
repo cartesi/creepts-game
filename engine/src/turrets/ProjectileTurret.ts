@@ -1,10 +1,22 @@
 module Anuto {
+    // usando esto:
+    // https://www.symbolab.com/solver/system-of-equations-calculator/
+   
+    // damage se calcula en funcion de level mediante una equacion de tercer grado
+    // damage = a * level ^ 3 + b * level ^ 2 + c * level + d
+    // siendo a = 1 / 3, b = 2, c = 95/3 y d = 66
+
+    // reload = (-1/18) * level + 19/18
+    // range = 2/45 * level + 221 / 90
+    // priceNextImprovement =  29 / 336 * level ^ 3  + 27 / 56 * level ^ 2 + 2671 / 336 * this.level + 2323 / 56
 
     export class ProjectileTurret extends Turret {
 
         constructor (p: {r: number, c: number}, creationTick: number) {
             
             super(GameConstants.TURRET_PROJECTILE, p, creationTick);
+
+            this.calculateTurretParameters();
         }
 
         public update(): void {
@@ -24,6 +36,22 @@ module Anuto {
             super.update();
         }
 
+        protected calculateTurretParameters(): void {
+
+            this.damage = Math.floor( 1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 66);
+            this.reload = Math.round(((-1 / 18) * this.level + 19 / 18 ) * 10) / 10;
+            this.range =  Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
+            this.priceImprovement =  Math.floor( 29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+            
+            if (this.level === 1) {
+                this.value = GameVars.turretData[this.type].price;
+            } else {
+                // calcularlo
+            }
+
+            super.calculateTurretParameters();
+        }
+    
         protected shoot(): void {
 
             super.shoot();

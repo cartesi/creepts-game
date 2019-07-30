@@ -33,11 +33,14 @@ declare module Anuto {
         creationTick: number;
         type: string;
         level: number;
+        grade: number;
         x: number;
         y: number;
         damage: number;
         reload: number;
         range: number;
+        priceImprovement: number;
+        priceUpgrade: number;
         value: number;
         position: {
             r: number;
@@ -56,7 +59,9 @@ declare module Anuto {
         }, creationTick: number);
         destroy(): void;
         update(): void;
+        improve(): void;
         upgrade(): void;
+        protected calculateTurretParameters(): void;
         protected shoot(): void;
         protected getEnemiesWithinRange(): Enemy[];
     }
@@ -110,14 +115,18 @@ declare module Anuto {
         }): Turret;
         sellTurret(turret: Turret): void;
         addBullet(bullet: Bullet, turret: Turret): void;
+        addLaserRay(laserTurret: LaserTurret, enemy: Enemy): void;
         onEnemyReachedExit(enemy: Enemy): void;
         onEnemyKilled(enemy: Enemy): void;
+        improveTurret(id: number): void;
+        upgradeTurret(id: number): void;
         addEventListener(type: string, listenerFunction: Function, scope: any): void;
         removeEventListener(type: string, listenerFunction: any): void;
         private checkCollisions;
         private removeBulletsAndAccountDamage;
         private spawnEnemies;
         private waveOver;
+        private getTurretById;
         readonly ticksCounter: number;
         readonly credits: number;
         timeStep: number;
@@ -219,6 +228,7 @@ declare module Anuto {
         static readonly ENEMY_REACHED_EXIT = "enemy reached exit";
         static readonly WAVE_OVER = "wave over";
         static readonly BULLET_SHOT = "bullet shot";
+        static readonly LASER_SHOT = "laser shot";
         private type;
         private params;
         constructor(type: string, params?: any);
@@ -252,6 +262,8 @@ declare module Anuto {
             c: number;
         }, creationTick: number);
         update(): void;
+        protected calculateTurretParameters(): void;
+        protected shoot(): void;
     }
 }
 declare module Anuto {
@@ -270,6 +282,7 @@ declare module Anuto {
             c: number;
         }, creationTick: number);
         update(): void;
+        protected calculateTurretParameters(): void;
         protected shoot(): void;
     }
 }

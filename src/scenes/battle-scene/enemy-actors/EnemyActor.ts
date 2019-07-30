@@ -20,7 +20,7 @@ export class EnemyActor extends Phaser.GameObjects.Container {
         this.type = this.anutoEnemy.type;
 
         this.lifeBar = new LifeBar(this.scene, this.anutoEnemy.life);
-        this.lifeBar.y = -26;
+        this.lifeBar.y = -32;
         this.lifeBar.x -= LifeBar.WIDTH / 2;
         this.add(this.lifeBar);
 

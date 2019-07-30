@@ -9,15 +9,17 @@ import { RunnerEnemyActor } from "./enemy-actors/RunnerEnemyActor";
 import { HealerEnemyActor } from "./enemy-actors/HealerEnemyActor";
 import { BlobEnemyActor } from "./enemy-actors/BlobEnemyActor";
 import { FlierEnemyActor } from "./enemy-actors/FlierEnemyActor";
+import { ProjectileTurretActor } from "./turret-actors/ProjectileTurretActor";
+import { LaserTurretActor } from "./turret-actors/LaserTurretActor";
 
 export class BoardContainer extends Phaser.GameObjects.Container {
 
     public static currentInstance: BoardContainer;
 
     private board: Board;
-    private enemies: EnemyActor[];
-    private towers: TurretActor[];
-    private bullets: BulletActor[];
+    private enemyActors: EnemyActor[];
+    private turretActors: TurretActor[];
+    private bulletActors: BulletActor[];
 
     constructor(scene: Phaser.Scene) {
 
@@ -31,9 +33,9 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.scaleX = GameVars.scaleCorrectionFactor;
         this.scaleY = GameVars.scaleCorrectionFactor * GameVars.scaleY;
 
-        this.enemies = [];
-        this.towers = [];
-        this.bullets = [];
+        this.enemyActors = [];
+        this.turretActors = [];
+        this.bulletActors = [];
 
         this.board = new Board(this.scene);
         this.add(this.board);
@@ -43,7 +45,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
 
         // temporalmente añadimos una torre
-        this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, {r: 3, c: 2});
+        this.addTower(Anuto.GameConstants.TURRET_LASER, {r: 3, c: 2});
         this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, {r: 6, c: 2});
         this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, {r: 8, c: 6});
         this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, {r: 11, c: 2});
@@ -51,15 +53,15 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
     public update(time: number, delta: number): void {
 
-        this.enemies.forEach(function (enemy) {
+        this.enemyActors.forEach(function (enemy) {
             enemy.update(time, delta);
         }); 
 
-        this.towers.forEach(function (tower) {
+        this.turretActors.forEach(function (tower) {
             tower.update(time, delta);
         }); 
 
-        this.bullets.forEach(function (bullet) {
+        this.bulletActors.forEach(function (bullet) {
             bullet.update(time, delta);
         }); 
     }
@@ -90,33 +92,49 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         
         if (enemyActor) {
             this.board.add(enemyActor);
-            this.enemies.push(enemyActor);
+            this.enemyActors.push(enemyActor);
         }
     }
 
     public removeEnemy(id: number): void {
 
         let i: number;
-        for (i = 0; i < this.enemies.length; i ++) {
-            if (this.enemies[i].id === id) {
+        for (i = 0; i < this.enemyActors.length; i ++) {
+            if (this.enemyActors[i].id === id) {
                break; 
             }
         }
 
-        const enemy = this.enemies[i];
+        const enemy = this.enemyActors[i];
 
         if (enemy) {
-            this.enemies.splice(i, 1);
+            this.enemyActors.splice(i, 1);
             enemy.destroy();
         }
     }
 
     public addTower(type: string, position: {r: number, c: number}): void {
-        
-        const tower = new TurretActor(this.scene, type, position);
-        this.board.add(tower);
 
-        this.towers.push(tower);
+        let turret: TurretActor;
+
+        switch (type) {
+
+            case Anuto.GameConstants.TURRET_PROJECTILE:
+                turret = new ProjectileTurretActor(this.scene, position);
+                break;
+            case Anuto.GameConstants.TURRET_LASER:
+                turret = new LaserTurretActor(this.scene, position);
+                break;
+            case Anuto.GameConstants.TURRET_LAUNCH:
+                break;
+            case Anuto.GameConstants.TURRET_LASER:
+                break;
+            default:
+        }
+        
+        this.board.add(turret);
+
+        this.turretActors.push(turret);
     }
 
     public addBullet(anutoBullet: Anuto.Bullet): void {
@@ -124,7 +142,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         const bullet = new BulletActor(this.scene, anutoBullet);
         this.board.add(bullet);
 
-        this.bullets.push(bullet);
+        this.bulletActors.push(bullet);
     }
 
     public onEnemyHit(anutoEnemy: Anuto.Enemy): void {
@@ -143,8 +161,8 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         if (enemy) {
 
-            const i = this.enemies.indexOf(enemy);
-            this.enemies.splice(i, 1);
+            const i = this.enemyActors.indexOf(enemy);
+            this.enemyActors.splice(i, 1);
 
             enemy.destroy();
         }
@@ -154,17 +172,17 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         let bullet: BulletActor = null;
 
-        for (let i = 0; i < this.bullets.length; i ++) {
+        for (let i = 0; i < this.bulletActors.length; i ++) {
 
-            if (this.bullets[i].anutoBullet.id === anutoBullet.id) {
-                bullet = this.bullets[i];
+            if (this.bulletActors[i].anutoBullet.id === anutoBullet.id) {
+                bullet = this.bulletActors[i];
                 break;
             }
         }
 
         if (bullet) {
-            const i = this.bullets.indexOf(bullet);
-            this.bullets.splice(i, 1);
+            const i = this.bulletActors.indexOf(bullet);
+            this.bulletActors.splice(i, 1);
             bullet.destroy();
         }
     }
@@ -178,9 +196,9 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         let enemy = null;
 
-        for (let i = 0; i < this.enemies.length; i ++) {
-            if (this.enemies[i].id === id) {
-                enemy = this.enemies[i];
+        for (let i = 0; i < this.enemyActors.length; i ++) {
+            if (this.enemyActors[i].id === id) {
+                enemy = this.enemyActors[i];
                 break;
             }
         }

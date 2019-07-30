@@ -84,19 +84,15 @@ var Anuto;
             this.type = type;
             this.f = 0;
             this.level = 1;
+            this.grade = 1;
             this.position = p;
-            this.fixedTarget = false;
-            this.shootingStrategy = Anuto.GameConstants.STRATEGY_SHOOT_LAST;
+            this.fixedTarget = true;
+            this.shootingStrategy = Anuto.GameConstants.STRATEGY_SHOOT_FIRST;
             this.readyToShoot = false;
             this.enemiesWithinRange = [];
             this.followedEnemy = null;
             this.x = this.position.c + .5;
             this.y = this.position.r + .5;
-            this.damage = Anuto.GameVars.turretData[type].damage;
-            this.range = Anuto.GameVars.turretData[type].range;
-            this.reload = Anuto.GameVars.turretData[type].reload;
-            this.value = Anuto.GameVars.turretData[type].price;
-            this.reloadTicks = Math.floor(Anuto.GameConstants.RELOAD_BASE_TICKS * this.reload);
         }
         Turret.prototype.destroy = function () {
         };
@@ -116,13 +112,22 @@ var Anuto;
                 }
             }
         };
-        Turret.prototype.upgrade = function () {
+        Turret.prototype.improve = function () {
             this.level++;
+            this.calculateTurretParameters();
+        };
+        Turret.prototype.upgrade = function () {
+            this.grade++;
+            this.level = 1;
+            this.calculateTurretParameters();
+        };
+        Turret.prototype.calculateTurretParameters = function () {
+            this.reloadTicks = Math.floor(Anuto.GameConstants.RELOAD_BASE_TICKS * this.reload);
         };
         Turret.prototype.shoot = function () {
         };
         Turret.prototype.getEnemiesWithinRange = function () {
-            var enemiesAndDistances = [];
+            var enemiesAndSquaredDistances = [];
             var squaredRange = Anuto.MathUtils.fixNumber(this.range * this.range);
             for (var i = 0; i < Anuto.GameVars.enemies.length; i++) {
                 if (Anuto.GameVars.enemies[i].life > 0) {
@@ -130,33 +135,33 @@ var Anuto;
                     var dy = this.y - Anuto.GameVars.enemies[i].y;
                     var squaredDist = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
                     if (squaredRange >= squaredDist) {
-                        enemiesAndDistances.push({ enemy: Anuto.GameVars.enemies[i], squareDist: squaredDist });
+                        enemiesAndSquaredDistances.push({ enemy: Anuto.GameVars.enemies[i], squareDist: squaredDist });
                     }
                 }
             }
-            if (enemiesAndDistances.length > 1 && (this.type === Anuto.GameConstants.TURRET_PROJECTILE || this.type === Anuto.GameConstants.TURRET_LASER)) {
+            if (enemiesAndSquaredDistances.length > 1 && (this.type === Anuto.GameConstants.TURRET_PROJECTILE || this.type === Anuto.GameConstants.TURRET_LASER)) {
                 switch (this.shootingStrategy) {
                     case Anuto.GameConstants.STRATEGY_SHOOT_LAST:
-                        enemiesAndDistances = enemiesAndDistances.sort(function (e1, e2) { return e1.enemy.l - e2.enemy.l; });
+                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort(function (e1, e2) { return e1.enemy.l - e2.enemy.l; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_CLOSEST:
-                        enemiesAndDistances = enemiesAndDistances.sort(function (e1, e2) { return e1.squareDist - e2.squareDist; });
+                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort(function (e1, e2) { return e1.squareDist - e2.squareDist; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_WEAKEST:
-                        enemiesAndDistances = enemiesAndDistances.sort(function (e1, e2) { return e1.enemy.life - e2.enemy.life; });
+                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort(function (e1, e2) { return e1.enemy.life - e2.enemy.life; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_STRONGEST:
-                        enemiesAndDistances = enemiesAndDistances.sort(function (e1, e2) { return e2.enemy.life - e1.enemy.life; });
+                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort(function (e1, e2) { return e2.enemy.life - e1.enemy.life; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_FIRST:
-                        enemiesAndDistances = enemiesAndDistances.sort(function (e1, e2) { return e2.enemy.l - e1.enemy.l; });
+                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort(function (e1, e2) { return e2.enemy.l - e1.enemy.l; });
                         break;
                     default:
                 }
             }
             var e = [];
-            for (var i = 0; i < enemiesAndDistances.length; i++) {
-                e.push(enemiesAndDistances[i].enemy);
+            for (var i = 0; i < enemiesAndSquaredDistances.length; i++) {
+                e.push(enemiesAndSquaredDistances[i].enemy);
             }
             return e;
         };
@@ -334,6 +339,11 @@ var Anuto;
             this.bullets.push(bullet);
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.BULLET_SHOT, [bullet, turret]));
         };
+        Engine.prototype.addLaserRay = function (laserTurret, enemy) {
+            enemy.hit(laserTurret.damage);
+            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.LASER_SHOT, [laserTurret, enemy]));
+            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_HIT, [enemy]));
+        };
         Engine.prototype.onEnemyReachedExit = function (enemy) {
             var i = Anuto.GameVars.enemies.indexOf(enemy);
             Anuto.GameVars.enemies.splice(i, 1);
@@ -351,6 +361,21 @@ var Anuto;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_KILLED, [enemy]));
             if (Anuto.GameVars.enemies.length === 0) {
                 this.waveOver();
+            }
+        };
+        Engine.prototype.improveTurret = function (id) {
+            var turret = this.getTurretById(id);
+            console.log(id);
+            if (turret.level < 10 && Anuto.GameVars.credits >= turret.priceImprovement) {
+                Anuto.GameVars.credits -= turret.priceImprovement;
+                turret.improve();
+            }
+        };
+        Engine.prototype.upgradeTurret = function (id) {
+            var turret = this.getTurretById(id);
+            if (turret.grade < 3 && turret.priceImprovement) {
+                Anuto.GameVars.credits -= turret.priceImprovement;
+                turret.upgrade();
             }
         };
         Engine.prototype.addEventListener = function (type, listenerFunction, scope) {
@@ -396,6 +421,16 @@ var Anuto;
         Engine.prototype.waveOver = function () {
             this.waveActivated = false;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.WAVE_OVER));
+        };
+        Engine.prototype.getTurretById = function (id) {
+            var turret = null;
+            for (var i = 0; i < this.turrets.length; i++) {
+                if (this.turrets[i].id === id) {
+                    turret = this.turrets[i];
+                    break;
+                }
+            }
+            return turret;
         };
         Object.defineProperty(Engine.prototype, "ticksCounter", {
             get: function () {
@@ -533,6 +568,7 @@ var Anuto;
         Event.ENEMY_REACHED_EXIT = "enemy reached exit";
         Event.WAVE_OVER = "wave over";
         Event.BULLET_SHOT = "bullet shot";
+        Event.LASER_SHOT = "laser shot";
         return Event;
     }());
     Anuto.Event = Event;
@@ -595,10 +631,49 @@ var Anuto;
     var LaserTurret = (function (_super) {
         __extends(LaserTurret, _super);
         function LaserTurret(p, creationTick) {
-            return _super.call(this, Anuto.GameConstants.TURRET_LASER, p, creationTick) || this;
+            var _this = _super.call(this, Anuto.GameConstants.TURRET_LASER, p, creationTick) || this;
+            _this.calculateTurretParameters();
+            return _this;
         }
         LaserTurret.prototype.update = function () {
+            if (this.fixedTarget) {
+                if (this.enemiesWithinRange.length > 0) {
+                    if (this.enemiesWithinRange.indexOf(this.followedEnemy) === -1) {
+                        this.followedEnemy = this.enemiesWithinRange[0];
+                    }
+                }
+                else {
+                    this.followedEnemy = null;
+                }
+            }
+            else {
+                this.followedEnemy = this.enemiesWithinRange[0];
+            }
             _super.prototype.update.call(this);
+        };
+        LaserTurret.prototype.calculateTurretParameters = function () {
+            this.damage = Math.floor(1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 66);
+            this.reload = Math.round(((-1 / 18) * this.level + 19 / 18) * 10) / 10;
+            this.range = Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
+            this.priceImprovement = Math.floor(29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+            if (this.level === 1) {
+                this.value = Anuto.GameVars.turretData[this.type].price;
+            }
+            else {
+            }
+            _super.prototype.calculateTurretParameters.call(this);
+        };
+        LaserTurret.prototype.shoot = function () {
+            _super.prototype.shoot.call(this);
+            var enemy;
+            if (this.fixedTarget) {
+                enemy = this.followedEnemy || this.enemiesWithinRange[0];
+            }
+            else {
+                enemy = this.enemiesWithinRange[0];
+            }
+            console.log("adding laser ray");
+            Anuto.Engine.currentInstance.addLaserRay(this, enemy);
         };
         return LaserTurret;
     }(Anuto.Turret));
@@ -623,7 +698,9 @@ var Anuto;
     var ProjectileTurret = (function (_super) {
         __extends(ProjectileTurret, _super);
         function ProjectileTurret(p, creationTick) {
-            return _super.call(this, Anuto.GameConstants.TURRET_PROJECTILE, p, creationTick) || this;
+            var _this = _super.call(this, Anuto.GameConstants.TURRET_PROJECTILE, p, creationTick) || this;
+            _this.calculateTurretParameters();
+            return _this;
         }
         ProjectileTurret.prototype.update = function () {
             if (this.fixedTarget) {
@@ -640,6 +717,18 @@ var Anuto;
                 this.followedEnemy = this.enemiesWithinRange[0];
             }
             _super.prototype.update.call(this);
+        };
+        ProjectileTurret.prototype.calculateTurretParameters = function () {
+            this.damage = Math.floor(1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 66);
+            this.reload = Math.round(((-1 / 18) * this.level + 19 / 18) * 10) / 10;
+            this.range = Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
+            this.priceImprovement = Math.floor(29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+            if (this.level === 1) {
+                this.value = Anuto.GameVars.turretData[this.type].price;
+            }
+            else {
+            }
+            _super.prototype.calculateTurretParameters.call(this);
         };
         ProjectileTurret.prototype.shoot = function () {
             _super.prototype.shoot.call(this);

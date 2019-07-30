@@ -14,6 +14,8 @@ module Anuto {
         public damage: number;
         public reload: number;
         public range: number;
+        public priceImprovement: number;
+        public priceUpgrade: number;
         public value: number;
         public position: {r: number, c: number};
         public shootingStrategy: string;
@@ -35,6 +37,7 @@ module Anuto {
             this.type = type;
             this.f = 0;
             this.level = 1;
+            this.grade = 1;
             this.position = p;
             this.fixedTarget = true;
             this.shootingStrategy = GameConstants.STRATEGY_SHOOT_FIRST;
@@ -44,13 +47,6 @@ module Anuto {
 
             this.x = this.position.c + .5;
             this.y = this.position.r + .5;
-
-            this.damage = GameVars.turretData[type].damage;
-            this.range = GameVars.turretData[type].range;
-            this.reload = GameVars.turretData[type].reload;
-            this.value =  GameVars.turretData[type].price;
-
-            this.reloadTicks = Math.floor(GameConstants.RELOAD_BASE_TICKS * this.reload);
         }
 
         public destroy(): void {
@@ -64,7 +60,7 @@ module Anuto {
             if (this.readyToShoot) {
 
                 if (this.enemiesWithinRange.length > 0) {
-                    this.readyToShoot = false;
+                    this.readyToShoot = false;   
                     this.shoot();
                 }
             
@@ -79,15 +75,25 @@ module Anuto {
             }
         }
 
-        public upgrade(): void {
-            
-            this.level ++;
+        public improve(): void {
 
-            // TODO: actualizar el valor de la torreta
+            this.level ++;
+            this.calculateTurretParameters();                                                                                                                                        
+        }
+
+        public upgrade(): void {
+
+            this.grade ++;
+            this.level = 1;
+            this.calculateTurretParameters();
+        }
+
+        protected calculateTurretParameters(): void {
+            
+            this.reloadTicks = Math.floor(GameConstants.RELOAD_BASE_TICKS * this.reload);
         }
 
         protected shoot(): void {
-
             // override
         }
 

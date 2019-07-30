@@ -104,7 +104,7 @@ module.exports = JSON.parse("{\"enemies\":{\"soldier\":{\"life\":80,\"speed\":0.
 /*! exports provided: turrets, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"turrets\":{\"projectile\":{\"price\":150,\"damage\":10,\"reload\":1,\"range\":2.5},\"laser\":{\"price\":250,\"damage\":10,\"reload\":1,\"range\":2.5},\"launch\":{\"price\":300,\"damage\":10,\"reload\":1,\"range\":2.5},\"glue\":{\"price\":500,\"damage\":10,\"reload\":1,\"range\":2.5}}}");
+module.exports = JSON.parse("{\"turrets\":{\"projectile\":{\"price\":150,\"damage\":100,\"reload\":1,\"range\":2.5},\"laser\":{\"price\":150,\"damage\":230,\"reload\":1.5,\"range\":3},\"launch\":{\"price\":250,\"explosiveRange\":1.5,\"damage\":100,\"reload\":1,\"range\":2.5},\"glue\":{\"price\":500,\"intensity\":10,\"duration\":1.5,\"reload\":1,\"range\":2.5}}}");
 
 /***/ }),
 
@@ -195,7 +195,7 @@ var GameConstants = /** @class */ (function () {
     GameConstants.ENEMY_SPAWNING_DELTA_TICKS = 10;
     GameConstants.BOARD_SIZE = { r: 15, c: 10 };
     GameConstants.INITIAL_CREDITS = 600;
-    GameConstants.CELLS_SIZE = 50;
+    GameConstants.CELLS_SIZE = 60;
     // los caminos de los enemigos
     GameConstants.ENEMY_PATH_1 = [
         { r: -1, c: 3 },
@@ -284,6 +284,22 @@ var GameManager = /** @class */ (function () {
     function GameManager() {
     }
     GameManager.init = function () {
+        if (GameVars_1.GameVars.currentScene.sys.game.device.os.desktop) {
+            GameVars_1.GameVars.scaleY = 1;
+            GameVars_1.GameVars.scaleCorrectionFactor = 1;
+        }
+        else {
+            GameVars_1.GameVars.currentScene.game.scale.displaySize = GameVars_1.GameVars.currentScene.game.scale.parentSize;
+            GameVars_1.GameVars.currentScene.game.scale.refresh();
+            var aspectRatio = window.innerHeight / window.innerWidth;
+            GameVars_1.GameVars.scaleY = (GameConstants_1.GameConstants.GAME_HEIGHT / GameConstants_1.GameConstants.GAME_WIDTH) / aspectRatio;
+            if (aspectRatio > 1.5) {
+                GameVars_1.GameVars.scaleCorrectionFactor = 1.2;
+            }
+            else {
+                GameVars_1.GameVars.scaleCorrectionFactor = 1;
+            }
+        }
         GameManager.readGameData();
     };
     GameManager.readGameData = function () {
@@ -756,6 +772,8 @@ var Board = /** @class */ (function (_super) {
     __extends(Board, _super);
     function Board(scene) {
         var _this = _super.call(this, scene) || this;
+        _this.x = -GameConstants_1.GameConstants.CELLS_SIZE * GameConstants_1.GameConstants.BOARD_SIZE.c / 2;
+        _this.y = -GameConstants_1.GameConstants.CELLS_SIZE * GameConstants_1.GameConstants.BOARD_SIZE.r / 2;
         var tmpGraphics = new Phaser.GameObjects.Graphics(_this.scene);
         _this.add(tmpGraphics);
         tmpGraphics.lineStyle(1, 0x666666);
@@ -817,8 +835,10 @@ var BoardContainer = /** @class */ (function (_super) {
     function BoardContainer(scene) {
         var _this = _super.call(this, scene) || this;
         BoardContainer.currentInstance = _this;
-        _this.x = GameConstants_1.GameConstants.GAME_WIDTH / 2 - GameConstants_1.GameConstants.CELLS_SIZE * GameConstants_1.GameConstants.BOARD_SIZE.c / 2;
-        _this.y = GameConstants_1.GameConstants.GAME_HEIGHT / 2 - GameConstants_1.GameConstants.CELLS_SIZE * GameConstants_1.GameConstants.BOARD_SIZE.r / 2;
+        _this.x = GameConstants_1.GameConstants.GAME_WIDTH / 2;
+        _this.y = GameConstants_1.GameConstants.GAME_HEIGHT / 2 + GameConstants_1.GameConstants.CELLS_SIZE * .75 * GameVars_1.GameVars.scaleY;
+        _this.scaleX = GameVars_1.GameVars.scaleCorrectionFactor;
+        _this.scaleY = GameVars_1.GameVars.scaleCorrectionFactor * GameVars_1.GameVars.scaleY;
         _this.enemies = [];
         _this.towers = [];
         _this.bullets = [];
@@ -866,7 +886,7 @@ var BoardContainer = /** @class */ (function (_super) {
             default:
         }
         if (enemyActor) {
-            this.add(enemyActor);
+            this.board.add(enemyActor);
             this.enemies.push(enemyActor);
         }
     };
@@ -885,12 +905,12 @@ var BoardContainer = /** @class */ (function (_super) {
     };
     BoardContainer.prototype.addTower = function (type, position) {
         var tower = new TurretActor_1.TurretActor(this.scene, type, position);
-        this.add(tower);
+        this.board.add(tower);
         this.towers.push(tower);
     };
     BoardContainer.prototype.addBullet = function (anutoBullet) {
         var bullet = new BulletActor_1.BulletActor(this.scene, anutoBullet);
-        this.add(bullet);
+        this.board.add(bullet);
         this.bullets.push(bullet);
     };
     BoardContainer.prototype.onEnemyHit = function (anutoEnemy) {
@@ -947,7 +967,7 @@ var BoardContainer = /** @class */ (function (_super) {
             path.lineTo(x, y);
             path.stroke();
         }
-        this.add(path);
+        this.board.add(path);
     };
     return BoardContainer;
 }(Phaser.GameObjects.Container));
@@ -987,21 +1007,26 @@ var GUI = /** @class */ (function (_super) {
     __extends(GUI, _super);
     function GUI(scene) {
         var _this = _super.call(this, scene) || this;
-        _this.timeStepMultiplierButton4x = new Utils_1.Button(_this.scene, 480, 35, "texture_atlas_1", "btn_4x_off", "btn_4x_on", true);
+        _this.timeStepMultiplierButton4x = new Utils_1.Button(_this.scene, 480, 35 * GameVars_1.GameVars.scaleY, "texture_atlas_1", "btn_4x_off", "btn_4x_on", true);
         _this.timeStepMultiplierButton4x.onDown(_this.onClick4x, _this);
+        _this.timeStepMultiplierButton4x.scaleY = GameVars_1.GameVars.scaleY;
         _this.add(_this.timeStepMultiplierButton4x);
-        _this.timeStepMultiplierButton1x = new Utils_1.Button(_this.scene, 480, 35, "texture_atlas_1", "btn_1x_off", "btn_1x_on", true);
+        _this.timeStepMultiplierButton1x = new Utils_1.Button(_this.scene, 480, 35 * GameVars_1.GameVars.scaleY, "texture_atlas_1", "btn_1x_off", "btn_1x_on", true);
         _this.timeStepMultiplierButton1x.onDown(_this.onClick1x, _this);
+        _this.timeStepMultiplierButton1x.scaleY = GameVars_1.GameVars.scaleY;
         _this.timeStepMultiplierButton1x.visible = false;
         _this.add(_this.timeStepMultiplierButton1x);
-        var nextWaveButton = new Utils_1.Button(_this.scene, 610, 35, "texture_atlas_1", "btn_start_off", "btn_start_on", true);
+        var nextWaveButton = new Utils_1.Button(_this.scene, 610, 35 * GameVars_1.GameVars.scaleY, "texture_atlas_1", "btn_start_off", "btn_start_on", true);
         nextWaveButton.onDown(_this.onClickNextWave, _this);
+        nextWaveButton.scaleY = GameVars_1.GameVars.scaleY;
         _this.add(nextWaveButton);
-        var resetButton = new Utils_1.Button(_this.scene, 610, 95, "texture_atlas_1", "btn_reset_off", "btn_reset_on", true);
+        var resetButton = new Utils_1.Button(_this.scene, 610, 85 * GameVars_1.GameVars.scaleY, "texture_atlas_1", "btn_reset_off", "btn_reset_on", true);
         resetButton.onDown(_this.onClickReset, _this);
+        resetButton.scaleY = GameVars_1.GameVars.scaleY;
         _this.add(resetButton);
-        var pauseButton = new Utils_1.Button(_this.scene, 735, 35, "texture_atlas_1", "btn_pause_off", "btn_pause_on", true);
+        var pauseButton = new Utils_1.Button(_this.scene, 735, 35 * GameVars_1.GameVars.scaleY, "texture_atlas_1", "btn_pause_off", "btn_pause_on", true);
         pauseButton.onDown(_this.onClickPauseWave, _this);
+        pauseButton.scaleY = GameVars_1.GameVars.scaleY;
         _this.add(pauseButton);
         return _this;
     }
@@ -1061,14 +1086,17 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var BattleManager_1 = __webpack_require__(/*! ./BattleManager */ "./src/scenes/battle-scene/BattleManager.ts");
 var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
+var GameVars_1 = __webpack_require__(/*! ../../GameVars */ "./src/GameVars.ts");
 var HUD = /** @class */ (function (_super) {
     __extends(HUD, _super);
     function HUD(scene) {
         var _this = _super.call(this, scene) || this;
-        _this.creditsLabel = new Phaser.GameObjects.Text(_this.scene, 15, 15, "credits: " + BattleManager_1.BattleManager.anutoEngine.credits, { fontFamily: "Arial", fontSize: "25px", color: "#000000" });
+        _this.creditsLabel = new Phaser.GameObjects.Text(_this.scene, 15, 15 * GameVars_1.GameVars.scaleY, "credits: " + BattleManager_1.BattleManager.anutoEngine.credits, { fontFamily: "Arial", fontSize: "25px", color: "#000000" });
+        _this.creditsLabel.scaleY = GameVars_1.GameVars.scaleY;
         _this.add(_this.creditsLabel);
         if (GameConstants_1.GameConstants.DEVELOPMENT) {
-            _this.ticksLabel = new Phaser.GameObjects.Text(_this.scene, 15, GameConstants_1.GameConstants.GAME_HEIGHT - 35, "ticks: " + BattleManager_1.BattleManager.anutoEngine.ticksCounter, { fontFamily: "Arial", fontSize: "25px", color: "#000000" });
+            _this.ticksLabel = new Phaser.GameObjects.Text(_this.scene, 15, GameConstants_1.GameConstants.GAME_HEIGHT - 35 * GameVars_1.GameVars.scaleY, "ticks: " + BattleManager_1.BattleManager.anutoEngine.ticksCounter, { fontFamily: "Arial", fontSize: "25px", color: "#000000" });
+            _this.ticksLabel.scaleY = GameVars_1.GameVars.scaleY;
             _this.add(_this.ticksLabel);
         }
         else {
@@ -1531,6 +1559,11 @@ var TurretActor = /** @class */ (function (_super) {
             _this.rangeCircle.strokeCircle(0, 0, _this.anutoTurret.range * GameConstants_1.GameConstants.CELLS_SIZE);
             _this.add(_this.rangeCircle);
         }
+        if (_this.id === 0) {
+            for (var i = 0; i < 9; i++) {
+                _this.anutoTurret.improve();
+            }
+        }
         return _this;
     }
     TurretActor.prototype.update = function (time, delta) {
@@ -1538,8 +1571,8 @@ var TurretActor = /** @class */ (function (_super) {
             // TODO: EN REALIDAD NO ESTA APUNTANDO AL ACTOR SI NO AL ENEMIGO DEL CORE
             // girar el cañon hacia el enemigo
             if (this.anutoTurret.followedEnemy) {
-                var dx = this.anutoTurret.followedEnemy.x - this.p.c;
-                var dy = this.anutoTurret.followedEnemy.y - this.p.r;
+                var dx = this.anutoTurret.followedEnemy.x - (this.p.c + .5);
+                var dy = this.anutoTurret.followedEnemy.y - (this.p.r + .5);
                 this.canon.rotation = Math.atan2(dy, dx);
             }
         }

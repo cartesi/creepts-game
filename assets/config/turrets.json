@@ -2,28 +2,16 @@
 {
     "turrets": {
                 "projectile" : {
-                    "price": 150,
-                    "damage": 10,
-                    "reload": 1,
-                    "range": 2.5
+                    "price": 150
                 },
                 "laser" : {
-                    "price": 250,
-                    "damage": 10,
-                    "reload": 1,
-                    "range": 2.5
+                    "price": 150
                 },
                 "launch" : {
-                    "price": 300,
-                    "damage": 10,
-                    "reload": 1,
-                    "range": 2.5
+                    "price": 250
                 },
                 "glue" : {
-                    "price": 500,
-                    "damage": 10,
-                    "reload": 1,
-                    "range": 2.5
+                    "price": 500
                 }
     }
 }

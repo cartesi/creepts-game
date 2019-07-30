@@ -1,29 +1,29 @@
 {
     "enemies": {
                 "soldier" : {
-                    "life": 80,
+                    "life": 1000,
                     "speed": 0.1,
-                    "value": 20
+                    "value": 200
                 },
                 "runner" : {
-                    "life": 150,
+                    "life": 750,
                     "speed": 0.2,
-                    "value": 40
+                    "value": 150
                 },
                 "healer" : {
-                    "life": 200,
+                    "life": 1500,
                     "speed": 0.085,
-                    "value": 80
+                    "value": 500
                 },
                 "blob" : {
-                    "life": 250,
+                    "life": 2500,
                     "speed": 0.045,
-                    "value": 90
+                    "value": 600
                 },
                 "flier" : {
-                    "life": 150,
+                    "life": 2000,
                     "speed": 0.075,
-                    "value": 120
+                    "value": 450
                 }
     }
 }
