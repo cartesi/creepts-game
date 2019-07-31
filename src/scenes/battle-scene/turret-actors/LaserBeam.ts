@@ -17,7 +17,7 @@ export class LaserBeam extends Phaser.GameObjects.Graphics {
         this.enemyActor = enemyActor;
 
         this.f = 0;
-        this.framesDuration = GameVars.timeStepFactor === 1 ? 20 : 5;
+        this.framesDuration = GameVars.timeStepFactor === 1 ? 24 : 6;
 
         // HAY Q HACER ESTO PQ EL METODO UPDATE NO SE UTILIZA DE MANERA AUTOMATICA
         this.scene.sys.updateList.add(this);
@@ -39,8 +39,8 @@ export class LaserBeam extends Phaser.GameObjects.Graphics {
         // se remata por un circulo
         let r1 = this.f % 2 === 0 ? 12 : 6;
         let r2 = this.f % 2 === 0 ? 6 : 3;
-        let alpha1 =  this.f % 2 === 0 ? .15 : .3;
-        let alpha2 =  this.f % 2 === 0 ? .3 : .6;
+        let alpha1 = this.f % 2 === 0 ? .1 : .2;
+        let alpha2 = this.f % 2 === 0 ? .3 : .6;
         let alpha3 =  this.f % 2 === 0 ? .6 : .8;
 
         this.fillStyle(0xFF0000, alpha1);
@@ -57,7 +57,7 @@ export class LaserBeam extends Phaser.GameObjects.Graphics {
         this.lineBetween(emmission_x, emmission_y, this.enemyActor.x, this.enemyActor.y);
         this.stroke();
 
-        this.lineStyle(r1 * .2, 0xFF0000, alpha3);
+        this.lineStyle(r1 * .2, 0xFFC0BF, alpha3);
         this.lineBetween(emmission_x, emmission_y, this.enemyActor.x, this.enemyActor.y);
         this.stroke();
     }
