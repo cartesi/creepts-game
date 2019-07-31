@@ -10,7 +10,9 @@ module Anuto {
        
         private turrets: Turret[];
         private bullets: Bullet[];
+        private mortars: Mortar[];
         private bulletsColliding: Bullet[];
+        private mortarsImpacting: Mortar[];
         private t: number;
         private eventDispatcher: EventDispatcher;
         private enemiesSpawner: EnemiesSpawner;
@@ -52,6 +54,7 @@ module Anuto {
             Turret.id = 0;
             Enemy.id = 0;
             Bullet.id = 0;
+            Mortar.id = 0;
  
             GameVars.runningInClientSide = gameConfig.runningInClientSide;
             GameVars.credits = gameConfig.credits;
@@ -91,7 +94,7 @@ module Anuto {
                 return;
             }
 
-            this.removeBulletsAndAccountDamage();
+            this.removeProjectilesAndAccountDamage();
 
             this.checkCollisions();
             this.spawnEnemies();
@@ -107,6 +110,10 @@ module Anuto {
             this.bullets.forEach(function (bullet) {
                 bullet.update();
             }); 
+
+            this.mortars.forEach(function (mortars) {
+                mortars.update();
+            });
 
             GameVars.ticksCounter ++;
         }
@@ -131,7 +138,9 @@ module Anuto {
            
             GameVars.enemies = [];
             this.bullets = [];
+            this.mortars = [];
             this.bulletsColliding = [];
+            this.mortarsImpacting = [];
         }
 
         public removeEnemy(enemy: Enemy): void {
@@ -186,11 +195,18 @@ module Anuto {
             turret.destroy();
         }
 
-        public addBullet(bullet: Bullet, turret: Turret): void {
+        public addBullet(bullet: Bullet, projectileTurret: ProjectileTurret): void {
 
             this.bullets.push(bullet);
 
-            this.eventDispatcher.dispatchEvent(new Event(Event.BULLET_SHOT, [bullet, turret]));
+            this.eventDispatcher.dispatchEvent(new Event(Event.BULLET_SHOT, [bullet, projectileTurret]));
+        }
+
+        public addMortar(mortar: Mortar, launchTurret: LaunchTurret): void {
+
+            this.mortars.push(mortar);
+
+            this.eventDispatcher.dispatchEvent(new Event(Event.MORTAR_SHOT, [mortar, launchTurret]));
         }
 
         public addLaserRay(laserTurret: LaserTurret, enemy: Enemy): void {
@@ -232,8 +248,6 @@ module Anuto {
         public improveTurret(id: number): void {
 
             const turret = this.getTurretById(id);
-
-            console.log(id);
 
             if (turret.level < 10 && GameVars.credits >= turret.priceImprovement) {
                 GameVars.credits -= turret.priceImprovement;
@@ -278,10 +292,18 @@ module Anuto {
                     this.bulletsColliding.push(bullet);
                 }
             } 
+
+            for (let i = 0; i < this.mortars.length; i ++) {
+
+                if (this.mortars[i].detonate) {
+                    this.mortarsImpacting.push(this.mortars[i]);
+                }
+            }
         }
 
-        private removeBulletsAndAccountDamage(): void {
+        private removeProjectilesAndAccountDamage(): void {
 
+            // las balas
             if (this.bulletsColliding.length > 0) {
 
                 for (let i = 0; i < this.bulletsColliding.length; i ++) {
@@ -300,6 +322,38 @@ module Anuto {
                 }
 
                 this.bulletsColliding.length = 0;
+            }
+
+            // los morteros
+            if (this.mortarsImpacting.length > 0) {
+
+                for (let i = 0; i < this.mortarsImpacting.length; i ++) {
+
+                    const mortar = this.mortarsImpacting[i];
+
+                    const hitEnemiesData: {enemy: Enemy, damage: number} [] = mortar.getEnemiesWithinExplosionRange();
+                    const hitEnemies: Enemy[] = [];
+
+                    if (hitEnemiesData.length > 0) {
+
+                        for (let j = 0; j < hitEnemiesData.length; j ++) {
+
+                            const enemy = hitEnemiesData[j].enemy;
+                            enemy.hit(hitEnemiesData[j].damage);
+
+                            hitEnemies.push(enemy);
+                        }
+                    }
+
+                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMIES_HIT_BY_MORTAR, [hitEnemies, mortar]));
+
+                    const index = this.mortars.indexOf(mortar);
+                    this.mortars.splice(index, 1);
+
+                    mortar.destroy();
+                }
+
+                this.mortarsImpacting.length = 0;
             }
         }
 

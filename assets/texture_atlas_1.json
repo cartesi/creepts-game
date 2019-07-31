@@ -199,6 +199,48 @@
 					}
 				},
 				{
+					"filename": "tmp-launch-turret",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 100,
+						"h": 87
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 100,
+						"h": 87
+					},
+					"frame": {
+						"x": 1,
+						"y": 205,
+						"w": 100,
+						"h": 87
+					}
+				},
+				{
+					"filename": "mortar",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 36,
+						"h": 36
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 36,
+						"h": 36
+					},
+					"frame": {
+						"x": 1,
+						"y": 158,
+						"w": 36,
+						"h": 36
+					}
+				},
+				{
 					"filename": "btn_4x_off",
 					"rotated": false,
 					"trimmed": false,
@@ -213,8 +255,8 @@
 						"h": 47
 					},
 					"frame": {
-						"x": 1,
-						"y": 205,
+						"x": 39,
+						"y": 110,
 						"w": 48,
 						"h": 47
 					}
@@ -234,7 +276,7 @@
 						"h": 47
 					},
 					"frame": {
-						"x": 1,
+						"x": 89,
 						"y": 110,
 						"w": 48,
 						"h": 47
@@ -255,8 +297,8 @@
 						"h": 47
 					},
 					"frame": {
-						"x": 1,
-						"y": 254,
+						"x": 139,
+						"y": 110,
 						"w": 48,
 						"h": 47
 					}
@@ -276,8 +318,8 @@
 						"h": 47
 					},
 					"frame": {
-						"x": 1,
-						"y": 303,
+						"x": 189,
+						"y": 110,
 						"w": 48,
 						"h": 47
 					}
@@ -288,6 +330,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:604b263f36f5ce950798f6c03fb51ed4:b0de857de49476c680693b2faafef360:1bd3fbbbdaf54e41cf80e3e904578de4$"
+		"smartupdate": "$TexturePacker:SmartUpdate:be0df8f2e0a6f00e52607d342d5b1986:9767d8caa712ab0be6252a37da56c1a4:1bd3fbbbdaf54e41cf80e3e904578de4$"
 	}
 }

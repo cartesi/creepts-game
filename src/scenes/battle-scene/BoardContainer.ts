@@ -12,6 +12,8 @@ import { FlierEnemyActor } from "./enemy-actors/FlierEnemyActor";
 import { ProjectileTurretActor } from "./turret-actors/ProjectileTurretActor";
 import { LaserTurretActor } from "./turret-actors/LaserTurretActor";
 import { LaserBeam } from "./turret-actors/LaserBeam";
+import { LaunchTurretActor } from "./turret-actors/LaunchTurretActor";
+import { MortarActor } from "./turret-actors/MortarActor";
 
 export class BoardContainer extends Phaser.GameObjects.Container {
 
@@ -21,6 +23,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     private enemyActors: EnemyActor[];
     private turretActors: TurretActor[];
     private bulletActors: BulletActor[];
+    private mortarActors: MortarActor[];
 
     constructor(scene: Phaser.Scene) {
 
@@ -37,6 +40,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.enemyActors = [];
         this.turretActors = [];
         this.bulletActors = [];
+        this.mortarActors = [];
 
         this.board = new Board(this.scene);
         this.add(this.board);
@@ -46,8 +50,8 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
 
         // temporalmente añadimos una torre
-        this.addTower(Anuto.GameConstants.TURRET_LASER, {r: 3, c: 2});
-        this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, {r: 6, c: 2});
+        this.addTower(Anuto.GameConstants.TURRET_LAUNCH, {r: 3, c: 3});
+        this.addTower(Anuto.GameConstants.TURRET_LASER, {r: 6, c: 2});
         this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, {r: 8, c: 6});
         this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, {r: 11, c: 2});
     }
@@ -64,6 +68,10 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         this.bulletActors.forEach(function (bullet) {
             bullet.update(time, delta);
+        }); 
+
+        this.mortarActors.forEach(function (mortar) {
+            mortar.update(time, delta);
         }); 
     }
 
@@ -127,6 +135,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
                 turret = new LaserTurretActor(this.scene, position);
                 break;
             case Anuto.GameConstants.TURRET_LAUNCH:
+                turret = new LaunchTurretActor(this.scene, position);
                 break;
             case Anuto.GameConstants.TURRET_LASER:
                 break;
@@ -138,10 +147,10 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.turretActors.push(turret);
     }
 
-    public addBullet(anutoTurret: Anuto.Turret, anutoBullet: Anuto.Bullet): void {
+    public addBullet(anutoBullet: Anuto.Bullet, anutoProjectileTurret: Anuto.ProjectileTurret): void {
 
-        const turret = <ProjectileTurretActor> this.getTurretActorByID(anutoTurret.id);
-        turret.shootBullet();
+        const projectileTurretActor = <ProjectileTurretActor> this.getTurretActorByID(anutoProjectileTurret.id);
+        projectileTurretActor.shootBullet();
 
         const bullet = new BulletActor(this.scene, anutoBullet);
         this.board.add(bullet);
@@ -158,6 +167,17 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         const laserBeam = new LaserBeam(this.scene, laserTurretActor, enemyActor);
         this.board.add(laserBeam);
+    }
+
+    public addMortar(anutoMortar: Anuto.Mortar, anutoLaunchTurret: Anuto.LaunchTurret): void {
+
+        const launchTurretActor = <LaunchTurretActor> this.getTurretActorByID(anutoLaunchTurret.id);
+        launchTurretActor.shootMortar();
+
+        const mortar = new MortarActor(this.scene, anutoMortar);
+        this.board.add(mortar);
+
+        this.mortarActors.push(mortar);
     }
 
     public onEnemyHit(anutoEnemy: Anuto.Enemy): void {
@@ -185,24 +205,42 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
     public removeBullet(anutoBullet: Anuto.Bullet): void {
 
-        let bullet: BulletActor = null;
+        let bulletActor: BulletActor = null;
 
         for (let i = 0; i < this.bulletActors.length; i ++) {
 
             if (this.bulletActors[i].anutoBullet.id === anutoBullet.id) {
-                bullet = this.bulletActors[i];
+                bulletActor = this.bulletActors[i];
                 break;
             }
         }
 
-        if (bullet) {
-            const i = this.bulletActors.indexOf(bullet);
+        if (bulletActor) {
+            const i = this.bulletActors.indexOf(bulletActor);
             this.bulletActors.splice(i, 1);
-            bullet.destroy();
+            bulletActor.destroy();
         }
     }
 
+    public removeMortar(anutoMortar: Anuto.Mortar): void {
 
+        let mortarActor: MortarActor = null;
+
+        for (let i = 0; i < this.mortarActors.length; i ++) {
+
+            if (this.mortarActors[i].anutoMortar.id === anutoMortar.id) {
+                mortarActor = this.mortarActors[i];
+                break;
+            }
+        }
+
+        if (mortarActor) {
+            const i = this.mortarActors.indexOf(mortarActor);
+            this.mortarActors.splice(i, 1);
+            mortarActor.destroy();
+        }
+    }
+    
     public upgradeTower(id: number): void {
         //
     }

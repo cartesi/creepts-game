@@ -26,6 +26,7 @@ module Anuto {
             super.update();
         }
 
+        // mirar en el ANUTO y generar las formulas que correspondan
         protected calculateTurretParameters(): void {
 
             this.damage = Math.floor( 1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 66);

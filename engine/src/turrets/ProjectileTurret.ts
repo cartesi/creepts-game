@@ -36,6 +36,7 @@ module Anuto {
             super.update();
         }
 
+        // estos valores estan sacados del anuto
         protected calculateTurretParameters(): void {
 
             this.damage = Math.floor( 1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 66);
@@ -46,7 +47,8 @@ module Anuto {
             if (this.level === 1) {
                 this.value = GameVars.turretData[this.type].price;
             } else {
-                // calcularlo
+                // calcular value con la formuula correspondiente
+                // this.value = ????????;
             }
 
             super.calculateTurretParameters();
@@ -69,7 +71,7 @@ module Anuto {
             // cuantos ticks va a tardar la bala en llegar?
             const ticksToImpact = Math.floor(MathUtils.fixNumber(d / GameConstants.BULLET_SPEED));
 
-            // encontrar la posicion de la torre dentro de estos ticks
+            // encontrar la posicion del enemigo dentro de estos ticks
             const impactPosition = enemy.getNextPosition(ticksToImpact);
 
             // la posicion de impacto sigue estando dentro del radio de accion?

@@ -22,7 +22,7 @@ export class HealerEnemyActor extends EnemyActor {
         const anutoEnemy = <Anuto.HealerEnemy> this.anutoEnemy;
 
         if (anutoEnemy.healing) {
-            this.img.alpha = .5;
+            this.img.alpha = .3 + Math.random() * .25;
         } else {
             this.img.alpha = 1;
         }

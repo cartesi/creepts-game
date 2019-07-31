@@ -24,7 +24,7 @@ export class HUD extends Phaser.GameObjects.Container {
         }
     }
 
-    public update(ime: number, delta: number): void {
+    public update(time: number, delta: number): void {
 
         this.creditsLabel.text = "credits: " + BattleManager.anutoEngine.credits;
 
