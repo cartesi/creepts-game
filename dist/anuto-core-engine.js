@@ -672,7 +672,6 @@ var Anuto;
             else {
                 enemy = this.enemiesWithinRange[0];
             }
-            console.log("adding laser ray");
             Anuto.Engine.currentInstance.addLaserRay(this, enemy);
         };
         return LaserTurret;

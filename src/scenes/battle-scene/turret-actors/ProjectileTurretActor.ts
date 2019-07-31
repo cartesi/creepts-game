@@ -14,4 +14,8 @@ export class ProjectileTurretActor extends TurretActor {
         this.addAt(tmpImage, 0);
 
     }
+
+    public shootBullet(): void {
+        // hacer que el cañon retroceda
+    }
 }

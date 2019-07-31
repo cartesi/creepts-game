@@ -240,7 +240,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">texture_atlas_1/tmp-tower.png</key>
+            <key type="filename">texture_atlas_1/tmp-laser-turret.png</key>
+            <key type="filename">texture_atlas_1/tmp-projectile-turret.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

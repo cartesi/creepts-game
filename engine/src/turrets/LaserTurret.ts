@@ -53,9 +53,7 @@ module Anuto {
             } else {
                 enemy = this.enemiesWithinRange[0];
             }
-
-            console.log("adding laser ray");
-        
+            
             Engine.currentInstance.addLaserRay(this, enemy);
         }
     }

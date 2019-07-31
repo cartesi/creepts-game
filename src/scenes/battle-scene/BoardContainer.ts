@@ -11,6 +11,7 @@ import { BlobEnemyActor } from "./enemy-actors/BlobEnemyActor";
 import { FlierEnemyActor } from "./enemy-actors/FlierEnemyActor";
 import { ProjectileTurretActor } from "./turret-actors/ProjectileTurretActor";
 import { LaserTurretActor } from "./turret-actors/LaserTurretActor";
+import { LaserBeam } from "./turret-actors/LaserBeam";
 
 export class BoardContainer extends Phaser.GameObjects.Container {
 
@@ -137,7 +138,10 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.turretActors.push(turret);
     }
 
-    public addBullet(anutoBullet: Anuto.Bullet): void {
+    public addBullet(anutoTurret: Anuto.Turret, anutoBullet: Anuto.Bullet): void {
+
+        const turret = <ProjectileTurretActor> this.getTurretActorByID(anutoTurret.id);
+        turret.shootBullet();
 
         const bullet = new BulletActor(this.scene, anutoBullet);
         this.board.add(bullet);
@@ -145,10 +149,21 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.bulletActors.push(bullet);
     }
 
+    public addLaserBeam (anutoLaserTurret: Anuto.LaserTurret, anutoEnemy: Anuto.Enemy): void {
+
+        const laserTurretActor = <LaserTurretActor> this.getTurretActorByID(anutoLaserTurret.id);
+        laserTurretActor.shootLaser();
+
+        const enemyActor = this.getEnemyActorByID(anutoEnemy.id);
+
+        const laserBeam = new LaserBeam(this.scene, laserTurretActor, enemyActor);
+        this.board.add(laserBeam);
+    }
+
     public onEnemyHit(anutoEnemy: Anuto.Enemy): void {
         
         // encontrar el enemigo en cuestion
-        let enemy: EnemyActor = this.getEnemyByID(anutoEnemy.id);
+        let enemy: EnemyActor = this.getEnemyActorByID(anutoEnemy.id);
 
         if (enemy) {
             enemy.hit();
@@ -157,7 +172,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
     public onEnemyKilled(anutoEnemy: Anuto.Enemy): void {
 
-        let enemy: EnemyActor = this.getEnemyByID(anutoEnemy.id);
+        let enemy: EnemyActor = this.getEnemyActorByID(anutoEnemy.id);
 
         if (enemy) {
 
@@ -192,7 +207,21 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         //
     }
 
-    private getEnemyByID(id: number): EnemyActor {
+    public getTurretActorByID(id: number): TurretActor {
+
+        let turretActor = null;
+
+        for (let i = 0; i < this.turretActors.length; i ++) {
+            if (this.turretActors[i].id === id) {
+                turretActor = this.turretActors[i];
+                break;
+            }
+        }
+
+        return turretActor;
+    }
+
+    public getEnemyActorByID(id: number): EnemyActor {
 
         let enemy = null;
 

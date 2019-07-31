@@ -39,7 +39,7 @@ export class BattleManager {
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_KILLED, BattleManager.onEnemyKilled, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.WAVE_OVER, BattleManager.onWaveOver, BattleManager);
 
-        BattleManager.anutoEngine.addEventListener(Anuto.Event.LASER_SHOT, BattleManager.onLaserShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.LASER_SHOT, BattleManager.onLaserBeamShot, BattleManager);
     }
 
     public static update(time: number, delta: number): void {
@@ -108,12 +108,12 @@ export class BattleManager {
 
     private static onBulletShot(anutoBullet: Anuto.Bullet, anutoTurret: Anuto.Turret): void {
 
-        BoardContainer.currentInstance.addBullet(anutoBullet);
+        BoardContainer.currentInstance.addBullet(anutoTurret, anutoBullet);
     }
 
-    private static onLaserShot(laserTurret: Anuto.LaserTurret, enemy: Anuto.Enemy): void {
+    private static onLaserBeamShot(anutoLaserTurret: Anuto.LaserTurret, anutoEnemy: Anuto.Enemy): void {
 
-        console.log("laser shot:", laserTurret, enemy);
+        BoardContainer.currentInstance.addLaserBeam(anutoLaserTurret, anutoEnemy);
     }
 
     private static onEnemyHit(anutoEnemy: Anuto.Enemy, anutoBullet?: Anuto.Bullet): void {

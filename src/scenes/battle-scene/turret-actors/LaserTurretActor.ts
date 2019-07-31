@@ -13,4 +13,8 @@ export class LaserTurretActor extends TurretActor {
         tmpImage.on("pointerdown", this.onDownTurret, this);
         this.addAt(tmpImage, 0);
     }
+
+    public shootLaser(): void {
+        // de momento nada, el cañon podria vibrar, retroceder o emitir un brillo
+    }
 }
