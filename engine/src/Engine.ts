@@ -232,13 +232,13 @@ module Anuto {
 
         public onEnemyKilled(enemy: Enemy): void {
 
-            const i = GameVars.enemies.indexOf(enemy);
-            GameVars.enemies.splice(i, 1);
-            enemy.destroy();
-
             GameVars.credits += enemy.value;
 
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_KILLED, [enemy]));
+
+            const i = GameVars.enemies.indexOf(enemy);
+            GameVars.enemies.splice(i, 1);
+            enemy.destroy();
 
             if (GameVars.enemies.length === 0) {
                 this.waveOver();

@@ -53,7 +53,7 @@ module Anuto {
                     enemy.restoreHealth();
                 } else {
                     const distanceSquare = MathUtils.fixNumber((enemy.x - this.x) * (enemy.x - this.x) + (enemy.y - this.y) * (enemy.y - this.y));
-                    if (distanceSquare < GameConstants.HEALER_HEALING_RADIUS * GameConstants.HEALER_HEALING_RADIUS) {
+                    if (distanceSquare <= GameConstants.HEALER_HEALING_RADIUS * GameConstants.HEALER_HEALING_RADIUS) {
                         enemy.restoreHealth();
                     }
                 }

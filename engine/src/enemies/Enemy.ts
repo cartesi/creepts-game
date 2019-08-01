@@ -70,6 +70,7 @@ module Anuto {
             this.life -= damage;
 
             if (this.life <= 0) {
+                this.life = 0;
                 Engine.currentInstance.onEnemyKilled(this);
             }
         }
