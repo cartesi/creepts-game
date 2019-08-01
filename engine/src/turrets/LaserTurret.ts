@@ -2,9 +2,9 @@ module Anuto {
 
     export class LaserTurret extends Turret {
 
-        constructor (p: {r: number, c: number}, creationTick: number) {
+        constructor (p: {r: number, c: number}) {
             
-            super(GameConstants.TURRET_LASER, p, creationTick);
+            super(GameConstants.TURRET_LASER, p);
 
             this.calculateTurretParameters();
         }

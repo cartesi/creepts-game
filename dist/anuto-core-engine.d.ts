@@ -28,13 +28,14 @@ declare module Anuto {
         fixedTarget: boolean;
         enemiesWithinRange: Enemy[];
         followedEnemy: Enemy;
+        shootAngle: number;
         protected f: number;
         protected reloadTicks: number;
         protected readyToShoot: boolean;
         constructor(type: string, p: {
             r: number;
             c: number;
-        }, creationTick: number);
+        });
         destroy(): void;
         update(): void;
         improve(): void;
@@ -207,7 +208,6 @@ declare module Anuto {
         static readonly ENEMY_SPAWNED = "enemy spawned";
         static readonly ENEMY_KILLED = "enemy killed";
         static readonly ENEMY_HIT = "enemy hit by bullet";
-        static readonly ENEMIES_HIT_BY_MORTAR = "enemies hit by mortar";
         static readonly ENEMY_REACHED_EXIT = "enemy reached exit";
         static readonly WAVE_OVER = "wave over";
         static readonly BULLET_SHOT = "bullet shot";
@@ -266,7 +266,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        }, creationTick: number);
+        });
         update(): void;
         protected calculateTurretParameters(): void;
         protected shoot(): void;
@@ -280,7 +280,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        }, creationTick: number);
+        });
         protected calculateTurretParameters(): void;
         protected shoot(): void;
     }
@@ -293,11 +293,12 @@ declare module Anuto {
         y: number;
         ticksToImpact: number;
         detonate: boolean;
+        explosionRange: number;
+        creationTick: number;
         private vx;
         private vy;
         private f;
         private damage;
-        private explosionRange;
         constructor(p: {
             r: number;
             c: number;
@@ -315,7 +316,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        }, creationTick: number);
+        });
         update(): void;
         protected calculateTurretParameters(): void;
         protected shoot(): void;

@@ -9,18 +9,21 @@ module Anuto {
         public y: number;
         public ticksToImpact: number;
         public detonate: boolean;
+        public explosionRange: number;
+        public creationTick: number;
 
         private vx: number;
         private vy: number;
         private f: number;
         private damage: number;
-        private explosionRange: number;
-
+        
         // mortar speed in cells / tick
         constructor (p: {r: number, c: number}, angle: number, ticksToImpact: number, explosionRange: number, damage: number) {
             
             this.id = Mortar.id;
             Mortar.id ++;
+
+            this.creationTick = GameVars.ticksCounter;
 
             this.x = p.c + .5;
             this.y = p.r + .5;
@@ -55,7 +58,19 @@ module Anuto {
         public getEnemiesWithinExplosionRange(): {enemy: Enemy, damage: number} [] {
 
             const hitEnemiesData: {enemy: Enemy, damage: number} [] = [];
-            
+
+            for (let i = 0; i < GameVars.enemies.length; i ++) {
+
+                const enemy = GameVars.enemies[i];
+                const distance = MathUtils.fixNumber(Math.sqrt((enemy.x - this.x) *  (enemy.x - this.x) + (enemy.y - this.y) *  (enemy.y - this.y)));
+
+                if (distance <= this.explosionRange) {
+
+                    const damage = MathUtils.fixNumber(this.damage * (1 - distance / this.explosionRange));
+                    hitEnemiesData.push({enemy: enemy, damage: damage});
+                }
+            }
+
             return hitEnemiesData;
         }
     }

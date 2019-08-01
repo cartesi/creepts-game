@@ -22,17 +22,18 @@ module Anuto {
         public fixedTarget: boolean;
         public enemiesWithinRange: Enemy[];
         public followedEnemy: Enemy;
+        public shootAngle: number;
 
         protected f: number;
         protected reloadTicks: number;
         protected readyToShoot: boolean;
         
-        constructor (type: string, p: {r: number, c: number}, creationTick: number) {
+        constructor (type: string, p: {r: number, c: number}) {
 
             this.id = Turret.id;
             Turret.id ++;
 
-            this.creationTick = creationTick;
+            this.creationTick = GameVars.ticksCounter;
 
             this.type = type;
             this.f = 0;

@@ -18,6 +18,7 @@ export class EnemyActor extends Phaser.GameObjects.Container {
         this.anutoEnemy = anutoEnemy;
         this.id = this.anutoEnemy.id;
         this.type = this.anutoEnemy.type;
+        this.alpha = 0;
 
         this.lifeBar = new LifeBar(this.scene, this.anutoEnemy.life);
         this.lifeBar.y = -32;
@@ -42,6 +43,11 @@ export class EnemyActor extends Phaser.GameObjects.Container {
         this.y += (this.anutoEnemy.y * GameConstants.CELLS_SIZE - this.y) * smoothFactor;
 
         this.lifeBar.updateValue(this.anutoEnemy.life);
+
+        // para suavizar la aparición
+        if (this.alpha < 1) {
+            this.alpha += GameVars.timeStepFactor === 4 ? .1 : .035;
+        }
     }
 
     public hit(): void {

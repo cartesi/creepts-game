@@ -12,9 +12,9 @@ module Anuto {
 
     export class ProjectileTurret extends Turret {
 
-        constructor (p: {r: number, c: number}, creationTick: number) {
+        constructor (p: {r: number, c: number}) {
             
-            super(GameConstants.TURRET_PROJECTILE, p, creationTick);
+            super(GameConstants.TURRET_PROJECTILE, p);
 
             this.calculateTurretParameters();
         }
@@ -82,8 +82,8 @@ module Anuto {
 
             if (this.range * this.range > impactSquareDistance) {
 
-                const angle =  MathUtils.fixNumber(Math.atan2(dy, dx));
-                const bullet = new Bullet(this.position, angle, enemy, this.damage);
+                this.shootAngle =  MathUtils.fixNumber(Math.atan2(dy, dx));
+                const bullet = new Bullet(this.position, this.shootAngle, enemy, this.damage);
 
                 Engine.currentInstance.addBullet(bullet, this);
 

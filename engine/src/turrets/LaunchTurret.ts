@@ -8,9 +8,9 @@ module Anuto {
 
         private explosionRange: number;
 
-        constructor (p: {r: number, c: number}, creationTick: number) {
+        constructor (p: {r: number, c: number}) {
             
-            super(GameConstants.TURRET_LAUNCH, p, creationTick);
+            super(GameConstants.TURRET_LAUNCH, p);
 
             this.calculateTurretParameters();
         }
@@ -77,8 +77,8 @@ module Anuto {
                 const dx = impactPosition.x - this.x;
                 const dy = impactPosition.y - this.y;
     
-                const angle =  MathUtils.fixNumber(Math.atan2(dy, dx));
-                const mortar = new Mortar(this.position, angle, ticksToImpact, this.explosionRange, this.damage);
+                this.shootAngle =  MathUtils.fixNumber(Math.atan2(dy, dx));
+                const mortar = new Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage);
     
                 Engine.currentInstance.addMortar(mortar, this);
 

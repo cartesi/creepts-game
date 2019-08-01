@@ -39,10 +39,7 @@ export class BattleManager {
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_KILLED, BattleManager.onEnemyKilled, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.WAVE_OVER, BattleManager.onWaveOver, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.LASER_SHOT, BattleManager.onLaserBeamShot, BattleManager);
-
         BattleManager.anutoEngine.addEventListener(Anuto.Event.MORTAR_SHOT, BattleManager.onMortarShot, BattleManager);
-
-        BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMIES_HIT_BY_MORTAR, BattleManager.onEnemiesHitByMortar, BattleManager);
     }
 
     public static update(time: number, delta: number): void {
@@ -124,24 +121,21 @@ export class BattleManager {
         BoardContainer.currentInstance.addMortar(anutoMortar, anutoLaunchTurret);
     }
 
-    private static onEnemyHit(anutoEnemy: Anuto.Enemy, anutoBullet?: Anuto.Bullet): void {
-
-        BoardContainer.currentInstance.onEnemyHit(anutoEnemy);
-        
-        if (anutoBullet) {
-            BoardContainer.currentInstance.removeBullet(anutoBullet);
-        } 
-    }
-
-    private static onEnemiesHitByMortar(anutoEnemies: Anuto.Enemy[], anutoMortar: Anuto.Mortar): void {
+    private static onEnemyHit(anutoEnemies: Anuto.Enemy[], anutoBullet?: Anuto.Bullet, anutoMortar?: Anuto.Mortar): void {
 
         for (let i = 0; i < anutoEnemies.length; i ++) {
             BoardContainer.currentInstance.onEnemyHit(anutoEnemies[i]);
         }
+        
+        if (anutoBullet) {
+            BoardContainer.currentInstance.removeBullet(anutoBullet);
+        } 
 
-        BoardContainer.currentInstance.removeMortar(anutoMortar);
+        if (anutoMortar) {
+            BoardContainer.currentInstance.detonateMortar(anutoMortar);
+        }
     }
-
+   
     private static onEnemyKilled(anutoEnemy: Anuto.Enemy): void {
 
         BoardContainer.currentInstance.onEnemyKilled(anutoEnemy);

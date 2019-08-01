@@ -37,8 +37,8 @@ export class LaserBeam extends Phaser.GameObjects.Graphics {
         this.clear();
 
         // se remata por un circulo
-        let r1 = this.f % 2 === 0 ? 12 : 6;
-        let r2 = this.f % 2 === 0 ? 6 : 3;
+        let r1 = this.f % 2 === 0 ? 15 : 8;
+        let r2 = this.f % 2 === 0 ? 8 : 4;
         let alpha1 = this.f % 2 === 0 ? .1 : .2;
         let alpha2 = this.f % 2 === 0 ? .3 : .6;
         let alpha3 =  this.f % 2 === 0 ? .6 : .8;

@@ -12,10 +12,10 @@ export class ProjectileTurretActor extends TurretActor {
         tmpImage.setInteractive();
         tmpImage.on("pointerdown", this.onDownTurret, this);
         this.addAt(tmpImage, 0);
-
     }
 
     public shootBullet(): void {
         // hacer que el cañon retroceda
+        this.canon.rotation = this.anutoTurret.shootAngle;
     }
 }

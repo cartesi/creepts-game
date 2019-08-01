@@ -174,7 +174,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         const launchTurretActor = <LaunchTurretActor> this.getTurretActorByID(anutoLaunchTurret.id);
         launchTurretActor.shootMortar();
 
-        const mortar = new MortarActor(this.scene, anutoMortar);
+        const mortar = new MortarActor(this.scene, anutoMortar, launchTurretActor);
         this.board.add(mortar);
 
         this.mortarActors.push(mortar);
@@ -222,7 +222,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    public removeMortar(anutoMortar: Anuto.Mortar): void {
+    public detonateMortar(anutoMortar: Anuto.Mortar): void {
 
         let mortarActor: MortarActor = null;
 
@@ -235,10 +235,15 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
 
         if (mortarActor) {
-            const i = this.mortarActors.indexOf(mortarActor);
-            this.mortarActors.splice(i, 1);
-            mortarActor.destroy();
+            mortarActor.detonate();
         }
+    }
+
+    public removeMortar(mortarActor: MortarActor): void {
+
+        const i = this.mortarActors.indexOf(mortarActor);
+        this.mortarActors.splice(i, 1);
+        mortarActor.destroy();
     }
     
     public upgradeTower(id: number): void {

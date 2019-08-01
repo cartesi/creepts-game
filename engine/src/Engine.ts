@@ -162,16 +162,16 @@ module Anuto {
 
             switch (type) {
                 case GameConstants.TURRET_PROJECTILE:
-                    turret = new ProjectileTurret(p, GameVars.ticksCounter);
+                    turret = new ProjectileTurret(p);
                     break;
                 case GameConstants.TURRET_LASER:
-                    turret = new LaserTurret(p, GameVars.ticksCounter);
+                    turret = new LaserTurret(p);
                     break;
                 case GameConstants.TURRET_LAUNCH:
-                    turret = new LaunchTurret(p, GameVars.ticksCounter);
+                    turret = new LaunchTurret(p);
                     break;
                 case GameConstants.TURRET_GLUE:
-                    turret = new GlueTurret(p, GameVars.ticksCounter);
+                    turret = new GlueTurret(p);
                     break;
                 default:
             }
@@ -214,7 +214,7 @@ module Anuto {
             enemy.hit(laserTurret.damage);
 
             this.eventDispatcher.dispatchEvent(new Event(Event.LASER_SHOT, [laserTurret, enemy]));
-            this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [enemy]));
+            this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[enemy]]));
         }
 
         public onEnemyReachedExit(enemy: Enemy): void {
@@ -316,7 +316,7 @@ module Anuto {
                     const index = this.bullets.indexOf(bullet);
                     this.bullets.splice(index, 1);
 
-                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [enemy, bullet]));
+                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[enemy], bullet]));
 
                     bullet.destroy();
                 }
@@ -345,7 +345,7 @@ module Anuto {
                         }
                     }
 
-                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMIES_HIT_BY_MORTAR, [hitEnemies, mortar]));
+                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [hitEnemies, null, mortar]));
 
                     const index = this.mortars.indexOf(mortar);
                     this.mortars.splice(index, 1);
