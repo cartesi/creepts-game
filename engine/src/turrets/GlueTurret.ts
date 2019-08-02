@@ -13,6 +13,11 @@ module Anuto {
             this.calculateTurretParameters();
         }
 
+        public update(): void {
+
+            super.update();
+        }
+
         // mirar en el ANUTO y generar las formulas que correspondan
         protected calculateTurretParameters(): void {
 
