@@ -410,20 +410,22 @@ var Anuto;
             }
             for (var i = 0; i < Anuto.GameVars.enemies.length; i++) {
                 var enemy = Anuto.GameVars.enemies[i];
-                enemy.affectedByGlue = false;
-                for (var j = 0; j < this.glues.length; j++) {
-                    var glue = this.glues[j];
-                    if (glue.consumed && this.consumedGlues.indexOf(glue) === -1) {
-                        this.consumedGlues.push(glue);
-                    }
-                    else {
-                        var dx = enemy.x - glue.x;
-                        var dy = enemy.y - glue.y;
-                        var squaredDist = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
-                        var squaredRange = Anuto.MathUtils.fixNumber(glue.range * glue.range);
-                        if (squaredRange >= squaredDist) {
-                            enemy.glue(glue.intensity);
-                            break;
+                if (enemy.type !== Anuto.GameConstants.ENEMY_FLIER) {
+                    enemy.affectedByGlue = false;
+                    for (var j = 0; j < this.glues.length; j++) {
+                        var glue = this.glues[j];
+                        if (glue.consumed && this.consumedGlues.indexOf(glue) === -1) {
+                            this.consumedGlues.push(glue);
+                        }
+                        else {
+                            var dx = enemy.x - glue.x;
+                            var dy = enemy.y - glue.y;
+                            var squaredDist = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
+                            var squaredRange = Anuto.MathUtils.fixNumber(glue.range * glue.range);
+                            if (squaredRange >= squaredDist) {
+                                enemy.glue(glue.intensity);
+                                break;
+                            }
                         }
                     }
                 }

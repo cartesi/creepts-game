@@ -320,27 +320,31 @@ module Anuto {
             for (let i = 0; i < GameVars.enemies.length; i ++) {
 
                 const enemy = GameVars.enemies[i];
-                enemy.affectedByGlue = false;
 
-                for (let j = 0; j < this.glues.length; j++) {
+                if (enemy.type !== GameConstants.ENEMY_FLIER) {
 
-                    const glue = this.glues[j];
+                    enemy.affectedByGlue = false;
 
-                    if (glue.consumed && this.consumedGlues.indexOf(glue) === -1) {
-
-                        this.consumedGlues.push(glue);
-                        
-                    } else {
-
-                        const dx = enemy.x - glue.x;
-                        const dy = enemy.y - glue.y;
-        
-                        const squaredDist = MathUtils.fixNumber(dx * dx + dy * dy);
-                        let squaredRange = MathUtils.fixNumber(glue.range * glue.range);
-        
-                        if (squaredRange >= squaredDist) {
-                            enemy.glue(glue.intensity);
-                            break; // EL EFECTO DEL PEGAMENTO NO ES ACUMULATIVO, NO HACE FALTA COMPROBAR CON MAS PEGAMENTOS
+                    for (let j = 0; j < this.glues.length; j++) {
+    
+                        const glue = this.glues[j];
+    
+                        if (glue.consumed && this.consumedGlues.indexOf(glue) === -1) {
+    
+                            this.consumedGlues.push(glue);
+                            
+                        } else {
+    
+                            const dx = enemy.x - glue.x;
+                            const dy = enemy.y - glue.y;
+            
+                            const squaredDist = MathUtils.fixNumber(dx * dx + dy * dy);
+                            let squaredRange = MathUtils.fixNumber(glue.range * glue.range);
+            
+                            if (squaredRange >= squaredDist) {
+                                enemy.glue(glue.intensity);
+                                break; // EL EFECTO DEL PEGAMENTO NO ES ACUMULATIVO, NO HACE FALTA COMPROBAR CON MAS PEGAMENTOS
+                            }
                         }
                     }
                 }
