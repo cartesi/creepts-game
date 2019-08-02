@@ -9,10 +9,9 @@ export class FlierEnemyActor extends EnemyActor {
 
         const s = GameConstants.CELLS_SIZE * .35;
 
-        this.img = new Phaser.GameObjects.Graphics(this.scene);
-        this.img.lineStyle(7, 0xFF1493);
-        this.img.strokeTriangle(-s, s, s, s, 0, -s);
-        this.img.strokeTriangle(-s, -s, s, -s, 0, s);
+        this.img = this.scene.add.sprite(0, 0, "texture_atlas_1", "enemy_flier_1");
         this.add(this.img);
+
+        this.img.anims.play("enemy_flier_run");
     }
 }

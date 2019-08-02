@@ -7,7 +7,7 @@ export class EnemyActor extends Phaser.GameObjects.Container {
     public type: string;
     public id: number;
    
-    protected img: Phaser.GameObjects.Graphics;
+    protected img: Phaser.GameObjects.Sprite;
     protected lifeBar: LifeBar;
     protected anutoEnemy: Anuto.Enemy;
 
@@ -27,6 +27,8 @@ export class EnemyActor extends Phaser.GameObjects.Container {
 
         this.x = GameConstants.CELLS_SIZE * (position.c + .5);
         this.y = GameConstants.CELLS_SIZE * (position.r + .5);
+
+        // this.scene.sys.updateList.add(this);
     }
 
     public update(time: number, delta: number): void {

@@ -8,7 +8,8 @@ export class TurretActor extends Phaser.GameObjects.Container {
     public level: number;
     public p: {r: number, c: number};
     public canonLength: number;
-    public canon: Phaser.GameObjects.Graphics;
+    public base: Phaser.GameObjects.Image;
+    public canon: Phaser.GameObjects.Image;
 
     protected anutoTurret: Anuto.Turret;
     
@@ -28,14 +29,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
         this.y = GameConstants.CELLS_SIZE * (this.p.r + .5);
 
         // este valor habra q sacarlo de la imagen del cañón
-        this.canonLength = GameConstants.CELLS_SIZE * .5;
-
-        this.canon = new Phaser.GameObjects.Graphics(this.scene);
-        this.canon.lineStyle(12, 0x000000);
-        this.canon.moveTo(0, 0);
-        this.canon.lineTo(GameConstants.CELLS_SIZE * .5, 0);
-        this.canon.stroke();
-        this.add(this.canon);
+        this.canonLength = 40;
 
         if (GameConstants.SHOW_DEBUG_GEOMETRY) {
             this.rangeCircle = new Phaser.GameObjects.Graphics(this.scene);
@@ -56,7 +50,10 @@ export class TurretActor extends Phaser.GameObjects.Container {
                 if (followedEnemyActor) {
                     const dx = followedEnemyActor.x - this.x;
                     const dy = followedEnemyActor.y - this.y;
-                    this.canon.rotation = Math.atan2(dy, dx);
+
+                    if (this.canon) {
+                        this.canon.rotation = Math.atan2(dy, dx) + Math.PI / 2;
+                    }
                 }
             }
         }

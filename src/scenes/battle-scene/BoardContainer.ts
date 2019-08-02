@@ -55,10 +55,13 @@ export class BoardContainer extends Phaser.GameObjects.Container {
             this.drawDebugGeometry();
         }
 
+        this.createAnimations();
+
         // temporalmente añadimos una torre
         this.addTower(Anuto.GameConstants.TURRET_LAUNCH, {r: 3, c: 3});
         this.addTower(Anuto.GameConstants.TURRET_LASER, {r: 6, c: 2});
         this.addTower(Anuto.GameConstants.TURRET_GLUE, {r: 8, c: 5});
+        this.addTower(Anuto.GameConstants.TURRET_GLUE, {r: 5, c: 5});
         this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, {r: 11, c: 2});
     }
 
@@ -194,7 +197,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         const gluePool = new GluePool(this.scene, glueTurretActor, anutoGlue);
         this.board.add(gluePool);
-        this.board.sendToBack(gluePool);
+        this.board.sendActorBack(gluePool);
 
         this.gluePools.push(gluePool);
     }
@@ -331,5 +334,16 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
 
         this.board.add(path);
+    }
+
+    private createAnimations(): void {
+
+        this.scene.anims.create({ key: "enemy_soldier_run", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_soldier_", start: 1, end: 6, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
+        this.scene.anims.create({ key: "enemy_runner_run", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_runner_", start: 1, end: 6, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
+        this.scene.anims.create({ key: "enemy_healer_run", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_healer_", start: 1, end: 6, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
+        this.scene.anims.create({ key: "enemy_flier_run", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_flier_", start: 1, end: 5, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
+        this.scene.anims.create({ key: "enemy_blob_run", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_blob_", start: 1, end: 5, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
+
+        this.scene.anims.create({ key: "enemy_healer_heal", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_healing_", start: 1, end: 6, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
     }
 }

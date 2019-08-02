@@ -3,16 +3,16 @@ import { GameConstants } from "../../../GameConstants";
 
 export class HealerEnemyActor extends EnemyActor {
 
+    private needChangenimation: boolean;
+
     constructor(scene: Phaser.Scene, anutoEnemy: Anuto.Enemy, position: {r: number, c: number}) {
 
         super(scene, anutoEnemy, position);
 
-        const s = GameConstants.CELLS_SIZE * .35;
-
-        this.img = new Phaser.GameObjects.Graphics(this.scene);
-        this.img.lineStyle(7, 0xcb2929);
-        this.img.strokeTriangle(-s, s, s, s, 0, -s);
+        this.img = this.scene.add.sprite(0, 0, "texture_atlas_1", "enemy_healer_1");
         this.add(this.img);
+
+        this.img.anims.play("enemy_healer_run");
     }
 
     public update(time: number, delta: number): void {
@@ -21,10 +21,10 @@ export class HealerEnemyActor extends EnemyActor {
 
         const anutoEnemy = <Anuto.HealerEnemy> this.anutoEnemy;
 
-        if (anutoEnemy.healing) {
-            this.img.alpha = .3 + Math.random() * .25;
-        } else {
-            this.img.alpha = 1;
+        if (anutoEnemy.healing && this.img.anims.currentAnim.key === "enemy_healer_run") {
+            this.img.anims.play("enemy_healer_heal");
+        } else if (!anutoEnemy.healing && this.img.anims.currentAnim.key === "enemy_healer_heal") {
+            this.img.anims.play("enemy_healer_run");
         }
     }
 }

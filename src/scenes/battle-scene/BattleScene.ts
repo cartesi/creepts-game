@@ -21,9 +21,9 @@ export class BattleScene extends Phaser.Scene {
 
         BattleManager.init();
 
-        const tmpBackground = this.add.graphics(this);
-        tmpBackground.fillStyle(0xFFFFFF);
-        tmpBackground.fillRect(0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
+        // const tmpBackground = this.add.graphics(this);
+        // tmpBackground.fillStyle(0xFFFFFF);
+        // tmpBackground.fillRect(0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
 
         this.boardContainer = new BoardContainer(this);
         this.add.existing(this.boardContainer);

@@ -14,7 +14,7 @@ window.onload = () => {
 
         version: GameConstants.VERSION,
         type: Phaser.AUTO,
-        backgroundColor: "#000000",
+        backgroundColor: "#555555",
         width: GameConstants.GAME_WIDTH,
         height: GameConstants.GAME_HEIGHT,
 

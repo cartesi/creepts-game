@@ -7,10 +7,9 @@ export class BlobEnemyActor extends EnemyActor {
 
         super(scene, anutoEnemy, position);
 
-        this.img = new Phaser.GameObjects.Graphics(this.scene);
-        this.img.lineStyle(8, 0xFFC0CB);
-        this.img.strokeCircle(0, 0, GameConstants.CELLS_SIZE * .325);
-        
+        this.img = this.scene.add.sprite(0, 0, "texture_atlas_1", "enemy_blob_1");
         this.add(this.img);
+
+        this.img.anims.play("enemy_blob_run");
     }
 }

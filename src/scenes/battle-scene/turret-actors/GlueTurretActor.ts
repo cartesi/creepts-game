@@ -7,13 +7,10 @@ export class GlueTurretActor extends TurretActor {
 
         super(scene, Anuto.GameConstants.TURRET_GLUE, position);
 
-        const tmpImage = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "tmp-glue-turret");
-        tmpImage.setScale(GameConstants.CELLS_SIZE / tmpImage.width * .8);
-        tmpImage.setInteractive();
-        tmpImage.on("pointerdown", this.onDownTurret, this);
-        this.addAt(tmpImage, 0);
-
-        this.canon.visible = false;
+        this.base = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "base_3_1");
+        this.base.setInteractive();
+        this.base.on("pointerdown", this.onDownTurret, this);
+        this.addAt(this.base, 0);
     }
 
     public update(time: number, delta: number): void {

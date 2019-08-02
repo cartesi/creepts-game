@@ -27,7 +27,7 @@ export class GluePool extends Phaser.GameObjects.Container {
         let range = this.anutoGlue.range * GameConstants.CELLS_SIZE;
 
         let graphic = new Phaser.GameObjects.Graphics(this.scene);
-        graphic.fillStyle(0x00ff00, .75);
+        graphic.fillStyle(0x99ffff, .5);
         graphic.fillCircle(0, 0, range);
         this.add(graphic);
 

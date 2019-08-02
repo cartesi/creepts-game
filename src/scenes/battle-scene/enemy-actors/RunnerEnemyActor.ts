@@ -7,10 +7,9 @@ export class RunnerEnemyActor extends EnemyActor {
 
         super(scene, anutoEnemy, position);
     
-        this.img = new Phaser.GameObjects.Graphics(this.scene);
-        this.img.fillStyle(0xAB2A3E);
-        this.img.fillCircle(0, 0, GameConstants.CELLS_SIZE * .4);
-        
+        this.img = this.scene.add.sprite(0, 0, "texture_atlas_1", "enemy_runner_1");
         this.add(this.img);
+
+        this.img.anims.play("enemy_runner_run");
     }
 }

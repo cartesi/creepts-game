@@ -7,15 +7,17 @@ export class ProjectileTurretActor extends TurretActor {
 
         super(scene, Anuto.GameConstants.TURRET_PROJECTILE, position);
 
-        const tmpImage = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "tmp-projectile-turret");
-        tmpImage.setScale(GameConstants.CELLS_SIZE / tmpImage.width * .8);
-        tmpImage.setInteractive();
-        tmpImage.on("pointerdown", this.onDownTurret, this);
-        this.addAt(tmpImage, 0);
+        this.base = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "base_1_1");
+        this.base.setInteractive();
+        this.base.on("pointerdown", this.onDownTurret, this);
+        this.addAt(this.base, 0);
+
+        this.canon = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "canon_1_1_1");
+        this.add(this.canon);
     }
 
     public shootBullet(): void {
         // hacer que el cañon retroceda
-        this.canon.rotation = this.anutoTurret.shootAngle;
+        this.canon.rotation = this.anutoTurret.shootAngle + Math.PI / 2;
     }
 }

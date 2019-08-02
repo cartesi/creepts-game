@@ -7,11 +7,13 @@ export class LaserTurretActor extends TurretActor {
 
         super(scene, Anuto.GameConstants.TURRET_LASER, position);
 
-        const tmpImage = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "tmp-laser-turret");
-        tmpImage.setScale(GameConstants.CELLS_SIZE / tmpImage.width * .8);
-        tmpImage.setInteractive();
-        tmpImage.on("pointerdown", this.onDownTurret, this);
-        this.addAt(tmpImage, 0);
+        this.base = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "base_2_1");
+        this.base.setInteractive();
+        this.base.on("pointerdown", this.onDownTurret, this);
+        this.addAt(this.base, 0);
+
+        this.canon = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "canon_2_1_1");
+        this.add(this.canon);
     }
 
     public shootLaser(): void {
