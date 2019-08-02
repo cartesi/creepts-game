@@ -80,6 +80,7 @@ declare module Anuto {
         private glues;
         private bulletsColliding;
         private mortarsImpacting;
+        private consumedGlues;
         private t;
         private eventDispatcher;
         private enemiesSpawner;
@@ -98,7 +99,6 @@ declare module Anuto {
         sellTurret(turret: Turret): void;
         addBullet(bullet: Bullet, projectileTurret: ProjectileTurret): void;
         addGlue(glue: Glue, glueTurret: GlueTurret): void;
-        destroyGlue(glue: Glue): void;
         addMortar(mortar: Mortar, launchTurret: LaunchTurret): void;
         addLaserRay(laserTurret: LaserTurret, enemy: Enemy): void;
         onEnemyReachedExit(enemy: Enemy): void;
@@ -217,7 +217,7 @@ declare module Anuto {
         static readonly LASER_SHOT = "laser shot";
         static readonly MORTAR_SHOT = "mortar shot";
         static readonly GLUE_SHOT = "glue shot";
-        static readonly GLUE_DESTROY = "glue destroy";
+        static readonly GLUE_CONSUMED = "glue consumed";
         private type;
         private params;
         constructor(type: string, params?: any);
@@ -266,7 +266,7 @@ declare module Anuto {
         intensity: number;
         duration: number;
         range: number;
-        gluesArray: Glue[];
+        consumed: boolean;
         private f;
         constructor(p: {
             r: number;

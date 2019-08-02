@@ -10,14 +10,13 @@ module Anuto {
         public intensity: number;
         public duration: number;
         public range: number;
-        public gluesArray: Glue[];
-
+        public consumed: boolean;
+       
         private f: number;
-
 
         constructor (p: {r: number, c: number}, intensity: number, duration: number, range: number) {
             
-            this.id = Bullet.id;
+            this.id = Glue.id;
             Glue.id ++;
 
             this.x = p.c + .5;
@@ -26,13 +25,13 @@ module Anuto {
             this.intensity = intensity;
             this.duration = duration;
             this.range = range;
+            this.consumed = false;
 
             this.f = 0;
-            
         }
 
         public destroy(): void {
-            //
+            // nada de momento
         }
 
         public update(): void {
@@ -41,11 +40,7 @@ module Anuto {
 
             if (this.f === this.duration) {
 
-                const i = this.gluesArray.indexOf(this);
-                this.gluesArray.splice(i, 1);
-                this.destroy();
-
-                Engine.currentInstance.destroyGlue(this);
+                this.consumed = true;
             }
         }
     }

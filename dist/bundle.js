@@ -629,6 +629,7 @@ var BattleManager = /** @class */ (function () {
         BattleManager.anutoEngine.addEventListener(Anuto.Event.LASER_SHOT, BattleManager.onLaserBeamShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.MORTAR_SHOT, BattleManager.onMortarShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.GLUE_SHOT, BattleManager.onGlueShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.GLUE_CONSUMED, BattleManager.onGlueConsumed, BattleManager);
     };
     BattleManager.update = function (time, delta) {
         BattleManager.anutoEngine.update();
@@ -681,6 +682,9 @@ var BattleManager = /** @class */ (function () {
     };
     BattleManager.onGlueShot = function (anutoGlue, anutoGlueTurret) {
         BoardContainer_1.BoardContainer.currentInstance.addGlue(anutoGlue, anutoGlueTurret);
+    };
+    BattleManager.onGlueConsumed = function (anutoGlue) {
+        BoardContainer_1.BoardContainer.currentInstance.onGlueConsumed(anutoGlue);
     };
     BattleManager.onEnemyHit = function (anutoEnemies, anutoBullet, anutoMortar) {
         for (var i = 0; i < anutoEnemies.length; i++) {
@@ -871,6 +875,7 @@ var BoardContainer = /** @class */ (function (_super) {
         _this.turretActors = [];
         _this.bulletActors = [];
         _this.mortarActors = [];
+        _this.gluePools = [];
         _this.board = new Board_1.Board(_this.scene);
         _this.add(_this.board);
         if (GameConstants_1.GameConstants.SHOW_DEBUG_GEOMETRY) {
@@ -879,7 +884,7 @@ var BoardContainer = /** @class */ (function (_super) {
         // temporalmente añadimos una torre
         _this.addTower(Anuto.GameConstants.TURRET_LAUNCH, { r: 3, c: 3 });
         _this.addTower(Anuto.GameConstants.TURRET_LASER, { r: 6, c: 2 });
-        _this.addTower(Anuto.GameConstants.TURRET_GLUE, { r: 8, c: 6 });
+        _this.addTower(Anuto.GameConstants.TURRET_GLUE, { r: 8, c: 5 });
         _this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, { r: 11, c: 2 });
         return _this;
     }
@@ -981,6 +986,17 @@ var BoardContainer = /** @class */ (function (_super) {
         glueTurretActor.shootGlue();
         var gluePool = new GluePool_1.GluePool(this.scene, glueTurretActor, anutoGlue);
         this.board.add(gluePool);
+        this.board.sendToBack(gluePool);
+        this.gluePools.push(gluePool);
+    };
+    BoardContainer.prototype.onGlueConsumed = function (anutoGlue) {
+        for (var i = 0; i < this.gluePools.length; i++) {
+            if (anutoGlue.id === this.gluePools[i].id) {
+                this.gluePools.splice(i, 1);
+                this.gluePools[i].destroy();
+                break;
+            }
+        }
     };
     BoardContainer.prototype.onEnemyHit = function (anutoEnemy) {
         // encontrar el enemigo en cuestion
@@ -1632,26 +1648,26 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var GameConstants_1 = __webpack_require__(/*! ../../../GameConstants */ "./src/GameConstants.ts");
-var GameVars_1 = __webpack_require__(/*! ../../../GameVars */ "./src/GameVars.ts");
 var GluePool = /** @class */ (function (_super) {
     __extends(GluePool, _super);
     function GluePool(scene, glueTurretActor, anutoGlue) {
         var _this = _super.call(this, scene) || this;
         _this.glueTurretActor = glueTurretActor;
         _this.anutoGlue = anutoGlue;
-        _this.f = 0;
-        _this.framesDuration = GameVars_1.GameVars.timeStepFactor === 1 ? 24 : 6;
+        _this.id = anutoGlue.id;
+        _this.x = _this.glueTurretActor.x;
+        _this.y = _this.glueTurretActor.y;
         _this.scene.sys.updateList.add(_this);
+        var range = _this.anutoGlue.range * GameConstants_1.GameConstants.CELLS_SIZE;
         var graphic = new Phaser.GameObjects.Graphics(_this.scene);
-        graphic.fillStyle(0xff0000, .75);
-        //  32px radius on the corners
-        graphic.fillCircle(0, 0, _this.anutoGlue.range * GameConstants_1.GameConstants.CELLS_SIZE);
+        graphic.fillStyle(0x00ff00, .75);
+        graphic.fillCircle(0, 0, range);
+        _this.add(graphic);
+        _this.scene.sys.updateList.add(_this);
         return _this;
     }
     GluePool.prototype.preUpdate = function (time, delta) {
-        if (this.f++ === this.framesDuration) {
-            this.destroy();
-        }
+        // 
     };
     return GluePool;
 }(Phaser.GameObjects.Container));
@@ -1694,10 +1710,11 @@ var GlueTurretActor = /** @class */ (function (_super) {
         tmpImage.setInteractive();
         tmpImage.on("pointerdown", _this.onDownTurret, _this);
         _this.addAt(tmpImage, 0);
+        _this.canon.visible = false;
         return _this;
     }
     GlueTurretActor.prototype.update = function (time, delta) {
-        // esta torreta no orienta el cañón hacia el enemigo
+        //
     };
     GlueTurretActor.prototype.shootGlue = function () {
         // 
@@ -1746,12 +1763,15 @@ var LaserBeam = /** @class */ (function (_super) {
         return _this;
     }
     LaserBeam.prototype.preUpdate = function (time, delta) {
+        this.clear();
+        if (!this.enemyActor) {
+            return;
+        }
         if (this.f++ === this.framesDuration) {
             this.destroy();
         }
         var emmission_x = this.laserTurretActor.x + this.laserTurretActor.canonLength * Math.cos(this.laserTurretActor.canon.rotation);
         var emmission_y = this.laserTurretActor.y + this.laserTurretActor.canonLength * Math.sin(this.laserTurretActor.canon.rotation);
-        this.clear();
         // se remata por un circulo
         var r1 = this.f % 2 === 0 ? 15 : 8;
         var r2 = this.f % 2 === 0 ? 8 : 4;

@@ -61,6 +61,8 @@ module Anuto {
                 if (squaredRange >= squaredDist) {
                     speed /= glues[i].intensity;
                 }
+
+                break;
             }
 
             this.l = MathUtils.fixNumber(this.l + speed);
