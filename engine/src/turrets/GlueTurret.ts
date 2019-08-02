@@ -13,11 +13,6 @@ module Anuto {
             this.calculateTurretParameters();
         }
 
-        public update(): void {
-
-            super.update();
-        }
-
         // mirar en el ANUTO y generar las formulas que correspondan
         protected calculateTurretParameters(): void {
 
@@ -48,8 +43,6 @@ module Anuto {
             const glue = new Glue(this.position, this.intensity, this.durationTicks, this.range);
 
             Engine.currentInstance.addGlue(glue, this);
-
-            console.log("ADD GLUE " + Date.now());
         }
     }
 }

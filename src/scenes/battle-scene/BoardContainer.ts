@@ -202,14 +202,17 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.gluePools.push(gluePool);
     }
 
-    public destroyGlue(anutoGlue: Anuto.Glue): void {
+    public onGlueConsumed(anutoGlue: Anuto.Glue): void {
+
+        let glue: GluePool = null;
 
         for (let i = 0; i < this.gluePools.length; i++) {
 
             if (anutoGlue.id === this.gluePools[i].id) {
-
-                this.gluePools[i].destroy();
+                glue = this.gluePools[i];
                 this.gluePools.splice(i, 1);
+                glue.destroy();
+                break;
             }
         }
     }

@@ -14,6 +14,7 @@ module Anuto {
         private glues: Glue[];
         private bulletsColliding: Bullet[];
         private mortarsImpacting: Mortar[];
+        private consumedGlues: Glue[];
         private t: number;
         private eventDispatcher: EventDispatcher;
         private enemiesSpawner: EnemiesSpawner;
@@ -103,7 +104,7 @@ module Anuto {
             this.spawnEnemies();
 
             GameVars.enemies.forEach(function (enemy) {
-                enemy.update(this.glues);
+                enemy.update();
             }, this); 
 
             this.turrets.forEach(function (turret) {
@@ -149,6 +150,7 @@ module Anuto {
 
             this.bulletsColliding = [];
             this.mortarsImpacting = [];
+            this.consumedGlues = [];
         }
 
         public removeEnemy(enemy: Enemy): void {
@@ -213,14 +215,8 @@ module Anuto {
         public addGlue(glue: Glue, glueTurret: GlueTurret): void {
 
             this.glues.push(glue);
-            glue.gluesArray = this.glues;
 
             this.eventDispatcher.dispatchEvent(new Event(Event.GLUE_SHOT, [glue, glueTurret]));
-        }
-
-        public destroyGlue(glue: Glue): void {
-
-            this.eventDispatcher.dispatchEvent(new Event(Event.GLUE_DESTROY, [glue]));
         }
 
         public addMortar(mortar: Mortar, launchTurret: LaunchTurret): void {
@@ -320,62 +316,99 @@ module Anuto {
                     this.mortarsImpacting.push(this.mortars[i]);
                 }
             }
+
+            for (let i = 0; i < GameVars.enemies.length; i ++) {
+
+                const enemy = GameVars.enemies[i];
+                enemy.affectedByGlue = false;
+
+                for (let j = 0; j < this.glues.length; j++) {
+
+                    const glue = this.glues[j];
+
+                    if (glue.consumed && this.consumedGlues.indexOf(glue) === -1) {
+
+                        this.consumedGlues.push(glue);
+                        
+                    } else {
+
+                        const dx = enemy.x - glue.x;
+                        const dy = enemy.y - glue.y;
+        
+                        const squaredDist = MathUtils.fixNumber(dx * dx + dy * dy);
+                        let squaredRange = MathUtils.fixNumber(glue.range * glue.range);
+        
+                        if (squaredRange >= squaredDist) {
+                            enemy.glue(glue.intensity);
+                            break; // EL EFECTO DEL PEGAMENTO NO ES ACUMULATIVO, NO HACE FALTA COMPROBAR CON MAS PEGAMENTOS
+                        }
+                    }
+                }
+            }
         }
 
         private removeProjectilesAndAccountDamage(): void {
 
             // las balas
-            if (this.bulletsColliding.length > 0) {
+            for (let i = 0; i < this.bulletsColliding.length; i ++) {
 
-                for (let i = 0; i < this.bulletsColliding.length; i ++) {
+                const bullet = this.bulletsColliding[i];
+                const enemy = bullet.assignedEnemy;
 
-                    const bullet = this.bulletsColliding[i];
-                    const enemy = bullet.assignedEnemy;
+                enemy.hit(bullet.damage);
 
-                    enemy.hit(bullet.damage);
+                const index = this.bullets.indexOf(bullet);
+                this.bullets.splice(index, 1);
 
-                    const index = this.bullets.indexOf(bullet);
-                    this.bullets.splice(index, 1);
+                this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[enemy], bullet]));
 
-                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[enemy], bullet]));
-
-                    bullet.destroy();
-                }
-
-                this.bulletsColliding.length = 0;
+                bullet.destroy();
             }
 
+            this.bulletsColliding.length = 0;
+            
             // los morteros
-            if (this.mortarsImpacting.length > 0) {
+            for (let i = 0; i < this.mortarsImpacting.length; i ++) {
 
-                for (let i = 0; i < this.mortarsImpacting.length; i ++) {
+                const mortar = this.mortarsImpacting[i];
 
-                    const mortar = this.mortarsImpacting[i];
+                const hitEnemiesData: {enemy: Enemy, damage: number} [] = mortar.getEnemiesWithinExplosionRange();
+                const hitEnemies: Enemy[] = [];
 
-                    const hitEnemiesData: {enemy: Enemy, damage: number} [] = mortar.getEnemiesWithinExplosionRange();
-                    const hitEnemies: Enemy[] = [];
+                if (hitEnemiesData.length > 0) {
 
-                    if (hitEnemiesData.length > 0) {
+                    for (let j = 0; j < hitEnemiesData.length; j ++) {
 
-                        for (let j = 0; j < hitEnemiesData.length; j ++) {
+                        const enemy = hitEnemiesData[j].enemy;
+                        enemy.hit(hitEnemiesData[j].damage);
 
-                            const enemy = hitEnemiesData[j].enemy;
-                            enemy.hit(hitEnemiesData[j].damage);
-
-                            hitEnemies.push(enemy);
-                        }
+                        hitEnemies.push(enemy);
                     }
-
-                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [hitEnemies, null, mortar]));
-
-                    const index = this.mortars.indexOf(mortar);
-                    this.mortars.splice(index, 1);
-
-                    mortar.destroy();
                 }
 
-                this.mortarsImpacting.length = 0;
+                this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [hitEnemies, null, mortar]));
+
+                const index = this.mortars.indexOf(mortar);
+                this.mortars.splice(index, 1);
+
+                mortar.destroy();
             }
+
+            this.mortarsImpacting.length = 0;
+
+            // los pegamentos
+            for (let i = 0; i < this.consumedGlues.length; i ++) {
+
+                const glue = this.consumedGlues[i];
+
+                const index = this.glues.indexOf(glue);
+                this.glues.splice(index, 1);
+
+                this.eventDispatcher.dispatchEvent(new Event(Event.GLUE_CONSUMED, [glue]));
+                glue.destroy();
+            }  
+
+            this.consumedGlues.length = 0;
         }
 
         private spawnEnemies(): void {
