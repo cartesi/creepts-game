@@ -628,6 +628,7 @@ var BattleManager = /** @class */ (function () {
         BattleManager.anutoEngine.addEventListener(Anuto.Event.WAVE_OVER, BattleManager.onWaveOver, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.LASER_SHOT, BattleManager.onLaserBeamShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.MORTAR_SHOT, BattleManager.onMortarShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.GLUE_SHOT, BattleManager.onGlueShot, BattleManager);
     };
     BattleManager.update = function (time, delta) {
         BattleManager.anutoEngine.update();
@@ -677,6 +678,9 @@ var BattleManager = /** @class */ (function () {
     };
     BattleManager.onMortarShot = function (anutoMortar, anutoLaunchTurret) {
         BoardContainer_1.BoardContainer.currentInstance.addMortar(anutoMortar, anutoLaunchTurret);
+    };
+    BattleManager.onGlueShot = function (anutoGlue, anutoGlueTurret) {
+        BoardContainer_1.BoardContainer.currentInstance.addGlue(anutoGlue, anutoGlueTurret);
     };
     BattleManager.onEnemyHit = function (anutoEnemies, anutoBullet, anutoMortar) {
         for (var i = 0; i < anutoEnemies.length; i++) {
@@ -838,6 +842,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var GluePool_1 = __webpack_require__(/*! ./turret-actors/GluePool */ "./src/scenes/battle-scene/turret-actors/GluePool.ts");
 var Board_1 = __webpack_require__(/*! ./Board */ "./src/scenes/battle-scene/Board.ts");
 var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
 var BulletActor_1 = __webpack_require__(/*! ./turret-actors/BulletActor */ "./src/scenes/battle-scene/turret-actors/BulletActor.ts");
@@ -852,6 +857,7 @@ var LaserTurretActor_1 = __webpack_require__(/*! ./turret-actors/LaserTurretActo
 var LaserBeam_1 = __webpack_require__(/*! ./turret-actors/LaserBeam */ "./src/scenes/battle-scene/turret-actors/LaserBeam.ts");
 var LaunchTurretActor_1 = __webpack_require__(/*! ./turret-actors/LaunchTurretActor */ "./src/scenes/battle-scene/turret-actors/LaunchTurretActor.ts");
 var MortarActor_1 = __webpack_require__(/*! ./turret-actors/MortarActor */ "./src/scenes/battle-scene/turret-actors/MortarActor.ts");
+var GlueTurretActor_1 = __webpack_require__(/*! ./turret-actors/GlueTurretActor */ "./src/scenes/battle-scene/turret-actors/GlueTurretActor.ts");
 var BoardContainer = /** @class */ (function (_super) {
     __extends(BoardContainer, _super);
     function BoardContainer(scene) {
@@ -873,7 +879,7 @@ var BoardContainer = /** @class */ (function (_super) {
         // temporalmente añadimos una torre
         _this.addTower(Anuto.GameConstants.TURRET_LAUNCH, { r: 3, c: 3 });
         _this.addTower(Anuto.GameConstants.TURRET_LASER, { r: 6, c: 2 });
-        _this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, { r: 8, c: 6 });
+        _this.addTower(Anuto.GameConstants.TURRET_GLUE, { r: 8, c: 6 });
         _this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, { r: 11, c: 2 });
         return _this;
     }
@@ -941,7 +947,8 @@ var BoardContainer = /** @class */ (function (_super) {
             case Anuto.GameConstants.TURRET_LAUNCH:
                 turret = new LaunchTurretActor_1.LaunchTurretActor(this.scene, position);
                 break;
-            case Anuto.GameConstants.TURRET_LASER:
+            case Anuto.GameConstants.TURRET_GLUE:
+                turret = new GlueTurretActor_1.GlueTurretActor(this.scene, position);
                 break;
             default:
         }
@@ -968,6 +975,12 @@ var BoardContainer = /** @class */ (function (_super) {
         var mortar = new MortarActor_1.MortarActor(this.scene, anutoMortar, launchTurretActor);
         this.board.add(mortar);
         this.mortarActors.push(mortar);
+    };
+    BoardContainer.prototype.addGlue = function (anutoGlue, anutoGlueTurret) {
+        var glueTurretActor = this.getTurretActorByID(anutoGlueTurret.id);
+        glueTurretActor.shootGlue();
+        var gluePool = new GluePool_1.GluePool(this.scene, glueTurretActor, anutoGlue);
+        this.board.add(gluePool);
     };
     BoardContainer.prototype.onEnemyHit = function (anutoEnemy) {
         // encontrar el enemigo en cuestion
@@ -1591,6 +1604,107 @@ var BulletActor = /** @class */ (function (_super) {
     return BulletActor;
 }(Phaser.GameObjects.Image));
 exports.BulletActor = BulletActor;
+
+
+/***/ }),
+
+/***/ "./src/scenes/battle-scene/turret-actors/GluePool.ts":
+/*!***********************************************************!*\
+  !*** ./src/scenes/battle-scene/turret-actors/GluePool.ts ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var GameConstants_1 = __webpack_require__(/*! ../../../GameConstants */ "./src/GameConstants.ts");
+var GameVars_1 = __webpack_require__(/*! ../../../GameVars */ "./src/GameVars.ts");
+var GluePool = /** @class */ (function (_super) {
+    __extends(GluePool, _super);
+    function GluePool(scene, glueTurretActor, anutoGlue) {
+        var _this = _super.call(this, scene) || this;
+        _this.glueTurretActor = glueTurretActor;
+        _this.anutoGlue = anutoGlue;
+        _this.f = 0;
+        _this.framesDuration = GameVars_1.GameVars.timeStepFactor === 1 ? 24 : 6;
+        _this.scene.sys.updateList.add(_this);
+        var graphic = new Phaser.GameObjects.Graphics(_this.scene);
+        graphic.fillStyle(0xff0000, .75);
+        //  32px radius on the corners
+        graphic.fillCircle(0, 0, _this.anutoGlue.range * GameConstants_1.GameConstants.CELLS_SIZE);
+        return _this;
+    }
+    GluePool.prototype.preUpdate = function (time, delta) {
+        if (this.f++ === this.framesDuration) {
+            this.destroy();
+        }
+    };
+    return GluePool;
+}(Phaser.GameObjects.Container));
+exports.GluePool = GluePool;
+
+
+/***/ }),
+
+/***/ "./src/scenes/battle-scene/turret-actors/GlueTurretActor.ts":
+/*!******************************************************************!*\
+  !*** ./src/scenes/battle-scene/turret-actors/GlueTurretActor.ts ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var TurretActor_1 = __webpack_require__(/*! ./TurretActor */ "./src/scenes/battle-scene/turret-actors/TurretActor.ts");
+var GameConstants_1 = __webpack_require__(/*! ../../../GameConstants */ "./src/GameConstants.ts");
+var GlueTurretActor = /** @class */ (function (_super) {
+    __extends(GlueTurretActor, _super);
+    function GlueTurretActor(scene, position) {
+        var _this = _super.call(this, scene, Anuto.GameConstants.TURRET_GLUE, position) || this;
+        var tmpImage = new Phaser.GameObjects.Image(_this.scene, 0, 0, "texture_atlas_1", "tmp-glue-turret");
+        tmpImage.setScale(GameConstants_1.GameConstants.CELLS_SIZE / tmpImage.width * .8);
+        tmpImage.setInteractive();
+        tmpImage.on("pointerdown", _this.onDownTurret, _this);
+        _this.addAt(tmpImage, 0);
+        return _this;
+    }
+    GlueTurretActor.prototype.update = function (time, delta) {
+        // esta torreta no orienta el cañón hacia el enemigo
+    };
+    GlueTurretActor.prototype.shootGlue = function () {
+        // 
+    };
+    return GlueTurretActor;
+}(TurretActor_1.TurretActor));
+exports.GlueTurretActor = GlueTurretActor;
 
 
 /***/ }),

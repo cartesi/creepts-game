@@ -24,6 +24,12 @@ export class LaserBeam extends Phaser.GameObjects.Graphics {
     }
 
     public preUpdate(time: number, delta: number): void {
+
+        this.clear();
+
+        if (!this.enemyActor) {
+            return;
+        }
         
         if (this.f ++ === this.framesDuration) {
             this.destroy();
@@ -31,8 +37,6 @@ export class LaserBeam extends Phaser.GameObjects.Graphics {
         
         const emmission_x = this.laserTurretActor.x + this.laserTurretActor.canonLength * Math.cos(this.laserTurretActor.canon.rotation);
         const emmission_y = this.laserTurretActor.y + this.laserTurretActor.canonLength * Math.sin(this.laserTurretActor.canon.rotation);
-
-        this.clear();
 
         // se remata por un circulo
         let r1 = this.f % 2 === 0 ? 15 : 8;

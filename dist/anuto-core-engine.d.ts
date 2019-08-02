@@ -61,7 +61,7 @@ declare module Anuto {
         protected enemyData: any;
         constructor(type: string, creationTick: number);
         destroy(): void;
-        update(): void;
+        update(glues: Glue[]): void;
         hit(damage: number): void;
         restoreHealth(): void;
         getNextPosition(deltaTicks: number): {
@@ -77,6 +77,7 @@ declare module Anuto {
         private turrets;
         private bullets;
         private mortars;
+        private glues;
         private bulletsColliding;
         private mortarsImpacting;
         private t;
@@ -96,6 +97,8 @@ declare module Anuto {
         }): Turret;
         sellTurret(turret: Turret): void;
         addBullet(bullet: Bullet, projectileTurret: ProjectileTurret): void;
+        addGlue(glue: Glue, glueTurret: GlueTurret): void;
+        destroyGlue(glue: Glue): void;
         addMortar(mortar: Mortar, launchTurret: LaunchTurret): void;
         addLaserRay(laserTurret: LaserTurret, enemy: Enemy): void;
         onEnemyReachedExit(enemy: Enemy): void;
@@ -199,7 +202,7 @@ declare module Anuto {
         healing: boolean;
         private f;
         constructor(creationTick: number);
-        update(): void;
+        update(glues: Glue[]): void;
         private heal;
     }
 }
@@ -213,6 +216,8 @@ declare module Anuto {
         static readonly BULLET_SHOT = "bullet shot";
         static readonly LASER_SHOT = "laser shot";
         static readonly MORTAR_SHOT = "mortar shot";
+        static readonly GLUE_SHOT = "glue shot";
+        static readonly GLUE_DESTROY = "glue destroy";
         private type;
         private params;
         constructor(type: string, params?: any);
@@ -253,12 +258,36 @@ declare module Anuto {
     }
 }
 declare module Anuto {
-    class GlueTurret extends Turret {
+    class Glue {
+        static id: number;
+        id: number;
+        x: number;
+        y: number;
+        intensity: number;
+        duration: number;
+        range: number;
+        gluesArray: Glue[];
+        private f;
         constructor(p: {
             r: number;
             c: number;
-        }, creationTick: number);
+        }, intensity: number, duration: number, range: number);
+        destroy(): void;
         update(): void;
+    }
+}
+declare module Anuto {
+    class GlueTurret extends Turret {
+        intensity: number;
+        duration: number;
+        durationTicks: number;
+        constructor(p: {
+            r: number;
+            c: number;
+        });
+        update(): void;
+        protected calculateTurretParameters(): void;
+        protected shoot(): void;
     }
 }
 declare module Anuto {

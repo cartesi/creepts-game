@@ -1,3 +1,4 @@
+import { GluePool } from './turret-actors/GluePool';
 import { EnemyActor } from "./enemy-actors/EnemyActor";
 import { TurretActor } from "./turret-actors/TurretActor";
 import { Board } from "./Board";
@@ -14,6 +15,7 @@ import { LaserTurretActor } from "./turret-actors/LaserTurretActor";
 import { LaserBeam } from "./turret-actors/LaserBeam";
 import { LaunchTurretActor } from "./turret-actors/LaunchTurretActor";
 import { MortarActor } from "./turret-actors/MortarActor";
+import { GlueTurretActor } from "./turret-actors/GlueTurretActor";
 
 export class BoardContainer extends Phaser.GameObjects.Container {
 
@@ -24,6 +26,8 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     private turretActors: TurretActor[];
     private bulletActors: BulletActor[];
     private mortarActors: MortarActor[];
+
+    private gluePools: GluePool[];
 
     constructor(scene: Phaser.Scene) {
 
@@ -42,6 +46,8 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.bulletActors = [];
         this.mortarActors = [];
 
+        this.gluePools = [];
+
         this.board = new Board(this.scene);
         this.add(this.board);
 
@@ -52,7 +58,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         // temporalmente añadimos una torre
         this.addTower(Anuto.GameConstants.TURRET_LAUNCH, {r: 3, c: 3});
         this.addTower(Anuto.GameConstants.TURRET_LASER, {r: 6, c: 2});
-        this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, {r: 8, c: 6});
+        this.addTower(Anuto.GameConstants.TURRET_GLUE, {r: 8, c: 5});
         this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, {r: 11, c: 2});
     }
 
@@ -137,7 +143,8 @@ export class BoardContainer extends Phaser.GameObjects.Container {
             case Anuto.GameConstants.TURRET_LAUNCH:
                 turret = new LaunchTurretActor(this.scene, position);
                 break;
-            case Anuto.GameConstants.TURRET_LASER:
+            case Anuto.GameConstants.TURRET_GLUE:
+                turret = new GlueTurretActor(this.scene, position);
                 break;
             default:
         }
@@ -178,6 +185,30 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.board.add(mortar);
 
         this.mortarActors.push(mortar);
+    }
+
+    public addGlue(anutoGlue: Anuto.Glue, anutoGlueTurret: Anuto.GlueTurret): void {
+
+        const glueTurretActor = <GlueTurretActor> this.getTurretActorByID(anutoGlueTurret.id);
+        glueTurretActor.shootGlue();
+
+        const gluePool = new GluePool(this.scene, glueTurretActor, anutoGlue);
+        this.board.add(gluePool);
+        this.board.sendToBack(gluePool);
+
+        this.gluePools.push(gluePool);
+    }
+
+    public destroyGlue(anutoGlue: Anuto.Glue): void {
+
+        for (let i = 0; i < this.gluePools.length; i++) {
+
+            if (anutoGlue.id === this.gluePools[i].id) {
+
+                this.gluePools[i].destroy();
+                this.gluePools.splice(i, 1);
+            }
+        }
     }
 
     public onEnemyHit(anutoEnemy: Anuto.Enemy): void {

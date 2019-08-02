@@ -40,6 +40,8 @@ export class BattleManager {
         BattleManager.anutoEngine.addEventListener(Anuto.Event.WAVE_OVER, BattleManager.onWaveOver, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.LASER_SHOT, BattleManager.onLaserBeamShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.MORTAR_SHOT, BattleManager.onMortarShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.GLUE_SHOT, BattleManager.onGlueShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.GLUE_DESTROY, BattleManager.onGlueDestroy, BattleManager);
     }
 
     public static update(time: number, delta: number): void {
@@ -119,6 +121,16 @@ export class BattleManager {
     private static onMortarShot(anutoMortar: Anuto.Mortar, anutoLaunchTurret: Anuto.LaunchTurret): void {
 
         BoardContainer.currentInstance.addMortar(anutoMortar, anutoLaunchTurret);
+    }
+
+    private static onGlueShot(anutoGlue: Anuto.Glue, anutoGlueTurret: Anuto.GlueTurret): void {
+
+        BoardContainer.currentInstance.addGlue(anutoGlue, anutoGlueTurret);
+    }
+
+    private static onGlueDestroy(anutoGlue: Anuto.Glue): void {
+
+        BoardContainer.currentInstance.destroyGlue(anutoGlue);
     }
 
     private static onEnemyHit(anutoEnemies: Anuto.Enemy[], anutoBullet?: Anuto.Bullet, anutoMortar?: Anuto.Mortar): void {

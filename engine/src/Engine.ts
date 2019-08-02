@@ -11,6 +11,7 @@ module Anuto {
         private turrets: Turret[];
         private bullets: Bullet[];
         private mortars: Mortar[];
+        private glues: Glue[];
         private bulletsColliding: Bullet[];
         private mortarsImpacting: Mortar[];
         private t: number;
@@ -55,6 +56,7 @@ module Anuto {
             Enemy.id = 0;
             Bullet.id = 0;
             Mortar.id = 0;
+            Glue.id = 0;
  
             GameVars.runningInClientSide = gameConfig.runningInClientSide;
             GameVars.credits = gameConfig.credits;
@@ -75,6 +77,7 @@ module Anuto {
             GameVars.ticksCounter = 0;
 
             this.turrets = [];
+            this.glues = [];
         }
 
         public update(): void {
@@ -100,8 +103,8 @@ module Anuto {
             this.spawnEnemies();
 
             GameVars.enemies.forEach(function (enemy) {
-                enemy.update();
-            }); 
+                enemy.update(this.glues);
+            }, this); 
 
             this.turrets.forEach(function (turret) {
                 turret.update();
@@ -113,6 +116,10 @@ module Anuto {
 
             this.mortars.forEach(function (mortars) {
                 mortars.update();
+            });
+
+            this.glues.forEach(function (glue) {
+                glue.update();
             });
 
             GameVars.ticksCounter ++;
@@ -139,6 +146,7 @@ module Anuto {
             GameVars.enemies = [];
             this.bullets = [];
             this.mortars = [];
+
             this.bulletsColliding = [];
             this.mortarsImpacting = [];
         }
@@ -200,6 +208,19 @@ module Anuto {
             this.bullets.push(bullet);
 
             this.eventDispatcher.dispatchEvent(new Event(Event.BULLET_SHOT, [bullet, projectileTurret]));
+        }
+
+        public addGlue(glue: Glue, glueTurret: GlueTurret): void {
+
+            this.glues.push(glue);
+            glue.gluesArray = this.glues;
+
+            this.eventDispatcher.dispatchEvent(new Event(Event.GLUE_SHOT, [glue, glueTurret]));
+        }
+
+        public destroyGlue(glue: Glue): void {
+
+            this.eventDispatcher.dispatchEvent(new Event(Event.GLUE_DESTROY, [glue]));
         }
 
         public addMortar(mortar: Mortar, launchTurret: LaunchTurret): void {

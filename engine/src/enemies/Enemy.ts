@@ -45,9 +45,25 @@ module Anuto {
             // de momento nada
         }
 
-        public update(): void {
+        public update(glues: Glue[]): void {
 
-            this.l = MathUtils.fixNumber(this.l + this.speed);
+            let speed = this.speed;
+
+            // si esta encima de pegamento hacer que vaya mas lento
+            for (let i = 0; i < glues.length; i++) {
+
+                const dx = this.x - glues[i].x;
+                const dy = this.y - glues[i].y;
+
+                const squaredDist = MathUtils.fixNumber(dx * dx + dy * dy);
+                let squaredRange = MathUtils.fixNumber(glues[i].range * glues[i].range);
+
+                if (squaredRange >= squaredDist) {
+                    speed /= glues[i].intensity;
+                }
+            }
+
+            this.l = MathUtils.fixNumber(this.l + speed);
 
             if (this.l >= GameVars.enemiesPathCells.length - 1) {
 

@@ -52,7 +52,7 @@
 					}
 				},
 				{
-					"filename": "tmp-laser-turret",
+					"filename": "tmp-glue-turret",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -157,7 +157,7 @@
 					}
 				},
 				{
-					"filename": "tmp-projectile-turret",
+					"filename": "tmp-laser-turret",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -199,6 +199,27 @@
 					}
 				},
 				{
+					"filename": "tmp-projectile-turret",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 100,
+						"h": 100
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 100,
+						"h": 100
+					},
+					"frame": {
+						"x": 1,
+						"y": 205,
+						"w": 100,
+						"h": 100
+					}
+				},
+				{
 					"filename": "tmp-launch-turret",
 					"rotated": false,
 					"trimmed": false,
@@ -214,30 +235,9 @@
 					},
 					"frame": {
 						"x": 1,
-						"y": 205,
+						"y": 110,
 						"w": 100,
 						"h": 87
-					}
-				},
-				{
-					"filename": "mortar",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 36,
-						"h": 36
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 36,
-						"h": 36
-					},
-					"frame": {
-						"x": 1,
-						"y": 158,
-						"w": 36,
-						"h": 36
 					}
 				},
 				{
@@ -255,8 +255,8 @@
 						"h": 47
 					},
 					"frame": {
-						"x": 39,
-						"y": 110,
+						"x": 1,
+						"y": 307,
 						"w": 48,
 						"h": 47
 					}
@@ -276,8 +276,8 @@
 						"h": 47
 					},
 					"frame": {
-						"x": 89,
-						"y": 110,
+						"x": 1,
+						"y": 356,
 						"w": 48,
 						"h": 47
 					}
@@ -297,8 +297,8 @@
 						"h": 47
 					},
 					"frame": {
-						"x": 139,
-						"y": 110,
+						"x": 1,
+						"y": 405,
 						"w": 48,
 						"h": 47
 					}
@@ -318,10 +318,31 @@
 						"h": 47
 					},
 					"frame": {
-						"x": 189,
-						"y": 110,
+						"x": 1,
+						"y": 454,
 						"w": 48,
 						"h": 47
+					}
+				},
+				{
+					"filename": "mortar",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 36,
+						"h": 36
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 36,
+						"h": 36
+					},
+					"frame": {
+						"x": 51,
+						"y": 307,
+						"w": 36,
+						"h": 36
 					}
 				}
 			]
@@ -330,6 +351,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:be0df8f2e0a6f00e52607d342d5b1986:9767d8caa712ab0be6252a37da56c1a4:1bd3fbbbdaf54e41cf80e3e904578de4$"
+		"smartupdate": "$TexturePacker:SmartUpdate:1f5737674d5aaccf0068e9cf87853730:51107dcfd929a70fa6e92245b0ecec8a:1bd3fbbbdaf54e41cf80e3e904578de4$"
 	}
 }

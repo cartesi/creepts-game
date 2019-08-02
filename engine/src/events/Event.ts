@@ -10,6 +10,8 @@ module Anuto {
         public static readonly BULLET_SHOT = "bullet shot";
         public static readonly LASER_SHOT = "laser shot";
         public static readonly MORTAR_SHOT = "mortar shot";
+        public static readonly GLUE_SHOT = "glue shot";
+        public static readonly GLUE_DESTROY = "glue destroy";
 
         private type: string;
         private params: any;
