@@ -288,7 +288,6 @@ declare module Anuto {
             r: number;
             c: number;
         });
-        update(): void;
         protected calculateTurretParameters(): void;
         protected shoot(): void;
     }

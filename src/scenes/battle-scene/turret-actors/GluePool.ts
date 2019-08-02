@@ -1,7 +1,5 @@
 import { GameConstants } from "../../../GameConstants";
-import { GlueTurretActor } from './GlueTurretActor';
-import { GameVars } from "../../../GameVars";
-import { threadId } from "worker_threads";
+import { GlueTurretActor } from "./GlueTurretActor";
 
 export class GluePool extends Phaser.GameObjects.Container {
 
@@ -30,12 +28,5 @@ export class GluePool extends Phaser.GameObjects.Container {
         graphic.fillStyle(0x00ff00, .75);
         graphic.fillCircle(0, 0, range);
         this.add(graphic);
-
-        this.scene.sys.updateList.add(this);
-    }
-
-    public preUpdate(time: number, delta: number): void {
-        
-        // 
     }
 }
