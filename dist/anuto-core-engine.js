@@ -732,9 +732,6 @@ var Anuto;
             _this.calculateTurretParameters();
             return _this;
         }
-        GlueTurret.prototype.update = function () {
-            _super.prototype.update.call(this);
-        };
         GlueTurret.prototype.calculateTurretParameters = function () {
             this.damage = Math.floor(1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 66);
             this.reload = 5;
