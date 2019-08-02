@@ -104,7 +104,7 @@ module Anuto {
             this.spawnEnemies();
 
             GameVars.enemies.forEach(function (enemy) {
-                enemy.update(this.glues);
+                enemy.update();
             }, this); 
 
             this.turrets.forEach(function (turret) {
@@ -317,10 +317,32 @@ module Anuto {
                 }
             }
 
-            for (let i = 0; i < this.glues.length; i ++) {
+            for (let i = 0; i < GameVars.enemies.length; i ++) {
 
-                if (this.glues[i].consumed) {
-                    this.consumedGlues.push(this.glues[i]);
+                const enemy = GameVars.enemies[i];
+                enemy.affectedByGlue = false;
+
+                for (let j = 0; j < this.glues.length; j++) {
+
+                    const glue = this.glues[j];
+
+                    if (glue.consumed && this.consumedGlues.indexOf(glue) === -1) {
+
+                        this.consumedGlues.push(glue);
+                        
+                    } else {
+
+                        const dx = enemy.x - glue.x;
+                        const dy = enemy.y - glue.y;
+        
+                        const squaredDist = MathUtils.fixNumber(dx * dx + dy * dy);
+                        let squaredRange = MathUtils.fixNumber(glue.range * glue.range);
+        
+                        if (squaredRange >= squaredDist) {
+                            enemy.glue(glue.intensity);
+                            break; // EL EFECTO DEL PEGAMENTO NO ES ACUMULATIVO, NO HACE FALTA COMPROBAR CON MAS PEGAMENTOS
+                        }
+                    }
                 }
             }
         }

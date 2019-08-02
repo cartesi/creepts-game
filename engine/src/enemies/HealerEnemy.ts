@@ -16,7 +16,7 @@ module Anuto {
             this.healing = false;
         }
 
-        public update(glues: Glue[]): void {
+        public update(): void {
 
             this.f ++;
 
@@ -31,7 +31,7 @@ module Anuto {
 
             } else {
 
-                super.update(glues);
+                super.update();
 
                 // no cura si ya esta muy cerca de la salida
                 if (this.f === GameConstants.HEALER_HEALING_TICKS && this.l < GameVars.enemiesPathCells.length - 2) {

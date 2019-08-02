@@ -58,10 +58,13 @@ declare module Anuto {
         value: number;
         boundingRadius: number;
         l: number;
+        affectedByGlue: boolean;
+        glueIntensity: number;
         protected enemyData: any;
         constructor(type: string, creationTick: number);
         destroy(): void;
-        update(glues: Glue[]): void;
+        update(): void;
+        glue(glueIntensity: number): void;
         hit(damage: number): void;
         restoreHealth(): void;
         getNextPosition(deltaTicks: number): {
@@ -202,7 +205,7 @@ declare module Anuto {
         healing: boolean;
         private f;
         constructor(creationTick: number);
-        update(glues: Glue[]): void;
+        update(): void;
         private heal;
     }
 }

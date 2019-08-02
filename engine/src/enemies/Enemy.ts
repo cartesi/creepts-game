@@ -14,6 +14,8 @@ module Anuto {
         public value: number;
         public boundingRadius: number;
         public l: number;
+        public affectedByGlue: boolean;
+        public glueIntensity: number;
         
         protected enemyData: any;
 
@@ -22,6 +24,8 @@ module Anuto {
             this.id = Enemy.id;
             Enemy.id ++;
 
+            this.creationTick = creationTick;
+
             this.type = type;
             this.enemyData = GameVars.enemyData[this.type];
 
@@ -29,7 +33,8 @@ module Anuto {
             this.value = this.enemyData.value;
             this.speed = this.enemyData.speed;
 
-            this.creationTick = creationTick;
+            this.affectedByGlue = false;
+            this.glueIntensity = 0;
 
             this.l = 0;
 
@@ -45,26 +50,15 @@ module Anuto {
             // de momento nada
         }
 
-        public update(glues: Glue[]): void {
+        public update(): void {
 
             let speed = this.speed;
 
             // si esta encima de pegamento hacer que vaya mas lento
-            for (let i = 0; i < glues.length; i++) {
-
-                const dx = this.x - glues[i].x;
-                const dy = this.y - glues[i].y;
-
-                const squaredDist = MathUtils.fixNumber(dx * dx + dy * dy);
-                let squaredRange = MathUtils.fixNumber(glues[i].range * glues[i].range);
-
-                if (squaredRange >= squaredDist) {
-                    speed /= glues[i].intensity;
-                }
-
-                break;
+            if (this.affectedByGlue) {
+                speed = MathUtils.fixNumber(this.speed / this.glueIntensity);
             }
-
+           
             this.l = MathUtils.fixNumber(this.l + speed);
 
             if (this.l >= GameVars.enemiesPathCells.length - 1) {
@@ -81,6 +75,12 @@ module Anuto {
                 this.x = p.x;
                 this.y = p.y;
             }
+        }
+
+        public glue(glueIntensity: number): void{
+
+            this.affectedByGlue = true;
+            this.glueIntensity = glueIntensity;
         }
 
         public hit(damage: number): void {
@@ -100,7 +100,13 @@ module Anuto {
 
         public getNextPosition(deltaTicks: number): {x: number, y: number} {
 
-            let l = MathUtils.fixNumber(this.l + this.speed * deltaTicks);
+            let speed = this.speed;
+
+            if (this.affectedByGlue) {
+                speed = MathUtils.fixNumber(this.speed / this.glueIntensity);
+            }
+
+            let l = MathUtils.fixNumber(this.l + speed * deltaTicks);
 
             const p = Engine.getPathPosition(l);
 
