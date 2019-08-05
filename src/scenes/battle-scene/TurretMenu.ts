@@ -8,53 +8,64 @@ export class TurretMenu extends Phaser.GameObjects.Container {
         super(scene);
 
         const bck = new Phaser.GameObjects.Graphics(this.scene);
-        bck.fillStyle(0xFFFFFF);
-        bck.fillRect(-200, -300, 400, 600);
+        bck.fillStyle(0x000000);
+        bck.fillRect(-200, -350, 400, 700);
         bck.lineStyle(4, 0x000000);
-        bck.strokeRect(-200, -300, 400, 600);
+        bck.strokeRect(-200, -350, 400, 700);
         this.add(bck);
 
-        let offY = -280;
+        const titleLines = new Phaser.GameObjects.Graphics(this.scene);
+        titleLines.lineStyle(4, 0xffffff);
+        titleLines.strokeRect(-180, -330, 360, 70);
+        titleLines.lineStyle(2, 0xffffff);
+        titleLines.strokeRect(-170, -320, 340, 50);
+        this.add(titleLines);
 
-        let text = new Phaser.GameObjects.Text(this.scene, -180, offY, "LEVEL: " + anutoTurret.level, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+        let title = new Phaser.GameObjects.Text(this.scene, 0, -315, "TOWER INFO", {fontFamily: "Rubik-Regular", fontSize: "35px", color: "#FFFFFF"});
+        title.setOrigin(.5, 0);
+        this.add(title);
+
+        let offY = -230;
+
+        let text = new Phaser.GameObjects.Text(this.scene, -180, offY, "LEVEL: " + anutoTurret.level, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
         this.add(text);
 
         offY += 35;
 
         if (anutoTurret.type !== Anuto.GameConstants.TURRET_GLUE) {
-            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "DAMAGE: " + anutoTurret.damage, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "DAMAGE: " + anutoTurret.damage, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(text);
         } else {
-            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "INTENSITY: " + anutoTurret.intensity, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "INTENSITY: " + anutoTurret.intensity, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(text);
 
             offY += 35;
 
-            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "DURATION: " + anutoTurret.duration, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "DURATION: " + anutoTurret.duration, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(text);
         }
 
         offY += 35;
 
         if (anutoTurret.type === Anuto.GameConstants.TURRET_LAUNCH) {
-            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "EXPLOSION RANGE: " + anutoTurret.explosionRange, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "EXPLOSION RANGE: " + anutoTurret.explosionRange, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(text);
 
             offY += 35;
         }
 
-        text = new Phaser.GameObjects.Text(this.scene, -180, offY, "RELOAD: " + anutoTurret.reload, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+        text = new Phaser.GameObjects.Text(this.scene, -180, offY, "RELOAD: " + anutoTurret.reload, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
         this.add(text);
 
         offY += 35;
 
-        text = new Phaser.GameObjects.Text(this.scene, -180, offY, "RANGE: " + anutoTurret.range, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+        text = new Phaser.GameObjects.Text(this.scene, -180, offY, "RANGE: " + anutoTurret.range, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
         this.add(text);
 
         offY += 35;
 
         if (anutoTurret.type !== Anuto.GameConstants.TURRET_GLUE) {
-            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "INFLICTED: ", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "INFLICTED: ", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(text);
         }
 

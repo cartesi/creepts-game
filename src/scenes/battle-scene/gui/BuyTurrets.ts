@@ -6,7 +6,7 @@ export class BuyTurrets extends Phaser.GameObjects.Container {
 
         super(scene);
 
-        this.y = 85;
+        this.y = 80;
         this.x = 40;
 
         let types = [Anuto.GameConstants.TURRET_PROJECTILE, Anuto.GameConstants.TURRET_LASER, Anuto.GameConstants.TURRET_LAUNCH, Anuto.GameConstants.TURRET_GLUE];

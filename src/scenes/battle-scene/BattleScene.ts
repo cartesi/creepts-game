@@ -32,7 +32,7 @@ export class BattleScene extends Phaser.Scene {
         this.add.existing(this.gui);
 
         // remove
-        // this.boardContainer.initialTurrets();
+        this.boardContainer.initialTurrets();
 
         
     }

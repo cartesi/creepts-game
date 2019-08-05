@@ -14,6 +14,8 @@ export class TurretButton extends Phaser.GameObjects.Container {
         this.x = index * 60;
         this.typeTurret = type;
 
+        this.setScale(.8);
+
         let base_name;
         let canon_name;
 
@@ -46,6 +48,15 @@ export class TurretButton extends Phaser.GameObjects.Container {
             this.canon = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", canon_name);
             this.add(this.canon);
         }
+
+        if (type === Anuto.GameConstants.TURRET_LASER) {
+            this.base.y += 6;
+            this.canon.y += 6;
+        }
+
+        let text = new Phaser.GameObjects.Text(this.scene, 0, 40, "100", {fontFamily: "Rubik-Regular", fontSize: "26px", color: "#000000"});
+        text.setOrigin(.5);
+        this.add(text);
         
     }
 

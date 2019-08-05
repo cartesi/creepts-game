@@ -13,13 +13,18 @@ export class HUD extends Phaser.GameObjects.Container {
 
         this.scaleX = GameVars.scaleCorrectionFactor;
         this.scaleY = GameVars.scaleCorrectionFactor * GameVars.scaleY;
-
-        const bck = new Phaser.GameObjects.Graphics(this.scene);
+        
+        let bck = new Phaser.GameObjects.Graphics(this.scene);
         bck.fillStyle(0xFFFFFF);
         bck.fillRect(0, 0, GameConstants.GAME_WIDTH, 122);
         this.add(bck);
 
-        this.creditsLabel = new Phaser.GameObjects.Text(this.scene, 10, 10, "Credits: " + BattleManager.anutoEngine.credits, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+        bck = new Phaser.GameObjects.Graphics(this.scene);
+        bck.fillStyle(0x000000);
+        bck.fillRect(0, 0, GameConstants.GAME_WIDTH, 35);
+        this.add(bck);
+
+        this.creditsLabel = new Phaser.GameObjects.Text(this.scene, 4, 4, "Credits: " + BattleManager.anutoEngine.credits, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff"});
         this.add(this.creditsLabel);
 
         if (GameConstants.DEVELOPMENT) {

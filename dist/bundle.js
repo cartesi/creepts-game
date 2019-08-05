@@ -571,7 +571,8 @@ var PreloadScene = /** @class */ (function (_super) {
         GameManager_1.GameManager.onGameAssetsLoaded();
     };
     PreloadScene.prototype.composeScene = function () {
-        this.add.text(-100, -100, "abcdefg", { fontFamily: "RussoOne", fontSize: 28, color: "#A6F834" });
+        this.add.text(-100, -100, "abcdefg", { fontFamily: "Rubik-Light", fontSize: 28, color: "#A6F834" });
+        this.add.text(-100, -100, "abcdefg", { fontFamily: "Rubik-Regular", fontSize: 28, color: "#A6F834" });
     };
     PreloadScene.prototype.loadAssets = function () {
         this.load.atlas("texture_atlas_1", "assets/texture_atlas_1.png", "assets/texture_atlas_1.json");
@@ -769,6 +770,8 @@ var BattleScene = /** @class */ (function (_super) {
         this.add.existing(this.hud);
         this.gui = new GUI_1.GUI(this);
         this.add.existing(this.gui);
+        // remove
+        // this.boardContainer.initialTurrets();
     };
     BattleScene.prototype.update = function (time, delta) {
         BattleManager_1.BattleManager.update(time, delta);
@@ -938,6 +941,7 @@ var BoardContainer = /** @class */ (function (_super) {
         _this.mortarActors = [];
         _this.rangeCircles = [];
         _this.gluePools = [];
+        _this.glueCircles = [];
         _this.board = new Board_1.Board(_this.scene);
         _this.add(_this.board);
         if (GameConstants_1.GameConstants.SHOW_DEBUG_GEOMETRY) {
@@ -952,16 +956,18 @@ var BoardContainer = /** @class */ (function (_super) {
         _this.circlesContainer = new Phaser.GameObjects.Container(_this.scene);
         _this.board.add(_this.circlesContainer);
         _this.createAnimations();
-        // temporalmente añadimos una torre
-        _this.addTurret(Anuto.GameConstants.TURRET_PROJECTILE, { r: 0, c: 2 });
-        _this.addTurret(Anuto.GameConstants.TURRET_PROJECTILE, { r: 1, c: 2 });
-        _this.addTurret(Anuto.GameConstants.TURRET_LASER, { r: 2, c: 2 });
-        _this.addTurret(Anuto.GameConstants.TURRET_LASER, { r: 2, c: 3 });
-        _this.addTurret(Anuto.GameConstants.TURRET_LASER, { r: 2, c: 4 });
-        _this.addTurret(Anuto.GameConstants.TURRET_LASER, { r: 0, c: 4 });
-        _this.addTurret(Anuto.GameConstants.TURRET_LASER, { r: 0, c: 5 });
         return _this;
     }
+    BoardContainer.prototype.initialTurrets = function () {
+        // temporalmente añadimos una torre
+        this.addTurret(Anuto.GameConstants.TURRET_PROJECTILE, { r: 0, c: 2 });
+        this.addTurret(Anuto.GameConstants.TURRET_PROJECTILE, { r: 1, c: 2 });
+        this.addTurret(Anuto.GameConstants.TURRET_LASER, { r: 2, c: 2 });
+        this.addTurret(Anuto.GameConstants.TURRET_LASER, { r: 2, c: 3 });
+        this.addTurret(Anuto.GameConstants.TURRET_LASER, { r: 2, c: 4 });
+        this.addTurret(Anuto.GameConstants.TURRET_LASER, { r: 0, c: 4 });
+        this.addTurret(Anuto.GameConstants.TURRET_LASER, { r: 0, c: 5 });
+    };
     BoardContainer.prototype.update = function (time, delta) {
         // eliminar a los enemigos que ya han muerto
         for (var i = 0; i < this.deadEnemyActors.length; i++) {
@@ -1084,16 +1090,51 @@ var BoardContainer = /** @class */ (function (_super) {
         this.board.add(gluePool);
         this.board.sendActorBack(gluePool);
         this.gluePools.push(gluePool);
+        var glueCircle = new Phaser.GameObjects.Graphics(this.scene);
+        glueCircle.setPosition(glueTurretActor.x, glueTurretActor.y);
+        glueCircle.lineStyle(2, 0x66CCFF, 1);
+        glueCircle.strokeCircle(0, 0, anutoGlue.range * GameConstants_1.GameConstants.CELLS_SIZE);
+        glueCircle.setScale(0);
+        glueCircle.alpha = 0;
+        glueCircle.name = anutoGlue.id.toString();
+        this.circlesContainer.add(glueCircle);
+        this.glueCircles.push(glueCircle);
+        this.scene.tweens.add({
+            targets: glueCircle,
+            scaleX: 1,
+            scaleY: 1,
+            alpha: 1,
+            ease: Phaser.Math.Easing.Cubic.Out,
+            duration: GameVars_1.GameVars.timeStepFactor === 4 ? 200 : 600,
+        });
     };
     BoardContainer.prototype.onGlueConsumed = function (anutoGlue) {
         var glue = null;
-        for (var i = 0; i < this.gluePools.length; i++) {
-            if (anutoGlue.id === this.gluePools[i].id) {
-                glue = this.gluePools[i];
-                this.gluePools.splice(i, 1);
+        var _loop_1 = function (i) {
+            if (anutoGlue.id === this_1.gluePools[i].id) {
+                glue = this_1.gluePools[i];
+                this_1.gluePools.splice(i, 1);
                 glue.destroy();
-                break;
+                var glueCircle_1 = this_1.glueCircles[i];
+                this_1.glueCircles.splice(i, 1);
+                this_1.scene.tweens.add({
+                    targets: glueCircle_1,
+                    alpha: 0,
+                    ease: Phaser.Math.Easing.Cubic.Out,
+                    duration: GameVars_1.GameVars.timeStepFactor === 4 ? 200 : 600,
+                    onComplete: function () {
+                        glueCircle_1.destroy();
+                    },
+                    onCompleteScope: this_1
+                });
+                return "break";
             }
+        };
+        var this_1 = this;
+        for (var i = 0; i < this.gluePools.length; i++) {
+            var state_1 = _loop_1(i);
+            if (state_1 === "break")
+                break;
         }
     };
     BoardContainer.prototype.onEnemyHit = function (anutoEnemy) {
@@ -1253,18 +1294,73 @@ var TurretMenu = /** @class */ (function (_super) {
     function TurretMenu(scene, anutoTurret) {
         var _this = _super.call(this, scene) || this;
         var bck = new Phaser.GameObjects.Graphics(_this.scene);
-        bck.fillStyle(0xFFFFFF);
-        bck.fillRect(-150, -200, 300, 400);
+        bck.fillStyle(0x000000);
+        bck.fillRect(-200, -300, 400, 600);
         bck.lineStyle(4, 0x000000);
-        bck.strokeRect(-150, -200, 300, 400);
+        bck.strokeRect(-200, -300, 400, 600);
         _this.add(bck);
-        var nextWaveButton = new Utils_1.Button(_this.scene, 0, 0, "texture_atlas_1", "btn_start_off", "btn_start_on", true);
-        nextWaveButton.onDown(_this.onClickDown, _this);
-        _this.add(nextWaveButton);
+        var offY = -280;
+        var text = new Phaser.GameObjects.Text(_this.scene, -180, offY, "LEVEL: " + anutoTurret.level, { fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF" });
+        _this.add(text);
+        offY += 35;
+        if (anutoTurret.type !== Anuto.GameConstants.TURRET_GLUE) {
+            text = new Phaser.GameObjects.Text(_this.scene, -180, offY, "DAMAGE: " + anutoTurret.damage, { fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF" });
+            _this.add(text);
+        }
+        else {
+            text = new Phaser.GameObjects.Text(_this.scene, -180, offY, "INTENSITY: " + anutoTurret.intensity, { fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF" });
+            _this.add(text);
+            offY += 35;
+            text = new Phaser.GameObjects.Text(_this.scene, -180, offY, "DURATION: " + anutoTurret.duration, { fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF" });
+            _this.add(text);
+        }
+        offY += 35;
+        if (anutoTurret.type === Anuto.GameConstants.TURRET_LAUNCH) {
+            text = new Phaser.GameObjects.Text(_this.scene, -180, offY, "EXPLOSION RANGE: " + anutoTurret.explosionRange, { fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF" });
+            _this.add(text);
+            offY += 35;
+        }
+        text = new Phaser.GameObjects.Text(_this.scene, -180, offY, "RELOAD: " + anutoTurret.reload, { fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF" });
+        _this.add(text);
+        offY += 35;
+        text = new Phaser.GameObjects.Text(_this.scene, -180, offY, "RANGE: " + anutoTurret.range, { fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF" });
+        _this.add(text);
+        offY += 35;
+        if (anutoTurret.type !== Anuto.GameConstants.TURRET_GLUE) {
+            text = new Phaser.GameObjects.Text(_this.scene, -180, offY, "INFLICTED: ", { fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF" });
+            _this.add(text);
+        }
+        var strategyButton = new Utils_1.Button(_this.scene, 0, -20, "texture_atlas_1", "btn_start_off", "btn_start_on", true);
+        strategyButton.onDown(_this.onClickStrategy, _this);
+        _this.add(strategyButton);
+        var objectiveButton = new Utils_1.Button(_this.scene, 0, 40, "texture_atlas_1", "btn_start_off", "btn_start_on", true);
+        objectiveButton.onDown(_this.onClickObjective, _this);
+        _this.add(objectiveButton);
+        var levelButton = new Utils_1.Button(_this.scene, 0, 120, "texture_atlas_1", "btn_start_off", "btn_start_on", true);
+        levelButton.onDown(_this.onClickLevel, _this);
+        _this.add(levelButton);
+        var upgradeButton = new Utils_1.Button(_this.scene, 0, 180, "texture_atlas_1", "btn_start_off", "btn_start_on", true);
+        upgradeButton.onDown(_this.onClickUpgrade, _this);
+        _this.add(upgradeButton);
+        var sellButton = new Utils_1.Button(_this.scene, 0, 240, "texture_atlas_1", "btn_start_off", "btn_start_on", true);
+        sellButton.onDown(_this.onClickSell, _this);
+        _this.add(sellButton);
         return _this;
     }
-    TurretMenu.prototype.onClickDown = function () {
-        console.log("DOWN");
+    TurretMenu.prototype.onClickStrategy = function () {
+        console.log("STRATEGY");
+    };
+    TurretMenu.prototype.onClickObjective = function () {
+        console.log("OBJECTIVE");
+    };
+    TurretMenu.prototype.onClickLevel = function () {
+        console.log("LEVEL UP");
+    };
+    TurretMenu.prototype.onClickUpgrade = function () {
+        console.log("UPGRADE");
+    };
+    TurretMenu.prototype.onClickSell = function () {
+        console.log("SELL");
     };
     return TurretMenu;
 }(Phaser.GameObjects.Container));
@@ -1645,7 +1741,7 @@ var BuyTurrets = /** @class */ (function (_super) {
     __extends(BuyTurrets, _super);
     function BuyTurrets(scene) {
         var _this = _super.call(this, scene) || this;
-        _this.y = 85;
+        _this.y = 80;
         _this.x = 40;
         var types = [Anuto.GameConstants.TURRET_PROJECTILE, Anuto.GameConstants.TURRET_LASER, Anuto.GameConstants.TURRET_LAUNCH, Anuto.GameConstants.TURRET_GLUE];
         for (var i = 0; i < 4; i++) {
@@ -1790,6 +1886,7 @@ var TurretButton = /** @class */ (function (_super) {
         var _this = _super.call(this, scene) || this;
         _this.x = index * 60;
         _this.typeTurret = type;
+        _this.setScale(.8);
         var base_name;
         var canon_name;
         switch (type) {
@@ -1818,6 +1915,13 @@ var TurretButton = /** @class */ (function (_super) {
             _this.canon = new Phaser.GameObjects.Image(_this.scene, 0, 0, "texture_atlas_1", canon_name);
             _this.add(_this.canon);
         }
+        if (type === Anuto.GameConstants.TURRET_LASER) {
+            _this.base.y += 6;
+            _this.canon.y += 6;
+        }
+        var text = new Phaser.GameObjects.Text(_this.scene, 0, 40, "100", { fontFamily: "Rubik-Regular", fontSize: "26px", color: "#000000" });
+        text.setOrigin(.5);
+        _this.add(text);
         return _this;
     }
     TurretButton.prototype.onDownTurret = function () {
@@ -1949,10 +2053,14 @@ var HUD = /** @class */ (function (_super) {
         bck.fillStyle(0xFFFFFF);
         bck.fillRect(0, 0, GameConstants_1.GameConstants.GAME_WIDTH, 122);
         _this.add(bck);
-        _this.creditsLabel = new Phaser.GameObjects.Text(_this.scene, 10, 10, "Credits: " + BattleManager_1.BattleManager.anutoEngine.credits, { fontFamily: "Rubik-Light", fontSize: "22px", color: "#000000" });
+        bck = new Phaser.GameObjects.Graphics(_this.scene);
+        bck.fillStyle(0x000000);
+        bck.fillRect(0, 0, GameConstants_1.GameConstants.GAME_WIDTH, 35);
+        _this.add(bck);
+        _this.creditsLabel = new Phaser.GameObjects.Text(_this.scene, 4, 4, "Credits: " + BattleManager_1.BattleManager.anutoEngine.credits, { fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff" });
         _this.add(_this.creditsLabel);
         if (GameConstants_1.GameConstants.DEVELOPMENT) {
-            _this.ticksLabel = new Phaser.GameObjects.Text(_this.scene, 15, GameConstants_1.GameConstants.GAME_HEIGHT - 35, "ticks: " + BattleManager_1.BattleManager.anutoEngine.ticksCounter, { fontFamily: "Rubik-Light", fontSize: "25px", color: "#000000" });
+            _this.ticksLabel = new Phaser.GameObjects.Text(_this.scene, 15, GameConstants_1.GameConstants.GAME_HEIGHT - 35, "ticks: " + BattleManager_1.BattleManager.anutoEngine.ticksCounter, { fontFamily: "Rubik-Regular", fontSize: "25px", color: "#000000" });
             _this.add(_this.ticksLabel);
         }
         else {
@@ -2003,10 +2111,13 @@ var GameConstants_1 = __webpack_require__(/*! ../../../GameConstants */ "./src/G
 var BulletActor = /** @class */ (function (_super) {
     __extends(BulletActor, _super);
     function BulletActor(scene, anutoBullet) {
-        var _this = _super.call(this, scene, 0, 0, "texture_atlas_1", "bullet") || this;
+        var _this = _super.call(this, scene, 0, 0, "texture_atlas_1", "bullet_1_1") || this;
         _this.anutoBullet = anutoBullet;
+        _this.setScale(.75);
+        _this.visible = false;
         _this.x = _this.anutoBullet.x * GameConstants_1.GameConstants.CELLS_SIZE;
         _this.y = _this.anutoBullet.y * GameConstants_1.GameConstants.CELLS_SIZE;
+        _this.initialPosition = { x: _this.x, y: _this.y };
         return _this;
     }
     BulletActor.prototype.update = function (time, delta) {
@@ -2017,8 +2128,18 @@ var BulletActor = /** @class */ (function (_super) {
         else {
             smoothFactor = 1;
         }
-        this.x += (this.anutoBullet.x * GameConstants_1.GameConstants.CELLS_SIZE - this.x) * smoothFactor;
-        this.y += (this.anutoBullet.y * GameConstants_1.GameConstants.CELLS_SIZE - this.y) * smoothFactor;
+        var offX = (this.anutoBullet.x * GameConstants_1.GameConstants.CELLS_SIZE - this.x) * smoothFactor;
+        var offY = (this.anutoBullet.y * GameConstants_1.GameConstants.CELLS_SIZE - this.y) * smoothFactor;
+        this.x += offX;
+        this.y += offY;
+        this.rotation = Math.atan2(offY, offX) + Math.PI / 2;
+        if (!this.visible) {
+            var distX = this.initialPosition.x - this.x;
+            var distY = this.initialPosition.y - this.y;
+            if (Math.sqrt(distX * distX + distY * distY) > 40) {
+                this.visible = true;
+            }
+        }
     };
     return BulletActor;
 }(Phaser.GameObjects.Image));
@@ -2063,7 +2184,7 @@ var GluePool = /** @class */ (function (_super) {
         _this.y = _this.glueTurretActor.y;
         var range = _this.anutoGlue.range * GameConstants_1.GameConstants.CELLS_SIZE;
         var graphic = new Phaser.GameObjects.Graphics(_this.scene);
-        graphic.fillStyle(0x66CCFF, .5);
+        graphic.fillStyle(0x66CCFF, 1);
         graphic.fillCircle(0, 0, range);
         _this.add(graphic);
         _this.scene.tweens.add({
