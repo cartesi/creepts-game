@@ -15,7 +15,7 @@ module Anuto {
         private bulletsColliding: Bullet[];
         private mortarsImpacting: Mortar[];
         private consumedGlues: Glue[];
-        private teleportedEnemies: {enemy: Enemy, teleportDistance: number}[];
+        private teleportedEnemies: {enemy: Enemy, glueTurret: GlueTurret}[];
         private t: number;
         private eventDispatcher: EventDispatcher;
         private enemiesSpawner: EnemiesSpawner;
@@ -238,10 +238,19 @@ module Anuto {
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[enemy]]));
         }
 
-        public flagEnemiesToTeleport(enemies: Enemy[], teleportDistance: number): void {
+        public flagEnemyToTeleport(enemy: Enemy, glueTurret: GlueTurret): void {
 
-            for (let i = 0; i < enemies.length; i ++) {
-                this.teleportedEnemies.push({enemy: enemies[i], teleportDistance: teleportDistance});
+            this.teleportedEnemies.push({enemy: enemy, glueTurret: glueTurret});
+
+            // ¿hay balas que tenian asignadas a este enemigo?
+            for (let i = 0; i < this.bullets.length; i ++) {
+
+                const bullet = this.bullets[i];
+
+                if (bullet.assignedEnemy.id === enemy.id && this.bulletsColliding.indexOf(bullet) === -1) {
+                    bullet.assignedEnemy = null;
+                    this.bulletsColliding.push(bullet);
+                }
             }
         }
 
@@ -384,8 +393,8 @@ module Anuto {
                 const bullet = this.bulletsColliding[i];
                 const enemy = bullet.assignedEnemy;
 
-                if (enemy.life === 0) {
-                    // ya esta muerto
+                if (enemy === null || enemy.life === 0) {
+                    // ya esta muerto o el enemigo ha sido teletransportado
                     this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[], bullet]));
                 } else {
                     this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[enemy], bullet]));
@@ -447,18 +456,20 @@ module Anuto {
 
         private teleport(): void {
 
-            const teleportedEnemies: Enemy [] = [];
+            const teleportedEnemiesData: {enemy: Enemy, glueTurret: GlueTurret} [] = [];
             
             for (let i = 0; i < this.teleportedEnemies.length; i ++) {
-                
+
                 const enemy = this.teleportedEnemies[i].enemy;
-                enemy.teleport(this.teleportedEnemies[i].teleportDistance);
-                teleportedEnemies.push(enemy);
+                enemy.teleport(this.teleportedEnemies[i].glueTurret.teleportDistance);
+                teleportedEnemiesData.push({enemy: enemy, glueTurret: this.teleportedEnemies[i].glueTurret});
             }
 
             this.teleportedEnemies.length = 0;
 
-            this.eventDispatcher.dispatchEvent(new Event(Event.ENEMIES_TELEPORTED, [teleportedEnemies]));
+            if (teleportedEnemiesData.length) {
+                this.eventDispatcher.dispatchEvent(new Event(Event.ENEMIES_TELEPORTED, [teleportedEnemiesData]));
+            }
         }
 
         private spawnEnemies(): void {

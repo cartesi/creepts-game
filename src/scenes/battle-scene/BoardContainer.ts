@@ -90,6 +90,14 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         BattleManager.upgradeTower(0);
         BattleManager.upgradeTower(0);
+
+        this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 5, c: 5});
+
+        BattleManager.upgradeTower(1);
+        BattleManager.upgradeTower(1);
+
+
+        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 3, c: 7});
     }
 
     public update(time: number, delta: number): void {
@@ -290,12 +298,12 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    public teleportEnemy(anutoEnemy: Anuto.Enemy): void {
+    public teleportEnemy(anutoEnemy: Anuto.Enemy, anutoGlueTurret: Anuto.GlueTurret): void {
 
         let enemyActor: EnemyActor = this.getEnemyActorByID(anutoEnemy.id);
 
         if (enemyActor) {
-            enemyActor.teleport();
+            enemyActor.teleport(anutoGlueTurret);
         }
     }
 

@@ -61,7 +61,9 @@ declare module Anuto {
         affectedByGlue: boolean;
         glueIntensity: number;
         hasBeenTeleported: boolean;
+        teleporting: boolean;
         protected enemyData: any;
+        protected t: number;
         constructor(type: string, creationTick: number);
         destroy(): void;
         update(): void;
@@ -107,7 +109,7 @@ declare module Anuto {
         addGlue(glue: Glue, glueTurret: GlueTurret): void;
         addMortar(mortar: Mortar, launchTurret: LaunchTurret): void;
         addLaserRay(laserTurret: LaserTurret, enemy: Enemy): void;
-        flagEnemiesToTeleport(enemies: Enemy[], teleportDistance: number): void;
+        flagEnemyToTeleport(enemy: Enemy, glueTurret: GlueTurret): void;
         onEnemyReachedExit(enemy: Enemy): void;
         onEnemyKilled(enemy: Enemy): void;
         improveTurret(id: number): boolean;

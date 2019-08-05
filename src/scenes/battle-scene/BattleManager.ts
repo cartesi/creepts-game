@@ -186,13 +186,13 @@ export class BattleManager {
         }
     }
 
-    private static onEnemiesTeleported(anutoEnemies: Anuto.Enemy[]): void {
+    private static onEnemiesTeleported(teleportedEnemiesData: {enemy: Anuto.Enemy, glueTurret: Anuto.GlueTurret} []): void {
 
-        for (let i = 0; i < anutoEnemies.length; i ++) {
-            BoardContainer.currentInstance.teleportEnemy(anutoEnemies[i]);
+        for (let i = 0; i < teleportedEnemiesData.length; i++) {
+            BoardContainer.currentInstance.teleportEnemy(teleportedEnemiesData[i].enemy, teleportedEnemiesData[i].glueTurret);
         }
     }
-   
+
     private static onEnemyKilled(anutoEnemy: Anuto.Enemy): void {
 
         BoardContainer.currentInstance.onEnemyKilled(anutoEnemy);

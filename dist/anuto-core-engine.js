@@ -103,12 +103,13 @@ var Anuto;
             var enemiesAndSquaredDistances = [];
             var squaredRange = Anuto.MathUtils.fixNumber(this.range * this.range);
             for (var i = 0; i < Anuto.GameVars.enemies.length; i++) {
-                if (Anuto.GameVars.enemies[i].life > 0) {
-                    var dx = this.x - Anuto.GameVars.enemies[i].x;
-                    var dy = this.y - Anuto.GameVars.enemies[i].y;
+                var enemy = Anuto.GameVars.enemies[i];
+                if (enemy.life > 0 && Anuto.GameVars && !enemy.teleporting) {
+                    var dx = this.x - enemy.x;
+                    var dy = this.y - enemy.y;
                     var squaredDist = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
                     if (squaredRange >= squaredDist) {
-                        enemiesAndSquaredDistances.push({ enemy: Anuto.GameVars.enemies[i], squareDist: squaredDist });
+                        enemiesAndSquaredDistances.push({ enemy: enemy, squareDist: squaredDist });
                     }
                 }
             }
@@ -157,7 +158,9 @@ var Anuto;
             this.affectedByGlue = false;
             this.glueIntensity = 0;
             this.hasBeenTeleported = false;
+            this.teleporting = false;
             this.l = 0;
+            this.t = 0;
             var p = Anuto.Engine.getPathPosition(this.l);
             this.x = p.x;
             this.y = p.y;
@@ -166,6 +169,13 @@ var Anuto;
         Enemy.prototype.destroy = function () {
         };
         Enemy.prototype.update = function () {
+            if (this.teleporting) {
+                this.t++;
+                if (this.t === 8) {
+                    this.teleporting = false;
+                }
+                return;
+            }
             var speed = this.speed;
             if (this.affectedByGlue) {
                 speed = Anuto.MathUtils.fixNumber(this.speed / this.glueIntensity);
@@ -184,10 +194,15 @@ var Anuto;
         };
         Enemy.prototype.teleport = function (teleportDistance) {
             this.hasBeenTeleported = true;
+            this.teleporting = true;
+            this.t = 0;
             this.l -= teleportDistance;
             if (this.l < 0) {
                 this.l = 0;
             }
+            var p = Anuto.Engine.getPathPosition(this.l);
+            this.x = p.x;
+            this.y = p.y;
         };
         Enemy.prototype.glue = function (glueIntensity) {
             this.affectedByGlue = true;
@@ -362,9 +377,14 @@ var Anuto;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.LASER_SHOT, [laserTurret, enemy]));
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_HIT, [[enemy]]));
         };
-        Engine.prototype.flagEnemiesToTeleport = function (enemies, teleportDistance) {
-            for (var i = 0; i < enemies.length; i++) {
-                this.teleportedEnemies.push({ enemy: enemies[i], teleportDistance: teleportDistance });
+        Engine.prototype.flagEnemyToTeleport = function (enemy, glueTurret) {
+            this.teleportedEnemies.push({ enemy: enemy, glueTurret: glueTurret });
+            for (var i = 0; i < this.bullets.length; i++) {
+                var bullet = this.bullets[i];
+                if (bullet.assignedEnemy.id === enemy.id && this.bulletsColliding.indexOf(bullet) === -1) {
+                    bullet.assignedEnemy = null;
+                    this.bulletsColliding.push(bullet);
+                }
             }
         };
         Engine.prototype.onEnemyReachedExit = function (enemy) {
@@ -461,7 +481,7 @@ var Anuto;
             for (var i = 0; i < this.bulletsColliding.length; i++) {
                 var bullet = this.bulletsColliding[i];
                 var enemy = bullet.assignedEnemy;
-                if (enemy.life === 0) {
+                if (enemy === null || enemy.life === 0) {
                     this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_HIT, [[], bullet]));
                 }
                 else {
@@ -502,14 +522,16 @@ var Anuto;
             this.consumedGlues.length = 0;
         };
         Engine.prototype.teleport = function () {
-            var teleportedEnemies = [];
+            var teleportedEnemiesData = [];
             for (var i = 0; i < this.teleportedEnemies.length; i++) {
                 var enemy = this.teleportedEnemies[i].enemy;
-                enemy.teleport(this.teleportedEnemies[i].teleportDistance);
-                teleportedEnemies.push(enemy);
+                enemy.teleport(this.teleportedEnemies[i].glueTurret.teleportDistance);
+                teleportedEnemiesData.push({ enemy: enemy, glueTurret: this.teleportedEnemies[i].glueTurret });
             }
             this.teleportedEnemies.length = 0;
-            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMIES_TELEPORTED, [teleportedEnemies]));
+            if (teleportedEnemiesData.length) {
+                this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMIES_TELEPORTED, [teleportedEnemiesData]));
+            }
         };
         Engine.prototype.spawnEnemies = function () {
             var enemy = this.enemiesSpawner.getEnemy();
@@ -824,14 +846,15 @@ var Anuto;
                 case 2:
                     break;
                 case 3:
-                    var enemiesToTeleport = [];
-                    for (var i = 0; i < this.enemiesWithinRange.length; i++) {
-                        if (!this.enemiesWithinRange[i].hasBeenTeleported) {
-                            enemiesToTeleport.push(this.enemiesWithinRange[i]);
-                        }
+                    var enemy = void 0;
+                    if (this.fixedTarget) {
+                        enemy = this.followedEnemy || this.enemiesWithinRange[0];
                     }
-                    if (enemiesToTeleport.length > 0) {
-                        Anuto.Engine.currentInstance.flagEnemiesToTeleport(enemiesToTeleport, this.teleportDistance);
+                    else {
+                        enemy = this.enemiesWithinRange[0];
+                    }
+                    if (enemy.life > 0 && !enemy.hasBeenTeleported) {
+                        Anuto.Engine.currentInstance.flagEnemyToTeleport(enemy, this);
                     }
                     else {
                         this.readyToShoot = true;

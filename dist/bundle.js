@@ -722,9 +722,10 @@ var BattleManager = /** @class */ (function () {
             BoardContainer_1.BoardContainer.currentInstance.detonateMortar(anutoMortar);
         }
     };
-    BattleManager.onEnemiesTeleported = function (anutoEnemies) {
-        for (var i = 0; i < anutoEnemies.length; i++) {
-            BoardContainer_1.BoardContainer.currentInstance.teleportEnemy(anutoEnemies[i]);
+    BattleManager.onEnemiesTeleported = function (teleportedEnemiesData) {
+        for (var i = 0; i < teleportedEnemiesData.length; i++) {
+            console.log(teleportedEnemiesData[i].enemy, teleportedEnemiesData[i].glueTurret);
+            BoardContainer_1.BoardContainer.currentInstance.teleportEnemy(teleportedEnemiesData[i].enemy, teleportedEnemiesData[i].glueTurret);
         }
     };
     BattleManager.onEnemyKilled = function (anutoEnemy) {
@@ -959,7 +960,7 @@ var BoardContainer = /** @class */ (function (_super) {
     }
     BoardContainer.prototype.addInitialTowers = function () {
         // temporalmente añadimos una torre
-        this.addTurret(Anuto.GameConstants.TURRET_GLUE, { r: 2, c: 3 });
+        this.addTurret(Anuto.GameConstants.TURRET_GLUE, { r: 3, c: 3 });
         BattleManager_1.BattleManager.upgradeTower(0);
         BattleManager_1.BattleManager.upgradeTower(0);
     };
@@ -1111,10 +1112,10 @@ var BoardContainer = /** @class */ (function (_super) {
             this.deadEnemyActors.push(enemyActor);
         }
     };
-    BoardContainer.prototype.teleportEnemy = function (anutoEnemy) {
+    BoardContainer.prototype.teleportEnemy = function (anutoEnemy, anutoGlueTurret) {
         var enemyActor = this.getEnemyActorByID(anutoEnemy.id);
         if (enemyActor) {
-            enemyActor.teleport();
+            enemyActor.teleport(anutoGlueTurret);
         }
     };
     BoardContainer.prototype.removeBullet = function (anutoBullet) {
@@ -1364,6 +1365,9 @@ var EnemyActor = /** @class */ (function (_super) {
         return _this;
     }
     EnemyActor.prototype.update = function (time, delta) {
+        if (this.anutoEnemy.teleporting) {
+            return;
+        }
         var smoothFactor;
         if (GameConstants_1.GameConstants.INTERPOLATE_TRAJECTORIES) {
             smoothFactor = GameVars_1.GameVars.timeStepFactor === 4 ? .5 : .15;
@@ -1382,8 +1386,23 @@ var EnemyActor = /** @class */ (function (_super) {
     EnemyActor.prototype.hit = function () {
         // de momento nada
     };
-    EnemyActor.prototype.teleport = function () {
-        //
+    EnemyActor.prototype.teleport = function (anutoGlueTurret) {
+        var glueTurret_px = (anutoGlueTurret.position.c + .5) * GameConstants_1.GameConstants.CELLS_SIZE;
+        var glueTurret_py = (anutoGlueTurret.position.r + .5) * GameConstants_1.GameConstants.CELLS_SIZE;
+        this.scene.tweens.add({
+            targets: this,
+            x: glueTurret_px,
+            y: glueTurret_py,
+            scaleX: .15,
+            scaleY: .15,
+            ease: Phaser.Math.Easing.Cubic.Out,
+            duration: 500,
+            onComplete: function () {
+                this.scaleX = 1;
+                this.scaleY = 1;
+            },
+            onCompleteScope: this
+        });
     };
     EnemyActor.prototype.die = function () {
         this.lifeBar.visible = false;

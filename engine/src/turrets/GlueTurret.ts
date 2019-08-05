@@ -81,16 +81,16 @@ module Anuto {
                     break;
                 case 3:
 
-                    const enemiesToTeleport: Enemy[] = [];
+                    let enemy: Enemy;
 
-                    for (let i = 0; i < this.enemiesWithinRange.length; i++){
-                        if (!this.enemiesWithinRange[i].hasBeenTeleported) {
-                            enemiesToTeleport.push(this.enemiesWithinRange[i]);
-                        }
+                    if (this.fixedTarget) {
+                        enemy = this.followedEnemy || this.enemiesWithinRange[0];
+                    } else {
+                        enemy = this.enemiesWithinRange[0];
                     }
-
-                    if (enemiesToTeleport.length > 0) {
-                        Engine.currentInstance.flagEnemiesToTeleport(enemiesToTeleport, this.teleportDistance);
+                    
+                    if (enemy.life > 0 && !enemy.hasBeenTeleported) { 
+                        Engine.currentInstance.flagEnemyToTeleport(enemy, this);
                     } else {
                         this.readyToShoot = true;
                     }

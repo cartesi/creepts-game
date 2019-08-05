@@ -17,8 +17,10 @@ module Anuto {
         public affectedByGlue: boolean;
         public glueIntensity: number;
         public hasBeenTeleported: boolean;
+        public teleporting: boolean;
         
         protected enemyData: any;
+        protected t: number;
 
         constructor (type: string, creationTick: number) {
             
@@ -37,8 +39,10 @@ module Anuto {
             this.affectedByGlue = false;
             this.glueIntensity = 0;
             this.hasBeenTeleported = false;
+            this.teleporting = false;
 
             this.l = 0;
+            this.t = 0;
 
             const p = Engine.getPathPosition(this.l);
 
@@ -53,6 +57,16 @@ module Anuto {
         }
 
         public update(): void {
+
+            if (this.teleporting) {
+
+                this.t ++;
+
+                if (this.t === 8) {
+                    this.teleporting = false;
+                }
+                return;
+            }
 
             let speed = this.speed;
 
@@ -82,12 +96,19 @@ module Anuto {
         public teleport(teleportDistance: number): void {
 
             this.hasBeenTeleported = true;
-            
+            this.teleporting = true;
+            this.t = 0;
+
             this.l -= teleportDistance;
 
             if (this.l < 0) {
                 this.l = 0;
             }
+
+            const p = Engine.getPathPosition(this.l);
+
+            this.x = p.x;
+            this.y = p.y;
         }
 
         public glue(glueIntensity: number): void{
