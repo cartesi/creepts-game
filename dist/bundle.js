@@ -1949,10 +1949,10 @@ var HUD = /** @class */ (function (_super) {
         bck.fillStyle(0xFFFFFF);
         bck.fillRect(0, 0, GameConstants_1.GameConstants.GAME_WIDTH, 122);
         _this.add(bck);
-        _this.creditsLabel = new Phaser.GameObjects.Text(_this.scene, 10, 10, "Credits: " + BattleManager_1.BattleManager.anutoEngine.credits, { fontFamily: "Arial", fontSize: "22px", color: "#000000" });
+        _this.creditsLabel = new Phaser.GameObjects.Text(_this.scene, 10, 10, "Credits: " + BattleManager_1.BattleManager.anutoEngine.credits, { fontFamily: "Rubik-Light", fontSize: "22px", color: "#000000" });
         _this.add(_this.creditsLabel);
         if (GameConstants_1.GameConstants.DEVELOPMENT) {
-            _this.ticksLabel = new Phaser.GameObjects.Text(_this.scene, 15, GameConstants_1.GameConstants.GAME_HEIGHT - 35, "ticks: " + BattleManager_1.BattleManager.anutoEngine.ticksCounter, { fontFamily: "Arial", fontSize: "25px", color: "#000000" });
+            _this.ticksLabel = new Phaser.GameObjects.Text(_this.scene, 15, GameConstants_1.GameConstants.GAME_HEIGHT - 35, "ticks: " + BattleManager_1.BattleManager.anutoEngine.ticksCounter, { fontFamily: "Rubik-Light", fontSize: "25px", color: "#000000" });
             _this.add(_this.ticksLabel);
         }
         else {

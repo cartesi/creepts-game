@@ -31,9 +31,10 @@ export class BattleScene extends Phaser.Scene {
         this.gui = new GUI(this);
         this.add.existing(this.gui);
 
-        this.boardContainer.initialTurrets();
-
         // remove
+        // this.boardContainer.initialTurrets();
+
+        
     }
 
     public update(time: number, delta: number): void {

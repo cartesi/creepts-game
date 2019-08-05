@@ -30,6 +30,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     private mortarActors: MortarActor[];
 
     private rangeCircles: Phaser.GameObjects.Graphics[];
+    private glueCircles: Phaser.GameObjects.Graphics[];
 
     private turretMenu: TurretMenu;
 
@@ -59,6 +60,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.rangeCircles = [];
 
         this.gluePools = [];
+        this.glueCircles = [];
 
         this.board = new Board(this.scene);
         this.add(this.board);
@@ -253,8 +255,26 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         const gluePool = new GluePool(this.scene, glueTurretActor, anutoGlue);
         this.board.add(gluePool);
         this.board.sendActorBack(gluePool);
-
         this.gluePools.push(gluePool);
+
+        const glueCircle = new Phaser.GameObjects.Graphics(this.scene);
+        glueCircle.setPosition(glueTurretActor.x, glueTurretActor.y);
+        glueCircle.lineStyle(2, 0x66CCFF, 1);
+        glueCircle.strokeCircle(0, 0, anutoGlue.range * GameConstants.CELLS_SIZE);
+        glueCircle.setScale(0);
+        glueCircle.alpha = 0;
+        glueCircle.name = anutoGlue.id.toString();
+        this.circlesContainer.add(glueCircle);
+        this.glueCircles.push(glueCircle);
+
+        this.scene.tweens.add({
+            targets: glueCircle,
+            scaleX: 1,
+            scaleY: 1,
+            alpha: 1,
+            ease: Phaser.Math.Easing.Cubic.Out,
+            duration: GameVars.timeStepFactor === 4 ? 200 : 600,
+        });
     }
 
     public onGlueConsumed(anutoGlue: Anuto.Glue): void {
@@ -267,6 +287,19 @@ export class BoardContainer extends Phaser.GameObjects.Container {
                 glue = this.gluePools[i];
                 this.gluePools.splice(i, 1);
                 glue.destroy();
+
+                let glueCircle = this.glueCircles[i];
+                this.glueCircles.splice(i, 1);
+                this.scene.tweens.add({
+                    targets: glueCircle,
+                    alpha: 0,
+                    ease: Phaser.Math.Easing.Cubic.Out,
+                    duration: GameVars.timeStepFactor === 4 ? 200 : 600,
+                    onComplete: () => {
+                        glueCircle.destroy();
+                    },
+                    onCompleteScope: this
+                });
                 break;
             }
         }

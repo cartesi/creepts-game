@@ -307,7 +307,7 @@ declare module Anuto {
     class LaunchTurret extends Turret {
         private static deviationRadius;
         private static deviationAngle;
-        private explosionRange;
+        explosionRange: number;
         constructor(p: {
             r: number;
             c: number;

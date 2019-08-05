@@ -37,7 +37,7 @@ module Anuto {
         }
 
         protected shoot(): void {
-
+            
             super.shoot();
 
             const glue = new Glue(this.position, this.intensity, this.durationTicks, this.range);

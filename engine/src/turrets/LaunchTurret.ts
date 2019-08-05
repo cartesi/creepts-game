@@ -6,7 +6,7 @@ module Anuto {
         private static deviationRadius = 0; // puede ser 0, .25. .5 ó .75   1 de cada 4 veces disparara al enemigo en el centro
         private static deviationAngle = 0; // se va incrementando de 45 en 45 grados
 
-        private explosionRange: number;
+        public explosionRange: number;
 
         constructor (p: {r: number, c: number}) {
             
