@@ -22,6 +22,8 @@ export class PreloadScene extends Phaser.Scene {
 
         GameManager.setCurrentScene(this);
 
+        this.scene.setVisible(false);
+
         GameManager.onGameAssetsLoaded();
     }
     

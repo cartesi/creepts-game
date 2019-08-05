@@ -1,3 +1,4 @@
+import { BattleScene } from './BattleScene';
 import { GameConstants } from "../../GameConstants";
 import { BoardContainer } from "./BoardContainer";
 import { GameVars } from "../../GameVars";
@@ -87,6 +88,17 @@ export class BattleManager {
 
         BattleManager.anutoEngine.newWave(waveConfig);
     }
+
+    public static createTurret(type: string): void {
+
+        BattleScene.currentInstance.createTurret(type);
+    }
+
+    public static addTurretToScene(type: string, position: {r: number, c: number}): void {
+
+        BattleScene.currentInstance.addTurret(type, position);
+    }
+
 
     public static addTurret(type: string, position: {r: number, c: number}): Anuto.Turret {
 

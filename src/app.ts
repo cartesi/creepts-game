@@ -15,11 +15,9 @@ window.onload = () => {
         version: GameConstants.VERSION,
         type: Phaser.AUTO,
         backgroundColor: "#555555",
-        width: GameConstants.GAME_WIDTH,
-        height: GameConstants.GAME_HEIGHT,
-
         scale: {
             mode: Phaser.Scale.FIT,
+            parent: "content",
             width: GameConstants.GAME_WIDTH,
             height: GameConstants.GAME_HEIGHT
         },

@@ -36,7 +36,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         BoardContainer.currentInstance = this;
 
         this.x = GameConstants.GAME_WIDTH / 2;
-        this.y = GameConstants.GAME_HEIGHT / 2 + GameConstants.CELLS_SIZE * .75 * GameVars.scaleY;
+        this.y = GameConstants.GAME_HEIGHT / 2 + GameConstants.CELLS_SIZE * GameVars.scaleY;
 
         this.scaleX = GameVars.scaleCorrectionFactor;
         this.scaleY = GameVars.scaleCorrectionFactor * GameVars.scaleY;
@@ -58,11 +58,11 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.createAnimations();
 
         // temporalmente añadimos una torre
-        this.addTower(Anuto.GameConstants.TURRET_LAUNCH, {r: 3, c: 3});
-        this.addTower(Anuto.GameConstants.TURRET_LASER, {r: 6, c: 2});
-        this.addTower(Anuto.GameConstants.TURRET_GLUE, {r: 8, c: 5});
-        this.addTower(Anuto.GameConstants.TURRET_GLUE, {r: 5, c: 5});
-        this.addTower(Anuto.GameConstants.TURRET_PROJECTILE, {r: 11, c: 2});
+        // this.addTurret(Anuto.GameConstants.TURRET_LAUNCH, {r: 3, c: 3});
+        // this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 6, c: 2});
+        // this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 8, c: 5});
+        // this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 5, c: 5});
+        // this.addTurret(Anuto.GameConstants.TURRET_PROJECTILE, {r: 11, c: 2});
     }
 
     public update(time: number, delta: number): void {
@@ -131,7 +131,25 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    public addTower(type: string, position: {r: number, c: number}): void {
+    public addTurret(type: string, position: {r: number, c: number}): void {
+
+        if ( position.r < 0 || position.c < 0 || position.r >= GameConstants.BOARD_SIZE.r || position.c >= GameConstants.BOARD_SIZE.c) {
+            return;
+        }
+
+        // mirar si estamos poniendo la torreta encima del camino
+        for (let i = 0; i < GameVars.enemiesPathCells.length; i++) {
+            if (position.c === GameVars.enemiesPathCells[i].c && position.r === GameVars.enemiesPathCells[i].r) {
+                return;
+            }
+        }
+
+        // mirar si ya hay una torreta
+        for (let i = 0; i < this.turretActors.length; i++) {
+            if (position.c === this.turretActors[i].getInfo().position.c && position.r === this.turretActors[i].getInfo().position.r) {
+                return;
+            }
+        }
 
         let turret: TurretActor;
 

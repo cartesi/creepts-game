@@ -1,16 +1,26 @@
-import { Button } from "../../utils/Utils";
-import { BattleManager } from "./BattleManager";
-import { GameVars } from "../../GameVars";
-import { GameManager } from "../../GameManager";
+import { TurretSelected } from './TurretSelected';
+import { BuyTurrets } from './BuyTurrets';
+import { Button } from "../../../utils/Utils";
+import { BattleManager } from "../BattleManager";
+import { GameVars } from "../../../GameVars";
+import { GameManager } from "../../../GameManager";
 
 export class GUI extends Phaser.GameObjects.Container {
 
     private timeStepMultiplierButton1x: Button;
     private timeStepMultiplierButton4x: Button;
 
+    private turretSelected: TurretSelected;
+
     constructor(scene: Phaser.Scene) {
 
         super(scene);
+
+        let buyTurrets = new BuyTurrets(this.scene);
+        this.add(buyTurrets);
+
+        this.scaleX = GameVars.scaleCorrectionFactor;
+        this.scaleY = GameVars.scaleCorrectionFactor * GameVars.scaleY;
 
         this.timeStepMultiplierButton4x = new Button(this.scene, 480, 35 * GameVars.scaleY, "texture_atlas_1", "btn_4x_off", "btn_4x_on", true);
         this.timeStepMultiplierButton4x.onDown(this.onClick4x, this);
@@ -37,6 +47,18 @@ export class GUI extends Phaser.GameObjects.Container {
         pauseButton.onDown(this.onClickPauseWave, this);
         pauseButton.scaleY = GameVars.scaleY;
         this.add(pauseButton);
+    }
+
+    public createTurret(type: string): void {
+
+        this.turretSelected = new TurretSelected(this.scene, type, this);
+        this.add(this.turretSelected);
+    }
+
+    public removeTurret(): void {
+
+        this.remove(this.turretSelected);
+        this.turretSelected = null;
     }
 
     private onClick4x(): void {

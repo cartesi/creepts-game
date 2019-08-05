@@ -21,6 +21,8 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
         this.p = position;
         this.name = type;
+
+        this.setScale(.85);
         
         this.anutoTurret = BattleManager.addTurret(type, this.p);
         this.id = this.anutoTurret.id;
@@ -61,6 +63,11 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
     public shoot(): void {
         //
+    }
+
+    public getInfo(): Anuto.Turret {
+
+        return this.anutoTurret;
     }
 
     protected onDownTurret(): void {

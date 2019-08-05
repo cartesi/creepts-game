@@ -17,6 +17,8 @@ export class BootScene extends Phaser.Scene {
 
         GameVars.scaleY = 1;
 
+        this.scene.setVisible(false);
+
         GameManager.init();
        
     }

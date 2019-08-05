@@ -1,5 +1,5 @@
-import { GUI } from "./GUI";
-import { HUD } from "./HUD";
+import { GUI } from "./gui/GUI";
+import { HUD } from "./hud/HUD";
 import { GameConstants } from "../../GameConstants";
 import { BattleManager } from "./BattleManager";
 import { BoardContainer } from "./BoardContainer";
@@ -15,15 +15,12 @@ export class BattleScene extends Phaser.Scene {
     constructor() {
 
         super("BattleScene");
+        BattleScene.currentInstance = this;
     }
 
     public create(): void {
 
         BattleManager.init();
-
-        // const tmpBackground = this.add.graphics(this);
-        // tmpBackground.fillStyle(0xFFFFFF);
-        // tmpBackground.fillRect(0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT);
 
         this.boardContainer = new BoardContainer(this);
         this.add.existing(this.boardContainer);
@@ -46,5 +43,15 @@ export class BattleScene extends Phaser.Scene {
     public onWaveOver(): void {
 
         this.hud.onWaveOver();
+    }
+
+    public createTurret(type: string): void {
+
+        this.gui.createTurret(type);
+    }
+
+    public addTurret(type, position): void {
+
+        this.boardContainer.addTurret(type, position);
     }
 }
