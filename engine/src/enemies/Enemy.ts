@@ -16,6 +16,7 @@ module Anuto {
         public l: number;
         public affectedByGlue: boolean;
         public glueIntensity: number;
+        public hasBeenTeleported: boolean;
         
         protected enemyData: any;
 
@@ -35,6 +36,7 @@ module Anuto {
 
             this.affectedByGlue = false;
             this.glueIntensity = 0;
+            this.hasBeenTeleported = false;
 
             this.l = 0;
 
@@ -74,6 +76,17 @@ module Anuto {
 
                 this.x = p.x;
                 this.y = p.y;
+            }
+        }
+
+        public teleport(teleportDistance: number): void {
+
+            this.hasBeenTeleported = true;
+            
+            this.l -= teleportDistance;
+
+            if (this.l < 0) {
+                this.l = 0;
             }
         }
 

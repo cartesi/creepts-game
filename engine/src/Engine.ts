@@ -15,6 +15,7 @@ module Anuto {
         private bulletsColliding: Bullet[];
         private mortarsImpacting: Mortar[];
         private consumedGlues: Glue[];
+        private teleportedEnemies: {enemy: Enemy, teleportDistance: number}[];
         private t: number;
         private eventDispatcher: EventDispatcher;
         private enemiesSpawner: EnemiesSpawner;
@@ -78,7 +79,6 @@ module Anuto {
             GameVars.ticksCounter = 0;
 
             this.turrets = [];
-            this.glues = [];
         }
 
         public update(): void {
@@ -99,6 +99,8 @@ module Anuto {
             }
 
             this.removeProjectilesAndAccountDamage();
+
+            this.teleport();
 
             this.checkCollisions();
             this.spawnEnemies();
@@ -147,10 +149,12 @@ module Anuto {
             GameVars.enemies = [];
             this.bullets = [];
             this.mortars = [];
+            this.glues = [];
 
             this.bulletsColliding = [];
             this.mortarsImpacting = [];
             this.consumedGlues = [];
+            this.teleportedEnemies = [];
         }
 
         public removeEnemy(enemy: Enemy): void {
@@ -234,6 +238,13 @@ module Anuto {
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[enemy]]));
         }
 
+        public flagEnemiesToTeleport(enemies: Enemy[], teleportDistance: number): void {
+
+            for (let i = 0; i < enemies.length; i ++) {
+                this.teleportedEnemies.push({enemy: enemies[i], teleportDistance: teleportDistance});
+            }
+        }
+
         public onEnemyReachedExit(enemy: Enemy): void {
 
             const i = GameVars.enemies.indexOf(enemy);
@@ -262,24 +273,34 @@ module Anuto {
             }
         }
 
-        public improveTurret(id: number): void {
+        public improveTurret(id: number): boolean {
+
+            let success = false;
 
             const turret = this.getTurretById(id);
 
             if (turret.level < 10 && GameVars.credits >= turret.priceImprovement) {
                 GameVars.credits -= turret.priceImprovement;
                 turret.improve();
+                success = true;
             }
+
+            return success;
         }
 
-        public upgradeTurret(id: number) {
+        public upgradeTurret(id: number): boolean {
+
+            let success = false;
 
             const turret = this.getTurretById(id);
 
-            if (turret.grade < 3 && turret.priceImprovement) {
-                GameVars.credits -= turret.priceImprovement;
+            if (turret.grade < 3 && GameVars.credits >= turret.priceUpgrade) {
+                GameVars.credits -= turret.priceUpgrade;
                 turret.upgrade();
+                success = true;
             }
+
+            return success;
         }
 
         public addEventListener(type: string, listenerFunction: Function, scope: any): void {
@@ -422,6 +443,22 @@ module Anuto {
             }  
 
             this.consumedGlues.length = 0;
+        }
+
+        private teleport(): void {
+
+            const teleportedEnemies: Enemy [] = [];
+            
+            for (let i = 0; i < this.teleportedEnemies.length; i ++) {
+                
+                const enemy = this.teleportedEnemies[i].enemy;
+                enemy.teleport(this.teleportedEnemies[i].teleportDistance);
+                teleportedEnemies.push(enemy);
+            }
+
+            this.teleportedEnemies.length = 0;
+
+            this.eventDispatcher.dispatchEvent(new Event(Event.ENEMIES_TELEPORTED, [teleportedEnemies]));
         }
 
         private spawnEnemies(): void {

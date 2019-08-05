@@ -86,7 +86,10 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     public addInitialTowers(): void {
 
         // temporalmente añadimos una torre
-        this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 2, c: 2});
+        this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 3, c: 3});
+
+        BattleManager.upgradeTower(0);
+        BattleManager.upgradeTower(0);
     }
 
     public update(time: number, delta: number): void {
@@ -287,6 +290,15 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
+    public teleportEnemy(anutoEnemy: Anuto.Enemy): void {
+
+        let enemyActor: EnemyActor = this.getEnemyActorByID(anutoEnemy.id);
+
+        if (enemyActor) {
+            enemyActor.teleport();
+        }
+    }
+
     public removeBullet(anutoBullet: Anuto.Bullet): void {
 
         let bulletActor: BulletActor = null;
@@ -330,10 +342,12 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         mortarActor.destroy();
     }
     
-    public upgradeTower(id: number): void {
-        //
+    public upgradeTurret(id: number): void {
+        
+        const turretActor = this.getTurretActorByID(id);
+        turretActor.upgrade();
     }
-
+    
     public getTurretActorByID(id: number): TurretActor {
 
         let turretActor = null;

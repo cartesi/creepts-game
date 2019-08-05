@@ -1,4 +1,4 @@
-import { BoardContainer } from './../BoardContainer';
+import { BoardContainer } from "./../BoardContainer";
 import { GameConstants } from "../../../GameConstants";
 import { BattleManager } from "../BattleManager";
 
@@ -55,7 +55,11 @@ export class TurretActor extends Phaser.GameObjects.Container {
         }
     }
 
-    public shoot(): void {
+    public upgrade(): void {
+        //
+    }
+
+    protected shoot(): void {
         //
     }
 

@@ -43,6 +43,8 @@ export class BattleManager {
         BattleManager.anutoEngine.addEventListener(Anuto.Event.MORTAR_SHOT, BattleManager.onMortarShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.GLUE_SHOT, BattleManager.onGlueShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.GLUE_CONSUMED, BattleManager.onGlueConsumed, BattleManager);
+
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMIES_TELEPORTED, BattleManager.onEnemiesTeleported, BattleManager);
     }
 
     public static update(time: number, delta: number): void {
@@ -96,7 +98,7 @@ export class BattleManager {
 
     public static addTurretToScene(type: string, position: {r: number, c: number}): void {
 
-        BattleScene.currentInstance.addTurret(type, position);
+        BoardContainer.currentInstance.addTurret(type, position);
     }
 
     public static addTurret(type: string, position: {r: number, c: number}): Anuto.Turret {
@@ -111,22 +113,27 @@ export class BattleManager {
 
     public static upgradeTower(id: number): void {
         
+        // hay creditos suficientes ?
+        const sucess = BattleManager.anutoEngine.upgradeTurret(id);
+
+        if (sucess) {
+            BoardContainer.currentInstance.upgradeTurret(id);
+        }
     }
 
     public static createRangeCircle(range: number, x: number, y: number): Phaser.GameObjects.Graphics {
 
-        return BattleScene.currentInstance.createRangeCircle(range, x, y);
-
+        return BoardContainer.currentInstance.createRangeCircle(range, x, y);
     }
 
     public static hideRangeCircles(): void {
 
-        BattleScene.currentInstance.hideRangeCircles();
+        BoardContainer.currentInstance.hideRangeCircles();
     }
 
     public static showTurretMenu(anutoTurret: Anuto.Turret): void {
 
-        BattleScene.currentInstance.showTurretMenu(anutoTurret);
+        BoardContainer.currentInstance.showTurretMenu(anutoTurret);
     }
 
     private static onEnemySpawned(anutoEnemy: Anuto.Enemy, p: {r: number, c: number} ): void {
@@ -176,6 +183,13 @@ export class BattleManager {
 
         if (anutoMortar) {
             BoardContainer.currentInstance.detonateMortar(anutoMortar);
+        }
+    }
+
+    private static onEnemiesTeleported(anutoEnemies: Anuto.Enemy[]): void {
+
+        for (let i = 0; i < anutoEnemies.length; i ++) {
+            BoardContainer.currentInstance.teleportEnemy(anutoEnemies[i]);
         }
     }
    

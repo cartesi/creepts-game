@@ -54,6 +54,10 @@ export class EnemyActor extends Phaser.GameObjects.Container {
         // de momento nada
     }
 
+    public teleport(): void {
+        //
+    }
+
     public die(): void {
 
         this.lifeBar.visible = false;

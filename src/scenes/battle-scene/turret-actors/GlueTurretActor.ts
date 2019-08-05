@@ -1,5 +1,4 @@
 import { TurretActor } from "./TurretActor";
-import { GameConstants } from "../../../GameConstants";
 
 export class GlueTurretActor extends TurretActor {
 
@@ -14,12 +13,24 @@ export class GlueTurretActor extends TurretActor {
     }
 
     public update(time: number, delta: number): void {
-        
         //
     }
 
-    public shootGlue(): void {
+    public upgrade(): void {
 
+       switch (this.anutoTurret.grade) {
+
+            case 2:
+                this.base.setFrame("base_3_2");
+                break;
+            case 3: 
+                this.base.setFrame("base_3_3");
+                break;
+            default:
+       }
+    }
+
+    public shootGlue(): void {
         // 
     }
 }

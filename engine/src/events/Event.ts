@@ -12,6 +12,7 @@ module Anuto {
         public static readonly MORTAR_SHOT = "mortar shot";
         public static readonly GLUE_SHOT = "glue shot";
         public static readonly GLUE_CONSUMED = "glue consumed";
+        public static readonly ENEMIES_TELEPORTED = "enemies teleported";
 
         private type: string;
         private params: any;
