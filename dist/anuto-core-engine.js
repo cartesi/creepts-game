@@ -777,6 +777,10 @@ var Anuto;
         function LaserTurret(p) {
             var _this = _super.call(this, Anuto.GameConstants.TURRET_LASER, p) || this;
             _this.calculateTurretParameters();
+            while (_this.level < 10) {
+                _this.level++;
+                _this.calculateTurretParameters();
+            }
             return _this;
         }
         LaserTurret.prototype.update = function () {
@@ -796,15 +800,16 @@ var Anuto;
             _super.prototype.update.call(this);
         };
         LaserTurret.prototype.calculateTurretParameters = function () {
-            this.damage = Math.floor(1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 66);
-            this.reload = Math.round(((-1 / 18) * this.level + 19 / 18) * 10) / 10;
-            this.range = Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
-            this.priceImprovement = Math.floor(29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+            this.damage = Math.floor(271 / 630 * Math.pow(this.level, 3) + 283 / 315 * Math.pow(this.level, 2) + 2437 / 70 * this.level + 1357 / 7);
+            this.reload = Math.round((-.1 * this.level + 1.6) * 10) / 10;
+            this.range = Math.round((.04 * this.level + 2.96) * 10) / 10;
+            this.priceImprovement = Math.floor(9 / 80 * Math.pow(this.level, 3) + 17 / 120 * Math.pow(this.level, 2) + 2153 / 240 * this.level + 1631 / 40);
             if (this.level === 1) {
                 this.value = Anuto.GameVars.turretData[this.type].price;
             }
             else {
             }
+            console.log(this.level, this.priceImprovement);
             _super.prototype.calculateTurretParameters.call(this);
         };
         LaserTurret.prototype.shoot = function () {
