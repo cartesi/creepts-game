@@ -48,10 +48,27 @@ export class BattleScene extends Phaser.Scene {
     public createTurret(type: string): void {
 
         this.gui.createTurret(type);
+        this.boardContainer.hideTurretMenu();
+        this.hideRangeCircles();
     }
 
     public addTurret(type, position): void {
 
         this.boardContainer.addTurret(type, position);
+    }
+
+    public createRangeCircle(range: number, x: number, y: number): Phaser.GameObjects.Graphics {
+
+        return this.boardContainer.createRangeCircle(range, x, y);
+    }
+
+    public hideRangeCircles(): void {
+
+        this.boardContainer.hideRangeCircles();
+    }
+
+    public showTurretMenu(anutoTurret: Anuto.Turret): void {
+
+        this.boardContainer.showTurretMenu(anutoTurret);
     }
 }

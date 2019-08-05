@@ -33,12 +33,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
         // este valor habra q sacarlo de la imagen del cañón
         this.canonLength = 40;
 
-        if (GameConstants.SHOW_DEBUG_GEOMETRY) {
-            this.rangeCircle = new Phaser.GameObjects.Graphics(this.scene);
-            this.rangeCircle.lineStyle(2, 0x00FF00);
-            this.rangeCircle.strokeCircle(0, 0, this.anutoTurret.range * GameConstants.CELLS_SIZE);
-            this.add(this.rangeCircle);
-        }
+        this.rangeCircle = BattleManager.createRangeCircle(this.anutoTurret.range * GameConstants.CELLS_SIZE, this.x, this.y);
     }
 
     public update(time: number, delta: number): void {
@@ -71,6 +66,12 @@ export class TurretActor extends Phaser.GameObjects.Container {
     }
 
     protected onDownTurret(): void {
-        //
+
+        if (!this.rangeCircle.visible) {
+            BattleManager.hideRangeCircles();
+            this.rangeCircle.visible = true;
+        } else {
+            BattleManager.showTurretMenu(this.anutoTurret);
+        }
     }
 }

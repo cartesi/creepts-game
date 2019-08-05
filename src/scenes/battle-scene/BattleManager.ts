@@ -99,7 +99,6 @@ export class BattleManager {
         BattleScene.currentInstance.addTurret(type, position);
     }
 
-
     public static addTurret(type: string, position: {r: number, c: number}): Anuto.Turret {
 
         return BattleManager.anutoEngine.addTurret(type, position);
@@ -108,6 +107,22 @@ export class BattleManager {
     public static improveTurret(id: number): void {
 
         BattleManager.anutoEngine.improveTurret(id);
+    }
+
+    public static createRangeCircle(range: number, x: number, y: number): Phaser.GameObjects.Graphics {
+
+        return BattleScene.currentInstance.createRangeCircle(range, x, y);
+
+    }
+
+    public static hideRangeCircles(): void {
+
+        BattleScene.currentInstance.hideRangeCircles();
+    }
+
+    public static showTurretMenu(anutoTurret: Anuto.Turret): void {
+
+        BattleScene.currentInstance.showTurretMenu(anutoTurret);
     }
 
     private static onEnemySpawned(anutoEnemy: Anuto.Enemy, p: {r: number, c: number} ): void {

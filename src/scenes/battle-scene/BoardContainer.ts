@@ -1,3 +1,4 @@
+import { TurretMenu } from './TurretMenu';
 import { GluePool } from './turret-actors/GluePool';
 import { EnemyActor } from "./enemy-actors/EnemyActor";
 import { TurretActor } from "./turret-actors/TurretActor";
@@ -27,6 +28,14 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     private bulletActors: BulletActor[];
     private mortarActors: MortarActor[];
 
+    private rangeCircles: Phaser.GameObjects.Graphics[];
+
+    private turretMenu: TurretMenu;
+
+    private pointerContainer: Phaser.GameObjects.Container;
+    private circlesContainer: Phaser.GameObjects.Container;
+    private actorsContainer: Phaser.GameObjects.Container;
+
     private gluePools: GluePool[];
 
     constructor(scene: Phaser.Scene) {
@@ -45,6 +54,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.turretActors = [];
         this.bulletActors = [];
         this.mortarActors = [];
+        this.rangeCircles = [];
 
         this.gluePools = [];
 
@@ -54,6 +64,18 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         if (GameConstants.SHOW_DEBUG_GEOMETRY) {
             this.drawDebugGeometry();
         }
+
+        this.pointerContainer = new Phaser.GameObjects.Container(this.scene);
+        this.board.add(this.pointerContainer);
+
+        this.pointerContainer.setInteractive(new Phaser.Geom.Rectangle(0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT), Phaser.Geom.Rectangle.Contains);
+        this.pointerContainer.on("pointerdown", () => { this.onPointerDown(); });
+
+        this.actorsContainer = new Phaser.GameObjects.Container(this.scene);
+        this.board.add(this.actorsContainer);
+
+        this.circlesContainer = new Phaser.GameObjects.Container(this.scene);
+        this.board.add(this.circlesContainer);
 
         this.createAnimations();
 
@@ -109,7 +131,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
         
         if (enemyActor) {
-            this.board.add(enemyActor);
+            this.actorsContainer.add(enemyActor);
             this.enemyActors.push(enemyActor);
         }
     }
@@ -170,7 +192,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
             default:
         }
         
-        this.board.add(turret);
+        this.actorsContainer.add(turret);
 
         this.turretActors.push(turret);
     }
@@ -194,7 +216,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         const enemyActor = this.getEnemyActorByID(anutoEnemy.id);
 
         const laserBeam = new LaserBeam(this.scene, laserTurretActor, enemyActor);
-        this.board.add(laserBeam);
+        this.actorsContainer.add(laserBeam);
     }
 
     public addMortar(anutoMortar: Anuto.Mortar, anutoLaunchTurret: Anuto.LaunchTurret): void {
@@ -203,7 +225,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         launchTurretActor.shootMortar();
 
         const mortar = new MortarActor(this.scene, anutoMortar, launchTurretActor);
-        this.board.add(mortar);
+        this.actorsContainer.add(mortar);
 
         this.mortarActors.push(mortar);
     }
@@ -333,6 +355,43 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         return enemy;
     }
 
+    public createRangeCircle(range: number, x: number, y: number): Phaser.GameObjects.Graphics {
+
+        let rangeCircle = new Phaser.GameObjects.Graphics(this.scene);
+        rangeCircle.setPosition(x, y);
+        rangeCircle.lineStyle(2, 0x00FF00);
+        rangeCircle.strokeCircle(0, 0, range);
+        rangeCircle.visible = false;
+        this.circlesContainer.add(rangeCircle);
+
+        this.rangeCircles.push(rangeCircle);
+
+        return rangeCircle;
+    }
+
+    public hideRangeCircles(): void {
+
+        for (let i = 0; i < this.rangeCircles.length; i ++) {
+            this.rangeCircles[i].visible = false;
+        }
+    }
+
+    public showTurretMenu(anutoTurret: Anuto.Turret): void {
+
+        if (!this.turretMenu) {
+            this.turretMenu = new TurretMenu(this.scene, anutoTurret);
+            this.add(this.turretMenu);
+        }
+    }
+
+    public hideTurretMenu(): void {
+
+        if (this.turretMenu) {
+            this.remove(this.turretMenu);
+            this.turretMenu = null;
+        }
+    }
+
     private drawDebugGeometry(): void {
         
         const path = new Phaser.GameObjects.Graphics(this.scene);
@@ -355,6 +414,12 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
 
         this.board.add(path);
+    }
+
+    private onPointerDown(): void {
+
+        this.hideRangeCircles();
+        this.hideTurretMenu();
     }
 
     private createAnimations(): void {
