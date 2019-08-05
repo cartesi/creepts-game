@@ -55,7 +55,14 @@ module Anuto {
                 enemy = this.enemiesWithinRange[0];
             }
             
-            Engine.currentInstance.addLaserRay(this, enemy);
+            if (enemy.life > 0) { 
+                // if (this.id === 3) {
+                //     console.log("rayo disparado:", GameVars.ticksCounter);
+                // }
+                Engine.currentInstance.addLaserRay(this, enemy);
+            } else {
+                this.readyToShoot = true;
+            }
         }
     }
 }

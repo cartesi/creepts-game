@@ -83,11 +83,12 @@ module Anuto {
             this.glueIntensity = glueIntensity;
         }
 
-        public hit(damage: number): void {
+        public hit(damage: number, bullet?: Bullet, mortar?: Mortar, laserTurret?: LaserTurret): void {
             
             this.life -= damage;
 
             if (this.life <= 0) {
+
                 this.life = 0;
                 Engine.currentInstance.onEnemyKilled(this);
             }

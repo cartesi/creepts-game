@@ -8,6 +8,8 @@ export class LaserBeam extends Phaser.GameObjects.Graphics {
     private enemyActor: EnemyActor;
     private f: number;
     private framesDuration: number;
+    private impact_x: number;
+    private impact_y: number;
 
     constructor(scene: Phaser.Scene, laserTurretActor: LaserTurretActor, enemyActor: EnemyActor) {
 
@@ -19,6 +21,9 @@ export class LaserBeam extends Phaser.GameObjects.Graphics {
         this.f = 0;
         this.framesDuration = GameVars.timeStepFactor === 1 ? 24 : 6;
 
+        this.impact_x = this.enemyActor.x;
+        this.impact_y = this.enemyActor.y;
+
         // HAY Q HACER ESTO PQ EL METODO UPDATE NO SE UTILIZA DE MANERA AUTOMATICA
         this.scene.sys.updateList.add(this);
     }
@@ -27,13 +32,15 @@ export class LaserBeam extends Phaser.GameObjects.Graphics {
 
         this.clear();
 
-        if (!this.enemyActor) {
-            return;
-        }
-        
         if (this.f ++ === this.framesDuration) {
             this.destroy();
+            return;
         }
+
+        if (this.enemyActor) {
+            this.impact_x = this.enemyActor.x;
+            this.impact_y = this.enemyActor.y;
+        } 
         
         const emmission_x = this.laserTurretActor.x + this.laserTurretActor.canonLength * Math.cos(this.laserTurretActor.canon.rotation - Math.PI / 2);
         const emmission_y = this.laserTurretActor.y + this.laserTurretActor.canonLength * Math.sin(this.laserTurretActor.canon.rotation - Math.PI / 2);
@@ -46,21 +53,21 @@ export class LaserBeam extends Phaser.GameObjects.Graphics {
         let alpha3 =  this.f % 2 === 0 ? .6 : .8;
 
         this.fillStyle(0xFF0000, alpha1);
-        this.fillCircle( this.enemyActor.x, this.enemyActor.y, r1);
+        this.fillCircle(this.impact_x,  this.impact_y, r1);
 
         this.fillStyle(0xFF0000, alpha2);
-        this.fillCircle( this.enemyActor.x, this.enemyActor.y, r2);
+        this.fillCircle( this.impact_x,  this.impact_y, r2);
 
         this.lineStyle(r1, 0xFF0000, alpha1);
-        this.lineBetween(emmission_x, emmission_y, this.enemyActor.x, this.enemyActor.y);
+        this.lineBetween(emmission_x, emmission_y, this.impact_x,  this.impact_y);
         this.stroke();
 
         this.lineStyle(r1 * .5, 0xFF0000, alpha2);
-        this.lineBetween(emmission_x, emmission_y, this.enemyActor.x, this.enemyActor.y);
+        this.lineBetween(emmission_x, emmission_y, this.impact_x,  this.impact_y);
         this.stroke();
 
         this.lineStyle(r1 * .2, 0xFFC0BF, alpha3);
-        this.lineBetween(emmission_x, emmission_y, this.enemyActor.x, this.enemyActor.y);
+        this.lineBetween(emmission_x, emmission_y, this.impact_x,  this.impact_y);
         this.stroke();
     }
 }

@@ -65,7 +65,7 @@ declare module Anuto {
         destroy(): void;
         update(): void;
         glue(glueIntensity: number): void;
-        hit(damage: number): void;
+        hit(damage: number, bullet?: Bullet, mortar?: Mortar, laserTurret?: LaserTurret): void;
         restoreHealth(): void;
         getNextPosition(deltaTicks: number): {
             x: number;
