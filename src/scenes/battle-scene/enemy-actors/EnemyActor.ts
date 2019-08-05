@@ -63,8 +63,8 @@ export class EnemyActor extends Phaser.GameObjects.Container {
             scaleX: 1.15,
             scaleY: 1.15,
             alpha: 0,
-            ease: Phaser.Math.Easing.Cubic.Out,
-            duration: 400,
+            ease: Phaser.Math.Easing.Cubic.In,
+            duration: 500,
             onComplete: function(): void {
                 this.destroy();
             },

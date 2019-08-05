@@ -7,11 +7,6 @@ module Anuto {
             super(GameConstants.TURRET_LASER, p);
 
             this.calculateTurretParameters();
-
-            while (this.level < 10) {
-                this.level ++;
-                this.calculateTurretParameters();
-            }
         }
 
         public update(): void {

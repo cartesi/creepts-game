@@ -17,6 +17,7 @@ import { LaserBeam } from "./turret-actors/LaserBeam";
 import { LaunchTurretActor } from "./turret-actors/LaunchTurretActor";
 import { MortarActor } from "./turret-actors/MortarActor";
 import { GlueTurretActor } from "./turret-actors/GlueTurretActor";
+import { BattleManager } from './BattleManager';
 
 export class BoardContainer extends Phaser.GameObjects.Container {
 
@@ -82,16 +83,10 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.createAnimations();
     }
 
-    public initialTurrets(): void {
+    public addInitialTowers(): void {
 
         // temporalmente añadimos una torre
-        this.addTurret(Anuto.GameConstants.TURRET_PROJECTILE, {r: 0, c: 2});
-        this.addTurret(Anuto.GameConstants.TURRET_PROJECTILE, {r: 1, c: 2});
-        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 2, c: 2});
-        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 2, c: 3});
-        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 2, c: 4});
-        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 0, c: 4});
-        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 0, c: 5});
+        this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 2, c: 2});
     }
 
     public update(time: number, delta: number): void {
@@ -183,7 +178,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         // mirar si ya hay una torreta
         for (let i = 0; i < this.turretActors.length; i++) {
-            if (position.c === this.turretActors[i].getInfo().position.c && position.r === this.turretActors[i].getInfo().position.r) {
+            if (position.c === this.turretActors[i].anutoTurret.position.c && position.r === this.turretActors[i].anutoTurret.position.r) {
                 return;
             }
         }

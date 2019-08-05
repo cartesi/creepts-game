@@ -1,11 +1,11 @@
-import { BattleScene } from './BattleScene';
+import { BattleScene } from "./BattleScene";
 import { GameConstants } from "../../GameConstants";
 import { GameVars } from "../../GameVars";
 
 import enemiesData from "../../../assets/config/enemies.json";
 import turretsData from "../../../assets/config/turrets.json";
 import wavesData from "../../../assets/config/waves.json";
-import { BoardContainer } from './BoardContainer';
+import { BoardContainer } from "./BoardContainer";
 
 export class BattleManager {
 
@@ -107,6 +107,10 @@ export class BattleManager {
     public static improveTurret(id: number): void {
 
         BattleManager.anutoEngine.improveTurret(id);
+    }
+
+    public static upgradeTower(id: number): void {
+        
     }
 
     public static createRangeCircle(range: number, x: number, y: number): Phaser.GameObjects.Graphics {

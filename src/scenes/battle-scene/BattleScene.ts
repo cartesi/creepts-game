@@ -1,7 +1,6 @@
-import { BoardContainer } from './BoardContainer';
+import { BoardContainer } from "./BoardContainer";
 import { GUI } from "./gui/GUI";
 import { HUD } from "./hud/HUD";
-import { GameConstants } from "../../GameConstants";
 import { BattleManager } from "./BattleManager";
 
 export class BattleScene extends Phaser.Scene {
@@ -31,9 +30,7 @@ export class BattleScene extends Phaser.Scene {
         this.gui = new GUI(this);
         this.add.existing(this.gui);
 
-        this.boardContainer.initialTurrets();
-
-        // remove
+        this.boardContainer.addInitialTowers();
     }
 
     public update(time: number, delta: number): void {

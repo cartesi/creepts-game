@@ -10,8 +10,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
     public canonLength: number;
     public base: Phaser.GameObjects.Image;
     public canon: Phaser.GameObjects.Image;
-
-    protected anutoTurret: Anuto.Turret;
+    public anutoTurret: Anuto.Turret;
     
     private rangeCircle: Phaser.GameObjects.Graphics;
 
@@ -58,11 +57,6 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
     public shoot(): void {
         //
-    }
-
-    public getInfo(): Anuto.Turret {
-
-        return this.anutoTurret;
     }
 
     protected onDownTurret(): void {

@@ -777,10 +777,6 @@ var Anuto;
         function LaserTurret(p) {
             var _this = _super.call(this, Anuto.GameConstants.TURRET_LASER, p) || this;
             _this.calculateTurretParameters();
-            while (_this.level < 10) {
-                _this.level++;
-                _this.calculateTurretParameters();
-            }
             return _this;
         }
         LaserTurret.prototype.update = function () {
@@ -809,7 +805,6 @@ var Anuto;
             }
             else {
             }
-            console.log(this.level, this.priceImprovement);
             _super.prototype.calculateTurretParameters.call(this);
         };
         LaserTurret.prototype.shoot = function () {
