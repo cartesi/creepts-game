@@ -299,15 +299,19 @@ module Anuto {
                 const bullet = this.bullets[i];
                 const enemy = this.bullets[i].assignedEnemy;
 
-                const bp1 = {x: bullet.x, y: bullet.y};
-                const bp2 = bullet.getPositionNextTick();
-                const enemyPosition = {x: enemy.x, y: enemy.y};
-
-                const enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
-
-                if (enemyHit) {
+                if (enemy.life === 0) {
                     this.bulletsColliding.push(bullet);
-                }
+                } else {
+                    const bp1 = {x: bullet.x, y: bullet.y};
+                    const bp2 = bullet.getPositionNextTick();
+                    const enemyPosition = {x: enemy.x, y: enemy.y};
+
+                    const enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
+
+                    if (enemyHit) {
+                        this.bulletsColliding.push(bullet);
+                    }
+                } 
             } 
 
             for (let i = 0; i < this.mortars.length; i ++) {
@@ -359,13 +363,17 @@ module Anuto {
                 const bullet = this.bulletsColliding[i];
                 const enemy = bullet.assignedEnemy;
 
-                enemy.hit(bullet.damage);
+                if (enemy.life === 0) {
+                    // ya esta muerto
+                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[], bullet]));
+                } else {
+
+                    enemy.hit(bullet.damage);
+                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[enemy], bullet]));
+                }
 
                 const index = this.bullets.indexOf(bullet);
                 this.bullets.splice(index, 1);
-
-                this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[enemy], bullet]));
-
                 bullet.destroy();
             }
 

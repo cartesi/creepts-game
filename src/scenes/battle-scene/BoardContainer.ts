@@ -58,11 +58,14 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.createAnimations();
 
         // temporalmente añadimos una torre
-        // this.addTurret(Anuto.GameConstants.TURRET_LAUNCH, {r: 3, c: 3});
-        // this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 6, c: 2});
-        // this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 8, c: 5});
-        // this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 5, c: 5});
-        // this.addTurret(Anuto.GameConstants.TURRET_PROJECTILE, {r: 11, c: 2});
+        this.addTurret(Anuto.GameConstants.TURRET_PROJECTILE, {r: 0, c: 2});
+        this.addTurret(Anuto.GameConstants.TURRET_PROJECTILE, {r: 1, c: 2});
+        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 2, c: 2});
+        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 2, c: 3});
+        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 2, c: 4});
+
+        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 0, c: 4});
+        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 0, c: 5});
     }
 
     public update(time: number, delta: number): void {

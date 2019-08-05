@@ -395,12 +395,17 @@ var Anuto;
             for (var i = 0; i < this.bullets.length; i++) {
                 var bullet = this.bullets[i];
                 var enemy = this.bullets[i].assignedEnemy;
-                var bp1 = { x: bullet.x, y: bullet.y };
-                var bp2 = bullet.getPositionNextTick();
-                var enemyPosition = { x: enemy.x, y: enemy.y };
-                var enemyHit = Anuto.MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
-                if (enemyHit) {
+                if (enemy.life === 0) {
                     this.bulletsColliding.push(bullet);
+                }
+                else {
+                    var bp1 = { x: bullet.x, y: bullet.y };
+                    var bp2 = bullet.getPositionNextTick();
+                    var enemyPosition = { x: enemy.x, y: enemy.y };
+                    var enemyHit = Anuto.MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
+                    if (enemyHit) {
+                        this.bulletsColliding.push(bullet);
+                    }
                 }
             }
             for (var i = 0; i < this.mortars.length; i++) {
@@ -435,10 +440,15 @@ var Anuto;
             for (var i = 0; i < this.bulletsColliding.length; i++) {
                 var bullet = this.bulletsColliding[i];
                 var enemy = bullet.assignedEnemy;
-                enemy.hit(bullet.damage);
+                if (enemy.life === 0) {
+                    this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_HIT, [[], bullet]));
+                }
+                else {
+                    enemy.hit(bullet.damage);
+                    this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_HIT, [[enemy], bullet]));
+                }
                 var index = this.bullets.indexOf(bullet);
                 this.bullets.splice(index, 1);
-                this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_HIT, [[enemy], bullet]));
                 bullet.destroy();
             }
             this.bulletsColliding.length = 0;
@@ -804,7 +814,12 @@ var Anuto;
             else {
                 enemy = this.enemiesWithinRange[0];
             }
-            Anuto.Engine.currentInstance.addLaserRay(this, enemy);
+            if (enemy.life > 0) {
+                Anuto.Engine.currentInstance.addLaserRay(this, enemy);
+            }
+            else {
+                this.readyToShoot = true;
+            }
         };
         return LaserTurret;
     }(Anuto.Turret));
