@@ -98,7 +98,6 @@ module Anuto {
             // override
         }
 
-        // TODO: hacer que se puedan pillar varios
         protected getEnemiesWithinRange(): Enemy [] {
 
             let enemiesAndSquaredDistances: {enemy: Enemy, squareDist: number} [] = [];
@@ -108,6 +107,8 @@ module Anuto {
 
                 const enemy = GameVars.enemies[i];
 
+                // TODO: AÑADIR LA CONDICION DE QUE SI ES UNA TORRETA GLUE IGNORE A LOS ENEMIGOS VOLADORES
+                // SIEMPRE QUE SEA DE GRADO 1 ó 2
                 if (enemy.life > 0 && GameVars && !enemy.teleporting) {
 
                     const dx = this.x - enemy.x;
