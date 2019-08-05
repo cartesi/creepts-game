@@ -1,6 +1,7 @@
 import { GameConstants } from "../../../GameConstants";
 import { GameVars } from "../../../GameVars";
 import { LifeBar } from "./LifeBar";
+import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from "constants";
 
 export class EnemyActor extends Phaser.GameObjects.Container {
 
@@ -31,6 +32,15 @@ export class EnemyActor extends Phaser.GameObjects.Container {
 
     public update(time: number, delta: number): void {
 
+        if (this.anutoEnemy.teleporting) {
+            this.scaleX = .15;
+            this.scaleY = .15;
+            return;
+        }
+
+        this.scaleX = 1;
+        this.scaleY = 1;
+
         let smoothFactor: number;
 
         if (GameConstants.INTERPOLATE_TRAJECTORIES) {
@@ -54,6 +64,22 @@ export class EnemyActor extends Phaser.GameObjects.Container {
         // de momento nada
     }
 
+    public teleport(anutoGlueTurret: Anuto.GlueTurret): void {
+        
+        const glueTurret_px = (anutoGlueTurret.position.c + .5) * GameConstants.CELLS_SIZE;
+        const glueTurret_py = (anutoGlueTurret.position.r + .5) * GameConstants.CELLS_SIZE;
+
+        this.scene.tweens.add({
+            targets: this,
+            x: glueTurret_px,
+            y: glueTurret_py,
+            scaleX: .15,
+            scaleY: .15,
+            ease: Phaser.Math.Easing.Cubic.Out,
+            duration: 500
+        });
+    }
+
     public die(): void {
 
         this.lifeBar.visible = false;
@@ -63,8 +89,8 @@ export class EnemyActor extends Phaser.GameObjects.Container {
             scaleX: 1.15,
             scaleY: 1.15,
             alpha: 0,
-            ease: Phaser.Math.Easing.Cubic.Out,
-            duration: 400,
+            ease: Phaser.Math.Easing.Cubic.In,
+            duration: 500,
             onComplete: function(): void {
                 this.destroy();
             },

@@ -60,10 +60,14 @@ declare module Anuto {
         l: number;
         affectedByGlue: boolean;
         glueIntensity: number;
+        hasBeenTeleported: boolean;
+        teleporting: boolean;
         protected enemyData: any;
+        protected t: number;
         constructor(type: string, creationTick: number);
         destroy(): void;
         update(): void;
+        teleport(teleportDistance: number): void;
         glue(glueIntensity: number): void;
         hit(damage: number, bullet?: Bullet, mortar?: Mortar, laserTurret?: LaserTurret): void;
         restoreHealth(): void;
@@ -84,6 +88,7 @@ declare module Anuto {
         private bulletsColliding;
         private mortarsImpacting;
         private consumedGlues;
+        private teleportedEnemies;
         private t;
         private eventDispatcher;
         private enemiesSpawner;
@@ -104,14 +109,16 @@ declare module Anuto {
         addGlue(glue: Glue, glueTurret: GlueTurret): void;
         addMortar(mortar: Mortar, launchTurret: LaunchTurret): void;
         addLaserRay(laserTurret: LaserTurret, enemy: Enemy): void;
+        flagEnemyToTeleport(enemy: Enemy, glueTurret: GlueTurret): void;
         onEnemyReachedExit(enemy: Enemy): void;
         onEnemyKilled(enemy: Enemy): void;
-        improveTurret(id: number): void;
-        upgradeTurret(id: number): void;
+        improveTurret(id: number): boolean;
+        upgradeTurret(id: number): boolean;
         addEventListener(type: string, listenerFunction: Function, scope: any): void;
         removeEventListener(type: string, listenerFunction: any): void;
         private checkCollisions;
         private removeProjectilesAndAccountDamage;
+        private teleport;
         private spawnEnemies;
         private waveOver;
         private getTurretById;
@@ -221,6 +228,7 @@ declare module Anuto {
         static readonly MORTAR_SHOT = "mortar shot";
         static readonly GLUE_SHOT = "glue shot";
         static readonly GLUE_CONSUMED = "glue consumed";
+        static readonly ENEMIES_TELEPORTED = "enemies teleported";
         private type;
         private params;
         constructor(type: string, params?: any);
@@ -282,6 +290,7 @@ declare module Anuto {
 declare module Anuto {
     class GlueTurret extends Turret {
         intensity: number;
+        teleportDistance: number;
         duration: number;
         durationTicks: number;
         constructor(p: {

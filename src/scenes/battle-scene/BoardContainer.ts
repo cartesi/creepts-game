@@ -17,6 +17,7 @@ import { LaserBeam } from "./turret-actors/LaserBeam";
 import { LaunchTurretActor } from "./turret-actors/LaunchTurretActor";
 import { MortarActor } from "./turret-actors/MortarActor";
 import { GlueTurretActor } from "./turret-actors/GlueTurretActor";
+import { BattleManager } from './BattleManager';
 
 export class BoardContainer extends Phaser.GameObjects.Container {
 
@@ -84,16 +85,24 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.createAnimations();
     }
 
-    public initialTurrets(): void {
+    public addInitialTowers(): void {
 
         // temporalmente añadimos una torre
-        this.addTurret(Anuto.GameConstants.TURRET_PROJECTILE, {r: 0, c: 2});
-        this.addTurret(Anuto.GameConstants.TURRET_PROJECTILE, {r: 1, c: 2});
-        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 2, c: 2});
-        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 2, c: 3});
-        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 2, c: 4});
-        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 0, c: 4});
-        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 0, c: 5});
+        this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 3, c: 3});
+
+        BattleManager.upgradeTower(0);
+        BattleManager.upgradeTower(0);
+
+        this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 5, c: 5});
+
+        BattleManager.upgradeTower(1);
+        BattleManager.upgradeTower(1);
+
+
+        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 3, c: 7});
+        this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 7, c: 3});
+        this.addTurret(Anuto.GameConstants.TURRET_LAUNCH, {r: 1, c: 2});
+        this.addTurret(Anuto.GameConstants.TURRET_PROJECTILE, {r: 1, c: 7});
     }
 
     public update(time: number, delta: number): void {
@@ -185,7 +194,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         // mirar si ya hay una torreta
         for (let i = 0; i < this.turretActors.length; i++) {
-            if (position.c === this.turretActors[i].getInfo().position.c && position.r === this.turretActors[i].getInfo().position.r) {
+            if (position.c === this.turretActors[i].anutoTurret.position.c && position.r === this.turretActors[i].anutoTurret.position.r) {
                 return;
             }
         }
@@ -325,6 +334,15 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
+    public teleportEnemy(anutoEnemy: Anuto.Enemy, anutoGlueTurret: Anuto.GlueTurret): void {
+
+        let enemyActor: EnemyActor = this.getEnemyActorByID(anutoEnemy.id);
+
+        if (enemyActor) {
+            enemyActor.teleport(anutoGlueTurret);
+        }
+    }
+
     public removeBullet(anutoBullet: Anuto.Bullet): void {
 
         let bulletActor: BulletActor = null;
@@ -368,10 +386,12 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         mortarActor.destroy();
     }
     
-    public upgradeTower(id: number): void {
-        //
+    public upgradeTurret(id: number): void {
+        
+        const turretActor = this.getTurretActorByID(id);
+        turretActor.upgrade();
     }
-
+    
     public getTurretActorByID(id: number): TurretActor {
 
         let turretActor = null;

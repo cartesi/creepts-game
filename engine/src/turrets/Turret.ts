@@ -106,15 +106,17 @@ module Anuto {
             
             for (let i = 0; i < GameVars.enemies.length; i ++) {
 
-                if (GameVars.enemies[i].life > 0) {
+                const enemy = GameVars.enemies[i];
 
-                    const dx = this.x - GameVars.enemies[i].x;
-                    const dy = this.y - GameVars.enemies[i].y;
+                if (enemy.life > 0 && GameVars && !enemy.teleporting) {
+
+                    const dx = this.x - enemy.x;
+                    const dy = this.y - enemy.y;
 
                     const squaredDist = MathUtils.fixNumber(dx * dx + dy * dy);
 
                     if (squaredRange >= squaredDist) {
-                        enemiesAndSquaredDistances.push({enemy: GameVars.enemies[i], squareDist: squaredDist});
+                        enemiesAndSquaredDistances.push({enemy: enemy, squareDist: squaredDist});
                     }
                 }
             }

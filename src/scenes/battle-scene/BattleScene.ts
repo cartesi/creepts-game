@@ -1,7 +1,6 @@
-import { BoardContainer } from './BoardContainer';
+import { BoardContainer } from "./BoardContainer";
 import { GUI } from "./gui/GUI";
 import { HUD } from "./hud/HUD";
-import { GameConstants } from "../../GameConstants";
 import { BattleManager } from "./BattleManager";
 
 export class BattleScene extends Phaser.Scene {
@@ -31,10 +30,7 @@ export class BattleScene extends Phaser.Scene {
         this.gui = new GUI(this);
         this.add.existing(this.gui);
 
-        // remove
-        this.boardContainer.initialTurrets();
-
-        
+        this.boardContainer.addInitialTowers();
     }
 
     public update(time: number, delta: number): void {
@@ -54,26 +50,11 @@ export class BattleScene extends Phaser.Scene {
 
         this.gui.createTurret(type);
         this.boardContainer.hideTurretMenu();
-        this.hideRangeCircles();
-    }
-
-    public addTurret(type, position): void {
-
-        this.boardContainer.addTurret(type, position);
-    }
-
-    public createRangeCircle(range: number, x: number, y: number): Phaser.GameObjects.Graphics {
-
-        return this.boardContainer.createRangeCircle(range, x, y);
-    }
-
-    public hideRangeCircles(): void {
-
         this.boardContainer.hideRangeCircles();
     }
 
-    public showTurretMenu(anutoTurret: Anuto.Turret): void {
+    // public createRangeCircle(range: number, x: number, y: number): Phaser.GameObjects.Graphics {
 
-        this.boardContainer.showTurretMenu(anutoTurret);
-    }
+    //     return this.boardContainer.createRangeCircle(range, x, y);
+    // }
 }

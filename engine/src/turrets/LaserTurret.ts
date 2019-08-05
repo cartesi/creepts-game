@@ -29,11 +29,14 @@ module Anuto {
         // mirar en el ANUTO y generar las formulas que correspondan
         protected calculateTurretParameters(): void {
 
-            this.damage = Math.floor( 1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 66);
-            this.reload = Math.round(((-1 / 18) * this.level + 19 / 18 ) * 10) / 10;
-            this.range =  Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
-            this.priceImprovement =  Math.floor( 29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+            this.damage = Math.floor( 271 / 630 * Math.pow(this.level, 3) + 283 / 315 * Math.pow(this.level, 2) + 2437 / 70 * this.level + 1357 / 7);
+            this.reload = Math.round((-.1 * this.level + 1.6 ) * 10) / 10;
+            this.range =  Math.round((.04 * this.level + 2.96) * 10) / 10;
+            this.priceImprovement =  Math.floor( 9 / 80 * Math.pow(this.level, 3) + 17 / 120 * Math.pow(this.level, 2) + 2153 / 240 * this.level + 1631 / 40);
             
+            // esto hay que calcularlo tambien
+            this.priceUpgrade = 7000 * this.grade;
+
             if (this.level === 1) {
                 this.value = GameVars.turretData[this.type].price;
             } else {
@@ -41,7 +44,7 @@ module Anuto {
             }
 
             super.calculateTurretParameters();
-        }
+        }  
 
         protected shoot(): void {
 

@@ -3,8 +3,6 @@ import { GameConstants } from "../../../GameConstants";
 
 export class HealerEnemyActor extends EnemyActor {
 
-    private needChangenimation: boolean;
-
     constructor(scene: Phaser.Scene, anutoEnemy: Anuto.Enemy, position: {r: number, c: number}) {
 
         super(scene, anutoEnemy, position);

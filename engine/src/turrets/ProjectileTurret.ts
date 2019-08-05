@@ -44,6 +44,9 @@ module Anuto {
             this.range =  Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
             this.priceImprovement =  Math.floor( 29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
             
+            // esto hay que calcularlo tambien
+            this.priceUpgrade = 5600 * this.grade;
+
             if (this.level === 1) {
                 this.value = GameVars.turretData[this.type].price;
             } else {
