@@ -98,6 +98,9 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
 
         this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 3, c: 7});
+        this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 7, c: 3});
+        this.addTurret(Anuto.GameConstants.TURRET_LAUNCH, {r: 1, c: 2});
+        this.addTurret(Anuto.GameConstants.TURRET_PROJECTILE, {r: 1, c: 7});
     }
 
     public update(time: number, delta: number): void {
