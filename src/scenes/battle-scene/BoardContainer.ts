@@ -80,6 +80,9 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.board.add(this.circlesContainer);
 
         this.createAnimations();
+    }
+
+    public initialTurrets(): void {
 
         // temporalmente añadimos una torre
         this.addTurret(Anuto.GameConstants.TURRET_PROJECTILE, {r: 0, c: 2});

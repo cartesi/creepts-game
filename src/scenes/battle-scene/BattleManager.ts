@@ -1,11 +1,11 @@
 import { BattleScene } from './BattleScene';
 import { GameConstants } from "../../GameConstants";
-import { BoardContainer } from "./BoardContainer";
 import { GameVars } from "../../GameVars";
 
 import enemiesData from "../../../assets/config/enemies.json";
 import turretsData from "../../../assets/config/turrets.json";
 import wavesData from "../../../assets/config/waves.json";
+import { BoardContainer } from './BoardContainer';
 
 export class BattleManager {
 

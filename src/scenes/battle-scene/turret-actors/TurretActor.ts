@@ -1,6 +1,6 @@
+import { BoardContainer } from './../BoardContainer';
 import { GameConstants } from "../../../GameConstants";
 import { BattleManager } from "../BattleManager";
-import { BoardContainer } from "../BoardContainer";
 
 export class TurretActor extends Phaser.GameObjects.Container {
 
