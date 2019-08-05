@@ -22,11 +22,11 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     public static currentInstance: BoardContainer;
 
     private board: Board;
+    private deadEnemyActors: EnemyActor[];
     private enemyActors: EnemyActor[];
     private turretActors: TurretActor[];
     private bulletActors: BulletActor[];
     private mortarActors: MortarActor[];
-
     private gluePools: GluePool[];
 
     constructor(scene: Phaser.Scene) {
@@ -41,6 +41,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.scaleX = GameVars.scaleCorrectionFactor;
         this.scaleY = GameVars.scaleCorrectionFactor * GameVars.scaleY;
 
+        this.deadEnemyActors = [];
         this.enemyActors = [];
         this.turretActors = [];
         this.bulletActors = [];
@@ -63,12 +64,19 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 2, c: 2});
         this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 2, c: 3});
         this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 2, c: 4});
-
         this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 0, c: 4});
         this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 0, c: 5});
     }
 
     public update(time: number, delta: number): void {
+
+        // eliminar a los enemigos que ya han muerto
+        for (let i = 0; i < this.deadEnemyActors.length; i++) {
+            const index = this.enemyActors.indexOf(this.deadEnemyActors[i]);
+            if (index !== -1) {
+                this.enemyActors.splice(index, 1);
+            }
+        }
 
         this.enemyActors.forEach(function (enemy) {
             enemy.update(time, delta);
@@ -250,14 +258,11 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
     public onEnemyKilled(anutoEnemy: Anuto.Enemy): void {
 
-        let enemy: EnemyActor = this.getEnemyActorByID(anutoEnemy.id);
+        let enemyActor: EnemyActor = this.getEnemyActorByID(anutoEnemy.id);
 
-        if (enemy) {
-
-            const i = this.enemyActors.indexOf(enemy);
-            this.enemyActors.splice(i, 1);
-
-            enemy.destroy();
+        if (enemyActor) {
+            enemyActor.die();
+            this.deadEnemyActors.push(enemyActor);
         }
     }
 

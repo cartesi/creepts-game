@@ -27,8 +27,6 @@ export class EnemyActor extends Phaser.GameObjects.Container {
 
         this.x = GameConstants.CELLS_SIZE * (position.c + .5);
         this.y = GameConstants.CELLS_SIZE * (position.r + .5);
-
-        // this.scene.sys.updateList.add(this);
     }
 
     public update(time: number, delta: number): void {
@@ -53,7 +51,24 @@ export class EnemyActor extends Phaser.GameObjects.Container {
     }
 
     public hit(): void {
-
         // de momento nada
+    }
+
+    public die(): void {
+
+        this.lifeBar.visible = false;
+
+        this.scene.tweens.add({
+            targets: this,
+            scaleX: 1.15,
+            scaleY: 1.15,
+            alpha: 0,
+            ease: Phaser.Math.Easing.Cubic.Out,
+            duration: 400,
+            onComplete: function(): void {
+                this.destroy();
+            },
+            onCompleteScope: this
+        });
     }
 }

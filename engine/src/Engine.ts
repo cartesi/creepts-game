@@ -228,7 +228,7 @@ module Anuto {
 
         public addLaserRay(laserTurret: LaserTurret, enemy: Enemy): void {
             
-            enemy.hit(laserTurret.damage);
+            enemy.hit(laserTurret.damage, null, null, laserTurret);
 
             this.eventDispatcher.dispatchEvent(new Event(Event.LASER_SHOT, [laserTurret, enemy]));
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[enemy]]));
@@ -367,9 +367,8 @@ module Anuto {
                     // ya esta muerto
                     this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[], bullet]));
                 } else {
-
-                    enemy.hit(bullet.damage);
                     this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[enemy], bullet]));
+                    enemy.hit(bullet.damage, bullet);
                 }
 
                 const index = this.bullets.indexOf(bullet);
@@ -392,9 +391,11 @@ module Anuto {
                     for (let j = 0; j < hitEnemiesData.length; j ++) {
 
                         const enemy = hitEnemiesData[j].enemy;
-                        enemy.hit(hitEnemiesData[j].damage);
 
-                        hitEnemies.push(enemy);
+                        if (enemy.life > 0) {
+                            enemy.hit(hitEnemiesData[j].damage, null, mortar);
+                            hitEnemies.push(enemy);
+                        }
                     }
                 }
 

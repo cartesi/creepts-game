@@ -185,7 +185,7 @@ var Anuto;
             this.affectedByGlue = true;
             this.glueIntensity = glueIntensity;
         };
-        Enemy.prototype.hit = function (damage) {
+        Enemy.prototype.hit = function (damage, bullet, mortar, laserTurret) {
             this.life -= damage;
             if (this.life <= 0) {
                 this.life = 0;
@@ -348,7 +348,7 @@ var Anuto;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.MORTAR_SHOT, [mortar, launchTurret]));
         };
         Engine.prototype.addLaserRay = function (laserTurret, enemy) {
-            enemy.hit(laserTurret.damage);
+            enemy.hit(laserTurret.damage, null, null, laserTurret);
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.LASER_SHOT, [laserTurret, enemy]));
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_HIT, [[enemy]]));
         };
@@ -444,8 +444,8 @@ var Anuto;
                     this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_HIT, [[], bullet]));
                 }
                 else {
-                    enemy.hit(bullet.damage);
                     this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_HIT, [[enemy], bullet]));
+                    enemy.hit(bullet.damage, bullet);
                 }
                 var index = this.bullets.indexOf(bullet);
                 this.bullets.splice(index, 1);
@@ -459,8 +459,10 @@ var Anuto;
                 if (hitEnemiesData.length > 0) {
                     for (var j = 0; j < hitEnemiesData.length; j++) {
                         var enemy = hitEnemiesData[j].enemy;
-                        enemy.hit(hitEnemiesData[j].damage);
-                        hitEnemies.push(enemy);
+                        if (enemy.life > 0) {
+                            enemy.hit(hitEnemiesData[j].damage, null, mortar);
+                            hitEnemies.push(enemy);
+                        }
                     }
                 }
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_HIT, [hitEnemies, null, mortar]));

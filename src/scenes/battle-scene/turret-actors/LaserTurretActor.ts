@@ -14,6 +14,8 @@ export class LaserTurretActor extends TurretActor {
 
         this.canon = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "canon_2_1_1");
         this.add(this.canon);
+
+        this.canonLength = 30;
     }
 
     public shootLaser(): void {

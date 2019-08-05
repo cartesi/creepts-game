@@ -99,7 +99,6 @@ export class BattleManager {
         BattleScene.currentInstance.addTurret(type, position);
     }
 
-
     public static addTurret(type: string, position: {r: number, c: number}): Anuto.Turret {
 
         return BattleManager.anutoEngine.addTurret(type, position);
