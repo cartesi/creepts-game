@@ -106,6 +106,12 @@ export class BattleManager {
         return BattleManager.anutoEngine.addTurret(type, position);
     }
 
+    public static sellTurret(anutoTurret: Anuto.Turret): void {
+
+        BattleManager.anutoEngine.sellTurret(anutoTurret);
+        BoardContainer.currentInstance.removeTurret(anutoTurret);
+    }
+
     public static improveTurret(id: number): void {
 
         BattleManager.anutoEngine.improveTurret(id);
@@ -119,6 +125,16 @@ export class BattleManager {
         if (sucess) {
             BoardContainer.currentInstance.upgradeTurret(id);
         }
+    }
+
+    public static setNextStrategy(id: number): void {
+
+        BattleManager.anutoEngine.setNextStrategy(id);
+    }
+
+    public static setFixedTarget(id: number): void {
+
+        BattleManager.anutoEngine.setFixedTarget(id);
     }
 
     public static createRangeCircle(range: number, x: number, y: number): Phaser.GameObjects.Graphics {

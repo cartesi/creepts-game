@@ -223,6 +223,26 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.turretActors.push(turret);
     }
 
+    public removeTurret(anutoTurret: Anuto.Turret): void {
+
+        this.hideTurretMenu();
+        this.hideRangeCircles();
+
+        let i: number;
+        for (i = 0; i < this.turretActors.length; i ++) {
+            if (this.turretActors[i].id === anutoTurret.id) {
+               break; 
+            }
+        }
+
+        const turret = this.turretActors[i];
+
+        if (turret) {
+            this.turretActors.splice(i, 1);
+            turret.destroy();
+        }
+    }
+
     public addBullet(anutoBullet: Anuto.Bullet, anutoProjectileTurret: Anuto.ProjectileTurret): void {
 
         const projectileTurretActor = <ProjectileTurretActor> this.getTurretActorByID(anutoProjectileTurret.id);

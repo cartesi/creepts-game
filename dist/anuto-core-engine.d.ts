@@ -25,6 +25,7 @@ declare module Anuto {
             c: number;
         };
         shootingStrategy: string;
+        shootingStrategyIndex: number;
         fixedTarget: boolean;
         enemiesWithinRange: Enemy[];
         followedEnemy: Enemy;
@@ -40,6 +41,8 @@ declare module Anuto {
         update(): void;
         improve(): void;
         upgrade(): void;
+        setNextStrategy(): void;
+        setFixedTarget(): void;
         protected calculateTurretParameters(): void;
         protected shoot(): void;
         protected getEnemiesWithinRange(): Enemy[];
@@ -105,6 +108,8 @@ declare module Anuto {
             c: number;
         }): Turret;
         sellTurret(turret: Turret): void;
+        setNextStrategy(id: number): void;
+        setFixedTarget(id: number): void;
         addBullet(bullet: Bullet, projectileTurret: ProjectileTurret): void;
         addGlue(glue: Glue, glueTurret: GlueTurret): void;
         addMortar(mortar: Mortar, launchTurret: LaunchTurret): void;
@@ -142,11 +147,12 @@ declare module Anuto {
         static readonly TURRET_LASER = "laser";
         static readonly TURRET_LAUNCH = "launch";
         static readonly TURRET_GLUE = "glue";
-        static readonly STRATEGY_SHOOT_CLOSEST = "shoot closest";
-        static readonly STRATEGY_SHOOT_WEAKEST = "shoot weakest";
-        static readonly STRATEGY_SHOOT_STRONGEST = "shoot strongest";
-        static readonly STRATEGY_SHOOT_FIRST = "shoot first";
-        static readonly STRATEGY_SHOOT_LAST = "shoot last";
+        static readonly STRATEGY_SHOOT_FIRST = "First";
+        static readonly STRATEGY_SHOOT_LAST = "Last";
+        static readonly STRATEGY_SHOOT_CLOSEST = "Closest";
+        static readonly STRATEGY_SHOOT_WEAKEST = "Weakest";
+        static readonly STRATEGY_SHOOT_STRONGEST = "Strongest";
+        static readonly STRATEGYS_ARRAY: string[];
         static readonly HEALER_HEALING_TICKS = 100;
         static readonly HEALER_STOP_TICKS = 30;
         static readonly HEALER_HEALING_RADIUS = 2;

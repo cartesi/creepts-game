@@ -209,6 +209,18 @@ module Anuto {
             turret.destroy();
         }
 
+        public setNextStrategy(id: number): void {
+
+            const turret = this.getTurretById(id);
+            turret.setNextStrategy();
+        }
+
+        public setFixedTarget(id: number): void {
+
+            const turret = this.getTurretById(id);
+            turret.setFixedTarget();
+        }
+
         public addBullet(bullet: Bullet, projectileTurret: ProjectileTurret): void {
 
             this.bullets.push(bullet);

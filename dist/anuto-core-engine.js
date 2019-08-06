@@ -60,7 +60,8 @@ var Anuto;
             this.grade = 1;
             this.position = p;
             this.fixedTarget = true;
-            this.shootingStrategy = Anuto.GameConstants.STRATEGY_SHOOT_FIRST;
+            this.shootingStrategyIndex = 0;
+            this.shootingStrategy = Anuto.GameConstants.STRATEGYS_ARRAY[this.shootingStrategyIndex];
             this.readyToShoot = false;
             this.enemiesWithinRange = [];
             this.followedEnemy = null;
@@ -93,6 +94,13 @@ var Anuto;
             this.grade++;
             this.level = 1;
             this.calculateTurretParameters();
+        };
+        Turret.prototype.setNextStrategy = function () {
+            this.shootingStrategyIndex = this.shootingStrategyIndex === Anuto.GameConstants.STRATEGYS_ARRAY.length - 1 ? 0 : this.shootingStrategyIndex + 1;
+            this.shootingStrategy = Anuto.GameConstants.STRATEGYS_ARRAY[this.shootingStrategyIndex];
+        };
+        Turret.prototype.setFixedTarget = function () {
+            this.fixedTarget = !this.fixedTarget;
         };
         Turret.prototype.calculateTurretParameters = function () {
             this.reloadTicks = Math.floor(Anuto.GameConstants.RELOAD_BASE_TICKS * this.reload);
@@ -360,6 +368,14 @@ var Anuto;
             Anuto.GameVars.credits += turret.value;
             turret.destroy();
         };
+        Engine.prototype.setNextStrategy = function (id) {
+            var turret = this.getTurretById(id);
+            turret.setNextStrategy();
+        };
+        Engine.prototype.setFixedTarget = function (id) {
+            var turret = this.getTurretById(id);
+            turret.setFixedTarget();
+        };
         Engine.prototype.addBullet = function (bullet, projectileTurret) {
             this.bullets.push(bullet);
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.BULLET_SHOT, [bullet, projectileTurret]));
@@ -606,11 +622,16 @@ var Anuto;
         GameConstants.TURRET_LASER = "laser";
         GameConstants.TURRET_LAUNCH = "launch";
         GameConstants.TURRET_GLUE = "glue";
-        GameConstants.STRATEGY_SHOOT_CLOSEST = "shoot closest";
-        GameConstants.STRATEGY_SHOOT_WEAKEST = "shoot weakest";
-        GameConstants.STRATEGY_SHOOT_STRONGEST = "shoot strongest";
-        GameConstants.STRATEGY_SHOOT_FIRST = "shoot first";
-        GameConstants.STRATEGY_SHOOT_LAST = "shoot last";
+        GameConstants.STRATEGY_SHOOT_FIRST = "First";
+        GameConstants.STRATEGY_SHOOT_LAST = "Last";
+        GameConstants.STRATEGY_SHOOT_CLOSEST = "Closest";
+        GameConstants.STRATEGY_SHOOT_WEAKEST = "Weakest";
+        GameConstants.STRATEGY_SHOOT_STRONGEST = "Strongest";
+        GameConstants.STRATEGYS_ARRAY = [GameConstants.STRATEGY_SHOOT_FIRST,
+            GameConstants.STRATEGY_SHOOT_LAST,
+            GameConstants.STRATEGY_SHOOT_CLOSEST,
+            GameConstants.STRATEGY_SHOOT_WEAKEST,
+            GameConstants.STRATEGY_SHOOT_STRONGEST];
         GameConstants.HEALER_HEALING_TICKS = 100;
         GameConstants.HEALER_STOP_TICKS = 30;
         GameConstants.HEALER_HEALING_RADIUS = 2;

@@ -19,6 +19,7 @@ module Anuto {
         public value: number;
         public position: {r: number, c: number};
         public shootingStrategy: string;
+        public shootingStrategyIndex: number;
         public fixedTarget: boolean;
         public enemiesWithinRange: Enemy[];
         public followedEnemy: Enemy;
@@ -41,7 +42,8 @@ module Anuto {
             this.grade = 1;
             this.position = p;
             this.fixedTarget = true;
-            this.shootingStrategy = GameConstants.STRATEGY_SHOOT_FIRST;
+            this.shootingStrategyIndex = 0;
+            this.shootingStrategy = GameConstants.STRATEGYS_ARRAY[this.shootingStrategyIndex];
             this.readyToShoot = false;
             this.enemiesWithinRange = [];
             this.followedEnemy = null;
@@ -87,6 +89,17 @@ module Anuto {
             this.grade ++;
             this.level = 1;
             this.calculateTurretParameters();
+        }
+
+        public setNextStrategy(): void {
+
+            this.shootingStrategyIndex = this.shootingStrategyIndex === GameConstants.STRATEGYS_ARRAY.length - 1 ? 0 : this.shootingStrategyIndex + 1;
+            this.shootingStrategy = GameConstants.STRATEGYS_ARRAY[this.shootingStrategyIndex];
+        }
+
+        public setFixedTarget(): void {
+
+            this.fixedTarget = !this.fixedTarget;
         }
 
         protected calculateTurretParameters(): void {
