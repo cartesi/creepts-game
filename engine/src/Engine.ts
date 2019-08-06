@@ -19,6 +19,7 @@ module Anuto {
         private t: number;
         private eventDispatcher: EventDispatcher;
         private enemiesSpawner: EnemiesSpawner;
+        private noEnemiesOnStage: boolean;
 
         public static getPathPosition(l: number): {x: number, y: number} {
 
@@ -98,6 +99,11 @@ module Anuto {
                 return;
             }
 
+            if (this.noEnemiesOnStage && this.bullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
+                this.waveActivated = false;
+                this.eventDispatcher.dispatchEvent(new Event(Event.WAVE_OVER));
+            }
+
             this.removeProjectilesAndAccountDamage();
 
             this.teleport();
@@ -155,6 +161,8 @@ module Anuto {
             this.mortarsImpacting = [];
             this.consumedGlues = [];
             this.teleportedEnemies = [];
+
+            this.noEnemiesOnStage = false;
         }
 
         public removeEnemy(enemy: Enemy): void {
@@ -275,7 +283,7 @@ module Anuto {
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_REACHED_EXIT, [enemy]));
 
             if (GameVars.enemies.length === 0) {
-                this.waveOver();
+                this.onNoEnemiesOnStage();
             }
         }
 
@@ -290,7 +298,7 @@ module Anuto {
             enemy.destroy();
 
             if (GameVars.enemies.length === 0) {
-                this.waveOver();
+                this.onNoEnemiesOnStage();
             }
         }
 
@@ -363,6 +371,13 @@ module Anuto {
                 }
             }
 
+            for (let i = 0; i < this.glues.length; i ++) {
+
+                if (this.glues[i].consumed) {
+                    this.consumedGlues.push(this.glues[i]);
+                }
+            }
+
             for (let i = 0; i < GameVars.enemies.length; i ++) {
 
                 const enemy = GameVars.enemies[i];
@@ -375,11 +390,7 @@ module Anuto {
     
                         const glue = this.glues[j];
     
-                        if (glue.consumed && this.consumedGlues.indexOf(glue) === -1) {
-    
-                            this.consumedGlues.push(glue);
-                            
-                        } else {
+                        if (!glue.consumed) {
     
                             const dx = enemy.x - glue.x;
                             const dy = enemy.y - glue.y;
@@ -479,7 +490,7 @@ module Anuto {
 
             this.teleportedEnemies.length = 0;
 
-            if (teleportedEnemiesData.length) {
+            if (teleportedEnemiesData.length > 0) {
                 this.eventDispatcher.dispatchEvent(new Event(Event.ENEMIES_TELEPORTED, [teleportedEnemiesData]));
             }
         }
@@ -495,11 +506,18 @@ module Anuto {
             }
         }
 
-        private waveOver(): void {
+        private onNoEnemiesOnStage(): void {
 
-            this.waveActivated = false;
+            this.noEnemiesOnStage = true;
 
-            this.eventDispatcher.dispatchEvent(new Event(Event.WAVE_OVER));
+            // nos cargamos de golpe todas las balas si las hubieren
+            for (let i = 0; i < this.bullets.length; i ++) {
+                const bullet = this.bullets[i];
+                bullet.assignedEnemy = null;
+                this.bulletsColliding.push(bullet);
+            }        
+
+            this.eventDispatcher.dispatchEvent(new Event(Event.NO_ENEMIES_ON_STAGE));
         }
 
         private getTurretById(id: number): Turret {

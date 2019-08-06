@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -141,11 +141,11 @@ var Anuto;
                     default:
                 }
             }
-            var e = [];
+            var enemies = [];
             for (var i = 0; i < enemiesAndSquaredDistances.length; i++) {
-                e.push(enemiesAndSquaredDistances[i].enemy);
+                enemies.push(enemiesAndSquaredDistances[i].enemy);
             }
-            return e;
+            return enemies;
         };
         return Turret;
     }());
@@ -294,6 +294,10 @@ var Anuto;
             if (!this.waveActivated || Anuto.GameVars.paused) {
                 return;
             }
+            if (this.noEnemiesOnStage && this.bullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
+                this.waveActivated = false;
+                this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.WAVE_OVER));
+            }
             this.removeProjectilesAndAccountDamage();
             this.teleport();
             this.checkCollisions();
@@ -331,6 +335,7 @@ var Anuto;
             this.mortarsImpacting = [];
             this.consumedGlues = [];
             this.teleportedEnemies = [];
+            this.noEnemiesOnStage = false;
         };
         Engine.prototype.removeEnemy = function (enemy) {
             var i = Anuto.GameVars.enemies.indexOf(enemy);
@@ -409,7 +414,7 @@ var Anuto;
             enemy.destroy();
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_REACHED_EXIT, [enemy]));
             if (Anuto.GameVars.enemies.length === 0) {
-                this.waveOver();
+                this.onNoEnemiesOnStage();
             }
         };
         Engine.prototype.onEnemyKilled = function (enemy) {
@@ -419,7 +424,7 @@ var Anuto;
             Anuto.GameVars.enemies.splice(i, 1);
             enemy.destroy();
             if (Anuto.GameVars.enemies.length === 0) {
-                this.waveOver();
+                this.onNoEnemiesOnStage();
             }
         };
         Engine.prototype.improveTurret = function (id) {
@@ -470,16 +475,18 @@ var Anuto;
                     this.mortarsImpacting.push(this.mortars[i]);
                 }
             }
+            for (var i = 0; i < this.glues.length; i++) {
+                if (this.glues[i].consumed) {
+                    this.consumedGlues.push(this.glues[i]);
+                }
+            }
             for (var i = 0; i < Anuto.GameVars.enemies.length; i++) {
                 var enemy = Anuto.GameVars.enemies[i];
                 if (enemy.type !== Anuto.GameConstants.ENEMY_FLIER) {
                     enemy.affectedByGlue = false;
                     for (var j = 0; j < this.glues.length; j++) {
                         var glue = this.glues[j];
-                        if (glue.consumed && this.consumedGlues.indexOf(glue) === -1) {
-                            this.consumedGlues.push(glue);
-                        }
-                        else {
+                        if (!glue.consumed) {
                             var dx = enemy.x - glue.x;
                             var dy = enemy.y - glue.y;
                             var squaredDist = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
@@ -545,7 +552,7 @@ var Anuto;
                 teleportedEnemiesData.push({ enemy: enemy, glueTurret: this.teleportedEnemies[i].glueTurret });
             }
             this.teleportedEnemies.length = 0;
-            if (teleportedEnemiesData.length) {
+            if (teleportedEnemiesData.length > 0) {
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMIES_TELEPORTED, [teleportedEnemiesData]));
             }
         };
@@ -556,9 +563,14 @@ var Anuto;
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_SPAWNED, [enemy, Anuto.GameVars.enemiesPathCells[0]]));
             }
         };
-        Engine.prototype.waveOver = function () {
-            this.waveActivated = false;
-            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.WAVE_OVER));
+        Engine.prototype.onNoEnemiesOnStage = function () {
+            this.noEnemiesOnStage = true;
+            for (var i = 0; i < this.bullets.length; i++) {
+                var bullet = this.bullets[i];
+                bullet.assignedEnemy = null;
+                this.bulletsColliding.push(bullet);
+            }
+            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.NO_ENEMIES_ON_STAGE));
         };
         Engine.prototype.getTurretById = function (id) {
             var turret = null;
@@ -711,6 +723,7 @@ var Anuto;
         Event.ENEMY_HIT = "enemy hit by bullet";
         Event.ENEMY_REACHED_EXIT = "enemy reached exit";
         Event.WAVE_OVER = "wave over";
+        Event.NO_ENEMIES_ON_STAGE = "no enemies on stage";
         Event.BULLET_SHOT = "bullet shot";
         Event.LASER_SHOT = "laser shot";
         Event.MORTAR_SHOT = "mortar shot";

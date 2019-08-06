@@ -33,8 +33,8 @@ export class EnemyActor extends Phaser.GameObjects.Container {
     public update(time: number, delta: number): void {
 
         if (this.anutoEnemy.teleporting) {
-            this.scaleX = .15;
-            this.scaleY = .15;
+            this.scaleX = .175;
+            this.scaleY = .175;
             return;
         }
 
@@ -67,14 +67,14 @@ export class EnemyActor extends Phaser.GameObjects.Container {
     public teleport(anutoGlueTurret: Anuto.GlueTurret): void {
         
         const glueTurret_px = (anutoGlueTurret.position.c + .5) * GameConstants.CELLS_SIZE;
-        const glueTurret_py = (anutoGlueTurret.position.r + .5) * GameConstants.CELLS_SIZE;
+        const glueTurret_py = (anutoGlueTurret.position.r + .5) * GameConstants.CELLS_SIZE - 8;
 
         this.scene.tweens.add({
             targets: this,
             x: glueTurret_px,
             y: glueTurret_py,
-            scaleX: .15,
-            scaleY: .15,
+            scaleX: .175,
+            scaleY: .175,
             ease: Phaser.Math.Easing.Cubic.Out,
             duration: 500
         });
