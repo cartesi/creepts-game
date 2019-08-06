@@ -12,6 +12,8 @@ module Anuto {
             
             super(GameConstants.TURRET_GLUE, p);
 
+            this.maxLevel = 5;
+
             this.calculateTurretParameters();
         }
 

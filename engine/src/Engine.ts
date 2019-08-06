@@ -308,7 +308,7 @@ module Anuto {
 
             const turret = this.getTurretById(id);
 
-            if (turret.level < 10 && GameVars.credits >= turret.priceImprovement) {
+            if (turret.level < turret.maxLevel && GameVars.credits >= turret.priceImprovement) {
                 GameVars.credits -= turret.priceImprovement;
                 turret.improve();
                 success = true;

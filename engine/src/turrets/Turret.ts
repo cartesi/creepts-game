@@ -8,12 +8,14 @@ module Anuto {
         public creationTick: number;
         public type: string;
         public level: number;
+        public maxLevel: number;
         public grade: number;
         public x: number;
         public y: number;
         public damage: number;
         public reload: number;
         public range: number;
+        public inflicted: number;
         public priceImprovement: number;
         public priceUpgrade: number;
         public value: number;
@@ -39,7 +41,9 @@ module Anuto {
             this.type = type;
             this.f = 0;
             this.level = 1;
+            this.maxLevel = 10;
             this.grade = 1;
+            this.inflicted = 0;
             this.position = p;
             this.fixedTarget = true;
             this.shootingStrategyIndex = 0;

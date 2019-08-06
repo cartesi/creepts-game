@@ -30,7 +30,7 @@ export class BattleScene extends Phaser.Scene {
         this.gui = new GUI(this);
         this.add.existing(this.gui);
 
-        this.boardContainer.addInitialTowers();
+        // this.boardContainer.addInitialTowers();
     }
 
     public update(time: number, delta: number): void {
@@ -52,9 +52,4 @@ export class BattleScene extends Phaser.Scene {
         this.boardContainer.hideTurretMenu();
         this.boardContainer.hideRangeCircles();
     }
-
-    // public createRangeCircle(range: number, x: number, y: number): Phaser.GameObjects.Graphics {
-
-    //     return this.boardContainer.createRangeCircle(range, x, y);
-    // }
 }

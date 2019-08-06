@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    };
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -57,7 +57,9 @@ var Anuto;
             this.type = type;
             this.f = 0;
             this.level = 1;
+            this.maxLevel = 10;
             this.grade = 1;
+            this.inflicted = 0;
             this.position = p;
             this.fixedTarget = true;
             this.shootingStrategyIndex = 0;
@@ -430,7 +432,7 @@ var Anuto;
         Engine.prototype.improveTurret = function (id) {
             var success = false;
             var turret = this.getTurretById(id);
-            if (turret.level < 10 && Anuto.GameVars.credits >= turret.priceImprovement) {
+            if (turret.level < turret.maxLevel && Anuto.GameVars.credits >= turret.priceImprovement) {
                 Anuto.GameVars.credits -= turret.priceImprovement;
                 turret.improve();
                 success = true;
@@ -831,6 +833,7 @@ var Anuto;
         __extends(GlueTurret, _super);
         function GlueTurret(p) {
             var _this = _super.call(this, Anuto.GameConstants.TURRET_GLUE, p) || this;
+            _this.maxLevel = 5;
             _this.calculateTurretParameters();
             return _this;
         }

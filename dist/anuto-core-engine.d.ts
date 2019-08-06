@@ -11,12 +11,14 @@ declare module Anuto {
         creationTick: number;
         type: string;
         level: number;
+        maxLevel: number;
         grade: number;
         x: number;
         y: number;
         damage: number;
         reload: number;
         range: number;
+        inflicted: number;
         priceImprovement: number;
         priceUpgrade: number;
         value: number;

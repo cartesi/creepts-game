@@ -1,6 +1,7 @@
 import { BattleManager } from './BattleManager';
 import { Button } from "../../utils/Utils";
 import { GameConstants } from "../../GameConstants";
+import { GameVars } from '../../GameVars';
 
 export class TurretMenu extends Phaser.GameObjects.Container {
 
@@ -12,9 +13,19 @@ export class TurretMenu extends Phaser.GameObjects.Container {
 
     private strategyText: Phaser.GameObjects.Text;
     private objectiveText: Phaser.GameObjects.Text;
-    private levelText: Phaser.GameObjects.Text;
+    private levelUpText: Phaser.GameObjects.Text;
     private upgradeText: Phaser.GameObjects.Text;
     private sellText: Phaser.GameObjects.Text;
+
+    private levelText: Phaser.GameObjects.Text;
+    private damageText: Phaser.GameObjects.Text;
+    private intensityText: Phaser.GameObjects.Text;
+    private distanceText: Phaser.GameObjects.Text;
+    private durationText: Phaser.GameObjects.Text;
+    private explosionText: Phaser.GameObjects.Text;
+    private reloadText: Phaser.GameObjects.Text;
+    private rangeText: Phaser.GameObjects.Text;
+    private inflictedText: Phaser.GameObjects.Text;
 
     private anutoTurret: Anuto.Turret;
 
@@ -42,47 +53,73 @@ export class TurretMenu extends Phaser.GameObjects.Container {
 
         let offY = -230;
 
-        let text = new Phaser.GameObjects.Text(this.scene, -180, offY, "LEVEL: " + anutoTurret.level, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+        let text = new Phaser.GameObjects.Text(this.scene, -180, offY, "LEVEL:", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
         this.add(text);
+
+        this.levelText = new Phaser.GameObjects.Text(this.scene, 50, offY, this.anutoTurret.level + "/" + this.anutoTurret.maxLevel, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+        this.add(this.levelText);
 
         offY += 35;
 
         if (anutoTurret.type !== Anuto.GameConstants.TURRET_GLUE) {
-            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "DAMAGE: " + anutoTurret.damage, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "DAMAGE:", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(text);
+
+            this.damageText = new Phaser.GameObjects.Text(this.scene, 50, offY, this.anutoTurret.damage.toString(), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+            this.add(this.damageText);
         } else {
-            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "INTENSITY: " + (anutoTurret as Anuto.GlueTurret).intensity, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "INTENSITY:", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(text);
+
+            this.intensityText = new Phaser.GameObjects.Text(this.scene, 50, offY, (this.anutoTurret as Anuto.GlueTurret).intensity.toString(), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+            this.add(this.intensityText);
 
             offY += 35;
 
-            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "DURATION: " + (anutoTurret as Anuto.GlueTurret).duration, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "DURATION:", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(text);
+
+            this.durationText = new Phaser.GameObjects.Text(this.scene, 50, offY, (this.anutoTurret as Anuto.GlueTurret).duration.toString(), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+            this.add(this.durationText);
         }
 
         offY += 35;
 
         if (anutoTurret.type === Anuto.GameConstants.TURRET_LAUNCH) {
-            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "EXPLOSION RANGE: " + (anutoTurret as Anuto.LaunchTurret).explosionRange, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "EXPLOSION RANGE:", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(text);
+
+            this.explosionText = new Phaser.GameObjects.Text(this.scene, 50, offY, (this.anutoTurret as Anuto.LaunchTurret).explosionRange.toString(), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+            this.add(this.explosionText);
 
             offY += 35;
         }
 
-        text = new Phaser.GameObjects.Text(this.scene, -180, offY, "RELOAD: " + anutoTurret.reload, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+        text = new Phaser.GameObjects.Text(this.scene, -180, offY, "RELOAD:", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
         this.add(text);
+
+        this.reloadText = new Phaser.GameObjects.Text(this.scene, 50, offY, this.anutoTurret.reload.toString(), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+        this.add(this.reloadText);
 
         offY += 35;
 
-        text = new Phaser.GameObjects.Text(this.scene, -180, offY, "RANGE: " + anutoTurret.range, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+        text = new Phaser.GameObjects.Text(this.scene, -180, offY, "RANGE:", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
         this.add(text);
+
+        this.rangeText = new Phaser.GameObjects.Text(this.scene, 50, offY, this.anutoTurret.range.toString(), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+        this.add(this.rangeText);
 
         offY += 35;
 
         if (anutoTurret.type !== Anuto.GameConstants.TURRET_GLUE) {
-            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "INFLICTED: ", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+            text = new Phaser.GameObjects.Text(this.scene, -180, offY, "INFLICTED:", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(text);
+
+            this.inflictedText = new Phaser.GameObjects.Text(this.scene, 50, offY, this.anutoTurret.inflicted.toString(), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+            this.add(this.inflictedText);
         }
+
+        // BUTTONS
 
         let width = 350;
         let height = 40;
@@ -146,9 +183,9 @@ export class TurretMenu extends Phaser.GameObjects.Container {
         levelBck.strokeRect(-width / 2 - 5, -height / 2 - 5, width + 10, height + 10);
         this.levelButton.add(levelBck);
 
-        this.levelText = new Phaser.GameObjects.Text(this.scene, 0, 0, "LEVEL UP (" + anutoTurret.priceImprovement + ")" , {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
-        this.levelText.setOrigin(.5);
-        this.levelButton.add(this.levelText);
+        this.levelUpText = new Phaser.GameObjects.Text(this.scene, 0, 0, "LEVEL UP (" + anutoTurret.priceImprovement + ")" , {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+        this.levelUpText.setOrigin(.5);
+        this.levelButton.add(this.levelUpText);
 
         offY += 65;
 
@@ -192,7 +229,12 @@ export class TurretMenu extends Phaser.GameObjects.Container {
         this.sellText.setOrigin(.5);
         this.sellButton.add(this.sellText);
 
-        if (anutoTurret.type === Anuto.GameConstants.TURRET_GLUE && anutoTurret.grade === 1) {
+        this.checkAndUpdateInfo();
+    }
+
+    private checkAndUpdateInfo(): void {
+
+        if ((this.anutoTurret.type === Anuto.GameConstants.TURRET_GLUE && this.anutoTurret.grade === 1) || (this.anutoTurret.type === Anuto.GameConstants.TURRET_LAUNCH && this.anutoTurret.grade === 2)) {
             this.strategyButton.alpha = .5;
             this.objectiveButton.alpha = .5;
 
@@ -200,15 +242,55 @@ export class TurretMenu extends Phaser.GameObjects.Container {
             this.objectiveText.setText("FIXED TARGET");
         }
 
-        if (anutoTurret.type === Anuto.GameConstants.TURRET_LAUNCH && anutoTurret.grade === 2) {
-            this.strategyButton.alpha = .5;
-            this.objectiveButton.alpha = .5;
+        // si no hay suficientes creditos desactivar botones de level up y upgrade
 
-            this.strategyText.setText("STRATEGY");
-            this.objectiveText.setText("FIXED TARGET");
+        if (Anuto.GameVars.credits < this.anutoTurret.priceImprovement) {
+            this.levelButton.alpha = .5;
         }
 
-        // TODO: si no hay suficientes creditos desactivar botones de level up y upgrade
+        if (Anuto.GameVars.credits < this.anutoTurret.priceUpgrade) {
+            this.upgradeButton.alpha = .5;
+        }
+
+        // si ya estamos a level maximo desactivar el boton
+
+        if (this.anutoTurret.level === this.anutoTurret.maxLevel) {
+            this.levelButton.alpha = .5;
+        }
+
+        // si ya estamos a upgrade maximo desactivar el boton
+
+        if (this.anutoTurret.grade === 3) {
+            this.upgradeButton.alpha = .5;
+        }
+
+        // update de la informacion en texto
+        
+        this.levelText.setText(this.anutoTurret.level + "/" + this.anutoTurret.maxLevel);
+
+        if (this.anutoTurret.type !== Anuto.GameConstants.TURRET_GLUE) {
+            this.damageText.setText(this.anutoTurret.damage.toString());
+        } else {
+            this.intensityText.setText((this.anutoTurret as Anuto.GlueTurret).intensity.toString());
+            this.durationText.setText((this.anutoTurret as Anuto.GlueTurret).duration.toString());
+        }
+
+        if (this.anutoTurret.type === Anuto.GameConstants.TURRET_LAUNCH) {
+            this.explosionText.setText((this.anutoTurret as Anuto.LaunchTurret).explosionRange.toString());
+        }
+
+            this.reloadText.setText(this.anutoTurret.reload.toString());
+            this.rangeText.setText(this.anutoTurret.range.toString());
+
+        if (this.anutoTurret.type !== Anuto.GameConstants.TURRET_GLUE) {
+            this.inflictedText.setText(this.anutoTurret.inflicted.toString());
+        }
+
+        // update en la informacion de los botones
+
+        this.levelUpText.setText("LEVEL UP (" + this.anutoTurret.priceImprovement + ")" );
+        this.upgradeText.setText("UPGRADE (" + this.anutoTurret.priceUpgrade + ")" );
+        this.sellText.setText("SELL (" + this.anutoTurret.value + ")" );
     }
 
     private onBtnOver(btn: Phaser.GameObjects.Container): void {
@@ -253,8 +335,8 @@ export class TurretMenu extends Phaser.GameObjects.Container {
             return;
         }
 
-        console.log("LEVEL UP");
-        // TODO: actualizar todos los datos / botones
+        BattleManager.improveTurret(this.anutoTurret.id);
+        this.checkAndUpdateInfo();
     }
 
     private onClickUpgrade(): void {
@@ -263,9 +345,8 @@ export class TurretMenu extends Phaser.GameObjects.Container {
             return;
         }
 
-        console.log("UPGRADE");
-        // TODO: si la evolucion es launch(2) no tienen estrategia ni fijan objetivos, en este caso desactivar esos dos botones
-        // TODO: actualizar todos los datos / botones
+        BattleManager.upgradeTower(this.anutoTurret.id);
+        this.checkAndUpdateInfo();
     }
 
     private onClickSell(): void {
