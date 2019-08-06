@@ -1473,8 +1473,8 @@ var EnemyActor = /** @class */ (function (_super) {
     }
     EnemyActor.prototype.update = function (time, delta) {
         if (this.anutoEnemy.teleporting) {
-            this.scaleX = .15;
-            this.scaleY = .15;
+            this.scaleX = .175;
+            this.scaleY = .175;
             return;
         }
         this.scaleX = 1;
@@ -1499,13 +1499,13 @@ var EnemyActor = /** @class */ (function (_super) {
     };
     EnemyActor.prototype.teleport = function (anutoGlueTurret) {
         var glueTurret_px = (anutoGlueTurret.position.c + .5) * GameConstants_1.GameConstants.CELLS_SIZE;
-        var glueTurret_py = (anutoGlueTurret.position.r + .5) * GameConstants_1.GameConstants.CELLS_SIZE;
+        var glueTurret_py = (anutoGlueTurret.position.r + .5) * GameConstants_1.GameConstants.CELLS_SIZE - 8;
         this.scene.tweens.add({
             targets: this,
             x: glueTurret_px,
             y: glueTurret_py,
-            scaleX: .15,
-            scaleY: .15,
+            scaleX: .175,
+            scaleY: .175,
             ease: Phaser.Math.Easing.Cubic.Out,
             duration: 500
         });

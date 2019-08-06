@@ -146,13 +146,13 @@ module Anuto {
                 }
             }
 
-            const e: Enemy[] = [];
+            const enemies: Enemy[] = [];
 
             for (let i = 0; i < enemiesAndSquaredDistances.length; i ++) {
-                e.push(enemiesAndSquaredDistances[i].enemy);
+                enemies.push(enemiesAndSquaredDistances[i].enemy);
             }
 
-            return e;
+            return enemies;
         }
     }
 }

@@ -7,6 +7,7 @@ module Anuto {
         public static readonly ENEMY_HIT = "enemy hit by bullet";
         public static readonly ENEMY_REACHED_EXIT = "enemy reached exit";
         public static readonly WAVE_OVER = "wave over";
+        public static readonly NO_ENEMIES_ON_STAGE = "no enemies on stage";
         public static readonly BULLET_SHOT = "bullet shot";
         public static readonly LASER_SHOT = "laser shot";
         public static readonly MORTAR_SHOT = "mortar shot";

@@ -92,6 +92,7 @@ declare module Anuto {
         private t;
         private eventDispatcher;
         private enemiesSpawner;
+        private noEnemiesOnStage;
         static getPathPosition(l: number): {
             x: number;
             y: number;
@@ -120,7 +121,7 @@ declare module Anuto {
         private removeProjectilesAndAccountDamage;
         private teleport;
         private spawnEnemies;
-        private waveOver;
+        private onNoEnemiesOnStage;
         private getTurretById;
         readonly ticksCounter: number;
         readonly credits: number;
@@ -223,6 +224,7 @@ declare module Anuto {
         static readonly ENEMY_HIT = "enemy hit by bullet";
         static readonly ENEMY_REACHED_EXIT = "enemy reached exit";
         static readonly WAVE_OVER = "wave over";
+        static readonly NO_ENEMIES_ON_STAGE = "no enemies on stage";
         static readonly BULLET_SHOT = "bullet shot";
         static readonly LASER_SHOT = "laser shot";
         static readonly MORTAR_SHOT = "mortar shot";
