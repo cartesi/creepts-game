@@ -132,6 +132,8 @@ declare module Anuto {
         private getTurretById;
         readonly ticksCounter: number;
         readonly credits: number;
+        readonly lifes: number;
+        readonly round: number;
         timeStep: number;
         paused: boolean;
     }
@@ -165,6 +167,8 @@ declare module Anuto {
     class GameVars {
         static credits: number;
         static score: number;
+        static lifes: number;
+        static round: number;
         static timeStep: number;
         static enemySpawningDeltaTicks: number;
         static ticksCounter: number;
@@ -198,6 +202,7 @@ declare module Anuto.Types {
         runningInClientSide: boolean;
         enemySpawningDeltaTicks: number;
         credits: number;
+        lifes: number;
         boardSize: {
             r: number;
             c: number;

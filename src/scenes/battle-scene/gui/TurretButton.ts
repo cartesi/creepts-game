@@ -1,4 +1,5 @@
 import { BattleManager } from './../BattleManager';
+import { GameVars } from '../../../GameVars';
 
 export class TurretButton extends Phaser.GameObjects.Container {
 
@@ -11,7 +12,7 @@ export class TurretButton extends Phaser.GameObjects.Container {
 
         super(scene);
 
-        this.x = index * 60;
+        this.x = index * 80;
         this.typeTurret = type;
 
         this.setScale(.8);
@@ -54,13 +55,34 @@ export class TurretButton extends Phaser.GameObjects.Container {
             this.canon.y += 6;
         }
 
-        let text = new Phaser.GameObjects.Text(this.scene, 0, 40, "100", {fontFamily: "Rubik-Regular", fontSize: "26px", color: "#000000"});
+        let creditIcon = new Phaser.GameObjects.Image(this.scene, -30, 42, "texture_atlas_1", "coin_icon");
+        creditIcon.setTint(0x000000);
+        this.add(creditIcon);
+
+        let text = new Phaser.GameObjects.Text(this.scene, 12, 42, Anuto.GameVars.turretData[this.typeTurret].price, {fontFamily: "Rubik-Light", fontSize: "30px", color: "#000000"});
         text.setOrigin(.5);
         this.add(text);
+
+        if (this.typeTurret === Anuto.GameConstants.TURRET_GLUE) {
+            text.x = 15;
+        }
         
     }
 
+    public updateTurret(): void {
+
+        if (Anuto.GameVars.turretData[this.typeTurret].price > Anuto.GameVars.credits) {
+            this.alpha = .5;
+        } else {
+            this.alpha = 1;
+        }
+    }
+
     private onDownTurret(): void {
+
+        if (this.alpha !== 1 || GameVars.paused) {
+            return;
+        }
 
         BattleManager.createTurret(this.typeTurret);
     }

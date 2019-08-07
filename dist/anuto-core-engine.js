@@ -253,12 +253,14 @@ var Anuto;
             Anuto.Glue.id = 0;
             Anuto.GameVars.runningInClientSide = gameConfig.runningInClientSide;
             Anuto.GameVars.credits = gameConfig.credits;
+            Anuto.GameVars.lifes = gameConfig.lifes;
             Anuto.GameVars.timeStep = gameConfig.timeStep;
             Anuto.GameVars.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
             Anuto.GameVars.paused = false;
             Anuto.GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
             Anuto.GameVars.enemyData = enemyData;
             Anuto.GameVars.turretData = turretData;
+            Anuto.GameVars.round = 1;
             this.waveActivated = false;
             this.t = 0;
             this.eventDispatcher = new Anuto.EventDispatcher();
@@ -594,6 +596,20 @@ var Anuto;
         Object.defineProperty(Engine.prototype, "credits", {
             get: function () {
                 return Anuto.GameVars.credits;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Engine.prototype, "lifes", {
+            get: function () {
+                return Anuto.GameVars.lifes;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Engine.prototype, "round", {
+            get: function () {
+                return Anuto.GameVars.round;
             },
             enumerable: true,
             configurable: true

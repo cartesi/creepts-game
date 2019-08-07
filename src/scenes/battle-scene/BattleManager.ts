@@ -20,6 +20,7 @@ export class BattleManager {
             runningInClientSide: true,
             enemySpawningDeltaTicks: GameConstants.ENEMY_SPAWNING_DELTA_TICKS,
             credits: GameConstants.INITIAL_CREDITS,
+            lifes: GameConstants.INITIAL_LIFES,
             boardSize: GameConstants.BOARD_SIZE,
             enemiesPathCells : GameVars.enemiesPathCells
         };
@@ -113,11 +114,18 @@ export class BattleManager {
 
         BattleManager.anutoEngine.sellTurret(anutoTurret);
         BoardContainer.currentInstance.removeTurret(anutoTurret);
+        BattleScene.currentInstance.gui.updateTurretButtons();
+    }
+
+    public static onClickMenu(): void {
+
+        BoardContainer.currentInstance.showPauseMenu();
     }
 
     public static improveTurret(id: number): void {
 
         BattleManager.anutoEngine.improveTurret(id);
+        BattleScene.currentInstance.gui.updateTurretButtons();
     }
 
     public static upgradeTower(id: number): void {
@@ -127,6 +135,7 @@ export class BattleManager {
 
         if (sucess) {
             BoardContainer.currentInstance.upgradeTurret(id);
+            BattleScene.currentInstance.gui.updateTurretButtons();
         }
     }
 

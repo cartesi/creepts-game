@@ -10,6 +10,7 @@ module Anuto.Types {
         runningInClientSide: boolean;
         enemySpawningDeltaTicks: number;
         credits: number;
+        lifes: number;
         boardSize: {r: number, c: number}; 
         enemiesPathCells: {r: number, c: number} [];
     };

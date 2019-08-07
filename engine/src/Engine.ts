@@ -63,6 +63,8 @@ module Anuto {
  
             GameVars.runningInClientSide = gameConfig.runningInClientSide;
             GameVars.credits = gameConfig.credits;
+            GameVars.lifes = gameConfig.lifes;
+
             GameVars.timeStep = gameConfig.timeStep;
             GameVars.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
             GameVars.paused = false;
@@ -70,6 +72,8 @@ module Anuto {
 
             GameVars.enemyData = enemyData;
             GameVars.turretData = turretData;
+
+            GameVars.round = 1;
             
             this.waveActivated = false;
             this.t = 0;
@@ -540,8 +544,18 @@ module Anuto {
         }
 
         public get credits(): number {
-
+            
             return GameVars.credits;
+        }
+
+        public get lifes(): number {
+            
+            return GameVars.lifes;
+        }
+
+        public get round(): number {
+            
+            return GameVars.round;
         }
 
         public get timeStep(): number {

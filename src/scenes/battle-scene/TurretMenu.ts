@@ -20,7 +20,6 @@ export class TurretMenu extends Phaser.GameObjects.Container {
     private levelText: Phaser.GameObjects.Text;
     private damageText: Phaser.GameObjects.Text;
     private intensityText: Phaser.GameObjects.Text;
-    private distanceText: Phaser.GameObjects.Text;
     private durationText: Phaser.GameObjects.Text;
     private explosionText: Phaser.GameObjects.Text;
     private reloadText: Phaser.GameObjects.Text;

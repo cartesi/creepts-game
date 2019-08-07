@@ -1,3 +1,4 @@
+import { BattleScene } from './BattleScene';
 import { TurretMenu } from './TurretMenu';
 import { GluePool } from './turret-actors/GluePool';
 import { EnemyActor } from "./enemy-actors/EnemyActor";
@@ -18,6 +19,8 @@ import { LaunchTurretActor } from "./turret-actors/LaunchTurretActor";
 import { MortarActor } from "./turret-actors/MortarActor";
 import { GlueTurretActor } from "./turret-actors/GlueTurretActor";
 import { BattleManager } from './BattleManager';
+import { PauseMenu } from './PauseMenu';
+import { GameManager } from '../../GameManager';
 
 export class BoardContainer extends Phaser.GameObjects.Container {
 
@@ -34,6 +37,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     private glueCircles: Phaser.GameObjects.Graphics[];
 
     private turretMenu: TurretMenu;
+    private pauseMenu: PauseMenu;
 
     private pointerContainer: Phaser.GameObjects.Container;
     private circlesContainer: Phaser.GameObjects.Container;
@@ -216,8 +220,9 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
         
         this.actorsContainer.add(turret);
-
         this.turretActors.push(turret);
+
+        BattleScene.currentInstance.gui.updateTurretButtons();
     }
 
     public removeTurret(anutoTurret: Anuto.Turret): void {
@@ -349,6 +354,8 @@ export class BoardContainer extends Phaser.GameObjects.Container {
             enemyActor.die();
             this.deadEnemyActors.push(enemyActor);
         }
+
+        BattleScene.currentInstance.gui.updateTurretButtons();
     }
 
     public teleportEnemy(anutoEnemy: Anuto.Enemy, anutoGlueTurret: Anuto.GlueTurret): void {
@@ -474,6 +481,26 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
+    public showPauseMenu(): void {
+
+        if (!this.pauseMenu) {
+            BattleManager.pause();
+            this.pauseMenu = new PauseMenu(this.scene);
+            this.add(this.pauseMenu);
+        } else {
+            this.hidePauseMenu();
+        }
+    }
+
+    public hidePauseMenu(): void {
+
+        if (this.pauseMenu) {
+            BattleManager.resume();
+            this.remove(this.pauseMenu);
+            this.pauseMenu = null;
+        }
+    }
+
     private drawDebugGeometry(): void {
         
         const path = new Phaser.GameObjects.Graphics(this.scene);
@@ -500,8 +527,13 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
     private onPointerDown(): void {
 
-        this.hideRangeCircles();
-        this.hideTurretMenu();
+        if (this.pauseMenu) {
+            this.hidePauseMenu();
+        } else {
+            this.hideRangeCircles();
+            this.hideTurretMenu();
+        }
+        
     }
 
     private createAnimations(): void {

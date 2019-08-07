@@ -2782,6 +2782,48 @@
 					}
 				},
 				{
+					"filename": "enemy_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 28,
+						"h": 29
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 28,
+						"h": 29
+					},
+					"frame": {
+						"x": 136,
+						"y": 514,
+						"w": 28,
+						"h": 29
+					}
+				},
+				{
+					"filename": "coin_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 28,
+						"h": 27
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 28,
+						"h": 27
+					},
+					"frame": {
+						"x": 662,
+						"y": 269,
+						"w": 28,
+						"h": 27
+					}
+				},
+				{
 					"filename": "canon_4_1_3",
 					"rotated": false,
 					"trimmed": true,
@@ -2796,8 +2838,8 @@
 						"h": 67
 					},
 					"frame": {
-						"x": 136,
-						"y": 514,
+						"x": 692,
+						"y": 269,
 						"w": 26,
 						"h": 67
 					}
@@ -2818,9 +2860,30 @@
 					},
 					"frame": {
 						"x": 662,
-						"y": 269,
+						"y": 298,
 						"w": 26,
 						"h": 37
+					}
+				},
+				{
+					"filename": "lives_icon",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 26,
+						"h": 22
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 26,
+						"h": 22
+					},
+					"frame": {
+						"x": 614,
+						"y": 300,
+						"w": 26,
+						"h": 22
 					}
 				}
 			]
@@ -2829,6 +2892,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:8e55193efac9d5bb801e30313c51f445:991b02dc5e87f5b644210e41493d6fbf:1bd3fbbbdaf54e41cf80e3e904578de4$"
+		"smartupdate": "$TexturePacker:SmartUpdate:876d86c31c7dc5d000e172fdbba65c0d:32b12027ff229b79020a38fc28c91640:1bd3fbbbdaf54e41cf80e3e904578de4$"
 	}
 }

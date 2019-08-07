@@ -4,6 +4,8 @@ module Anuto {
 
         public static credits: number;
         public static score: number;
+        public static lifes: number;
+        public static round: number;
         public static timeStep: number;
         public static enemySpawningDeltaTicks: number;
         public static ticksCounter: number;
