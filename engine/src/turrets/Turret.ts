@@ -126,7 +126,7 @@ module Anuto {
 
                 // TODO: AÑADIR LA CONDICION DE QUE SI ES UNA TORRETA GLUE IGNORE A LOS ENEMIGOS VOLADORES
                 // SIEMPRE QUE SEA DE GRADO 1 ó 2
-                if (enemy.life > 0 && GameVars && !enemy.teleporting) {
+                if (enemy.life > 0 && enemy.l < GameVars.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
 
                     const dx = this.x - enemy.x;
                     const dy = this.y - enemy.y;
