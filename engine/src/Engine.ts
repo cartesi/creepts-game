@@ -10,9 +10,11 @@ module Anuto {
        
         private turrets: Turret[];
         private bullets: Bullet[];
+        private glueBullets: GlueBullet[];
         private mortars: Mortar[];
         private glues: Glue[];
         private bulletsColliding: Bullet[];
+        private glueBulletsColliding: GlueBullet[];
         private mortarsImpacting: Mortar[];
         private consumedGlues: Glue[];
         private teleportedEnemies: {enemy: Enemy, glueTurret: GlueTurret}[];
@@ -103,7 +105,7 @@ module Anuto {
                 return;
             }
 
-            if (this.noEnemiesOnStage && this.bullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
+            if (this.noEnemiesOnStage && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
                 this.waveActivated = false;
                 this.eventDispatcher.dispatchEvent(new Event(Event.WAVE_OVER));
             }
@@ -124,6 +126,10 @@ module Anuto {
             }); 
 
             this.bullets.forEach(function (bullet) {
+                bullet.update();
+            }); 
+
+            this.glueBullets.forEach(function (bullet) {
                 bullet.update();
             }); 
 
@@ -158,10 +164,12 @@ module Anuto {
            
             GameVars.enemies = [];
             this.bullets = [];
+            this.glueBullets = [];
             this.mortars = [];
             this.glues = [];
 
             this.bulletsColliding = [];
+            this.glueBulletsColliding = [];
             this.mortarsImpacting = [];
             this.consumedGlues = [];
             this.teleportedEnemies = [];
@@ -240,6 +248,13 @@ module Anuto {
             this.eventDispatcher.dispatchEvent(new Event(Event.BULLET_SHOT, [bullet, projectileTurret]));
         }
 
+        public addGlueBullet(bullet: GlueBullet, glueTurret: GlueTurret): void {
+
+            this.glueBullets.push(bullet);
+
+            this.eventDispatcher.dispatchEvent(new Event(Event.GLUE_BULLET_SHOT, [bullet, glueTurret]));
+        }
+
         public addGlue(glue: Glue, glueTurret: GlueTurret): void {
 
             this.glues.push(glue);
@@ -274,6 +289,16 @@ module Anuto {
                 if (bullet.assignedEnemy.id === enemy.id && this.bulletsColliding.indexOf(bullet) === -1) {
                     bullet.assignedEnemy = null;
                     this.bulletsColliding.push(bullet);
+                }
+            }
+
+            for (let i = 0; i < this.glueBullets.length; i ++) {
+
+                const bullet = this.glueBullets[i];
+
+                if (bullet.assignedEnemy.id === enemy.id && this.glueBulletsColliding.indexOf(bullet) === -1) {
+                    bullet.assignedEnemy = null;
+                    this.glueBulletsColliding.push(bullet);
                 }
             }
         }
@@ -368,6 +393,22 @@ module Anuto {
                 } 
             } 
 
+            for (let i = 0; i < this.glueBullets.length; i ++) {
+                
+                const bullet = this.glueBullets[i];
+                const enemy = this.glueBullets[i].assignedEnemy;
+
+                const bp1 = {x: bullet.x, y: bullet.y};
+                const bp2 = bullet.getPositionNextTick();
+                const enemyPosition = {x: enemy.x, y: enemy.y};
+
+                const enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
+
+                if (enemyHit) {
+                    this.glueBulletsColliding.push(bullet);
+                } 
+            } 
+
             for (let i = 0; i < this.mortars.length; i ++) {
 
                 if (this.mortars[i].detonate) {
@@ -434,6 +475,27 @@ module Anuto {
             }
 
             this.bulletsColliding.length = 0;
+
+            // las balas de pegamento
+            for (let i = 0; i < this.glueBulletsColliding.length; i ++) {
+
+                const bullet = this.glueBulletsColliding[i];
+                const enemy = bullet.assignedEnemy;
+
+                if (enemy === null || enemy.life === 0) {
+                    // ya esta muerto o el enemigo ha sido teletransportado
+                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_GLUE_HIT, [[], bullet]));
+                } else {
+                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_GLUE_HIT, [[enemy], bullet]));
+                    enemy.glueHit(bullet.intensity, bullet.durationTicks, bullet);
+                }
+
+                const index = this.glueBullets.indexOf(bullet);
+                this.glueBullets.splice(index, 1);
+                bullet.destroy();
+            }
+
+            this.glueBulletsColliding.length = 0;
             
             // los morteros
             for (let i = 0; i < this.mortarsImpacting.length; i ++) {

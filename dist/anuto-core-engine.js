@@ -64,7 +64,7 @@ var Anuto;
             this.fixedTarget = true;
             this.shootingStrategyIndex = 0;
             this.shootingStrategy = Anuto.GameConstants.STRATEGYS_ARRAY[this.shootingStrategyIndex];
-            this.readyToShoot = false;
+            this.readyToShoot = true;
             this.enemiesWithinRange = [];
             this.followedEnemy = null;
             this.x = this.position.c + .5;
@@ -167,6 +167,10 @@ var Anuto;
             this.speed = this.enemyData.speed;
             this.affectedByGlue = false;
             this.glueIntensity = 0;
+            this.affectedByGlueBullet = false;
+            this.glueIntensityBullet = 0;
+            this.glueDuration = 0;
+            this.glueTime = 0;
             this.hasBeenTeleported = false;
             this.teleporting = false;
             this.l = 0;
@@ -189,6 +193,16 @@ var Anuto;
             var speed = this.speed;
             if (this.affectedByGlue) {
                 speed = Anuto.MathUtils.fixNumber(this.speed / this.glueIntensity);
+            }
+            if (this.affectedByGlueBullet) {
+                speed = Anuto.MathUtils.fixNumber(this.speed / this.glueIntensityBullet);
+                if (this.glueDuration <= this.glueTime) {
+                    this.affectedByGlueBullet = false;
+                    this.glueTime = 0;
+                }
+                else {
+                    this.glueTime++;
+                }
             }
             this.l = Anuto.MathUtils.fixNumber(this.l + speed);
             if (this.l >= Anuto.GameVars.enemiesPathCells.length - 1) {
@@ -224,6 +238,11 @@ var Anuto;
                 this.life = 0;
                 Anuto.Engine.currentInstance.onEnemyKilled(this);
             }
+        };
+        Enemy.prototype.glueHit = function (intensity, duration, bullet) {
+            this.affectedByGlueBullet = true;
+            this.glueIntensityBullet = intensity;
+            this.glueDuration = duration;
         };
         Enemy.prototype.restoreHealth = function () {
             this.life = this.enemyData.life;
@@ -298,7 +317,7 @@ var Anuto;
             if (!this.waveActivated || Anuto.GameVars.paused) {
                 return;
             }
-            if (this.noEnemiesOnStage && this.bullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
+            if (this.noEnemiesOnStage && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
                 this.waveActivated = false;
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.WAVE_OVER));
             }
@@ -313,6 +332,9 @@ var Anuto;
                 turret.update();
             });
             this.bullets.forEach(function (bullet) {
+                bullet.update();
+            });
+            this.glueBullets.forEach(function (bullet) {
                 bullet.update();
             });
             this.mortars.forEach(function (mortars) {
@@ -333,9 +355,11 @@ var Anuto;
             this.t = Date.now();
             Anuto.GameVars.enemies = [];
             this.bullets = [];
+            this.glueBullets = [];
             this.mortars = [];
             this.glues = [];
             this.bulletsColliding = [];
+            this.glueBulletsColliding = [];
             this.mortarsImpacting = [];
             this.consumedGlues = [];
             this.teleportedEnemies = [];
@@ -389,6 +413,10 @@ var Anuto;
             this.bullets.push(bullet);
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.BULLET_SHOT, [bullet, projectileTurret]));
         };
+        Engine.prototype.addGlueBullet = function (bullet, glueTurret) {
+            this.glueBullets.push(bullet);
+            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.GLUE_BULLET_SHOT, [bullet, glueTurret]));
+        };
         Engine.prototype.addGlue = function (glue, glueTurret) {
             this.glues.push(glue);
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.GLUE_SHOT, [glue, glueTurret]));
@@ -409,6 +437,13 @@ var Anuto;
                 if (bullet.assignedEnemy.id === enemy.id && this.bulletsColliding.indexOf(bullet) === -1) {
                     bullet.assignedEnemy = null;
                     this.bulletsColliding.push(bullet);
+                }
+            }
+            for (var i = 0; i < this.glueBullets.length; i++) {
+                var bullet = this.glueBullets[i];
+                if (bullet.assignedEnemy.id === enemy.id && this.glueBulletsColliding.indexOf(bullet) === -1) {
+                    bullet.assignedEnemy = null;
+                    this.glueBulletsColliding.push(bullet);
                 }
             }
         };
@@ -474,6 +509,17 @@ var Anuto;
                     }
                 }
             }
+            for (var i = 0; i < this.glueBullets.length; i++) {
+                var bullet = this.glueBullets[i];
+                var enemy = this.glueBullets[i].assignedEnemy;
+                var bp1 = { x: bullet.x, y: bullet.y };
+                var bp2 = bullet.getPositionNextTick();
+                var enemyPosition = { x: enemy.x, y: enemy.y };
+                var enemyHit = Anuto.MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
+                if (enemyHit) {
+                    this.glueBulletsColliding.push(bullet);
+                }
+            }
             for (var i = 0; i < this.mortars.length; i++) {
                 if (this.mortars[i].detonate) {
                     this.mortarsImpacting.push(this.mortars[i]);
@@ -520,6 +566,21 @@ var Anuto;
                 bullet.destroy();
             }
             this.bulletsColliding.length = 0;
+            for (var i = 0; i < this.glueBulletsColliding.length; i++) {
+                var bullet = this.glueBulletsColliding[i];
+                var enemy = bullet.assignedEnemy;
+                if (enemy === null || enemy.life === 0) {
+                    this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_GLUE_HIT, [[], bullet]));
+                }
+                else {
+                    this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_GLUE_HIT, [[enemy], bullet]));
+                    enemy.glueHit(bullet.intensity, bullet.durationTicks, bullet);
+                }
+                var index = this.glueBullets.indexOf(bullet);
+                this.glueBullets.splice(index, 1);
+                bullet.destroy();
+            }
+            this.glueBulletsColliding.length = 0;
             for (var i = 0; i < this.mortarsImpacting.length; i++) {
                 var mortar = this.mortarsImpacting[i];
                 var hitEnemiesData = mortar.getEnemiesWithinExplosionRange();
@@ -739,10 +800,12 @@ var Anuto;
         Event.ENEMY_SPAWNED = "enemy spawned";
         Event.ENEMY_KILLED = "enemy killed";
         Event.ENEMY_HIT = "enemy hit by bullet";
+        Event.ENEMY_GLUE_HIT = "enemy hit by glue bullet";
         Event.ENEMY_REACHED_EXIT = "enemy reached exit";
         Event.WAVE_OVER = "wave over";
         Event.NO_ENEMIES_ON_STAGE = "no enemies on stage";
         Event.BULLET_SHOT = "bullet shot";
+        Event.GLUE_BULLET_SHOT = "glue bullet shot";
         Event.LASER_SHOT = "laser shot";
         Event.MORTAR_SHOT = "mortar shot";
         Event.GLUE_SHOT = "glue shot";
@@ -794,13 +857,14 @@ var Anuto;
 var Anuto;
 (function (Anuto) {
     var Bullet = (function () {
-        function Bullet(p, angle, assignedEnemy, damage) {
+        function Bullet(p, angle, assignedEnemy, damage, canonShoot) {
             this.id = Bullet.id;
             Bullet.id++;
             this.x = p.c + .5;
             this.y = p.r + .5;
             this.assignedEnemy = assignedEnemy;
             this.damage = damage;
+            this.canonShoot = canonShoot;
             this.vx = Anuto.MathUtils.fixNumber(Anuto.GameConstants.BULLET_SPEED * Math.cos(angle));
             this.vy = Anuto.MathUtils.fixNumber(Anuto.GameConstants.BULLET_SPEED * Math.sin(angle));
         }
@@ -842,6 +906,33 @@ var Anuto;
         return Glue;
     }());
     Anuto.Glue = Glue;
+})(Anuto || (Anuto = {}));
+var Anuto;
+(function (Anuto) {
+    var GlueBullet = (function () {
+        function GlueBullet(p, angle, assignedEnemy, intensity, durationTicks) {
+            this.id = Anuto.Bullet.id;
+            Anuto.Bullet.id++;
+            this.x = p.c + .5;
+            this.y = p.r + .5;
+            this.assignedEnemy = assignedEnemy;
+            this.intensity = intensity;
+            this.durationTicks = durationTicks;
+            this.vx = Anuto.MathUtils.fixNumber(Anuto.GameConstants.BULLET_SPEED * Math.cos(angle));
+            this.vy = Anuto.MathUtils.fixNumber(Anuto.GameConstants.BULLET_SPEED * Math.sin(angle));
+        }
+        GlueBullet.prototype.destroy = function () {
+        };
+        GlueBullet.prototype.update = function () {
+            this.x = Anuto.MathUtils.fixNumber(this.x + this.vx);
+            this.y = Anuto.MathUtils.fixNumber(this.y + this.vy);
+        };
+        GlueBullet.prototype.getPositionNextTick = function () {
+            return { x: Anuto.MathUtils.fixNumber(this.x + this.vx), y: Anuto.MathUtils.fixNumber(this.y + this.vy) };
+        };
+        return GlueBullet;
+    }());
+    Anuto.GlueBullet = GlueBullet;
 })(Anuto || (Anuto = {}));
 var Anuto;
 (function (Anuto) {
@@ -891,15 +982,35 @@ var Anuto;
         };
         GlueTurret.prototype.shoot = function () {
             _super.prototype.shoot.call(this);
+            var enemy;
             switch (this.grade) {
                 case 1:
                     var glue = new Anuto.Glue(this.position, this.intensity, this.durationTicks, this.range);
                     Anuto.Engine.currentInstance.addGlue(glue, this);
                     break;
                 case 2:
+                    if (this.fixedTarget) {
+                        enemy = this.followedEnemy || this.enemiesWithinRange[0];
+                    }
+                    else {
+                        enemy = this.enemiesWithinRange[0];
+                    }
+                    var d = Anuto.MathUtils.fixNumber(Math.sqrt((this.x - enemy.x) * (this.x - enemy.x) + (this.y - enemy.y) * (this.y - enemy.y)));
+                    var ticksToImpact = Math.floor(Anuto.MathUtils.fixNumber(d / Anuto.GameConstants.BULLET_SPEED));
+                    var impactPosition = enemy.getNextPosition(ticksToImpact);
+                    var dx = impactPosition.x - this.x;
+                    var dy = impactPosition.y - this.y;
+                    var impactSquareDistance = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
+                    if (this.range * this.range > impactSquareDistance) {
+                        this.shootAngle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
+                        var bullet = new Anuto.GlueBullet({ c: this.position.c, r: this.position.r }, this.shootAngle, enemy, this.intensity, this.durationTicks);
+                        Anuto.Engine.currentInstance.addGlueBullet(bullet, this);
+                    }
+                    else {
+                        this.readyToShoot = true;
+                    }
                     break;
                 case 3:
-                    var enemy = void 0;
                     if (this.fixedTarget) {
                         enemy = this.followedEnemy || this.enemiesWithinRange[0];
                     }
@@ -1087,6 +1198,13 @@ var Anuto;
         __extends(ProjectileTurret, _super);
         function ProjectileTurret(p) {
             var _this = _super.call(this, Anuto.GameConstants.TURRET_PROJECTILE, p) || this;
+            _this.canonShoot = "center";
+            switch (_this.grade) {
+                case 2:
+                case 3:
+                    _this.canonShoot = "left";
+                default:
+            }
             _this.calculateTurretParameters();
             return _this;
         }
@@ -1107,10 +1225,28 @@ var Anuto;
             _super.prototype.update.call(this);
         };
         ProjectileTurret.prototype.calculateTurretParameters = function () {
-            this.damage = Math.floor(1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 66);
-            this.reload = Math.round(((-1 / 18) * this.level + 19 / 18) * 10) / 10;
-            this.range = Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
-            this.priceImprovement = Math.floor(29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+            switch (this.grade) {
+                case 1:
+                    this.damage = Math.floor(1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 66);
+                    this.reload = Math.round(((-1 / 18) * this.level + 19 / 18) * 10) / 10;
+                    this.range = Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
+                    this.priceImprovement = Math.floor(29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+                    break;
+                case 2:
+                    this.damage = Math.floor(1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 150);
+                    this.reload = Math.round(((-1 / 18) * this.level + 12 / 18) * 10) / 10;
+                    this.range = Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
+                    this.priceImprovement = Math.floor(29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+                    console.log(this.reload);
+                    break;
+                case 3:
+                    this.damage = Math.floor(1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 250);
+                    this.reload = Math.round(((-1 / 18) * this.level + 12 / 18) * 10) / 10;
+                    this.range = Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
+                    this.priceImprovement = Math.floor(29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+                    break;
+                default:
+            }
             this.priceUpgrade = 5600 * this.grade;
             if (this.level === 1) {
                 this.value = Anuto.GameVars.turretData[this.type].price;
@@ -1134,9 +1270,20 @@ var Anuto;
             var dx = impactPosition.x - this.x;
             var dy = impactPosition.y - this.y;
             var impactSquareDistance = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
+            switch (this.grade) {
+                case 2:
+                case 3:
+                    if (this.canonShoot === "left") {
+                        this.canonShoot = "right";
+                    }
+                    else {
+                        this.canonShoot = "left";
+                    }
+                default:
+            }
             if (this.range * this.range > impactSquareDistance) {
                 this.shootAngle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
-                var bullet = new Anuto.Bullet(this.position, this.shootAngle, enemy, this.damage);
+                var bullet = new Anuto.Bullet({ c: this.position.c, r: this.position.r }, this.shootAngle, enemy, this.damage, this.canonShoot);
                 Anuto.Engine.currentInstance.addBullet(bullet, this);
             }
             else {

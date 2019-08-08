@@ -12,9 +12,21 @@ module Anuto {
 
     export class ProjectileTurret extends Turret {
 
+        private canonShoot: string;
+
         constructor (p: {r: number, c: number}) {
             
             super(GameConstants.TURRET_PROJECTILE, p);
+
+            this.canonShoot = "center";
+
+            switch (this.grade) {
+
+                case 2:
+                case 3:
+                    this.canonShoot = "left";
+                default:
+            }
 
             this.calculateTurretParameters();
         }
@@ -39,10 +51,39 @@ module Anuto {
         // estos valores estan sacados del anuto
         protected calculateTurretParameters(): void {
 
-            this.damage = Math.floor( 1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 66);
-            this.reload = Math.round(((-1 / 18) * this.level + 19 / 18 ) * 10) / 10;
-            this.range =  Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
-            this.priceImprovement =  Math.floor( 29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+            switch (this.grade) {
+
+                case 1:
+
+                    this.damage = Math.floor( 1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 66);
+                    this.reload = Math.round(((-1 / 18) * this.level + 19 / 18 ) * 10) / 10;
+                    this.range =  Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
+                    this.priceImprovement =  Math.floor( 29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+            
+                    break;
+
+                case 2:
+
+                    this.damage = Math.floor( 1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 150);
+                    this.reload = Math.round(((-1 / 18) * this.level + 12 / 18 ) * 10) / 10;
+                    this.range =  Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
+                    this.priceImprovement =  Math.floor( 29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+                
+
+                    console.log(this.reload);
+                    break;
+
+                case 3: 
+
+                    this.damage = Math.floor( 1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 250);
+                    this.reload = Math.round(((-1 / 18) * this.level + 12 / 18 ) * 10) / 10;
+                    this.range =  Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
+                    this.priceImprovement =  Math.floor( 29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+            
+                    break;
+
+                default:
+            }
             
             // esto hay que calcularlo tambien
             this.priceUpgrade = 5600 * this.grade;
@@ -83,10 +124,22 @@ module Anuto {
 
             const impactSquareDistance = MathUtils.fixNumber(dx * dx + dy * dy);
 
+            switch (this.grade) {
+
+                case 2:
+                case 3:
+                    if (this.canonShoot === "left") {
+                        this.canonShoot = "right";
+                    } else {
+                        this.canonShoot = "left";
+                    }
+                default:
+            }
+
             if (this.range * this.range > impactSquareDistance) {
 
-                this.shootAngle =  MathUtils.fixNumber(Math.atan2(dy, dx));
-                const bullet = new Bullet(this.position, this.shootAngle, enemy, this.damage);
+                this.shootAngle = MathUtils.fixNumber(Math.atan2(dy, dx));
+                const bullet = new Bullet({c: this.position.c, r: this.position.r}, this.shootAngle, enemy, this.damage, this.canonShoot);
 
                 Engine.currentInstance.addBullet(bullet, this);
 

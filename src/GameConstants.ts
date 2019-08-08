@@ -17,7 +17,7 @@ export class GameConstants {
     public static readonly TIME_STEP = 100;
     public static readonly ENEMY_SPAWNING_DELTA_TICKS = 10;
     public static readonly BOARD_SIZE = {r: 15, c: 10};
-    public static readonly INITIAL_CREDITS = 10000;
+    public static readonly INITIAL_CREDITS = 100000;
     public static readonly INITIAL_LIFES = 20;
     public static readonly CELLS_SIZE = 60;
     

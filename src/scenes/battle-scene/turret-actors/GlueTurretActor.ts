@@ -10,6 +10,10 @@ export class GlueTurretActor extends TurretActor {
         this.base.setInteractive();
         this.base.on("pointerdown", this.onDownTurret, this);
         this.addAt(this.base, 0);
+
+        this.canon = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "canon_3_2_1");
+        this.canon.visible = false;
+        this.add(this.canon);
     }
 
     public update(time: number, delta: number): void {
@@ -22,15 +26,19 @@ export class GlueTurretActor extends TurretActor {
 
             case 2:
                 this.base.setFrame("base_3_2");
+                this.canon.setFrame("canon_3_2_1");
+                this.canon.visible = true;
                 break;
             case 3: 
                 this.base.setFrame("base_3_3");
+                this.canon.visible = false;
                 break;
             default:
        }
     }
 
     public shootGlue(): void {
-        // 
+        // hacer que el cañon retroceda
+        this.canon.rotation = this.anutoTurret.shootAngle + Math.PI / 2;
     }
 }

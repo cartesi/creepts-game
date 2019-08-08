@@ -23,9 +23,11 @@ export class MortarActor extends Phaser.GameObjects.Container {
         this.x = this.anutoMortar.x * GameConstants.CELLS_SIZE;
         this.y = this.anutoMortar.y * GameConstants.CELLS_SIZE;
 
-        this.mortarImage = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "mortar");
+        this.mortarImage = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "granade");
         this.mortarImage.setScale(.5);
         this.add(this.mortarImage);
+
+        this.rotation = Math.random() * Math.PI;
 
         this.visible = false;
     }
@@ -42,7 +44,7 @@ export class MortarActor extends Phaser.GameObjects.Container {
             let d = Math.sqrt((this.x - this.launchTurretActor.x) * (this.x - this.launchTurretActor.x) + (this.x - this.launchTurretActor.x) * (this.x - this.launchTurretActor.x));
 
             // la longitud del cañón más un poco más debido al diámetro del mortero 
-            if (d > this.launchTurretActor.canonLength + 15) {
+            if (d > this.launchTurretActor.canonLength) {
                 this.visible = true;
             }
         }

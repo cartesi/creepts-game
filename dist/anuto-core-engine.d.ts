@@ -65,6 +65,10 @@ declare module Anuto {
         l: number;
         affectedByGlue: boolean;
         glueIntensity: number;
+        affectedByGlueBullet: boolean;
+        glueIntensityBullet: number;
+        glueDuration: number;
+        glueTime: number;
         hasBeenTeleported: boolean;
         teleporting: boolean;
         protected enemyData: any;
@@ -75,6 +79,7 @@ declare module Anuto {
         teleport(teleportDistance: number): void;
         glue(glueIntensity: number): void;
         hit(damage: number, bullet?: Bullet, mortar?: Mortar, laserTurret?: LaserTurret): void;
+        glueHit(intensity: number, duration: number, bullet: GlueBullet): void;
         restoreHealth(): void;
         getNextPosition(deltaTicks: number): {
             x: number;
@@ -88,9 +93,11 @@ declare module Anuto {
         waveActivated: boolean;
         private turrets;
         private bullets;
+        private glueBullets;
         private mortars;
         private glues;
         private bulletsColliding;
+        private glueBulletsColliding;
         private mortarsImpacting;
         private consumedGlues;
         private teleportedEnemies;
@@ -114,6 +121,7 @@ declare module Anuto {
         setNextStrategy(id: number): void;
         setFixedTarget(id: number): void;
         addBullet(bullet: Bullet, projectileTurret: ProjectileTurret): void;
+        addGlueBullet(bullet: GlueBullet, glueTurret: GlueTurret): void;
         addGlue(glue: Glue, glueTurret: GlueTurret): void;
         addMortar(mortar: Mortar, launchTurret: LaunchTurret): void;
         addLaserRay(laserTurret: LaserTurret, enemy: Enemy): void;
@@ -235,10 +243,12 @@ declare module Anuto {
         static readonly ENEMY_SPAWNED = "enemy spawned";
         static readonly ENEMY_KILLED = "enemy killed";
         static readonly ENEMY_HIT = "enemy hit by bullet";
+        static readonly ENEMY_GLUE_HIT = "enemy hit by glue bullet";
         static readonly ENEMY_REACHED_EXIT = "enemy reached exit";
         static readonly WAVE_OVER = "wave over";
         static readonly NO_ENEMIES_ON_STAGE = "no enemies on stage";
         static readonly BULLET_SHOT = "bullet shot";
+        static readonly GLUE_BULLET_SHOT = "glue bullet shot";
         static readonly LASER_SHOT = "laser shot";
         static readonly MORTAR_SHOT = "mortar shot";
         static readonly GLUE_SHOT = "glue shot";
@@ -269,12 +279,13 @@ declare module Anuto {
         y: number;
         assignedEnemy: Enemy;
         damage: number;
+        canonShoot: string;
         private vx;
         private vy;
         constructor(p: {
             r: number;
             c: number;
-        }, angle: number, assignedEnemy: Enemy, damage: number);
+        }, angle: number, assignedEnemy: Enemy, damage: number, canonShoot: string);
         destroy(): void;
         update(): void;
         getPositionNextTick(): {
@@ -300,6 +311,30 @@ declare module Anuto {
         }, intensity: number, duration: number, range: number);
         destroy(): void;
         update(): void;
+    }
+}
+declare module Anuto {
+    class GlueBullet {
+        static id: number;
+        id: number;
+        x: number;
+        y: number;
+        assignedEnemy: Enemy;
+        intensity: number;
+        durationTicks: number;
+        canonShoot: string;
+        private vx;
+        private vy;
+        constructor(p: {
+            r: number;
+            c: number;
+        }, angle: number, assignedEnemy: Enemy, intensity: number, durationTicks: number);
+        destroy(): void;
+        update(): void;
+        getPositionNextTick(): {
+            x: number;
+            y: number;
+        };
     }
 }
 declare module Anuto {
@@ -368,6 +403,7 @@ declare module Anuto {
 }
 declare module Anuto {
     class ProjectileTurret extends Turret {
+        private canonShoot;
         constructor(p: {
             r: number;
             c: number;

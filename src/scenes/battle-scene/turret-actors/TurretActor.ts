@@ -1,6 +1,7 @@
 import { BoardContainer } from "./../BoardContainer";
 import { GameConstants } from "../../../GameConstants";
 import { BattleManager } from "../BattleManager";
+import { GameVars } from "../../../GameVars";
 
 export class TurretActor extends Phaser.GameObjects.Container {
 
@@ -64,6 +65,10 @@ export class TurretActor extends Phaser.GameObjects.Container {
     }
 
     protected onDownTurret(): void {
+
+        if (GameVars.paused) {
+            return;
+        }
 
         if (!this.rangeCircle.visible) {
             BattleManager.hideRangeCircles();

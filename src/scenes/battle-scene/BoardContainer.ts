@@ -21,6 +21,7 @@ import { GlueTurretActor } from "./turret-actors/GlueTurretActor";
 import { BattleManager } from './BattleManager';
 import { PauseMenu } from './PauseMenu';
 import { GameManager } from '../../GameManager';
+import { GlueBulletActor } from './turret-actors/GlueBulletActor';
 
 export class BoardContainer extends Phaser.GameObjects.Container {
 
@@ -31,6 +32,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     private enemyActors: EnemyActor[];
     private turretActors: TurretActor[];
     private bulletActors: BulletActor[];
+    private glueBulletActors: GlueBulletActor[];
     private mortarActors: MortarActor[];
 
     private rangeCircles: Phaser.GameObjects.Graphics[];
@@ -61,6 +63,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.enemyActors = [];
         this.turretActors = [];
         this.bulletActors = [];
+        this.glueBulletActors = [];
         this.mortarActors = [];
         this.rangeCircles = [];
 
@@ -125,6 +128,10 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }); 
 
         this.bulletActors.forEach(function (bullet) {
+            bullet.update(time, delta);
+        }); 
+
+        this.glueBulletActors.forEach(function (bullet) {
             bullet.update(time, delta);
         }); 
 
@@ -256,6 +263,17 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.bulletActors.push(bullet);
     }
 
+    public addGlueBullet(anutoBullet: Anuto.GlueBullet, anutoProjectileTurret: Anuto.GlueTurret): void {
+
+        const glueTurretActor = <GlueTurretActor> this.getTurretActorByID(anutoProjectileTurret.id);
+        glueTurretActor.shootGlue();
+
+        const bullet = new GlueBulletActor(this.scene, anutoBullet);
+        this.board.add(bullet);
+
+        this.glueBulletActors.push(bullet);
+    }
+
     public addLaserBeam (anutoLaserTurret: Anuto.LaserTurret, anutoEnemy: Anuto.Enemy): void {
 
         const laserTurretActor = <LaserTurretActor> this.getTurretActorByID(anutoLaserTurret.id);
@@ -346,6 +364,16 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
+    public onEnemyGlueHit(anutoEnemy: Anuto.Enemy): void {
+        
+        // encontrar el enemigo en cuestion
+        let enemy: EnemyActor = this.getEnemyActorByID(anutoEnemy.id);
+
+        if (enemy) {
+            enemy.glueHit();
+        }
+    }
+
     public onEnemyKilled(anutoEnemy: Anuto.Enemy): void {
 
         let enemyActor: EnemyActor = this.getEnemyActorByID(anutoEnemy.id);
@@ -382,6 +410,25 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         if (bulletActor) {
             const i = this.bulletActors.indexOf(bulletActor);
             this.bulletActors.splice(i, 1);
+            bulletActor.destroy();
+        }
+    }
+
+    public removeGlueBullet(anutoBullet: Anuto.GlueBullet): void {
+
+        let bulletActor: GlueBulletActor = null;
+
+        for (let i = 0; i < this.glueBulletActors.length; i ++) {
+
+            if (this.glueBulletActors[i].anutoBullet.id === anutoBullet.id) {
+                bulletActor = this.glueBulletActors[i];
+                break;
+            }
+        }
+
+        if (bulletActor) {
+            const i = this.glueBulletActors.indexOf(bulletActor);
+            this.glueBulletActors.splice(i, 1);
             bulletActor.destroy();
         }
     }
@@ -487,6 +534,9 @@ export class BoardContainer extends Phaser.GameObjects.Container {
             BattleManager.pause();
             this.pauseMenu = new PauseMenu(this.scene);
             this.add(this.pauseMenu);
+
+            this.hideRangeCircles();
+            this.hideTurretMenu();
         } else {
             this.hidePauseMenu();
         }
@@ -545,5 +595,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.scene.anims.create({ key: "enemy_blob_run", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_blob_", start: 1, end: 5, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
 
         this.scene.anims.create({ key: "enemy_healer_heal", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_healing_", start: 1, end: 6, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
+
+        this.scene.anims.create({ key: "glue_bullet", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "bullet_3_1_", start: 1, end: 8, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
     }
 }

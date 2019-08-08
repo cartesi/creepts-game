@@ -20,6 +20,22 @@ export class LaunchTurretActor extends TurretActor {
         // esta torreta no orienta el cañón hacia el enemigo
     }
 
+    public upgrade(): void {
+
+        switch (this.anutoTurret.grade) {
+ 
+             case 2:
+                 this.base.setFrame("base_4_2");
+                 this.canon.setFrame("canon_4_2_1");
+                 break;
+             case 3: 
+                 this.base.setFrame("base_4_2");
+                 this.canon.setFrame("canon_4_3_3");
+                 break;
+             default:
+        }
+    }
+
     public shootMortar(): void {
         // girar el cañón
         this.canon.rotation = this.anutoTurret.shootAngle + Math.PI / 2;

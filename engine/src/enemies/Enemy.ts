@@ -16,6 +16,10 @@ module Anuto {
         public l: number;
         public affectedByGlue: boolean;
         public glueIntensity: number;
+        public affectedByGlueBullet: boolean;
+        public glueIntensityBullet: number;
+        public glueDuration: number;
+        public glueTime: number;
         public hasBeenTeleported: boolean;
         public teleporting: boolean;
         
@@ -38,6 +42,10 @@ module Anuto {
 
             this.affectedByGlue = false;
             this.glueIntensity = 0;
+            this.affectedByGlueBullet = false;
+            this.glueIntensityBullet = 0;
+            this.glueDuration = 0;
+            this.glueTime = 0;
             this.hasBeenTeleported = false;
             this.teleporting = false;
 
@@ -72,7 +80,20 @@ module Anuto {
 
             // si esta encima de pegamento hacer que vaya mas lento
             if (this.affectedByGlue) {
-                speed = MathUtils.fixNumber(this.speed / this.glueIntensity);
+
+                speed = MathUtils.fixNumber(this.speed / this.glueIntensity);   
+            }
+
+            if (this.affectedByGlueBullet) {
+
+                speed = MathUtils.fixNumber(this.speed / this.glueIntensityBullet);
+
+                if (this.glueDuration <= this.glueTime) {
+                    this.affectedByGlueBullet = false;
+                    this.glueTime = 0;
+                } else {
+                    this.glueTime++;
+                }
             }
            
             this.l = MathUtils.fixNumber(this.l + speed);
@@ -126,6 +147,13 @@ module Anuto {
                 this.life = 0;
                 Engine.currentInstance.onEnemyKilled(this);
             }
+        }
+
+        public glueHit(intensity: number, duration: number, bullet: GlueBullet): void {
+            
+            this.affectedByGlueBullet = true;
+            this.glueIntensityBullet = intensity;
+            this.glueDuration = duration;
         }
 
         public restoreHealth(): void {

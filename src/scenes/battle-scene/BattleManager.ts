@@ -37,7 +37,9 @@ export class BattleManager {
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.GLUE_BULLET_SHOT, BattleManager.onGlueBulletShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_HIT, BattleManager.onEnemyHit, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_GLUE_HIT, BattleManager.onEnemyGlueHit, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_KILLED, BattleManager.onEnemyKilled, BattleManager);
         
         BattleManager.anutoEngine.addEventListener(Anuto.Event.LASER_SHOT, BattleManager.onLaserBeamShot, BattleManager);
@@ -179,6 +181,11 @@ export class BattleManager {
         BoardContainer.currentInstance.addBullet(anutoBullet, anutoProjectileTurret);
     }
 
+    private static onGlueBulletShot(anutoBullet: Anuto.GlueBullet, anutoGlueTurret: Anuto.GlueTurret): void {
+
+        BoardContainer.currentInstance.addGlueBullet(anutoBullet, anutoGlueTurret);
+    }
+
     private static onLaserBeamShot(anutoLaserTurret: Anuto.LaserTurret, anutoEnemy: Anuto.Enemy): void {
 
         BoardContainer.currentInstance.addLaserBeam(anutoLaserTurret, anutoEnemy);
@@ -212,6 +219,17 @@ export class BattleManager {
         if (anutoMortar) {
             BoardContainer.currentInstance.detonateMortar(anutoMortar);
         }
+    }
+
+    private static onEnemyGlueHit(anutoEnemies: Anuto.Enemy[], anutoGlueBullet: Anuto.GlueBullet): void {
+
+        for (let i = 0; i < anutoEnemies.length; i ++) {
+            BoardContainer.currentInstance.onEnemyGlueHit(anutoEnemies[i]);
+        }
+
+        if (anutoGlueBullet) {
+            BoardContainer.currentInstance.removeGlueBullet(anutoGlueBullet);
+        } 
     }
 
     private static onEnemiesTeleported(teleportedEnemiesData: {enemy: Anuto.Enemy, glueTurret: Anuto.GlueTurret} []): void {

@@ -1,6 +1,6 @@
 module Anuto {
 
-    export class Bullet {
+    export class GlueBullet {
 
         public static id: number;
 
@@ -8,14 +8,15 @@ module Anuto {
         public x: number;
         public y: number;
         public assignedEnemy: Enemy;
-        public damage: number;
+        public intensity: number;
+        public durationTicks: number;
         public canonShoot: string;
 
         private vx: number;
         private vy: number;
 
         // bullet speed in cells / tick
-        constructor (p: {r: number, c: number}, angle: number, assignedEnemy: Enemy, damage: number, canonShoot: string) {
+        constructor (p: {r: number, c: number}, angle: number, assignedEnemy: Enemy, intensity: number, durationTicks: number) {
             
             this.id = Bullet.id;
             Bullet.id ++;
@@ -25,8 +26,8 @@ module Anuto {
             
             this.assignedEnemy = assignedEnemy;
 
-            this.damage = damage;
-            this.canonShoot = canonShoot;
+            this.intensity = intensity;
+            this.durationTicks = durationTicks;
 
             this.vx = MathUtils.fixNumber(GameConstants.BULLET_SPEED * Math.cos(angle));
             this.vy = MathUtils.fixNumber( GameConstants.BULLET_SPEED * Math.sin(angle));

@@ -64,6 +64,10 @@ export class EnemyActor extends Phaser.GameObjects.Container {
         // de momento nada
     }
 
+    public glueHit(): void {
+        // de momento nada
+    }
+
     public teleport(anutoGlueTurret: Anuto.GlueTurret): void {
         
         const glueTurret_px = (anutoGlueTurret.position.c + .5) * GameConstants.CELLS_SIZE;

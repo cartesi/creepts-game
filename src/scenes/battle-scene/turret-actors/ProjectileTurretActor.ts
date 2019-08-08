@@ -16,6 +16,22 @@ export class ProjectileTurretActor extends TurretActor {
         this.add(this.canon);
     }
 
+    public upgrade(): void {
+
+        switch (this.anutoTurret.grade) {
+ 
+             case 2:
+                 this.base.setFrame("base_1_2");
+                 this.canon.setFrame("canon_1_2_1");
+                 break;
+             case 3: 
+                 this.base.setFrame("base_1_3");
+                 this.canon.setFrame("canon_1_3_1");
+                 break;
+             default:
+        }
+    }
+
     public shootBullet(): void {
         // hacer que el cañon retroceda
         this.canon.rotation = this.anutoTurret.shootAngle + Math.PI / 2;

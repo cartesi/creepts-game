@@ -233,6 +233,14 @@ export class TurretMenu extends Phaser.GameObjects.Container {
 
     private checkAndUpdateInfo(): void {
 
+        // update en la informacion de los botones
+
+        this.levelUpText.setText("LEVEL UP (" + this.anutoTurret.priceImprovement + ")" );
+        this.upgradeText.setText("UPGRADE (" + this.anutoTurret.priceUpgrade + ")" );
+        this.sellText.setText("SELL (" + this.anutoTurret.value + ")" );
+
+        // desactivar botones no necesarios
+
         if ((this.anutoTurret.type === Anuto.GameConstants.TURRET_GLUE && this.anutoTurret.grade === 1) || (this.anutoTurret.type === Anuto.GameConstants.TURRET_LAUNCH && this.anutoTurret.grade === 2)) {
             this.strategyButton.alpha = .5;
             this.objectiveButton.alpha = .5;
@@ -255,12 +263,16 @@ export class TurretMenu extends Phaser.GameObjects.Container {
 
         if (this.anutoTurret.level === this.anutoTurret.maxLevel) {
             this.levelButton.alpha = .5;
+            this.levelUpText.setText("LEVEL UP");
+        } else {
+            this.levelButton.alpha = 1;
         }
 
         // si ya estamos a upgrade maximo desactivar el boton
 
         if (this.anutoTurret.grade === 3) {
             this.upgradeButton.alpha = .5;
+            this.upgradeText.setText("UPGRADE");
         }
 
         // update de la informacion en texto
@@ -284,12 +296,6 @@ export class TurretMenu extends Phaser.GameObjects.Container {
         if (this.anutoTurret.type !== Anuto.GameConstants.TURRET_GLUE) {
             this.inflictedText.setText(this.anutoTurret.inflicted.toString());
         }
-
-        // update en la informacion de los botones
-
-        this.levelUpText.setText("LEVEL UP (" + this.anutoTurret.priceImprovement + ")" );
-        this.upgradeText.setText("UPGRADE (" + this.anutoTurret.priceUpgrade + ")" );
-        this.sellText.setText("SELL (" + this.anutoTurret.value + ")" );
     }
 
     private onBtnOver(btn: Phaser.GameObjects.Container): void {

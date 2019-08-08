@@ -48,7 +48,7 @@ module Anuto {
             this.fixedTarget = true;
             this.shootingStrategyIndex = 0;
             this.shootingStrategy = GameConstants.STRATEGYS_ARRAY[this.shootingStrategyIndex];
-            this.readyToShoot = false;
+            this.readyToShoot = true;
             this.enemiesWithinRange = [];
             this.followedEnemy = null;
 
