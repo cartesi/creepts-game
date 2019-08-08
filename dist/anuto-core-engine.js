@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -114,7 +114,7 @@ var Anuto;
             var squaredRange = Anuto.MathUtils.fixNumber(this.range * this.range);
             for (var i = 0; i < Anuto.GameVars.enemies.length; i++) {
                 var enemy = Anuto.GameVars.enemies[i];
-                if (enemy.life > 0 && Anuto.GameVars && !enemy.teleporting) {
+                if (enemy.life > 0 && enemy.l < Anuto.GameVars.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
                     var dx = this.x - enemy.x;
                     var dy = this.y - enemy.y;
                     var squaredDist = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
