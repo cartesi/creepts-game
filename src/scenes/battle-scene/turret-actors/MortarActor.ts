@@ -23,7 +23,7 @@ export class MortarActor extends Phaser.GameObjects.Container {
         this.x = this.anutoMortar.x * GameConstants.CELLS_SIZE;
         this.y = this.anutoMortar.y * GameConstants.CELLS_SIZE;
 
-        this.mortarImage = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "granade");
+        this.mortarImage = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", anutoMortar.grade === 1 ? "granade" : "bullet_4_3");
         this.mortarImage.setScale(.5);
         this.add(this.mortarImage);
 
@@ -72,8 +72,15 @@ export class MortarActor extends Phaser.GameObjects.Container {
             smoothFactor = 1;
         }
 
-        this.x += (this.anutoMortar.x * GameConstants.CELLS_SIZE - this.x) * smoothFactor;
-        this.y += (this.anutoMortar.y * GameConstants.CELLS_SIZE - this.y) * smoothFactor; 
+        let offX = (this.anutoMortar.x * GameConstants.CELLS_SIZE - this.x) * smoothFactor;
+        let offY = (this.anutoMortar.y * GameConstants.CELLS_SIZE - this.y) * smoothFactor;
+
+        this.x += offX;
+        this.y += offY; 
+
+        if (this.anutoMortar.grade === 3) {
+            this.rotation = Math.atan2(offY, offX) + Math.PI / 2;
+        }
     }
 
     public detonate(): void {

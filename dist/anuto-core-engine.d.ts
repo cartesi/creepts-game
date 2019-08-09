@@ -124,7 +124,7 @@ declare module Anuto {
         addGlueBullet(bullet: GlueBullet, glueTurret: GlueTurret): void;
         addGlue(glue: Glue, glueTurret: GlueTurret): void;
         addMortar(mortar: Mortar, launchTurret: LaunchTurret): void;
-        addLaserRay(laserTurret: LaserTurret, enemy: Enemy): void;
+        addLaserRay(laserTurret: LaserTurret, enemies: Enemy[]): void;
         flagEnemyToTeleport(enemy: Enemy, glueTurret: GlueTurret): void;
         onEnemyReachedExit(enemy: Enemy): void;
         onEnemyKilled(enemy: Enemy): void;
@@ -385,6 +385,7 @@ declare module Anuto {
         detonate: boolean;
         explosionRange: number;
         creationTick: number;
+        grade: number;
         private vx;
         private vy;
         private f;
@@ -392,7 +393,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        }, angle: number, ticksToImpact: number, explosionRange: number, damage: number);
+        }, angle: number, ticksToImpact: number, explosionRange: number, damage: number, grade: number);
         destroy(): void;
         update(): void;
         getEnemiesWithinExplosionRange(): {

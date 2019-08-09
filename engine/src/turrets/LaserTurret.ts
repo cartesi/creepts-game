@@ -50,19 +50,60 @@ module Anuto {
 
             super.shoot();
 
-            let enemy: Enemy;
+            let enemies: Enemy[] = [];
 
-            if (this.fixedTarget) {
-                enemy = this.followedEnemy || this.enemiesWithinRange[0];
+            let enemiesNumber = 1;
+            let enemiesCounter = 0;
+
+            switch (this.grade) {
+                case 1:
+                    enemiesNumber = 1;
+                    break;
+                case 2:
+                    enemiesNumber = 3;
+                    break;
+                case 3:
+                default:
+            }
+
+            if (this.grade === 3) {
+
+                // TODO: si esta en grado 3 hay que buscar todos los enemigos que pasan a traves de la linea recta del laser
+                if (this.fixedTarget) {
+                    enemies.push(this.followedEnemy || this.enemiesWithinRange[0]);
+                } else {
+                    enemies.push(this.enemiesWithinRange[0]);
+                }
+
             } else {
-                enemy = this.enemiesWithinRange[0];
+                if (this.fixedTarget) {
+                    if (this.followedEnemy) {
+                        enemies.push(this.followedEnemy);
+                        if (this.followedEnemy === this.enemiesWithinRange[0]) {
+                            enemiesCounter++;
+                        }
+                    } else {
+                        enemies.push(this.enemiesWithinRange[0]);
+                        enemiesCounter++;
+                    }
+                } else {
+                    enemies.push(this.enemiesWithinRange[0]);
+                    enemiesCounter++;
+                }
+    
+                while (enemies.length < enemiesNumber) {
+    
+                    if (this.enemiesWithinRange[enemiesCounter] ) {
+                        enemies.push(this.enemiesWithinRange[enemiesCounter]);
+                        enemiesCounter++;
+                    } else {
+                        break;
+                    }
+                }
             }
             
-            if (enemy.life > 0) { 
-                // if (this.id === 3) {
-                //     console.log("rayo disparado:", GameVars.ticksCounter);
-                // }
-                Engine.currentInstance.addLaserRay(this, enemy);
+            if (enemies[0].life > 0) {
+                Engine.currentInstance.addLaserRay(this, enemies);
             } else {
                 this.readyToShoot = true;
             }

@@ -68,9 +68,7 @@ module Anuto {
                     this.reload = Math.round(((-1 / 18) * this.level + 12 / 18 ) * 10) / 10;
                     this.range =  Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
                     this.priceImprovement =  Math.floor( 29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
-                
-
-                    console.log(this.reload);
+          
                     break;
 
                 case 3: 

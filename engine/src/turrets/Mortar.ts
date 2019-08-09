@@ -11,6 +11,7 @@ module Anuto {
         public detonate: boolean;
         public explosionRange: number;
         public creationTick: number;
+        public grade: number;
 
         private vx: number;
         private vy: number;
@@ -18,7 +19,7 @@ module Anuto {
         private damage: number;
         
         // mortar speed in cells / tick
-        constructor (p: {r: number, c: number}, angle: number, ticksToImpact: number, explosionRange: number, damage: number) {
+        constructor (p: {r: number, c: number}, angle: number, ticksToImpact: number, explosionRange: number, damage: number, grade: number) {
             
             this.id = Mortar.id;
             Mortar.id ++;
@@ -31,12 +32,15 @@ module Anuto {
             this.ticksToImpact = ticksToImpact;
             this.explosionRange = explosionRange;
             this.damage = damage;
+            this.grade = grade;
 
             this.detonate = false;
             this.f = 0;
 
-            this.vx = MathUtils.fixNumber(GameConstants.MORTAR_SPEED * Math.cos(angle));
-            this.vy = MathUtils.fixNumber( GameConstants.MORTAR_SPEED * Math.sin(angle));
+            let speed = this.grade === 3 ? GameConstants.MORTAR_SPEED * 5 : GameConstants.MORTAR_SPEED;
+
+            this.vx = MathUtils.fixNumber(speed * Math.cos(angle));
+            this.vy = MathUtils.fixNumber(speed * Math.sin(angle));
         }
 
         public destroy(): void {

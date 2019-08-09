@@ -186,9 +186,9 @@ export class BattleManager {
         BoardContainer.currentInstance.addGlueBullet(anutoBullet, anutoGlueTurret);
     }
 
-    private static onLaserBeamShot(anutoLaserTurret: Anuto.LaserTurret, anutoEnemy: Anuto.Enemy): void {
+    private static onLaserBeamShot(anutoLaserTurret: Anuto.LaserTurret, anutoEnemies: Anuto.Enemy[]): void {
 
-        BoardContainer.currentInstance.addLaserBeam(anutoLaserTurret, anutoEnemy);
+        BoardContainer.currentInstance.addLaserBeam(anutoLaserTurret, anutoEnemies);
     }
 
     private static onMortarShot(anutoMortar: Anuto.Mortar, anutoLaunchTurret: Anuto.LaunchTurret): void {

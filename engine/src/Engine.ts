@@ -269,12 +269,14 @@ module Anuto {
             this.eventDispatcher.dispatchEvent(new Event(Event.MORTAR_SHOT, [mortar, launchTurret]));
         }
 
-        public addLaserRay(laserTurret: LaserTurret, enemy: Enemy): void {
-            
-            enemy.hit(laserTurret.damage, null, null, laserTurret);
+        public addLaserRay(laserTurret: LaserTurret, enemies: Enemy[]): void {
 
-            this.eventDispatcher.dispatchEvent(new Event(Event.LASER_SHOT, [laserTurret, enemy]));
-            this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[enemy]]));
+            for (let i = 0; i < enemies.length; i++) {
+                enemies[i].hit(laserTurret.damage, null, null, laserTurret);
+            }
+
+            this.eventDispatcher.dispatchEvent(new Event(Event.LASER_SHOT, [laserTurret, enemies]));
+            this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[enemies]]));
         }
 
         public flagEnemyToTeleport(enemy: Enemy, glueTurret: GlueTurret): void {

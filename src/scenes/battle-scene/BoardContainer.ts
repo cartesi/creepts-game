@@ -274,14 +274,18 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.glueBulletActors.push(bullet);
     }
 
-    public addLaserBeam (anutoLaserTurret: Anuto.LaserTurret, anutoEnemy: Anuto.Enemy): void {
+    public addLaserBeam (anutoLaserTurret: Anuto.LaserTurret, anutoEnemies: Anuto.Enemy[]): void {
 
         const laserTurretActor = <LaserTurretActor> this.getTurretActorByID(anutoLaserTurret.id);
         laserTurretActor.shootLaser();
 
-        const enemyActor = this.getEnemyActorByID(anutoEnemy.id);
+        let enemyActors = [];
 
-        const laserBeam = new LaserBeam(this.scene, laserTurretActor, enemyActor);
+        for (let i = 0; i < anutoEnemies.length; i++) {
+            enemyActors.push(this.getEnemyActorByID(anutoEnemies[i].id));
+        }
+
+        const laserBeam = new LaserBeam(this.scene, laserTurretActor, enemyActors, anutoLaserTurret.grade);
         this.actorsContainer.add(laserBeam);
     }
 

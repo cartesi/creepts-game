@@ -140,6 +140,10 @@ module Anuto {
 
         public hit(damage: number, bullet?: Bullet, mortar?: Mortar, laserTurret?: LaserTurret): void {
             
+            if (this.life <= 0) {
+                return;
+            }
+            
             this.life -= damage;
 
             if (this.life <= 0) {

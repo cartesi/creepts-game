@@ -53,21 +53,27 @@ module Anuto {
         
             let d = MathUtils.fixNumber(Math.sqrt((this.x - enemy.x) * (this.x - enemy.x) + (this.y - enemy.y) * (this.y - enemy.y)));
 
+            let speed = this.grade === 3 ? GameConstants.MORTAR_SPEED * 5 : GameConstants.MORTAR_SPEED;
+
             // cuantos ticks va a tardar el mortero en llegar?
-            let ticksToImpact = Math.floor(MathUtils.fixNumber(d / GameConstants.MORTAR_SPEED));
+            let ticksToImpact = Math.floor(MathUtils.fixNumber(d / speed));
 
             // encontrar la posicion del enemigo dentro de estos ticks
             const impactPosition = enemy.getNextPosition(ticksToImpact);
 
-            // le damos una cierta desviacion para que no explote directamente justo encima del enemigo
-            const deviation_x = MathUtils.fixNumber(LaunchTurret.deviationRadius * Math.cos(LaunchTurret.deviationAngle * Math.PI / 180));
-            const deviation_y = MathUtils.fixNumber(LaunchTurret.deviationRadius * Math.sin(LaunchTurret.deviationAngle * Math.PI / 180));
+            if (this.grade === 1) {
+                // le damos una cierta desviacion para que no explote directamente justo encima del enemigo
+                const deviation_x = MathUtils.fixNumber(LaunchTurret.deviationRadius * Math.cos(LaunchTurret.deviationAngle * Math.PI / 180));
+                const deviation_y = MathUtils.fixNumber(LaunchTurret.deviationRadius * Math.sin(LaunchTurret.deviationAngle * Math.PI / 180));
 
-            impactPosition.x += deviation_x;
-            impactPosition.y += deviation_y;
+                impactPosition.x += deviation_x;
+                impactPosition.y += deviation_y;
 
-            LaunchTurret.deviationRadius = LaunchTurret.deviationRadius === .75 ? 0 : LaunchTurret.deviationRadius + .25;
-            LaunchTurret.deviationAngle = LaunchTurret.deviationAngle === 315 ? 0 : LaunchTurret.deviationAngle + 45;
+                LaunchTurret.deviationRadius = LaunchTurret.deviationRadius === .75 ? 0 : LaunchTurret.deviationRadius + .25;
+                LaunchTurret.deviationAngle = LaunchTurret.deviationAngle === 315 ? 0 : LaunchTurret.deviationAngle + 45;
+
+                console.log("AAA");
+            }
 
             // el impacto se producirá dentro del alcance de la torreta?
             d = MathUtils.fixNumber(Math.sqrt((this.x - impactPosition.x) * (this.x - impactPosition.x) + (this.y - impactPosition.y) * (this.y - impactPosition.y)));
@@ -75,13 +81,15 @@ module Anuto {
             if (d < this.range){
 
                 // recalculamos los ticks en los que va a impactar ya que estos determinan cuando se hace estallar al mortero
-                ticksToImpact = Math.floor(MathUtils.fixNumber(d / GameConstants.MORTAR_SPEED));
+                let speed = this.grade === 3 ? GameConstants.MORTAR_SPEED * 5 : GameConstants.MORTAR_SPEED;
+
+                ticksToImpact = Math.floor(MathUtils.fixNumber(d / speed));
 
                 const dx = impactPosition.x - this.x;
                 const dy = impactPosition.y - this.y;
     
                 this.shootAngle =  MathUtils.fixNumber(Math.atan2(dy, dx));
-                const mortar = new Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage);
+                const mortar = new Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage, this.grade);
     
                 Engine.currentInstance.addMortar(mortar, this);
 
