@@ -1,3 +1,4 @@
+import { MineActor } from './turret-actors/MineActor';
 import { BattleScene } from './BattleScene';
 import { TurretMenu } from './TurretMenu';
 import { GluePool } from './turret-actors/GluePool';
@@ -34,6 +35,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     private bulletActors: BulletActor[];
     private glueBulletActors: GlueBulletActor[];
     private mortarActors: MortarActor[];
+    private mineActors: MineActor[];
 
     private rangeCircles: Phaser.GameObjects.Graphics[];
     private glueCircles: Phaser.GameObjects.Graphics[];
@@ -65,6 +67,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.bulletActors = [];
         this.glueBulletActors = [];
         this.mortarActors = [];
+        this.mineActors = [];
         this.rangeCircles = [];
 
         this.gluePools = [];
@@ -300,6 +303,18 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.mortarActors.push(mortar);
     }
 
+    public addMine(anutoMine: Anuto.Mine, anutoLaunchTurret: Anuto.LaunchTurret): void {
+
+        const launchTurretActor = <LaunchTurretActor> this.getTurretActorByID(anutoLaunchTurret.id);
+        launchTurretActor.shootMine();
+
+        const mine = new MineActor(this.scene, anutoMine, launchTurretActor);
+        this.actorsContainer.add(mine);
+        this.actorsContainer.sendToBack(mine);
+
+        this.mineActors.push(mine);
+    }
+
     public addGlue(anutoGlue: Anuto.Glue, anutoGlueTurret: Anuto.GlueTurret): void {
 
         const glueTurretActor = <GlueTurretActor> this.getTurretActorByID(anutoGlueTurret.id);
@@ -454,11 +469,35 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
+    public detonateMine(anutoMine: Anuto.Mine): void {
+
+        let mineActor: MineActor = null;
+
+        for (let i = 0; i < this.mineActors.length; i ++) {
+
+            if (this.mineActors[i].anutoMine.id === anutoMine.id) {
+                mineActor = this.mineActors[i];
+                break;
+            }
+        }
+
+        if (mineActor) {
+            mineActor.detonate();
+        }
+    }
+
     public removeMortar(mortarActor: MortarActor): void {
 
         const i = this.mortarActors.indexOf(mortarActor);
         this.mortarActors.splice(i, 1);
         mortarActor.destroy();
+    }
+
+    public removeMine(mineActor: MineActor): void {
+
+        const i = this.mineActors.indexOf(mineActor);
+        this.mineActors.splice(i, 1);
+        mineActor.destroy();
     }
     
     public upgradeTurret(id: number): void {

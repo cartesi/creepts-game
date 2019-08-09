@@ -138,7 +138,7 @@ module Anuto {
             this.glueIntensity = glueIntensity;
         }
 
-        public hit(damage: number, bullet?: Bullet, mortar?: Mortar, laserTurret?: LaserTurret): void {
+        public hit(damage: number, bullet?: Bullet, mortar?: Mortar, mine?: Mine, laserTurret?: LaserTurret): void {
             
             if (this.life <= 0) {
                 return;

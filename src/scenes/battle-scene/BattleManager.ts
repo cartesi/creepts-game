@@ -30,6 +30,7 @@ export class BattleManager {
         GameVars.wavesData = wavesData.waves;
 
         GameVars.timeStepFactor = 1;
+        GameVars.currentWave = 1;
         GameVars.paused = false;
 
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData);
@@ -45,6 +46,7 @@ export class BattleManager {
         BattleManager.anutoEngine.addEventListener(Anuto.Event.LASER_SHOT, BattleManager.onLaserBeamShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.MORTAR_SHOT, BattleManager.onMortarShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.GLUE_SHOT, BattleManager.onGlueShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.MINE_SHOT, BattleManager.onMineShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.GLUE_CONSUMED, BattleManager.onGlueConsumed, BattleManager);
 
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMIES_TELEPORTED, BattleManager.onEnemiesTeleported, BattleManager);
@@ -84,17 +86,19 @@ export class BattleManager {
         if (BattleManager.anutoEngine.waveActivated) {
             return;
         }
-        
-        // TODO: ver como se gestiona esto despues
-        GameVars.currentWave = 1;
 
         const waveConfig: Anuto.Types.WaveConfig = {
-            level: 0,
-            turrets: [],
-            enemies: GameVars.wavesData["wave_4"]
+            enemies: GameVars.wavesData["wave_" + GameVars.currentWave]
         };
 
         BattleManager.anutoEngine.newWave(waveConfig);
+        BattleScene.currentInstance.hud.updateRound();
+
+        GameVars.currentWave++;
+
+        if (GameVars.currentWave > 4) {
+            GameVars.currentWave = 1;
+        }
     }
 
     public static createTurret(type: string): void {
@@ -174,6 +178,7 @@ export class BattleManager {
     private static onEnemyReachedExit(anutoEnemy: Anuto.Enemy): void {
 
         BoardContainer.currentInstance.removeEnemy(anutoEnemy.id);
+        BattleScene.currentInstance.hud.updateLifes();
     }
 
     private static onBulletShot(anutoBullet: Anuto.Bullet, anutoProjectileTurret: Anuto.ProjectileTurret): void {
@@ -201,12 +206,17 @@ export class BattleManager {
         BoardContainer.currentInstance.addGlue(anutoGlue, anutoGlueTurret);
     }
 
+    private static onMineShot(anutoMine: Anuto.Mine, anutoLaunchMine: Anuto.LaunchTurret): void {
+
+        BoardContainer.currentInstance.addMine(anutoMine, anutoLaunchMine);
+    }
+
     private static onGlueConsumed(anutoGlue: Anuto.Glue): void {
 
         BoardContainer.currentInstance.onGlueConsumed(anutoGlue);
     }
 
-    private static onEnemyHit(anutoEnemies: Anuto.Enemy[], anutoBullet?: Anuto.Bullet, anutoMortar?: Anuto.Mortar): void {
+    private static onEnemyHit(anutoEnemies: Anuto.Enemy[], anutoBullet?: Anuto.Bullet, anutoMortar?: Anuto.Mortar, anutoMine?: Anuto.Mine): void {
 
         for (let i = 0; i < anutoEnemies.length; i ++) {
             BoardContainer.currentInstance.onEnemyHit(anutoEnemies[i]);
@@ -218,6 +228,10 @@ export class BattleManager {
 
         if (anutoMortar) {
             BoardContainer.currentInstance.detonateMortar(anutoMortar);
+        }
+
+        if (anutoMine) {
+            BoardContainer.currentInstance.detonateMine(anutoMine);
         }
     }
 
@@ -250,7 +264,8 @@ export class BattleManager {
     }
 
     private static onWaveOver(): void {
-        // no quedan ni enemigos ni ningún tipo de proyectil
+    
+        BattleScene.currentInstance.gui.activeNextWave();
         console.log("WAVE OVER");
     }
 }

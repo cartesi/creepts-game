@@ -46,6 +46,40 @@ module Anuto {
             super.calculateTurretParameters();
         }  
 
+        protected getEnemiesWithinLine(enemy: Enemy): Enemy[] {
+
+            let newEnemies = [];
+
+            for (let i = 0; i < GameVars.enemies.length; i ++) {
+
+                const newEnemy = GameVars.enemies[i];
+
+                if (newEnemy !== enemy && this.inLine({x: this.position.c, y: this.position.r}, {x: Math.floor(newEnemy.x), y: Math.floor(newEnemy.y)}, {x: Math.floor(enemy.x), y: Math.floor(enemy.y)})) {
+                    newEnemies.push(newEnemy);
+                }
+            }
+
+            console.log(newEnemies);
+
+            return newEnemies;
+
+        }
+
+        protected inLine(A: {x: number, y: number}, B: {x: number, y: number}, C: {x: number, y: number}): boolean {
+
+            // if AC is vertical
+            if (A.x === C.x) {
+                return B.x === C.x;
+            }
+
+            // if AC is horizontal
+            if (A.y === C.y) {
+                return B.y === C.y;
+            }
+            // match the gradients
+            return (A.x - C.x) * (A.y - C.y) === (C.x - B.x) * (C.y - B.y);
+         }
+
         protected shoot(): void {
 
             super.shoot();
@@ -68,12 +102,13 @@ module Anuto {
 
             if (this.grade === 3) {
 
-                // TODO: si esta en grado 3 hay que buscar todos los enemigos que pasan a traves de la linea recta del laser
                 if (this.fixedTarget) {
                     enemies.push(this.followedEnemy || this.enemiesWithinRange[0]);
                 } else {
                     enemies.push(this.enemiesWithinRange[0]);
                 }
+
+                enemies = enemies.concat(this.getEnemiesWithinLine(enemies[0]));
 
             } else {
                 if (this.fixedTarget) {

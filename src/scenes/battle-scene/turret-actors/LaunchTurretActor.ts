@@ -40,4 +40,8 @@ export class LaunchTurretActor extends TurretActor {
         // girar el cañón
         this.canon.rotation = this.anutoTurret.shootAngle + Math.PI / 2;
     }
+
+    public shootMine(): void {
+        // 
+    }
 }

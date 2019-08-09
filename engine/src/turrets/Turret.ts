@@ -66,9 +66,15 @@ module Anuto {
 
             if (this.readyToShoot) {
 
-                if (this.enemiesWithinRange.length > 0) {
+                // si es la de las minas no necesita tener a enemigos en rango
+                if (this.type === GameConstants.TURRET_LAUNCH && this.grade === 2) {
                     this.readyToShoot = false;   
                     this.shoot();
+                } else {
+                    if (this.enemiesWithinRange.length > 0) {
+                        this.readyToShoot = false;   
+                        this.shoot();
+                    }
                 }
             
             } else {

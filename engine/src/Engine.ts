@@ -12,10 +12,12 @@ module Anuto {
         private bullets: Bullet[];
         private glueBullets: GlueBullet[];
         private mortars: Mortar[];
+        private mines: Mine[];
         private glues: Glue[];
         private bulletsColliding: Bullet[];
         private glueBulletsColliding: GlueBullet[];
         private mortarsImpacting: Mortar[];
+        private minesImpacting: Mine[];
         private consumedGlues: Glue[];
         private teleportedEnemies: {enemy: Enemy, glueTurret: GlueTurret}[];
         private t: number;
@@ -62,6 +64,7 @@ module Anuto {
             Bullet.id = 0;
             Mortar.id = 0;
             Glue.id = 0;
+            Mine.id = 0;
  
             GameVars.runningInClientSide = gameConfig.runningInClientSide;
             GameVars.credits = gameConfig.credits;
@@ -75,7 +78,7 @@ module Anuto {
             GameVars.enemyData = enemyData;
             GameVars.turretData = turretData;
 
-            GameVars.round = 1;
+            GameVars.round = 0;
             
             this.waveActivated = false;
             this.t = 0;
@@ -137,6 +140,10 @@ module Anuto {
                 mortars.update();
             });
 
+            this.mines.forEach(function (mine) {
+                mine.update();
+            });
+
             this.glues.forEach(function (glue) {
                 glue.update();
             });
@@ -146,17 +153,10 @@ module Anuto {
 
         public newWave(waveConfig: Types.WaveConfig): void {
 
-            GameVars.level = waveConfig.level;
-
-            // hay q clonar el array
+            GameVars.round++;
             GameVars.waveEnemies = waveConfig.enemies.slice(0); 
  
             GameVars.ticksCounter = 0;
-
-            // TODO: instanciar las torres que hubiesen
-            for (let i = 0; i < waveConfig.turrets.length; i ++) {
-               //
-            }
 
             this.waveActivated = true;
 
@@ -166,11 +166,13 @@ module Anuto {
             this.bullets = [];
             this.glueBullets = [];
             this.mortars = [];
+            this.mines = [];
             this.glues = [];
 
             this.bulletsColliding = [];
             this.glueBulletsColliding = [];
             this.mortarsImpacting = [];
+            this.minesImpacting = [];
             this.consumedGlues = [];
             this.teleportedEnemies = [];
 
@@ -269,10 +271,17 @@ module Anuto {
             this.eventDispatcher.dispatchEvent(new Event(Event.MORTAR_SHOT, [mortar, launchTurret]));
         }
 
+        public addMine(mine: Mine, launchTurret: LaunchTurret): void {
+
+            this.mines.push(mine);
+
+            this.eventDispatcher.dispatchEvent(new Event(Event.MINE_SHOT, [mine, launchTurret]));
+        }
+
         public addLaserRay(laserTurret: LaserTurret, enemies: Enemy[]): void {
 
             for (let i = 0; i < enemies.length; i++) {
-                enemies[i].hit(laserTurret.damage, null, null, laserTurret);
+                enemies[i].hit(laserTurret.damage, null, null, null, laserTurret);
             }
 
             this.eventDispatcher.dispatchEvent(new Event(Event.LASER_SHOT, [laserTurret, enemies]));
@@ -310,6 +319,8 @@ module Anuto {
             const i = GameVars.enemies.indexOf(enemy);
             GameVars.enemies.splice(i, 1);
             enemy.destroy();
+
+            GameVars.lifes -= 1;
 
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_REACHED_EXIT, [enemy]));
 
@@ -415,6 +426,13 @@ module Anuto {
 
                 if (this.mortars[i].detonate) {
                     this.mortarsImpacting.push(this.mortars[i]);
+                }
+            }
+
+            for (let i = 0; i < this.mines.length; i ++) {
+
+                if (this.mines[i].detonate) {
+                    this.minesImpacting.push(this.mines[i]);
                 }
             }
 
@@ -529,6 +547,37 @@ module Anuto {
             }
 
             this.mortarsImpacting.length = 0;
+
+            // las minas
+            for (let i = 0; i < this.minesImpacting.length; i ++) {
+
+                const mine = this.minesImpacting[i];
+
+                const hitEnemiesData: {enemy: Enemy, damage: number} [] = mine.getEnemiesWithinExplosionRange();
+                const hitEnemies: Enemy[] = [];
+
+                if (hitEnemiesData.length > 0) {
+
+                    for (let j = 0; j < hitEnemiesData.length; j ++) {
+
+                        const enemy = hitEnemiesData[j].enemy;
+
+                        if (enemy.life > 0) {
+                            enemy.hit(hitEnemiesData[j].damage, null, null, mine);
+                            hitEnemies.push(enemy);
+                        }
+                    }
+                }
+
+                this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [hitEnemies, null, null, mine]));
+
+                const index = this.mines.indexOf(mine);
+                this.mines.splice(index, 1);
+
+                mine.destroy();
+            }
+
+            this.minesImpacting.length = 0;
 
             // los pegamentos
             for (let i = 0; i < this.consumedGlues.length; i ++) {

@@ -68,6 +68,16 @@ export class HUD extends Phaser.GameObjects.Container {
         }
     }
 
+    public updateLifes(): void {
+
+        this.lifesLabel.setText(BattleManager.anutoEngine.lifes.toString());
+    }
+
+    public updateRound(): void {
+
+        this.roundLabel.setText("Round " + BattleManager.anutoEngine.round);
+    }
+
     public onWaveOver(): void {
         //
     }

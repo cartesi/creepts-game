@@ -95,6 +95,11 @@ export class GUI extends Phaser.GameObjects.Container {
         this.turretSelected = null;
     }
 
+    public activeNextWave(): void {
+
+        this.nextWaveButton.alpha = 1;
+    }
+
     private onClickTimeStep(): void {
 
         if (this.timeStepButton.alpha !== 1 || GameVars.paused) {
@@ -121,7 +126,9 @@ export class GUI extends Phaser.GameObjects.Container {
             return;
         }
         
+        this.nextWaveButton.alpha = .5;
         BattleManager.newWave();
+        
     }
 
     private onBtnOver(btn: Phaser.GameObjects.Container): void {

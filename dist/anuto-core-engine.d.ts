@@ -78,7 +78,7 @@ declare module Anuto {
         update(): void;
         teleport(teleportDistance: number): void;
         glue(glueIntensity: number): void;
-        hit(damage: number, bullet?: Bullet, mortar?: Mortar, laserTurret?: LaserTurret): void;
+        hit(damage: number, bullet?: Bullet, mortar?: Mortar, mine?: Mine, laserTurret?: LaserTurret): void;
         glueHit(intensity: number, duration: number, bullet: GlueBullet): void;
         restoreHealth(): void;
         getNextPosition(deltaTicks: number): {
@@ -95,10 +95,12 @@ declare module Anuto {
         private bullets;
         private glueBullets;
         private mortars;
+        private mines;
         private glues;
         private bulletsColliding;
         private glueBulletsColliding;
         private mortarsImpacting;
+        private minesImpacting;
         private consumedGlues;
         private teleportedEnemies;
         private t;
@@ -124,6 +126,7 @@ declare module Anuto {
         addGlueBullet(bullet: GlueBullet, glueTurret: GlueTurret): void;
         addGlue(glue: Glue, glueTurret: GlueTurret): void;
         addMortar(mortar: Mortar, launchTurret: LaunchTurret): void;
+        addMine(mine: Mine, launchTurret: LaunchTurret): void;
         addLaserRay(laserTurret: LaserTurret, enemies: Enemy[]): void;
         flagEnemyToTeleport(enemy: Enemy, glueTurret: GlueTurret): void;
         onEnemyReachedExit(enemy: Enemy): void;
@@ -221,8 +224,6 @@ declare module Anuto.Types {
         }[];
     };
     type WaveConfig = {
-        level: number;
-        turrets: any;
         enemies: {
             "type": string;
             "t": number;
@@ -251,6 +252,7 @@ declare module Anuto {
         static readonly GLUE_BULLET_SHOT = "glue bullet shot";
         static readonly LASER_SHOT = "laser shot";
         static readonly MORTAR_SHOT = "mortar shot";
+        static readonly MINE_SHOT = "mine shot";
         static readonly GLUE_SHOT = "glue shot";
         static readonly GLUE_CONSUMED = "glue consumed";
         static readonly ENEMIES_TELEPORTED = "enemies teleported";
@@ -359,6 +361,17 @@ declare module Anuto {
         });
         update(): void;
         protected calculateTurretParameters(): void;
+        protected getEnemiesWithinLine(enemy: Enemy): Enemy[];
+        protected inLine(A: {
+            x: number;
+            y: number;
+        }, B: {
+            x: number;
+            y: number;
+        }, C: {
+            x: number;
+            y: number;
+        }): boolean;
         protected shoot(): void;
     }
 }
@@ -366,13 +379,40 @@ declare module Anuto {
     class LaunchTurret extends Turret {
         private static deviationRadius;
         private static deviationAngle;
+        private minesCounter;
         explosionRange: number;
         constructor(p: {
             r: number;
             c: number;
         });
         protected calculateTurretParameters(): void;
+        protected getPathCellsInRange(): {
+            r: number;
+            c: number;
+        }[];
         protected shoot(): void;
+    }
+}
+declare module Anuto {
+    class Mine {
+        static id: number;
+        id: number;
+        x: number;
+        y: number;
+        explosionRange: number;
+        range: number;
+        damage: number;
+        detonate: boolean;
+        constructor(p: {
+            r: number;
+            c: number;
+        }, explosionRange: number, damage: number);
+        destroy(): void;
+        update(): void;
+        getEnemiesWithinExplosionRange(): {
+            enemy: Enemy;
+            damage: number;
+        }[];
     }
 }
 declare module Anuto {
