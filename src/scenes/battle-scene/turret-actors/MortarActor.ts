@@ -56,10 +56,10 @@ export class MortarActor extends Phaser.GameObjects.Container {
 
         // la escala crece
         if (dt < this.anutoMortar.ticksToImpact / 2) {
-            scale = .5 * ( 1 + dt / (this.anutoMortar.ticksToImpact / 2));
+            scale = .75 * ( 1 + dt / (this.anutoMortar.ticksToImpact / 2));
         } else {
             // la escala disminuye
-            scale = .5 * ( 1 +  (this.anutoMortar.ticksToImpact - dt) / (this.anutoMortar.ticksToImpact / 2)); 
+            scale = .75 * ( 1 +  (this.anutoMortar.ticksToImpact - dt) / (this.anutoMortar.ticksToImpact / 2)); 
         }
 
         this.mortarImage.setScale(scale);
@@ -88,23 +88,15 @@ export class MortarActor extends Phaser.GameObjects.Container {
         this.detonated = true;
 
         this.mortarImage.visible = false;
-        
-        const explosionEffect = new Phaser.GameObjects.Graphics(this.scene);
-        explosionEffect.lineStyle(8, 0xFFFF00);
-        explosionEffect.strokeCircle(0, 0, this.anutoMortar.explosionRange * GameConstants.CELLS_SIZE);
-        explosionEffect.setScale(.35);
+
+        let explosionEffect = this.scene.add.sprite(0, 0, "texture_atlas_1", "tower4_fx_01");
+        explosionEffect.setScale(.75);
         this.add(explosionEffect);
 
-        this.scene.tweens.add({
-            targets: explosionEffect,
-            scaleX: 1,
-            scaleY: 1,
-            ease: Phaser.Math.Easing.Cubic.Out,
-            duration: GameVars.timeStepFactor === 4 ? 100 : 180,
-            onComplete: function(): void {
-                BoardContainer.currentInstance.removeMortar(this);
-            },
-            onCompleteScope: this
-        });
+        explosionEffect.anims.play("explosion");
+
+        explosionEffect.on("animationcomplete", () => {
+            BoardContainer.currentInstance.removeMortar(this);
+        }, this);
     }
 }

@@ -107,6 +107,9 @@ declare module Anuto {
         private eventDispatcher;
         private enemiesSpawner;
         private noEnemiesOnStage;
+        private waveEnemiesLength;
+        private enemiesSpawned;
+        private allEnemiesSpawned;
         static getPathPosition(l: number): {
             x: number;
             y: number;

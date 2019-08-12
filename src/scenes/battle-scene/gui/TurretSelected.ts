@@ -1,6 +1,7 @@
 import { BattleManager } from './../BattleManager';
 import { GameConstants } from './../../../GameConstants';
 import { GUI } from './GUI';
+import { GameVars } from '../../../GameVars';
 export class TurretSelected extends Phaser.GameObjects.Container {
 
     private base: Phaser.GameObjects.Image;
@@ -63,13 +64,16 @@ export class TurretSelected extends Phaser.GameObjects.Container {
 
     private onPointerMove(pointer: Phaser.Input.Pointer): void {
 
-        this.setPosition(pointer.x, pointer.y);
+        this.setPosition(pointer.x, pointer.y / GameVars.scaleY);
     }
 
     private onPointerUp(pointer: Phaser.Input.Pointer): void {
 
-        let c = Math.floor((pointer.x - GameConstants.GAME_WIDTH / 2 + ((GameConstants.BOARD_SIZE.c * GameConstants.CELLS_SIZE) / 2)) / GameConstants.CELLS_SIZE);
-        let r = Math.floor((pointer.y - GameConstants.GAME_HEIGHT / 2 - GameConstants.CELLS_SIZE + ((GameConstants.BOARD_SIZE.r * GameConstants.CELLS_SIZE) / 2)) / GameConstants.CELLS_SIZE);
+        let posX = (pointer.x - GameConstants.GAME_WIDTH / 2) / GameVars.scaleCorrectionFactor + ((GameConstants.BOARD_SIZE.c * GameConstants.CELLS_SIZE) / 2);
+        let posY = (pointer.y - GameConstants.GAME_HEIGHT / 2 - GameConstants.CELLS_SIZE) / (GameVars.scaleCorrectionFactor * GameVars.scaleY) + ((GameConstants.BOARD_SIZE.r * GameConstants.CELLS_SIZE) / 2);
+
+        let c = Math.floor(posX / GameConstants.CELLS_SIZE);
+        let r = Math.floor(posY / GameConstants.CELLS_SIZE);
 
         BattleManager.addTurretToScene(this.typeTurret, {r: r, c: c});
         

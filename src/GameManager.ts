@@ -18,6 +18,8 @@ export class GameManager {
 
             if (aspectRatio > 1.5) {
                 GameVars.scaleCorrectionFactor = 1.2;
+            } else if (aspectRatio < 1.33) {
+                GameVars.scaleCorrectionFactor = .8;
             } else {
                 GameVars.scaleCorrectionFactor = 1;
             }

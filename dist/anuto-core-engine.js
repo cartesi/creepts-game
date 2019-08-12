@@ -21,7 +21,7 @@ var Anuto;
             var enemy = null;
             var partialTicks = Anuto.GameVars.ticksCounter - Anuto.GameVars.lastWaveTick;
             if (partialTicks % Anuto.GameVars.enemySpawningDeltaTicks === 0 && Anuto.GameVars.waveEnemies.length > 0) {
-                var nextEnemyData = Anuto.GameVars.waveEnemies.shift();
+                var nextEnemyData = Anuto.GameVars.waveEnemies[0];
                 if (nextEnemyData.t === partialTicks / Anuto.GameVars.enemySpawningDeltaTicks) {
                     switch (nextEnemyData.type) {
                         case Anuto.GameConstants.ENEMY_SOLDIER:
@@ -41,6 +41,7 @@ var Anuto;
                             break;
                         default:
                     }
+                    Anuto.GameVars.waveEnemies.shift();
                 }
             }
             return enemy;
@@ -346,7 +347,7 @@ var Anuto;
             if (!this.waveActivated || Anuto.GameVars.paused) {
                 return;
             }
-            if (this.noEnemiesOnStage && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
+            if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
                 this.waveActivated = false;
                 if (Anuto.GameVars.lifes > 0) {
                     this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.WAVE_OVER));
@@ -402,6 +403,9 @@ var Anuto;
             this.consumedGlues = [];
             this.teleportedEnemies = [];
             this.noEnemiesOnStage = false;
+            this.allEnemiesSpawned = false;
+            this.enemiesSpawned = 0;
+            this.waveEnemiesLength = Anuto.GameVars.waveEnemies.length;
         };
         Engine.prototype.removeEnemy = function (enemy) {
             var i = Anuto.GameVars.enemies.indexOf(enemy);
@@ -705,6 +709,10 @@ var Anuto;
         Engine.prototype.spawnEnemies = function () {
             var enemy = this.enemiesSpawner.getEnemy();
             if (enemy) {
+                this.enemiesSpawned++;
+                if (this.enemiesSpawned === this.waveEnemiesLength) {
+                    this.allEnemiesSpawned = true;
+                }
                 Anuto.GameVars.enemies.push(enemy);
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_SPAWNED, [enemy, Anuto.GameVars.enemiesPathCells[0]]));
             }

@@ -80,7 +80,7 @@ export class TurretButton extends Phaser.GameObjects.Container {
 
     private onDownTurret(): void {
 
-        if (this.alpha !== 1 || GameVars.paused) {
+        if (this.alpha !== 1 || GameVars.paused || BattleManager.anutoEngine.gameOver) {
             return;
         }
 

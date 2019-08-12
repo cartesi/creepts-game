@@ -40,22 +40,14 @@ export class MineActor extends Phaser.GameObjects.Container {
 
         this.mineImage.visible = false;
         
-        const explosionEffect = new Phaser.GameObjects.Graphics(this.scene);
-        explosionEffect.lineStyle(8, 0xFFFF00);
-        explosionEffect.strokeCircle(0, 0, this.anutoMine.explosionRange * GameConstants.CELLS_SIZE);
-        explosionEffect.setScale(.35);
+        let explosionEffect = this.scene.add.sprite(0, 0, "texture_atlas_1", "tower4_fx_01");
+        explosionEffect.setScale(.75);
         this.add(explosionEffect);
 
-        this.scene.tweens.add({
-            targets: explosionEffect,
-            scaleX: 1,
-            scaleY: 1,
-            ease: Phaser.Math.Easing.Cubic.Out,
-            duration: GameVars.timeStepFactor === 4 ? 100 : 180,
-            onComplete: function(): void {
-                BoardContainer.currentInstance.removeMine(this);
-            },
-            onCompleteScope: this
-        });
+        explosionEffect.anims.play("explosion");
+
+        explosionEffect.on("animationcomplete", () => {
+            BoardContainer.currentInstance.removeMine(this);
+        }, this);
     }
 }

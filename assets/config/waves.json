@@ -1,54 +1,76 @@
 {
     "waves": {
-                "wave_1" : [
-                                {"type": "soldier",     "t": 0},
-                                {"type": "soldier",     "t": 1},
-                                {"type": "soldier",     "t": 2},
-                                {"type": "soldier",     "t": 3},
-                                {"type": "soldier",     "t": 8},
-                                {"type": "soldier",     "t": 9},
-                                {"type": "soldier",     "t": 10},
-                                {"type": "soldier",     "t": 11},
-                                {"type": "soldier",     "t": 12},
-                                {"type": "soldier",     "t": 15}
-                ],
-                "wave_2" : [
-                                {"type": "soldier",     "t": 0},
-                                {"type": "soldier",     "t": 1},
-                                {"type": "soldier",     "t": 2},
-                                {"type": "soldier",     "t": 3},
-                                {"type": "soldier",     "t": 4},
-                                {"type": "runner",      "t": 10},
-                                {"type": "runner",      "t": 12},
-                                {"type": "runner",      "t": 14},
-                                {"type": "runner",      "t": 16},
-                                {"type": "soldier",     "t": 18}
-                ],
-                "wave_3" : [
-                                {"type": "soldier",     "t": 0},
-                                {"type": "soldier",     "t": 1},
-                                {"type": "healer",      "t": 2},
-                                {"type": "soldier",     "t": 3},
-                                {"type": "runner",      "t": 4},
-                                {"type": "runner",      "t": 5},
-                                {"type": "runner",      "t": 6},
-                                {"type": "healer",      "t": 7},
-                                {"type": "runner",      "t": 14},
-                                {"type": "runner",      "t": 16},
-                                {"type": "soldier",     "t": 18}
-                ],
-                "wave_4" : [
-                                {"type": "soldier",     "t": 0},
-                                {"type": "soldier",     "t": 1},
-                                {"type": "blob",        "t": 2},
-                                {"type": "soldier",     "t": 3},
-                                {"type": "flier",       "t": 4},
-                                {"type": "flier",       "t": 5},
-                                {"type": "runner",      "t": 6},
-                                {"type": "healer",      "t": 7},
-                                {"type": "runner",      "t": 14},
-                                {"type": "runner",      "t": 16},
-                                {"type": "soldier",     "t": 18}
-                ]
+        "wave_1" : [
+            {"type": "soldier",     "t": 0},
+            {"type": "soldier",     "t": 1},
+            {"type": "soldier",     "t": 2},
+            {"type": "soldier",     "t": 3}
+        ],
+        "wave_2" : [
+            {"type": "soldier",     "t": 0},
+            {"type": "soldier",     "t": 1},
+            {"type": "soldier",     "t": 2},
+            {"type": "soldier",     "t": 3},
+            {"type": "soldier",     "t": 5},
+            {"type": "soldier",     "t": 6},
+            {"type": "soldier",     "t": 7},
+            {"type": "soldier",     "t": 8}
+        ],
+        "wave_4" : [
+            {"type": "runner",     "t": 0},
+            {"type": "runner",     "t": 1},
+            {"type": "runner",     "t": 2},
+            {"type": "runner",     "t": 3}
+        ],
+        "wave_5" : [
+            {"type": "runner",     "t": 0},
+            {"type": "runner",     "t": 1},
+            {"type": "runner",     "t": 2},
+            {"type": "runner",     "t": 3},
+            {"type": "runner",     "t": 5},
+            {"type": "runner",     "t": 6},
+            {"type": "runner",     "t": 7},
+            {"type": "runner",     "t": 8}
+        ],
+        "wave_6" : [
+            {"type": "soldier",     "t": 0},
+            {"type": "soldier",     "t": 1},
+            {"type": "healer",      "t": 2},
+            {"type": "soldier",     "t": 3},
+            {"type": "soldier",     "t": 4},
+            {"type": "soldier",     "t": 6},
+            {"type": "soldier",     "t": 7},
+            {"type": "healer",      "t": 8},
+            {"type": "soldier",     "t": 9},
+            {"type": "soldier",     "t": 10}
+        ],
+        "wave_7" : [
+            {"type": "flier",     "t": 0},
+            {"type": "flier",     "t": 1},
+            {"type": "flier",     "t": 2},
+            {"type": "flier",     "t": 3},
+            {"type": "flier",     "t": 5},
+            {"type": "flier",     "t": 6},
+            {"type": "flier",     "t": 7},
+            {"type": "flier",     "t": 8}
+        ],
+        "wave_8" : [
+            {"type": "soldier",     "t": 0},
+            {"type": "soldier",     "t": 1},
+            {"type": "soldier",     "t": 2},
+            {"type": "soldier",     "t": 3},
+            {"type": "flier",       "t": 5},
+            {"type": "flier",       "t": 6},
+            {"type": "flier",       "t": 7},
+            {"type": "flier",       "t": 8},
+            {"type": "healer",      "t": 10},
+            {"type": "healer",      "t": 11},
+            {"type": "healer",      "t": 12},
+            {"type": "healer",      "t": 13},
+            {"type": "runner",      "t": 15},
+            {"type": "runner",      "t": 16},
+            {"type": "runner",      "t": 17},
+            {"type": "runner",      "t": 18}
+        ]
     }
 }

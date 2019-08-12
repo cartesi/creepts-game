@@ -146,6 +146,7 @@ export class BattleManager {
         let action = {type: GameConstants.TYPE_LEVEL_UP_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
         BattleManager.addAction(action);
 
+        BoardContainer.currentInstance.improveTurret(id);
         BattleScene.currentInstance.gui.updateTurretButtons();
     }
 
@@ -302,9 +303,7 @@ export class BattleManager {
     private static onGameOver(): void {
     
         // TODO: enseñar cartel de game over con la puntuacion
-        console.log("GAME OVER");
-        console.log(BattleManager.anutoEngine.ticksCounter);
-        console.log(BattleManager.anutoEngine.score);
+        BoardContainer.currentInstance.showGameOverLayer();
 
         console.log(JSON.stringify(GameVars.logsObject));
     }

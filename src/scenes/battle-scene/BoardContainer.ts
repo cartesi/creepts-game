@@ -1,3 +1,4 @@
+import { GameOverLayer } from './GameOverLayer';
 import { MineActor } from './turret-actors/MineActor';
 import { BattleScene } from './BattleScene';
 import { TurretMenu } from './TurretMenu';
@@ -42,6 +43,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
     private turretMenu: TurretMenu;
     private pauseMenu: PauseMenu;
+    private gameOverLayer: GameOverLayer;
 
     private pointerContainer: Phaser.GameObjects.Container;
     private circlesContainer: Phaser.GameObjects.Container;
@@ -56,7 +58,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         BoardContainer.currentInstance = this;
 
         this.x = GameConstants.GAME_WIDTH / 2;
-        this.y = GameConstants.GAME_HEIGHT / 2 + GameConstants.CELLS_SIZE * GameVars.scaleY;
+        this.y = GameConstants.GAME_HEIGHT / 2 + GameConstants.CELLS_SIZE;
 
         this.scaleX = GameVars.scaleCorrectionFactor;
         this.scaleY = GameVars.scaleCorrectionFactor * GameVars.scaleY;
@@ -83,7 +85,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.pointerContainer = new Phaser.GameObjects.Container(this.scene);
         this.board.add(this.pointerContainer);
 
-        this.pointerContainer.setInteractive(new Phaser.Geom.Rectangle(0, 0, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT), Phaser.Geom.Rectangle.Contains);
+        this.pointerContainer.setInteractive(new Phaser.Geom.Rectangle(0, - GameConstants.GAME_HEIGHT, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT * 4), Phaser.Geom.Rectangle.Contains);
         this.pointerContainer.on("pointerdown", () => { this.onPointerDown(); });
 
         this.actorsContainer = new Phaser.GameObjects.Container(this.scene);
@@ -505,6 +507,12 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         const turretActor = this.getTurretActorByID(id);
         turretActor.upgrade();
     }
+
+    public improveTurret(id: number): void {
+        
+        const turretActor = this.getTurretActorByID(id);
+        turretActor.improve();
+    }
     
     public getTurretActorByID(id: number): TurretActor {
 
@@ -594,6 +602,12 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
+    public showGameOverLayer(): void {
+
+        this.gameOverLayer = new GameOverLayer(this.scene);
+        this.add(this.gameOverLayer);
+    }
+
     private drawDebugGeometry(): void {
         
         const path = new Phaser.GameObjects.Graphics(this.scene);
@@ -640,5 +654,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.scene.anims.create({ key: "enemy_healer_heal", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_healing_", start: 1, end: 6, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
 
         this.scene.anims.create({ key: "glue_bullet", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "bullet_3_1_", start: 1, end: 8, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
+
+        this.scene.anims.create({ key: "explosion", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "tower4_fx_", start: 1, end: 21, zeroPad: 2, suffix: ""}), frameRate: 60, repeat: 0});
     }
 }

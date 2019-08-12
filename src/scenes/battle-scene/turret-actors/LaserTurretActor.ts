@@ -20,6 +20,8 @@ export class LaserTurretActor extends TurretActor {
 
     public upgrade(): void {
 
+        super.upgrade();
+
         switch (this.anutoTurret.grade) {
  
              case 2:

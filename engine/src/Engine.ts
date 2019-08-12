@@ -25,6 +25,9 @@ module Anuto {
         private eventDispatcher: EventDispatcher;
         private enemiesSpawner: EnemiesSpawner;
         private noEnemiesOnStage: boolean;
+        private waveEnemiesLength: number;
+        private enemiesSpawned: number;
+        private allEnemiesSpawned: boolean;
 
         public static getPathPosition(l: number): {x: number, y: number} {
 
@@ -115,7 +118,7 @@ module Anuto {
                 return;
             }
 
-            if (this.noEnemiesOnStage && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
+            if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
                 this.waveActivated = false;
 
                 if (GameVars.lifes > 0) {
@@ -191,6 +194,9 @@ module Anuto {
             this.teleportedEnemies = [];
 
             this.noEnemiesOnStage = false;
+            this.allEnemiesSpawned = false;
+            this.enemiesSpawned = 0;
+            this.waveEnemiesLength = GameVars.waveEnemies.length;
         }
 
         public removeEnemy(enemy: Enemy): void {
@@ -633,6 +639,11 @@ module Anuto {
             const enemy = this.enemiesSpawner.getEnemy();
 
             if (enemy) {
+
+                this.enemiesSpawned++;
+                if (this.enemiesSpawned === this.waveEnemiesLength) {
+                    this.allEnemiesSpawned = true;
+                }
 
                 GameVars.enemies.push(enemy);
                 this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_SPAWNED, [enemy, GameVars.enemiesPathCells[0]]));

@@ -10,12 +10,14 @@ export class HUD extends Phaser.GameObjects.Container {
     private lifesLabel: Phaser.GameObjects.Text;
     private roundLabel: Phaser.GameObjects.Text;
 
+    private enemyIcon: Phaser.GameObjects.Image;
+
     constructor(scene: Phaser.Scene) {
 
         super(scene);
 
-        this.scaleX = GameVars.scaleCorrectionFactor;
-        this.scaleY = GameVars.scaleCorrectionFactor * GameVars.scaleY;
+        // this.scaleX = GameVars.scaleCorrectionFactor;
+        this.scaleY = GameVars.scaleY;
         
         let bck = new Phaser.GameObjects.Graphics(this.scene);
         bck.fillStyle(0xFFFFFF);
@@ -35,21 +37,22 @@ export class HUD extends Phaser.GameObjects.Container {
         this.creditsLabel = new Phaser.GameObjects.Text(this.scene, 35, 5, BattleManager.anutoEngine.credits.toString(), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff"});
         this.add(this.creditsLabel);
 
-        let lifesIcon = new Phaser.GameObjects.Image(this.scene, 130, 8, "texture_atlas_1", "lives_icon");
-        lifesIcon.setOrigin(0);
+        let lifesIcon = new Phaser.GameObjects.Image(this.scene, GameConstants.GAME_WIDTH / 2 - 2, 8, "texture_atlas_1", "lives_icon");
+        lifesIcon.setOrigin(1, 0);
         lifesIcon.setScale(.9);
         this.add(lifesIcon);
 
-        this.lifesLabel = new Phaser.GameObjects.Text(this.scene, 158, 5, BattleManager.anutoEngine.lifes.toString(), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff"});
+        this.lifesLabel = new Phaser.GameObjects.Text(this.scene, GameConstants.GAME_WIDTH / 2 + 2, 5, BattleManager.anutoEngine.lifes.toString(), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff"});
         this.add(this.lifesLabel);
 
-        let enemyIcon = new Phaser.GameObjects.Image(this.scene, 220, 5, "texture_atlas_1", "enemy_icon");
-        enemyIcon.setOrigin(0);
-        enemyIcon.setScale(.9);
-        this.add(enemyIcon);
-
-        this.roundLabel = new Phaser.GameObjects.Text(this.scene, 250, 5, "Round " + BattleManager.anutoEngine.round, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff"});
+        this.roundLabel = new Phaser.GameObjects.Text(this.scene, GameConstants.GAME_WIDTH - 5, 5, "Round " + BattleManager.anutoEngine.round, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff"});
+        this.roundLabel.setOrigin(1, 0);
         this.add(this.roundLabel);
+
+        this.enemyIcon = new Phaser.GameObjects.Image(this.scene, this.roundLabel.x - this.roundLabel.width - 2, 5, "texture_atlas_1", "enemy_icon");
+        this.enemyIcon.setOrigin(1, 0);
+        this.enemyIcon.setScale(.9);
+        this.add(this.enemyIcon);
 
         if (GameConstants.DEVELOPMENT) {
             this.ticksLabel = new Phaser.GameObjects.Text(this.scene, 15, GameConstants.GAME_HEIGHT - 35, "ticks: " + BattleManager.anutoEngine.ticksCounter, {fontFamily: "Rubik-Regular", fontSize: "25px", color: "#000000"});
@@ -76,6 +79,7 @@ export class HUD extends Phaser.GameObjects.Container {
     public updateRound(): void {
 
         this.roundLabel.setText("Round " + BattleManager.anutoEngine.round);
+        this.enemyIcon.x = this.roundLabel.x - this.roundLabel.width - 2;
     }
 
     public onWaveOver(): void {

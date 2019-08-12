@@ -22,7 +22,9 @@ export class GlueTurretActor extends TurretActor {
 
     public upgrade(): void {
 
-       switch (this.anutoTurret.grade) {
+        super.upgrade();
+
+        switch (this.anutoTurret.grade) {
 
             case 2:
                 this.base.setFrame("base_3_2");

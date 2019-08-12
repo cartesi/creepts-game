@@ -184,7 +184,7 @@ var GameConstants = /** @class */ (function () {
     function GameConstants() {
     }
     GameConstants.VERSION = "0.0";
-    GameConstants.DEVELOPMENT = true;
+    GameConstants.DEVELOPMENT = false;
     GameConstants.SHOW_DEBUG_GEOMETRY = false;
     GameConstants.INTERPOLATE_TRAJECTORIES = true;
     GameConstants.VERBOSE = false;
@@ -304,6 +304,9 @@ var GameManager = /** @class */ (function () {
             GameVars_1.GameVars.scaleY = (GameConstants_1.GameConstants.GAME_HEIGHT / GameConstants_1.GameConstants.GAME_WIDTH) / aspectRatio;
             if (aspectRatio > 1.5) {
                 GameVars_1.GameVars.scaleCorrectionFactor = 1.2;
+            }
+            else if (aspectRatio < 1.33) {
+                GameVars_1.GameVars.scaleCorrectionFactor = .8;
             }
             else {
                 GameVars_1.GameVars.scaleCorrectionFactor = 1;
@@ -617,9 +620,6 @@ var BattleManager = /** @class */ (function () {
     function BattleManager() {
     }
     BattleManager.init = function () {
-        GameVars_1.GameVars.logsObject = {
-            actions: []
-        };
         GameVars_1.GameVars.enemiesPathCells = GameConstants_1.GameConstants.ENEMY_PATH_1;
         var gameConfig = {
             timeStep: GameConstants_1.GameConstants.TIME_STEP,
@@ -633,10 +633,17 @@ var BattleManager = /** @class */ (function () {
         GameVars_1.GameVars.enemiesData = enemies_json_1.default.enemies;
         GameVars_1.GameVars.turretsData = turrets_json_1.default.turrets;
         GameVars_1.GameVars.wavesData = waves_json_1.default.waves;
+        GameVars_1.GameVars.logsObject = {
+            gameConfig: gameConfig,
+            enemiesData: GameVars_1.GameVars.enemiesData,
+            turretsData: GameVars_1.GameVars.turretsData,
+            wavesData: GameVars_1.GameVars.wavesData,
+            actions: []
+        };
         GameVars_1.GameVars.timeStepFactor = 1;
         GameVars_1.GameVars.currentWave = 1;
         GameVars_1.GameVars.paused = false;
-        BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars_1.GameVars.enemiesData, GameVars_1.GameVars.turretsData);
+        BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars_1.GameVars.enemiesData, GameVars_1.GameVars.turretsData, GameVars_1.GameVars.wavesData);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
@@ -652,6 +659,7 @@ var BattleManager = /** @class */ (function () {
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMIES_TELEPORTED, BattleManager.onEnemiesTeleported, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.NO_ENEMIES_ON_STAGE, BattleManager.onNoEnemiesOnStage, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.WAVE_OVER, BattleManager.onWaveOver, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.GAME_OVER, BattleManager.onGameOver, BattleManager);
     };
     BattleManager.update = function (time, delta) {
         BattleManager.anutoEngine.update();
@@ -672,17 +680,10 @@ var BattleManager = /** @class */ (function () {
         if (BattleManager.anutoEngine.waveActivated) {
             return;
         }
-        var waveConfig = {
-            enemies: GameVars_1.GameVars.wavesData["wave_" + GameVars_1.GameVars.currentWave]
-        };
-        BattleManager.anutoEngine.newWave(waveConfig);
+        BattleManager.anutoEngine.newWave();
         BattleScene_1.BattleScene.currentInstance.hud.updateRound();
         var action = { type: GameConstants_1.GameConstants.TYPE_NEXT_WAVE, tick: BattleManager.anutoEngine.ticksCounter };
         BattleManager.addAction(action);
-        GameVars_1.GameVars.currentWave++;
-        if (GameVars_1.GameVars.currentWave > 4) {
-            GameVars_1.GameVars.currentWave = 1;
-        }
     };
     BattleManager.createTurret = function (type) {
         BattleScene_1.BattleScene.currentInstance.createTurret(type);
@@ -692,12 +693,12 @@ var BattleManager = /** @class */ (function () {
     };
     BattleManager.addTurret = function (type, position) {
         var turret = BattleManager.anutoEngine.addTurret(type, position);
-        var action = { type: GameConstants_1.GameConstants.TYPE_ADD_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: turret.id };
+        var action = { type: GameConstants_1.GameConstants.TYPE_ADD_TURRET, tick: BattleManager.anutoEngine.ticksCounter, typeTurret: turret.type, position: position };
         BattleManager.addAction(action);
         return turret;
     };
     BattleManager.sellTurret = function (turret) {
-        BattleManager.anutoEngine.sellTurret(turret);
+        BattleManager.anutoEngine.sellTurret(turret.id);
         var action = { type: GameConstants_1.GameConstants.TYPE_SELL_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: turret.id };
         BattleManager.addAction(action);
         BoardContainer_1.BoardContainer.currentInstance.removeTurret(turret);
@@ -710,6 +711,7 @@ var BattleManager = /** @class */ (function () {
         BattleManager.anutoEngine.improveTurret(id);
         var action = { type: GameConstants_1.GameConstants.TYPE_LEVEL_UP_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id };
         BattleManager.addAction(action);
+        BoardContainer_1.BoardContainer.currentInstance.improveTurret(id);
         BattleScene_1.BattleScene.currentInstance.gui.updateTurretButtons();
     };
     BattleManager.upgradeTower = function (id) {
@@ -743,7 +745,6 @@ var BattleManager = /** @class */ (function () {
     };
     BattleManager.addAction = function (action) {
         GameVars_1.GameVars.logsObject.actions.push(action);
-        console.log(GameVars_1.GameVars.logsObject);
     };
     BattleManager.onEnemySpawned = function (anutoEnemy, p) {
         BoardContainer_1.BoardContainer.currentInstance.addEnemy(anutoEnemy, p);
@@ -804,12 +805,16 @@ var BattleManager = /** @class */ (function () {
         BoardContainer_1.BoardContainer.currentInstance.onEnemyKilled(anutoEnemy);
     };
     BattleManager.onNoEnemiesOnStage = function () {
-        // no quedan enemigos pq han sido liquidados o han llegado todos a la salida
-        console.log("NO ENEMIES ON STAGE");
+        // TODO: si se tiene mas de 0 vidas se enseña cartel de round completed o algo asi
     };
     BattleManager.onWaveOver = function () {
         BattleScene_1.BattleScene.currentInstance.gui.activeNextWave();
         console.log("WAVE OVER");
+    };
+    BattleManager.onGameOver = function () {
+        // TODO: enseñar cartel de game over con la puntuacion
+        BoardContainer_1.BoardContainer.currentInstance.showGameOverLayer();
+        console.log(JSON.stringify(GameVars_1.GameVars.logsObject));
     };
     return BattleManager;
 }());
@@ -927,21 +932,6 @@ var Board = /** @class */ (function (_super) {
             ["12", "00", "00", "00", "00", "00", "00", "00", "00", "12"],
             ["35", "14", "14", "14", "14", "14", "14", "07", "00", "12"],
             ["10", "16", "16", "16", "16", "16", "16", "09", "00", "05"]];
-        // map =     [ [ "02", "02", "02", "00", "02", "02", "02", "02", "02", "02"],
-        //             [ "02", "02", "02", "00", "00", "00", "00", "02", "02", "02"],
-        //             [ "02", "02", "02", "02", "02", "02", "00", "02", "02", "02"],
-        //             [ "02", "02", "02", "02", "00", "00", "00", "02", "02", "02"],
-        //             [ "02", "02", "02", "02", "00", "02", "02", "02", "02", "02"],
-        //             [ "02", "02", "02", "02", "00", "02", "02", "02", "02", "02"],
-        //             [ "02", "02", "02", "02", "00", "02", "02", "02", "02", "02"],
-        //             [ "02", "02", "02", "02", "00", "02", "02", "02", "02", "02"],
-        //             [ "02", "02", "02", "02", "00", "02", "02", "02", "02", "02"],
-        //             [ "02", "02", "02", "02", "00", "02", "02", "02", "02", "02"],
-        //             [ "02", "00", "00", "00", "00", "02", "02", "02", "02", "02"],
-        //             [ "02", "00", "02", "02", "02", "02", "02", "02", "02", "02"],
-        //             [ "02", "00", "00", "00", "00", "00", "00", "00", "00", "02"],
-        //             [ "02", "02", "02", "02", "02", "02", "02", "02", "00", "02"],
-        //             [ "02", "02", "02", "02", "02", "02", "02", "02", "00", "02"]];
         for (var i = 0; i < GameConstants_1.GameConstants.BOARD_SIZE.c; i++) {
             for (var j = 0; j < GameConstants_1.GameConstants.BOARD_SIZE.r; j++) {
                 if (map[j][i] !== "00") {
@@ -985,6 +975,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var GameOverLayer_1 = __webpack_require__(/*! ./GameOverLayer */ "./src/scenes/battle-scene/GameOverLayer.ts");
 var MineActor_1 = __webpack_require__(/*! ./turret-actors/MineActor */ "./src/scenes/battle-scene/turret-actors/MineActor.ts");
 var BattleScene_1 = __webpack_require__(/*! ./BattleScene */ "./src/scenes/battle-scene/BattleScene.ts");
 var TurretMenu_1 = __webpack_require__(/*! ./TurretMenu */ "./src/scenes/battle-scene/TurretMenu.ts");
@@ -1013,7 +1004,7 @@ var BoardContainer = /** @class */ (function (_super) {
         var _this = _super.call(this, scene) || this;
         BoardContainer.currentInstance = _this;
         _this.x = GameConstants_1.GameConstants.GAME_WIDTH / 2;
-        _this.y = GameConstants_1.GameConstants.GAME_HEIGHT / 2 + GameConstants_1.GameConstants.CELLS_SIZE * GameVars_1.GameVars.scaleY;
+        _this.y = GameConstants_1.GameConstants.GAME_HEIGHT / 2 + GameConstants_1.GameConstants.CELLS_SIZE;
         _this.scaleX = GameVars_1.GameVars.scaleCorrectionFactor;
         _this.scaleY = GameVars_1.GameVars.scaleCorrectionFactor * GameVars_1.GameVars.scaleY;
         _this.deadEnemyActors = [];
@@ -1033,7 +1024,7 @@ var BoardContainer = /** @class */ (function (_super) {
         }
         _this.pointerContainer = new Phaser.GameObjects.Container(_this.scene);
         _this.board.add(_this.pointerContainer);
-        _this.pointerContainer.setInteractive(new Phaser.Geom.Rectangle(0, 0, GameConstants_1.GameConstants.GAME_WIDTH, GameConstants_1.GameConstants.GAME_HEIGHT), Phaser.Geom.Rectangle.Contains);
+        _this.pointerContainer.setInteractive(new Phaser.Geom.Rectangle(0, -GameConstants_1.GameConstants.GAME_HEIGHT, GameConstants_1.GameConstants.GAME_WIDTH, GameConstants_1.GameConstants.GAME_HEIGHT * 4), Phaser.Geom.Rectangle.Contains);
         _this.pointerContainer.on("pointerdown", function () { _this.onPointerDown(); });
         _this.actorsContainer = new Phaser.GameObjects.Container(_this.scene);
         _this.board.add(_this.actorsContainer);
@@ -1356,6 +1347,10 @@ var BoardContainer = /** @class */ (function (_super) {
         var turretActor = this.getTurretActorByID(id);
         turretActor.upgrade();
     };
+    BoardContainer.prototype.improveTurret = function (id) {
+        var turretActor = this.getTurretActorByID(id);
+        turretActor.improve();
+    };
     BoardContainer.prototype.getTurretActorByID = function (id) {
         var turretActor = null;
         for (var i = 0; i < this.turretActors.length; i++) {
@@ -1422,6 +1417,10 @@ var BoardContainer = /** @class */ (function (_super) {
             this.pauseMenu = null;
         }
     };
+    BoardContainer.prototype.showGameOverLayer = function () {
+        this.gameOverLayer = new GameOverLayer_1.GameOverLayer(this.scene);
+        this.add(this.gameOverLayer);
+    };
     BoardContainer.prototype.drawDebugGeometry = function () {
         var path = new Phaser.GameObjects.Graphics(this.scene);
         path.lineStyle(2, 0xFFA500);
@@ -1457,6 +1456,69 @@ var BoardContainer = /** @class */ (function (_super) {
     return BoardContainer;
 }(Phaser.GameObjects.Container));
 exports.BoardContainer = BoardContainer;
+
+
+/***/ }),
+
+/***/ "./src/scenes/battle-scene/GameOverLayer.ts":
+/*!**************************************************!*\
+  !*** ./src/scenes/battle-scene/GameOverLayer.ts ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var BattleManager_1 = __webpack_require__(/*! ./BattleManager */ "./src/scenes/battle-scene/BattleManager.ts");
+var GameConstants_1 = __webpack_require__(/*! ../../GameConstants */ "./src/GameConstants.ts");
+var GameOverLayer = /** @class */ (function (_super) {
+    __extends(GameOverLayer, _super);
+    function GameOverLayer(scene) {
+        var _this = _super.call(this, scene) || this;
+        var bck = new Phaser.GameObjects.Graphics(_this.scene);
+        bck.fillStyle(0x000000);
+        bck.fillRect(-GameConstants_1.GameConstants.GAME_WIDTH / 2, -100, GameConstants_1.GameConstants.GAME_WIDTH, 200);
+        bck.alpha = .75;
+        _this.add(bck);
+        var titleLines = new Phaser.GameObjects.Graphics(_this.scene);
+        titleLines.setPosition(0, 255);
+        titleLines.lineStyle(4, 0xffffff);
+        titleLines.strokeRect(-180, -330, 360, 70);
+        titleLines.lineStyle(2, 0xffffff);
+        titleLines.strokeRect(-170, -320, 340, 50);
+        _this.add(titleLines);
+        var title = new Phaser.GameObjects.Text(_this.scene, 0, -60, "GAME OVER", { fontFamily: "Rubik-Regular", fontSize: "35px", color: "#FFFFFF" });
+        title.setOrigin(.5, 0);
+        _this.add(title);
+        var score = new Phaser.GameObjects.Text(_this.scene, 0, 50, "SCORE: " + BattleManager_1.BattleManager.anutoEngine.score, { fontFamily: "Rubik-Regular", fontSize: "65px", color: "#FFFFFF" });
+        score.setOrigin(.5);
+        _this.add(score);
+        _this.alpha = 0;
+        _this.scene.tweens.add({
+            targets: _this,
+            alpha: 1,
+            ease: Phaser.Math.Easing.Cubic.Out,
+            duration: 500
+        });
+        return _this;
+    }
+    return GameOverLayer;
+}(Phaser.GameObjects.Container));
+exports.GameOverLayer = GameOverLayer;
 
 
 /***/ }),
@@ -1530,6 +1592,7 @@ var PauseMenu = /** @class */ (function (_super) {
         _this.changeMapButton.on("pointerover", function () { _this.onBtnOver(_this.changeMapButton); });
         _this.changeMapButton.on("pointerout", function () { _this.onBtnOut(_this.changeMapButton); });
         _this.changeMapButton.on("pointerdown", function () { _this.onClickChangeMap(); });
+        _this.changeMapButton.alpha = .5;
         _this.add(_this.changeMapButton);
         var changeMapBck = new Phaser.GameObjects.Graphics(_this.scene);
         changeMapBck.fillStyle(0xFFFFFF);
@@ -1547,6 +1610,7 @@ var PauseMenu = /** @class */ (function (_super) {
         _this.configurationButton.on("pointerover", function () { _this.onBtnOver(_this.configurationButton); });
         _this.configurationButton.on("pointerout", function () { _this.onBtnOut(_this.configurationButton); });
         _this.configurationButton.on("pointerdown", function () { _this.onClickConfiguration(); });
+        _this.configurationButton.alpha = .5;
         _this.add(_this.configurationButton);
         var configurationBck = new Phaser.GameObjects.Graphics(_this.scene);
         configurationBck.fillStyle(0xFFFFFF);
@@ -2317,8 +2381,8 @@ var GUI = /** @class */ (function (_super) {
         var _this = _super.call(this, scene) || this;
         _this.buyTurrets = new BuyTurrets_1.BuyTurrets(_this.scene);
         _this.add(_this.buyTurrets);
-        _this.scaleX = GameVars_1.GameVars.scaleCorrectionFactor;
-        _this.scaleY = GameVars_1.GameVars.scaleCorrectionFactor * GameVars_1.GameVars.scaleY;
+        // this.scaleX = GameVars.scaleCorrectionFactor;
+        _this.scaleY = GameVars_1.GameVars.scaleY;
         _this.menuButton = new Phaser.GameObjects.Container(_this.scene);
         _this.menuButton.setPosition(430, 79);
         _this.menuButton.setInteractive(new Phaser.Geom.Rectangle(-55, -30, 110, 60), Phaser.Geom.Rectangle.Contains);
@@ -2394,7 +2458,7 @@ var GUI = /** @class */ (function (_super) {
         BattleManager_1.BattleManager.onClickMenu();
     };
     GUI.prototype.onClickNextWave = function () {
-        if (this.nextWaveButton.alpha !== 1 || GameVars_1.GameVars.paused) {
+        if (this.nextWaveButton.alpha !== 1 || GameVars_1.GameVars.paused || BattleManager_1.BattleManager.anutoEngine.gameOver) {
             return;
         }
         this.nextWaveButton.alpha = .5;
@@ -2501,7 +2565,7 @@ var TurretButton = /** @class */ (function (_super) {
         }
     };
     TurretButton.prototype.onDownTurret = function () {
-        if (this.alpha !== 1 || GameVars_1.GameVars.paused) {
+        if (this.alpha !== 1 || GameVars_1.GameVars.paused || BattleManager_1.BattleManager.anutoEngine.gameOver) {
             return;
         }
         BattleManager_1.BattleManager.createTurret(this.typeTurret);
@@ -2538,6 +2602,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var BattleManager_1 = __webpack_require__(/*! ./../BattleManager */ "./src/scenes/battle-scene/BattleManager.ts");
 var GameConstants_1 = __webpack_require__(/*! ./../../../GameConstants */ "./src/GameConstants.ts");
+var GameVars_1 = __webpack_require__(/*! ../../../GameVars */ "./src/GameVars.ts");
 var TurretSelected = /** @class */ (function (_super) {
     __extends(TurretSelected, _super);
     function TurretSelected(scene, type, gui) {
@@ -2580,11 +2645,13 @@ var TurretSelected = /** @class */ (function (_super) {
         // 
     };
     TurretSelected.prototype.onPointerMove = function (pointer) {
-        this.setPosition(pointer.x, pointer.y);
+        this.setPosition(pointer.x, pointer.y / GameVars_1.GameVars.scaleY);
     };
     TurretSelected.prototype.onPointerUp = function (pointer) {
-        var c = Math.floor((pointer.x - GameConstants_1.GameConstants.GAME_WIDTH / 2 + ((GameConstants_1.GameConstants.BOARD_SIZE.c * GameConstants_1.GameConstants.CELLS_SIZE) / 2)) / GameConstants_1.GameConstants.CELLS_SIZE);
-        var r = Math.floor((pointer.y - GameConstants_1.GameConstants.GAME_HEIGHT / 2 - GameConstants_1.GameConstants.CELLS_SIZE + ((GameConstants_1.GameConstants.BOARD_SIZE.r * GameConstants_1.GameConstants.CELLS_SIZE) / 2)) / GameConstants_1.GameConstants.CELLS_SIZE);
+        var posX = (pointer.x - GameConstants_1.GameConstants.GAME_WIDTH / 2) / GameVars_1.GameVars.scaleCorrectionFactor + ((GameConstants_1.GameConstants.BOARD_SIZE.c * GameConstants_1.GameConstants.CELLS_SIZE) / 2);
+        var posY = (pointer.y - GameConstants_1.GameConstants.GAME_HEIGHT / 2 - GameConstants_1.GameConstants.CELLS_SIZE) / (GameVars_1.GameVars.scaleCorrectionFactor * GameVars_1.GameVars.scaleY) + ((GameConstants_1.GameConstants.BOARD_SIZE.r * GameConstants_1.GameConstants.CELLS_SIZE) / 2);
+        var c = Math.floor(posX / GameConstants_1.GameConstants.CELLS_SIZE);
+        var r = Math.floor(posY / GameConstants_1.GameConstants.CELLS_SIZE);
         BattleManager_1.BattleManager.addTurretToScene(this.typeTurret, { r: r, c: c });
         this.scene.input.removeAllListeners();
         this.gui.removeTurret();
@@ -2626,8 +2693,8 @@ var HUD = /** @class */ (function (_super) {
     __extends(HUD, _super);
     function HUD(scene) {
         var _this = _super.call(this, scene) || this;
-        _this.scaleX = GameVars_1.GameVars.scaleCorrectionFactor;
-        _this.scaleY = GameVars_1.GameVars.scaleCorrectionFactor * GameVars_1.GameVars.scaleY;
+        // this.scaleX = GameVars.scaleCorrectionFactor;
+        _this.scaleY = GameVars_1.GameVars.scaleY;
         var bck = new Phaser.GameObjects.Graphics(_this.scene);
         bck.fillStyle(0xFFFFFF);
         bck.fillRect(0, 0, GameConstants_1.GameConstants.GAME_WIDTH, 122);
@@ -2642,18 +2709,19 @@ var HUD = /** @class */ (function (_super) {
         _this.add(creditIcon);
         _this.creditsLabel = new Phaser.GameObjects.Text(_this.scene, 35, 5, BattleManager_1.BattleManager.anutoEngine.credits.toString(), { fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff" });
         _this.add(_this.creditsLabel);
-        var lifesIcon = new Phaser.GameObjects.Image(_this.scene, 130, 8, "texture_atlas_1", "lives_icon");
-        lifesIcon.setOrigin(0);
+        var lifesIcon = new Phaser.GameObjects.Image(_this.scene, GameConstants_1.GameConstants.GAME_WIDTH / 2 - 2, 8, "texture_atlas_1", "lives_icon");
+        lifesIcon.setOrigin(1, 0);
         lifesIcon.setScale(.9);
         _this.add(lifesIcon);
-        _this.lifesLabel = new Phaser.GameObjects.Text(_this.scene, 158, 5, BattleManager_1.BattleManager.anutoEngine.lifes.toString(), { fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff" });
+        _this.lifesLabel = new Phaser.GameObjects.Text(_this.scene, GameConstants_1.GameConstants.GAME_WIDTH / 2 + 2, 5, BattleManager_1.BattleManager.anutoEngine.lifes.toString(), { fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff" });
         _this.add(_this.lifesLabel);
-        var enemyIcon = new Phaser.GameObjects.Image(_this.scene, 220, 5, "texture_atlas_1", "enemy_icon");
-        enemyIcon.setOrigin(0);
-        enemyIcon.setScale(.9);
-        _this.add(enemyIcon);
-        _this.roundLabel = new Phaser.GameObjects.Text(_this.scene, 250, 5, "Round " + BattleManager_1.BattleManager.anutoEngine.round, { fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff" });
+        _this.roundLabel = new Phaser.GameObjects.Text(_this.scene, GameConstants_1.GameConstants.GAME_WIDTH - 5, 5, "Round " + BattleManager_1.BattleManager.anutoEngine.round, { fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff" });
+        _this.roundLabel.setOrigin(1, 0);
         _this.add(_this.roundLabel);
+        _this.enemyIcon = new Phaser.GameObjects.Image(_this.scene, _this.roundLabel.x - _this.roundLabel.width - 2, 5, "texture_atlas_1", "enemy_icon");
+        _this.enemyIcon.setOrigin(1, 0);
+        _this.enemyIcon.setScale(.9);
+        _this.add(_this.enemyIcon);
         if (GameConstants_1.GameConstants.DEVELOPMENT) {
             _this.ticksLabel = new Phaser.GameObjects.Text(_this.scene, 15, GameConstants_1.GameConstants.GAME_HEIGHT - 35, "ticks: " + BattleManager_1.BattleManager.anutoEngine.ticksCounter, { fontFamily: "Rubik-Regular", fontSize: "25px", color: "#000000" });
             _this.add(_this.ticksLabel);
@@ -2674,6 +2742,7 @@ var HUD = /** @class */ (function (_super) {
     };
     HUD.prototype.updateRound = function () {
         this.roundLabel.setText("Round " + BattleManager_1.BattleManager.anutoEngine.round);
+        this.enemyIcon.x = this.roundLabel.x - this.roundLabel.width - 2;
     };
     HUD.prototype.onWaveOver = function () {
         //
@@ -2942,6 +3011,7 @@ var GlueTurretActor = /** @class */ (function (_super) {
         //
     };
     GlueTurretActor.prototype.upgrade = function () {
+        _super.prototype.upgrade.call(this);
         switch (this.anutoTurret.grade) {
             case 2:
                 this.base.setFrame("base_3_2");
@@ -3135,6 +3205,7 @@ var LaserTurretActor = /** @class */ (function (_super) {
         return _this;
     }
     LaserTurretActor.prototype.upgrade = function () {
+        _super.prototype.upgrade.call(this);
         switch (this.anutoTurret.grade) {
             case 2:
                 this.base.setFrame("base_2_2");
@@ -3197,6 +3268,7 @@ var LaunchTurretActor = /** @class */ (function (_super) {
         // esta torreta no orienta el cañón hacia el enemigo
     };
     LaunchTurretActor.prototype.upgrade = function () {
+        _super.prototype.upgrade.call(this);
         switch (this.anutoTurret.grade) {
             case 2:
                 this.base.setFrame("base_4_2");
@@ -3355,11 +3427,11 @@ var MortarActor = /** @class */ (function (_super) {
         var scale;
         // la escala crece
         if (dt < this.anutoMortar.ticksToImpact / 2) {
-            scale = .5 * (1 + dt / (this.anutoMortar.ticksToImpact / 2));
+            scale = .75 * (1 + dt / (this.anutoMortar.ticksToImpact / 2));
         }
         else {
             // la escala disminuye
-            scale = .5 * (1 + (this.anutoMortar.ticksToImpact - dt) / (this.anutoMortar.ticksToImpact / 2));
+            scale = .75 * (1 + (this.anutoMortar.ticksToImpact - dt) / (this.anutoMortar.ticksToImpact / 2));
         }
         this.mortarImage.setScale(scale);
         var smoothFactor;
@@ -3441,6 +3513,7 @@ var ProjectileTurretActor = /** @class */ (function (_super) {
         return _this;
     }
     ProjectileTurretActor.prototype.upgrade = function () {
+        _super.prototype.upgrade.call(this);
         switch (this.anutoTurret.grade) {
             case 2:
                 this.base.setFrame("base_1_2");
@@ -3497,7 +3570,7 @@ var TurretActor = /** @class */ (function (_super) {
         var _this = _super.call(this, scene) || this;
         _this.p = position;
         _this.name = type;
-        _this.setScale(.85);
+        _this.setScale(.82);
         _this.anutoTurret = BattleManager_1.BattleManager.addTurret(type, _this.p);
         _this.id = _this.anutoTurret.id;
         _this.x = GameConstants_1.GameConstants.CELLS_SIZE * (_this.p.c + .5);
@@ -3522,13 +3595,22 @@ var TurretActor = /** @class */ (function (_super) {
         }
     };
     TurretActor.prototype.upgrade = function () {
-        //
+        this.reloadRangeCircle();
+    };
+    TurretActor.prototype.improve = function () {
+        this.reloadRangeCircle();
+    };
+    TurretActor.prototype.reloadRangeCircle = function () {
+        this.rangeCircle.clear();
+        this.rangeCircle.setPosition(this.x, this.y);
+        this.rangeCircle.lineStyle(2, 0x00FF00);
+        this.rangeCircle.strokeCircle(0, 0, this.anutoTurret.range * GameConstants_1.GameConstants.CELLS_SIZE);
     };
     TurretActor.prototype.shoot = function () {
         //
     };
     TurretActor.prototype.onDownTurret = function () {
-        if (GameVars_1.GameVars.paused) {
+        if (GameVars_1.GameVars.paused || BattleManager_1.BattleManager.anutoEngine.gameOver) {
             return;
         }
         if (!this.rangeCircle.visible) {

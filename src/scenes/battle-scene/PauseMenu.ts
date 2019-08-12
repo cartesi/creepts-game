@@ -63,6 +63,7 @@ export class PauseMenu extends Phaser.GameObjects.Container {
         this.changeMapButton.on("pointerover", () => { this.onBtnOver(this.changeMapButton); });
         this.changeMapButton.on("pointerout", () => { this.onBtnOut(this.changeMapButton); });
         this.changeMapButton.on("pointerdown", () => { this.onClickChangeMap(); });
+        this.changeMapButton.alpha = .5;
         this.add(this.changeMapButton);
 
         const changeMapBck = new Phaser.GameObjects.Graphics(this.scene);
@@ -84,6 +85,7 @@ export class PauseMenu extends Phaser.GameObjects.Container {
         this.configurationButton.on("pointerover", () => { this.onBtnOver(this.configurationButton); });
         this.configurationButton.on("pointerout", () => { this.onBtnOut(this.configurationButton); });
         this.configurationButton.on("pointerdown", () => { this.onClickConfiguration(); });
+        this.configurationButton.alpha = .5;
         this.add(this.configurationButton);
 
         const configurationBck = new Phaser.GameObjects.Graphics(this.scene);

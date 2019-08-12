@@ -23,8 +23,8 @@ export class GUI extends Phaser.GameObjects.Container {
         this.buyTurrets = new BuyTurrets(this.scene);
         this.add(this.buyTurrets);
 
-        this.scaleX = GameVars.scaleCorrectionFactor;
-        this.scaleY = GameVars.scaleCorrectionFactor * GameVars.scaleY;
+        // this.scaleX = GameVars.scaleCorrectionFactor;
+        this.scaleY = GameVars.scaleY;
 
         this.menuButton = new Phaser.GameObjects.Container(this.scene);
         this.menuButton.setPosition(430, 79);
@@ -122,7 +122,7 @@ export class GUI extends Phaser.GameObjects.Container {
 
     private onClickNextWave(): void {
 
-        if (this.nextWaveButton.alpha !== 1 || GameVars.paused) {
+        if (this.nextWaveButton.alpha !== 1 || GameVars.paused || BattleManager.anutoEngine.gameOver) {
             return;
         }
         

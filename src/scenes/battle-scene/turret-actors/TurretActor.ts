@@ -22,7 +22,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
         this.p = position;
         this.name = type;
 
-        this.setScale(.85);
+        this.setScale(.82);
         
         this.anutoTurret = BattleManager.addTurret(type, this.p);
         this.id = this.anutoTurret.id;
@@ -57,7 +57,21 @@ export class TurretActor extends Phaser.GameObjects.Container {
     }
 
     public upgrade(): void {
-        //
+        
+        this.reloadRangeCircle();
+    }
+
+    public improve(): void {
+        
+        this.reloadRangeCircle();
+    }
+
+    public reloadRangeCircle(): void {
+
+        this.rangeCircle.clear();
+        this.rangeCircle.setPosition(this.x, this.y);
+        this.rangeCircle.lineStyle(2, 0x00FF00);
+        this.rangeCircle.strokeCircle(0, 0, this.anutoTurret.range * GameConstants.CELLS_SIZE);
     }
 
     protected shoot(): void {
@@ -66,7 +80,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
     protected onDownTurret(): void {
 
-        if (GameVars.paused) {
+        if (GameVars.paused || BattleManager.anutoEngine.gameOver) {
             return;
         }
 

@@ -14,7 +14,7 @@ module Anuto {
             
             if (partialTicks % GameVars.enemySpawningDeltaTicks === 0 && GameVars.waveEnemies.length > 0) {
 
-                const nextEnemyData = GameVars.waveEnemies.shift();
+                const nextEnemyData = GameVars.waveEnemies[0];
                 
                 if (nextEnemyData.t === partialTicks / GameVars.enemySpawningDeltaTicks) {
 
@@ -37,6 +37,8 @@ module Anuto {
                             break;
                         default: 
                     }
+
+                    GameVars.waveEnemies.shift();
                 }
             }
 
