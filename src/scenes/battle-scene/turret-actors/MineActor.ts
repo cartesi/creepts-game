@@ -17,15 +17,23 @@ export class MineActor extends Phaser.GameObjects.Container {
         this.anutoMine = anutoMine;
         this.detonated = false;
 
-        let randX = Math.random() * GameConstants.CELLS_SIZE / 2 - GameConstants.CELLS_SIZE / 4;
-        let randY = Math.random() * GameConstants.CELLS_SIZE / 2 - GameConstants.CELLS_SIZE / 4;
+        let randX = Math.random() * GameConstants.CELLS_SIZE / 2 - GameConstants.CELLS_SIZE / 3;
+        let randY = Math.random() * GameConstants.CELLS_SIZE / 2 - GameConstants.CELLS_SIZE / 3;
 
-        this.x = this.anutoMine.x * GameConstants.CELLS_SIZE + randX;
-        this.y = this.anutoMine.y * GameConstants.CELLS_SIZE + randY;
+        this.x = launchTurretActor.x;
+        this.y = launchTurretActor.y;
 
         this.mineImage = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "mine");
         this.mineImage.setScale(.5);
         this.add(this.mineImage);
+
+        this.scene.tweens.add({
+            targets: this,
+            x: this.anutoMine.x * GameConstants.CELLS_SIZE + randX,
+            y: this.anutoMine.y * GameConstants.CELLS_SIZE + randY,
+            ease: Phaser.Math.Easing.Cubic.Out,
+            duration: GameVars.timeStepFactor === 4 ? 200 : 600,
+        });
 
     }
 

@@ -1,4 +1,5 @@
 import { GameManager } from "../GameManager";
+import { AudioManager } from "../AudioManager";
 
 export class PreloadScene extends Phaser.Scene {
 
@@ -7,6 +8,8 @@ export class PreloadScene extends Phaser.Scene {
     constructor() {
 
         super("PreloadScene");
+
+        PreloadScene.currentInstance = this;
     }
 
     public preload(): void {
@@ -18,13 +21,7 @@ export class PreloadScene extends Phaser.Scene {
 
     public create(): void {
 
-        PreloadScene.currentInstance = this;
-
-        GameManager.setCurrentScene(this);
-
-        this.scene.setVisible(false);
-
-        GameManager.onGameAssetsLoaded();
+        this.loadHowl();
     }
     
     private composeScene(): void {
@@ -36,5 +33,22 @@ export class PreloadScene extends Phaser.Scene {
     private loadAssets(): void {
 
         this.load.atlas("texture_atlas_1", "assets/texture_atlas_1.png", "assets/texture_atlas_1.json");
+        this.load.json("audiosprite", "assets/audio/audiosprite.json");
+    }
+
+    private loadHowl(): void {
+
+        let json = this.cache.json.get("audiosprite");
+        json = JSON.parse(JSON.stringify(json).replace("urls", "src"));
+
+        AudioManager.sound = new Howl(json);
+    
+        AudioManager.sound.on("load", function() {
+
+            console.log("Howl audio loaded.");
+            GameManager.setCurrentScene(PreloadScene.currentInstance);
+            PreloadScene.currentInstance.scene.setVisible(false);
+            GameManager.onGameAssetsLoaded();
+        });
     }
 }

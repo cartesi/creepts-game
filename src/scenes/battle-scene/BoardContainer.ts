@@ -24,6 +24,7 @@ import { BattleManager } from './BattleManager';
 import { PauseMenu } from './PauseMenu';
 import { GameManager } from '../../GameManager';
 import { GlueBulletActor } from './turret-actors/GlueBulletActor';
+import { AudioManager } from '../../AudioManager';
 
 export class BoardContainer extends Phaser.GameObjects.Container {
 
@@ -413,7 +414,10 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         if (enemyActor) {
             enemyActor.teleport(anutoGlueTurret);
+            AudioManager.playSound("t3_teleport");
         }
+
+        
     }
 
     public removeBullet(anutoBullet: Anuto.Bullet): void {

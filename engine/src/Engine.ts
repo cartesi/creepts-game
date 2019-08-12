@@ -596,6 +596,12 @@ module Anuto {
                 const index = this.mines.indexOf(mine);
                 this.mines.splice(index, 1);
 
+                let turret = this.getTurretById(mine.turretId) as LaunchTurret;
+
+                if (turret) {
+                    turret.numMines--;
+                }
+
                 mine.destroy();
             }
 

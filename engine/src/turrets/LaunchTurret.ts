@@ -6,9 +6,10 @@ module Anuto {
         private static deviationRadius = 0; // puede ser 0, .25. .5 ó .75   1 de cada 4 veces disparara al enemigo en el centro
         private static deviationAngle = 0; // se va incrementando de 45 en 45 grados
 
-        private minesCounter: number;
-
         public explosionRange: number;
+        public numMines: number;
+
+        private minesCounter: number;
 
         constructor (p: {r: number, c: number}) {
             
@@ -17,6 +18,7 @@ module Anuto {
             this.calculateTurretParameters();
 
             this.minesCounter = 0;
+            this.numMines = 0;
         }
 
         // mirar en el ANUTO y generar las formulas que correspondan
@@ -73,12 +75,21 @@ module Anuto {
                 
                 let cells: {r: number, c: number}[] = this.getPathCellsInRange();
 
-                if (cells.length > 0) {
+                if (cells.length > 0 && this.numMines < this.level + 3) {
                     let cell = cells[this.minesCounter % cells.length];
                     this.minesCounter++;
+                    this.numMines++;
 
-                    const mine = new Mine({c: cell.c, r: cell.r}, this.explosionRange, this.damage);
+                    const dx = (cell.c + .5) - this.x;
+                    const dy = (cell.r + .5) - this.y;
+                    this.shootAngle = MathUtils.fixNumber(Math.atan2(dy, dx));
+
+                    const mine = new Mine({c: cell.c, r: cell.r}, this.explosionRange, this.damage, this.id);
                     Engine.currentInstance.addMine(mine, this);
+
+                    
+        
+                    
 
                 } else {
                     this.readyToShoot = true;

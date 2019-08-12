@@ -1,5 +1,6 @@
 import { GameConstants } from "./GameConstants";
 import { GameVars } from "./GameVars";
+import { AudioManager } from "./AudioManager";
 
 export class GameManager {
 
@@ -53,6 +54,8 @@ export class GameManager {
     }
 
     public static onGameAssetsLoaded(): void {
+
+        AudioManager.init();
 
         GameManager.enterBattleScene();
     }

@@ -1,6 +1,7 @@
 import { GameConstants } from "../../../GameConstants";
 import { GlueTurretActor } from "./GlueTurretActor";
 import { GameVars } from "../../../GameVars";
+import { AudioManager } from "../../../AudioManager";
 
 export class GluePool extends Phaser.GameObjects.Container {
 
@@ -39,6 +40,8 @@ export class GluePool extends Phaser.GameObjects.Container {
 
         this.setScale(0);
         this.alpha = 0;
+
+        AudioManager.playSound("t3_pegamento");
     }
 
     public destroy(): void {

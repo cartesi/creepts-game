@@ -388,8 +388,9 @@ declare module Anuto {
     class LaunchTurret extends Turret {
         private static deviationRadius;
         private static deviationAngle;
-        private minesCounter;
         explosionRange: number;
+        numMines: number;
+        private minesCounter;
         constructor(p: {
             r: number;
             c: number;
@@ -412,10 +413,11 @@ declare module Anuto {
         range: number;
         damage: number;
         detonate: boolean;
+        turretId: number;
         constructor(p: {
             r: number;
             c: number;
-        }, explosionRange: number, damage: number);
+        }, explosionRange: number, damage: number, turretId: number);
         destroy(): void;
         update(): void;
         getEnemiesWithinExplosionRange(): {

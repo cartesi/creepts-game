@@ -3,6 +3,7 @@ import { GameVars } from "../../../GameVars";
 import { LaunchTurretActor } from "./LaunchTurretActor";
 import { BoardContainer } from "../BoardContainer";
 import { BattleManager } from "../BattleManager";
+import { AudioManager } from "../../../AudioManager";
 
 export class MortarActor extends Phaser.GameObjects.Container {
 
@@ -84,6 +85,8 @@ export class MortarActor extends Phaser.GameObjects.Container {
     }
 
     public detonate(): void {
+
+        AudioManager.playSound("t1_granada");
 
         this.detonated = true;
 

@@ -681,6 +681,10 @@ var Anuto;
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_HIT, [hitEnemies, null, null, mine]));
                 var index = this.mines.indexOf(mine);
                 this.mines.splice(index, 1);
+                var turret = this.getTurretById(mine.turretId);
+                if (turret) {
+                    turret.numMines--;
+                }
                 mine.destroy();
             }
             this.minesImpacting.length = 0;
@@ -1206,7 +1210,6 @@ var Anuto;
                     newEnemies.push(newEnemy);
                 }
             }
-            console.log(newEnemies);
             return newEnemies;
         };
         LaserTurret.prototype.inLine = function (A, B, C) {
@@ -1291,6 +1294,7 @@ var Anuto;
             var _this = _super.call(this, Anuto.GameConstants.TURRET_LAUNCH, p) || this;
             _this.calculateTurretParameters();
             _this.minesCounter = 0;
+            _this.numMines = 0;
             return _this;
         }
         // mirar en el ANUTO y generar las formulas que correspondan
@@ -1329,10 +1333,14 @@ var Anuto;
             _super.prototype.shoot.call(this);
             if (this.grade === 2) {
                 var cells = this.getPathCellsInRange();
-                if (cells.length > 0) {
+                if (cells.length > 0 && this.numMines < this.level + 3) {
                     var cell = cells[this.minesCounter % cells.length];
                     this.minesCounter++;
-                    var mine = new Anuto.Mine({ c: cell.c, r: cell.r }, this.explosionRange, this.damage);
+                    this.numMines++;
+                    var dx = (cell.c + .5) - this.x;
+                    var dy = (cell.r + .5) - this.y;
+                    this.shootAngle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
+                    var mine = new Anuto.Mine({ c: cell.c, r: cell.r }, this.explosionRange, this.damage, this.id);
                     Anuto.Engine.currentInstance.addMine(mine, this);
                 }
                 else {
@@ -1390,7 +1398,7 @@ var Anuto;
 var Anuto;
 (function (Anuto) {
     var Mine = /** @class */ (function () {
-        function Mine(p, explosionRange, damage) {
+        function Mine(p, explosionRange, damage, turretId) {
             this.id = Mine.id;
             Mine.id++;
             this.x = p.c + .5;
@@ -1399,6 +1407,7 @@ var Anuto;
             this.damage = damage;
             this.range = .5;
             this.detonate = false;
+            this.turretId = turretId;
         }
         Mine.prototype.destroy = function () {
             // nada de momento

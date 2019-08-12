@@ -59,8 +59,6 @@ module Anuto {
                 }
             }
 
-            console.log(newEnemies);
-
             return newEnemies;
 
         }

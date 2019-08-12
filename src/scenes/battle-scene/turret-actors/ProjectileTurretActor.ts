@@ -1,3 +1,4 @@
+import { AudioManager } from './../../../AudioManager';
 import { TurretActor } from "./TurretActor";
 import { GameConstants } from "../../../GameConstants";
 
@@ -37,5 +38,6 @@ export class ProjectileTurretActor extends TurretActor {
     public shootBullet(): void {
         // hacer que el cañon retroceda
         this.canon.rotation = this.anutoTurret.shootAngle + Math.PI / 2;
+        AudioManager.playSound("t1_bullets");
     }
 }

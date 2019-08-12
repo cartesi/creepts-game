@@ -16,13 +16,13 @@
             {"type": "soldier",     "t": 7},
             {"type": "soldier",     "t": 8}
         ],
-        "wave_4" : [
+        "wave_3" : [
             {"type": "runner",     "t": 0},
             {"type": "runner",     "t": 1},
             {"type": "runner",     "t": 2},
             {"type": "runner",     "t": 3}
         ],
-        "wave_5" : [
+        "wave_4" : [
             {"type": "runner",     "t": 0},
             {"type": "runner",     "t": 1},
             {"type": "runner",     "t": 2},
@@ -32,7 +32,7 @@
             {"type": "runner",     "t": 7},
             {"type": "runner",     "t": 8}
         ],
-        "wave_6" : [
+        "wave_5" : [
             {"type": "soldier",     "t": 0},
             {"type": "soldier",     "t": 1},
             {"type": "healer",      "t": 2},
@@ -44,7 +44,7 @@
             {"type": "soldier",     "t": 9},
             {"type": "soldier",     "t": 10}
         ],
-        "wave_7" : [
+        "wave_6" : [
             {"type": "flier",     "t": 0},
             {"type": "flier",     "t": 1},
             {"type": "flier",     "t": 2},
@@ -54,7 +54,7 @@
             {"type": "flier",     "t": 7},
             {"type": "flier",     "t": 8}
         ],
-        "wave_8" : [
+        "wave_7" : [
             {"type": "soldier",     "t": 0},
             {"type": "soldier",     "t": 1},
             {"type": "soldier",     "t": 2},

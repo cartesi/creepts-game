@@ -1,3 +1,4 @@
+import { AudioManager } from './../../../AudioManager';
 import { TurretActor } from "./TurretActor";
 import { GameConstants } from "../../../GameConstants";
 
@@ -37,6 +38,7 @@ export class LaserTurretActor extends TurretActor {
     }
 
     public shootLaser(): void {
-        // de momento nada, el cañon podria vibrar, retroceder o emitir un brillo
+
+        AudioManager.playSound("t2_laser" + this.anutoTurret.grade);
     }
 }

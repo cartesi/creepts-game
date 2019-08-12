@@ -1,4 +1,5 @@
 import { TurretActor } from "./TurretActor";
+import { AudioManager } from "../../../AudioManager";
 
 export class GlueTurretActor extends TurretActor {
 
@@ -42,5 +43,9 @@ export class GlueTurretActor extends TurretActor {
     public shootGlue(): void {
         // hacer que el cañon retroceda
         this.canon.rotation = this.anutoTurret.shootAngle + Math.PI / 2;
+
+        if (this.anutoTurret.grade === 2) {
+            AudioManager.playSound("t2_hielo");
+        }
     }
 }

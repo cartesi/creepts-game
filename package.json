@@ -11,6 +11,8 @@
         "webpack-dev-server": "3.7.2"
     },
     "dependencies": {
+        "@types/howler": "^2.1.1",
+        "howler": "^2.1.2",
         "phaser": "3.18.1"
     },
     "scripts": {
