@@ -41,7 +41,6 @@ module Anuto {
     
                     if (distance <= this.range) {
                         this.detonate = true;
-                        console.log("DETONATE " + this.id);
                         break;
                     }
                 }

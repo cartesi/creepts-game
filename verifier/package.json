@@ -1,0 +1,14 @@
+{
+  "name": "verifier",
+  "version": "1.0.0",
+  "description": "",
+  "main": "offlineVerifier.js",
+  "scripts": {
+    "start": "node offlineVerifier.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^8.1.0"
+  }
+}

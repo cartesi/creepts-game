@@ -111,15 +111,15 @@ declare module Anuto {
             x: number;
             y: number;
         };
-        constructor(gameConfig: Types.GameConfig, enemyData: any, turretData: any);
+        constructor(gameConfig: Types.GameConfig, enemyData: any, turretData: any, wavesData: any);
         update(): void;
-        newWave(waveConfig: Types.WaveConfig): void;
+        newWave(): void;
         removeEnemy(enemy: Enemy): void;
         addTurret(type: string, p: {
             r: number;
             c: number;
         }): Turret;
-        sellTurret(turret: Turret): void;
+        sellTurret(id: number): void;
         setNextStrategy(id: number): void;
         setFixedTarget(id: number): void;
         addBullet(bullet: Bullet, projectileTurret: ProjectileTurret): void;
@@ -142,6 +142,8 @@ declare module Anuto {
         private onNoEnemiesOnStage;
         private getTurretById;
         readonly ticksCounter: number;
+        readonly score: number;
+        readonly gameOver: boolean;
         readonly credits: number;
         readonly lifes: number;
         readonly round: number;
@@ -179,14 +181,17 @@ declare module Anuto {
         static credits: number;
         static score: number;
         static lifes: number;
+        static gameOver: boolean;
         static round: number;
         static timeStep: number;
         static enemySpawningDeltaTicks: number;
         static ticksCounter: number;
+        static lastWaveTick: number;
         static runningInClientSide: boolean;
         static paused: boolean;
         static enemyData: any;
         static turretData: any;
+        static wavesData: any;
         static waveEnemies: {
             "type": string;
             "t": number;
@@ -247,6 +252,7 @@ declare module Anuto {
         static readonly ENEMY_GLUE_HIT = "enemy hit by glue bullet";
         static readonly ENEMY_REACHED_EXIT = "enemy reached exit";
         static readonly WAVE_OVER = "wave over";
+        static readonly GAME_OVER = "game over";
         static readonly NO_ENEMIES_ON_STAGE = "no enemies on stage";
         static readonly BULLET_SHOT = "bullet shot";
         static readonly GLUE_BULLET_SHOT = "glue bullet shot";

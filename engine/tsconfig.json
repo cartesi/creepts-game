@@ -1,13 +1,17 @@
 {
     "compilerOptions": {
-        "module": "amd",
-        "noImplicitAny": false,
-        "strict": false,
-        "removeComments": true,
-        "preserveConstEnums": true,
         "outFile": "../dist/anuto-core-engine.js",
         "sourceMap": true,
         "declaration": true,
-		"target": "ES5"
-    }
+        "target": "ES5",
+        "module": "CommonJS",
+        "noImplicitAny": false,
+        "strict": false,
+        "resolveJsonModule": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+    },
+    "exclude": [
+        "engine"
+    ]
 }

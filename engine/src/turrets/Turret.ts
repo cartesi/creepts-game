@@ -26,6 +26,7 @@ module Anuto {
         public enemiesWithinRange: Enemy[];
         public followedEnemy: Enemy;
         public shootAngle: number;
+    
 
         protected f: number;
         protected reloadTicks: number;

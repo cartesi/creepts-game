@@ -29,11 +29,19 @@ export class BattleManager {
         GameVars.turretsData = turretsData.turrets;
         GameVars.wavesData = wavesData.waves;
 
+        GameVars.logsObject = {
+            gameConfig: gameConfig,
+            enemiesData: GameVars.enemiesData,
+            turretsData: GameVars.turretsData,
+            wavesData: GameVars.wavesData,
+            actions: []
+        };
+
         GameVars.timeStepFactor = 1;
         GameVars.currentWave = 1;
         GameVars.paused = false;
 
-        BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData);
+        BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData, GameVars.wavesData);
         
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
@@ -53,6 +61,7 @@ export class BattleManager {
         
         BattleManager.anutoEngine.addEventListener(Anuto.Event.NO_ENEMIES_ON_STAGE, BattleManager.onNoEnemiesOnStage, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.WAVE_OVER, BattleManager.onWaveOver, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.GAME_OVER, BattleManager.onGameOver, BattleManager);
     }
 
     public static update(time: number, delta: number): void {
@@ -87,18 +96,11 @@ export class BattleManager {
             return;
         }
 
-        const waveConfig: Anuto.Types.WaveConfig = {
-            enemies: GameVars.wavesData["wave_" + GameVars.currentWave]
-        };
-
-        BattleManager.anutoEngine.newWave(waveConfig);
+        BattleManager.anutoEngine.newWave();
         BattleScene.currentInstance.hud.updateRound();
 
-        GameVars.currentWave++;
-
-        if (GameVars.currentWave > 4) {
-            GameVars.currentWave = 1;
-        }
+        let action = {type: GameConstants.TYPE_NEXT_WAVE, tick: BattleManager.anutoEngine.ticksCounter};
+        BattleManager.addAction(action);
     }
 
     public static createTurret(type: string): void {
@@ -113,13 +115,22 @@ export class BattleManager {
 
     public static addTurret(type: string, position: {r: number, c: number}): Anuto.Turret {
 
-        return BattleManager.anutoEngine.addTurret(type, position);
+        let turret = BattleManager.anutoEngine.addTurret(type, position);
+
+        let action = {type: GameConstants.TYPE_ADD_TURRET, tick: BattleManager.anutoEngine.ticksCounter, typeTurret: turret.type, position: position};
+        BattleManager.addAction(action);
+
+        return turret;
     }
 
-    public static sellTurret(anutoTurret: Anuto.Turret): void {
+    public static sellTurret(turret: Anuto.Turret): void {
 
-        BattleManager.anutoEngine.sellTurret(anutoTurret);
-        BoardContainer.currentInstance.removeTurret(anutoTurret);
+        BattleManager.anutoEngine.sellTurret(turret.id);
+
+        let action = {type: GameConstants.TYPE_SELL_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: turret.id};
+        BattleManager.addAction(action);
+
+        BoardContainer.currentInstance.removeTurret(turret);
         BattleScene.currentInstance.gui.updateTurretButtons();
     }
 
@@ -131,6 +142,10 @@ export class BattleManager {
     public static improveTurret(id: number): void {
 
         BattleManager.anutoEngine.improveTurret(id);
+
+        let action = {type: GameConstants.TYPE_LEVEL_UP_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
+        BattleManager.addAction(action);
+
         BattleScene.currentInstance.gui.updateTurretButtons();
     }
 
@@ -140,6 +155,10 @@ export class BattleManager {
         const sucess = BattleManager.anutoEngine.upgradeTurret(id);
 
         if (sucess) {
+
+            let action = {type: GameConstants.TYPE_UPGRADE_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
+            BattleManager.addAction(action);
+
             BoardContainer.currentInstance.upgradeTurret(id);
             BattleScene.currentInstance.gui.updateTurretButtons();
         }
@@ -148,11 +167,17 @@ export class BattleManager {
     public static setNextStrategy(id: number): void {
 
         BattleManager.anutoEngine.setNextStrategy(id);
+
+        let action = {type: GameConstants.TYPE_CHANGE_STRATEGY_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
+        BattleManager.addAction(action);
     }
 
     public static setFixedTarget(id: number): void {
 
         BattleManager.anutoEngine.setFixedTarget(id);
+
+        let action = {type: GameConstants.TYPE_CHANGE_FIXED_TARGET_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
+        BattleManager.addAction(action);
     }
 
     public static createRangeCircle(range: number, x: number, y: number): Phaser.GameObjects.Graphics {
@@ -168,6 +193,11 @@ export class BattleManager {
     public static showTurretMenu(anutoTurret: Anuto.Turret): void {
 
         BoardContainer.currentInstance.showTurretMenu(anutoTurret);
+    }
+
+    private static addAction(action): void {
+
+        GameVars.logsObject.actions.push(action);
     }
 
     private static onEnemySpawned(anutoEnemy: Anuto.Enemy, p: {r: number, c: number} ): void {
@@ -259,13 +289,23 @@ export class BattleManager {
     }
 
     private static onNoEnemiesOnStage(): void {
-        // no quedan enemigos pq han sido liquidados o han llegado todos a la salida
-        console.log("NO ENEMIES ON STAGE");
+
+        // TODO: si se tiene mas de 0 vidas se enseña cartel de round completed o algo asi
     }
 
     private static onWaveOver(): void {
     
         BattleScene.currentInstance.gui.activeNextWave();
         console.log("WAVE OVER");
+    }
+
+    private static onGameOver(): void {
+    
+        // TODO: enseñar cartel de game over con la puntuacion
+        console.log("GAME OVER");
+        console.log(BattleManager.anutoEngine.ticksCounter);
+        console.log(BattleManager.anutoEngine.score);
+
+        console.log(JSON.stringify(GameVars.logsObject));
     }
 }
