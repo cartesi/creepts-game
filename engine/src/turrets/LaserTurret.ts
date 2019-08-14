@@ -81,8 +81,7 @@ module Anuto {
                 let infiniteX = newEnemy.x + (enemy.x - this.x) * 1000;
                 let infiniteY = newEnemy.y + (enemy.y - this.y) * 1000;
 
-                if (newEnemy !== enemy && MathUtils.isLineSegmentIntersectingCircle({x: this.x, y: this.y}, {x: infiniteX, y: infiniteY}, {x: newEnemy.x, y: newEnemy.y}, .4)) {
-                    console.log("ENEMY IN RANGEE");
+                if (newEnemy !== enemy && MathUtils.isLineSegmentIntersectingCircle({x: this.x, y: this.y}, {x: infiniteX, y: infiniteY}, {x: newEnemy.x, y: newEnemy.y}, .3)) {
                     newEnemies.push(newEnemy);
                 }
             }

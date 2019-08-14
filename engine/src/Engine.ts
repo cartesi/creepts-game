@@ -99,6 +99,29 @@ module Anuto {
             this.turrets = [];
             this.mines = [];
             this.minesImpacting = [];
+
+            this.initWaveVars();
+        }
+
+        public initWaveVars(): void {
+
+            this.t = Date.now();
+
+            GameVars.enemies = [];
+            this.bullets = [];
+            this.glueBullets = [];
+            this.mortars = [];
+            this.glues = [];
+
+            this.bulletsColliding = [];
+            this.glueBulletsColliding = [];
+            this.mortarsImpacting = [];
+            this.consumedGlues = [];
+            this.teleportedEnemies = [];
+
+            this.noEnemiesOnStage = false;
+            this.allEnemiesSpawned = false;
+            this.enemiesSpawned = 0;
         }
 
         public update(): void {
@@ -114,9 +137,14 @@ module Anuto {
                 this.t = t;
             }
 
-            if (!this.waveActivated || GameVars.paused) {
+            if (GameVars.paused || GameVars.gameOver) {
                 return;
             }
+
+            // if (!this.waveActivated) {
+            //     GameVars.ticksCounter ++;
+            //     return;
+            // }
 
             if (GameVars.lifes <= 0 && !GameVars.gameOver) {
                 this.eventDispatcher.dispatchEvent(new Event(Event.GAME_OVER));
@@ -133,12 +161,15 @@ module Anuto {
                 } 
             }
 
-            this.removeProjectilesAndAccountDamage();
+            if (this.waveActivated) {
+                this.removeProjectilesAndAccountDamage();
 
-            this.teleport();
+                this.teleport();
 
-            this.checkCollisions();
-            this.spawnEnemies();
+                this.checkCollisions();
+                this.spawnEnemies();
+            }
+            
 
             GameVars.enemies.forEach(function (enemy) {
                 enemy.update();
@@ -202,24 +233,9 @@ module Anuto {
             GameVars.lastWaveTick = GameVars.ticksCounter;
 
             this.waveActivated = true;
-
-            this.t = Date.now();
            
-            GameVars.enemies = [];
-            this.bullets = [];
-            this.glueBullets = [];
-            this.mortars = [];
-            this.glues = [];
+            this.initWaveVars();
 
-            this.bulletsColliding = [];
-            this.glueBulletsColliding = [];
-            this.mortarsImpacting = [];
-            this.consumedGlues = [];
-            this.teleportedEnemies = [];
-
-            this.noEnemiesOnStage = false;
-            this.allEnemiesSpawned = false;
-            this.enemiesSpawned = 0;
             this.waveEnemiesLength = GameVars.waveEnemies.length;
 
             return true;
@@ -718,8 +734,6 @@ module Anuto {
         }
 
         private onNoEnemiesOnStage(): void {
-
-            console.log("NO ENEMIES");
 
             this.noEnemiesOnStage = true;
 

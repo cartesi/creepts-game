@@ -13,7 +13,8 @@ export class BulletActor extends Phaser.GameObjects.Image {
 
         this.anutoBullet = anutoBullet;
 
-        this.setScale(.75);
+        this.setScale(1);
+        this.setOrigin(.5, 1);
         this.visible = false;
 
         this.x = this.anutoBullet.x * GameConstants.CELLS_SIZE;
@@ -60,7 +61,7 @@ export class BulletActor extends Phaser.GameObjects.Image {
         if (!this.visible) {
             let distX = this.initialPosition.x - this.x;
             let distY = this.initialPosition.y - this.y;
-            if (Math.sqrt( distX * distX + distY * distY) > 40) {
+            if (Math.sqrt( distX * distX + distY * distY) > 25) {
                 this.visible = true;
             }
         }

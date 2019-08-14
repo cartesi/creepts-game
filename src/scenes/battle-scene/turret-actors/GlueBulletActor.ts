@@ -12,6 +12,7 @@ export class GlueBulletActor extends Phaser.GameObjects.Container {
         super(scene);
 
         this.img = this.scene.add.sprite(0, 0, "texture_atlas_1", "bullet_3_1_1");
+        this.img.setOrigin(.5, 1);
         this.add(this.img);
 
         this.anutoBullet = anutoBullet;
@@ -48,7 +49,7 @@ export class GlueBulletActor extends Phaser.GameObjects.Container {
         if (!this.visible) {
             let distX = this.initialPosition.x - this.x;
             let distY = this.initialPosition.y - this.y;
-            if (Math.sqrt( distX * distX + distY * distY) > 40) {
+            if (Math.sqrt( distX * distX + distY * distY) > 20) {
                 this.visible = true;
             }
         }

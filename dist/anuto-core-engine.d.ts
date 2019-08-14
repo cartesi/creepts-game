@@ -116,6 +116,7 @@ declare module Anuto {
             y: number;
         };
         constructor(gameConfig: Types.GameConfig, enemyData: any, turretData: any, wavesData: any);
+        initWaveVars(): void;
         update(): void;
         newWave(): boolean;
         removeEnemy(enemy: Enemy): void;

@@ -339,6 +339,7 @@ var Anuto;
             this.turrets = [];
             this.mines = [];
             this.minesImpacting = [];
+            this.initWaveVars();
         }
         Engine.getPathPosition = function (l) {
             var x;
@@ -360,6 +361,22 @@ var Anuto;
             }
             return { x: x, y: y };
         };
+        Engine.prototype.initWaveVars = function () {
+            this.t = Date.now();
+            Anuto.GameVars.enemies = [];
+            this.bullets = [];
+            this.glueBullets = [];
+            this.mortars = [];
+            this.glues = [];
+            this.bulletsColliding = [];
+            this.glueBulletsColliding = [];
+            this.mortarsImpacting = [];
+            this.consumedGlues = [];
+            this.teleportedEnemies = [];
+            this.noEnemiesOnStage = false;
+            this.allEnemiesSpawned = false;
+            this.enemiesSpawned = 0;
+        };
         Engine.prototype.update = function () {
             if (Anuto.GameVars.runningInClientSide) {
                 var t = Date.now();
@@ -368,9 +385,13 @@ var Anuto;
                 }
                 this.t = t;
             }
-            if (!this.waveActivated || Anuto.GameVars.paused) {
+            if (Anuto.GameVars.paused || Anuto.GameVars.gameOver) {
                 return;
             }
+            // if (!this.waveActivated) {
+            //     GameVars.ticksCounter ++;
+            //     return;
+            // }
             if (Anuto.GameVars.lifes <= 0 && !Anuto.GameVars.gameOver) {
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.GAME_OVER));
                 Anuto.GameVars.gameOver = true;
@@ -384,9 +405,12 @@ var Anuto;
                     return;
                 }
             }
-            this.removeProjectilesAndAccountDamage();
-            this.teleport();
-            this.spawnEnemies();
+            if (this.waveActivated) {
+                this.removeProjectilesAndAccountDamage();
+                this.teleport();
+                this.checkCollisions();
+                this.spawnEnemies();
+            }
             Anuto.GameVars.enemies.forEach(function (enemy) {
                 enemy.update();
             }, this);
@@ -408,7 +432,6 @@ var Anuto;
             this.glues.forEach(function (glue) {
                 glue.update();
             });
-            this.checkCollisions();
             Anuto.GameVars.ticksCounter++;
         };
         Engine.prototype.newWave = function () {
@@ -430,20 +453,7 @@ var Anuto;
             }
             Anuto.GameVars.lastWaveTick = Anuto.GameVars.ticksCounter;
             this.waveActivated = true;
-            this.t = Date.now();
-            Anuto.GameVars.enemies = [];
-            this.bullets = [];
-            this.glueBullets = [];
-            this.mortars = [];
-            this.glues = [];
-            this.bulletsColliding = [];
-            this.glueBulletsColliding = [];
-            this.mortarsImpacting = [];
-            this.consumedGlues = [];
-            this.teleportedEnemies = [];
-            this.noEnemiesOnStage = false;
-            this.allEnemiesSpawned = false;
-            this.enemiesSpawned = 0;
+            this.initWaveVars();
             this.waveEnemiesLength = Anuto.GameVars.waveEnemies.length;
             return true;
         };
@@ -787,7 +797,6 @@ var Anuto;
             }
         };
         Engine.prototype.onNoEnemiesOnStage = function () {
-            console.log("NO ENEMIES");
             this.noEnemiesOnStage = true;
             // nos cargamos de golpe todas las balas si las hubieren
             for (var i = 0; i < this.bullets.length; i++) {
@@ -1281,8 +1290,7 @@ var Anuto;
                 // }
                 var infiniteX = newEnemy.x + (enemy.x - this.x) * 1000;
                 var infiniteY = newEnemy.y + (enemy.y - this.y) * 1000;
-                if (newEnemy !== enemy && Anuto.MathUtils.isLineSegmentIntersectingCircle({ x: this.x, y: this.y }, { x: infiniteX, y: infiniteY }, { x: newEnemy.x, y: newEnemy.y }, .4)) {
-                    console.log("ENEMY IN RANGEE");
+                if (newEnemy !== enemy && Anuto.MathUtils.isLineSegmentIntersectingCircle({ x: this.x, y: this.y }, { x: infiniteX, y: infiniteY }, { x: newEnemy.x, y: newEnemy.y }, .3)) {
                     newEnemies.push(newEnemy);
                 }
             }

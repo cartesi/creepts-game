@@ -12,6 +12,7 @@ export class MortarActor extends Phaser.GameObjects.Container {
     private launchTurretActor: LaunchTurretActor;
     private mortarImage: Phaser.GameObjects.Image;
     private detonated: boolean;
+    private initialPosition: {x: number, y: number};
     
     constructor(scene: Phaser.Scene, anutoMortar: Anuto.Mortar, launchTurretActor: LaunchTurretActor) {
 
@@ -23,6 +24,8 @@ export class MortarActor extends Phaser.GameObjects.Container {
 
         this.x = this.anutoMortar.x * GameConstants.CELLS_SIZE;
         this.y = this.anutoMortar.y * GameConstants.CELLS_SIZE;
+
+        this.initialPosition = {x: this.x, y: this.y};
 
         this.mortarImage = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", anutoMortar.grade === 1 ? "granade" : "bullet_4_3");
         this.mortarImage.setScale(.5);
@@ -41,15 +44,9 @@ export class MortarActor extends Phaser.GameObjects.Container {
 
         // hacerla visible una vez haya pasado la boca del cañón
         if (!this.visible) {
-
-            let d = Math.sqrt((this.x - this.launchTurretActor.x) * (this.x - this.launchTurretActor.x) + (this.x - this.launchTurretActor.x) * (this.x - this.launchTurretActor.x));
-
-
-            if (this.anutoMortar.grade === 3) {
-                d *= 2;
-            }
-            // la longitud del cañón más un poco más debido al diámetro del mortero 
-            if (d > this.launchTurretActor.canonLength) {
+            let distX = this.initialPosition.x - this.x;
+            let distY = this.initialPosition.y - this.y;
+            if (Math.sqrt( distX * distX + distY * distY) > 30) {
                 this.visible = true;
             }
         }
@@ -89,6 +86,8 @@ export class MortarActor extends Phaser.GameObjects.Container {
     }
 
     public detonate(): void {
+
+        this.visible = true;
 
         AudioManager.playSound("t1_granada");
 
