@@ -25,6 +25,7 @@ import { PauseMenu } from './PauseMenu';
 import { GameManager } from '../../GameManager';
 import { GlueBulletActor } from './turret-actors/GlueBulletActor';
 import { AudioManager } from '../../AudioManager';
+import { RoundCompletedLayer } from './RoundCompletedLayer';
 
 export class BoardContainer extends Phaser.GameObjects.Container {
 
@@ -45,8 +46,10 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     private turretMenu: TurretMenu;
     private pauseMenu: PauseMenu;
     private gameOverLayer: GameOverLayer;
+    private roundCompletedLayer: RoundCompletedLayer;
 
     private pointerContainer: Phaser.GameObjects.Container;
+    private glueCirclesContainer: Phaser.GameObjects.Container;
     private circlesContainer: Phaser.GameObjects.Container;
     private actorsContainer: Phaser.GameObjects.Container;
 
@@ -85,6 +88,9 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         this.pointerContainer = new Phaser.GameObjects.Container(this.scene);
         this.board.add(this.pointerContainer);
+
+        this.glueCirclesContainer = new Phaser.GameObjects.Container(this.scene);
+        this.board.add(this.glueCirclesContainer);
 
         this.pointerContainer.setInteractive(new Phaser.Geom.Rectangle(0, - GameConstants.GAME_HEIGHT, GameConstants.GAME_WIDTH, GameConstants.GAME_HEIGHT * 4), Phaser.Geom.Rectangle.Contains);
         this.pointerContainer.on("pointerdown", () => { this.onPointerDown(); });
@@ -214,20 +220,25 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
 
         let turret: TurretActor;
+        let anutoTurret = BattleManager.addTurret(type, position);
+
+        if (!anutoTurret) {
+            return;
+        }
 
         switch (type) {
 
             case Anuto.GameConstants.TURRET_PROJECTILE:
-                turret = new ProjectileTurretActor(this.scene, position);
+                turret = new ProjectileTurretActor(this.scene, position, anutoTurret);
                 break;
             case Anuto.GameConstants.TURRET_LASER:
-                turret = new LaserTurretActor(this.scene, position);
+                turret = new LaserTurretActor(this.scene, position, anutoTurret);
                 break;
             case Anuto.GameConstants.TURRET_LAUNCH:
-                turret = new LaunchTurretActor(this.scene, position);
+                turret = new LaunchTurretActor(this.scene, position, anutoTurret);
                 break;
             case Anuto.GameConstants.TURRET_GLUE:
-                turret = new GlueTurretActor(this.scene, position);
+                turret = new GlueTurretActor(this.scene, position, anutoTurret);
                 break;
             default:
         }
@@ -283,13 +294,14 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     public addLaserBeam (anutoLaserTurret: Anuto.LaserTurret, anutoEnemies: Anuto.Enemy[]): void {
 
         const laserTurretActor = <LaserTurretActor> this.getTurretActorByID(anutoLaserTurret.id);
-        laserTurretActor.shootLaser();
 
         let enemyActors = [];
 
         for (let i = 0; i < anutoEnemies.length; i++) {
             enemyActors.push(this.getEnemyActorByID(anutoEnemies[i].id));
         }
+
+        laserTurretActor.shootLaser(enemyActors);
 
         const laserBeam = new LaserBeam(this.scene, laserTurretActor, enemyActors, anutoLaserTurret.grade);
         this.actorsContainer.add(laserBeam);
@@ -335,7 +347,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         glueCircle.setScale(0);
         glueCircle.alpha = 0;
         glueCircle.name = anutoGlue.id.toString();
-        this.circlesContainer.add(glueCircle);
+        this.glueCirclesContainer.add(glueCircle);
         this.glueCircles.push(glueCircle);
 
         this.scene.tweens.add({
@@ -610,6 +622,18 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         this.gameOverLayer = new GameOverLayer(this.scene);
         this.add(this.gameOverLayer);
+    }
+
+    public showRoundCompletedLayer(): void {
+
+        this.roundCompletedLayer = new RoundCompletedLayer(this.scene);
+        this.add(this.roundCompletedLayer);
+    }
+
+    public hideRoundCompletedLayer(): void {
+
+        this.remove(this.roundCompletedLayer);
+        this.roundCompletedLayer = null;
     }
 
     private drawDebugGeometry(): void {

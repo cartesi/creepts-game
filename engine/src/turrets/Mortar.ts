@@ -12,6 +12,7 @@ module Anuto {
         public explosionRange: number;
         public creationTick: number;
         public grade: number;
+        public turret: LaunchTurret;
 
         private vx: number;
         private vy: number;
@@ -19,7 +20,7 @@ module Anuto {
         private damage: number;
         
         // mortar speed in cells / tick
-        constructor (p: {r: number, c: number}, angle: number, ticksToImpact: number, explosionRange: number, damage: number, grade: number) {
+        constructor (p: {r: number, c: number}, angle: number, ticksToImpact: number, explosionRange: number, damage: number, grade: number, turret: LaunchTurret) {
             
             this.id = Mortar.id;
             Mortar.id ++;
@@ -33,6 +34,7 @@ module Anuto {
             this.explosionRange = explosionRange;
             this.damage = damage;
             this.grade = grade;
+            this.turret = turret;
 
             this.detonate = false;
             this.f = 0;

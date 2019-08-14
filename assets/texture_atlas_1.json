@@ -2371,15 +2371,15 @@
 					},
 					"spriteSourceSize": {
 						"x": 38,
-						"y": 15,
+						"y": 14,
 						"w": 44,
-						"h": 58
+						"h": 59
 					},
 					"frame": {
 						"x": 2002,
 						"y": 775,
 						"w": 44,
-						"h": 58
+						"h": 59
 					}
 				},
 				{
@@ -2398,30 +2398,9 @@
 					},
 					"frame": {
 						"x": 2002,
-						"y": 775,
+						"y": 836,
 						"w": 44,
 						"h": 58
-					}
-				},
-				{
-					"filename": "enemy_runner_1",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 73,
-						"h": 60
-					},
-					"spriteSourceSize": {
-						"x": 16,
-						"y": 5,
-						"w": 44,
-						"h": 49
-					},
-					"frame": {
-						"x": 2002,
-						"y": 835,
-						"w": 44,
-						"h": 49
 					}
 				},
 				{
@@ -2734,7 +2713,7 @@
 					},
 					"frame": {
 						"x": 1970,
-						"y": 886,
+						"y": 896,
 						"w": 60,
 						"h": 60
 					}
@@ -2950,7 +2929,7 @@
 					}
 				},
 				{
-					"filename": "canon_4_3_1",
+					"filename": "canon_4_2_2",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -2971,7 +2950,7 @@
 					}
 				},
 				{
-					"filename": "canon_4_3_4",
+					"filename": "canon_4_3_1",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -2992,7 +2971,7 @@
 					}
 				},
 				{
-					"filename": "canon_4_2_2",
+					"filename": "canon_4_3_4",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -3001,15 +2980,15 @@
 					},
 					"spriteSourceSize": {
 						"x": 36,
-						"y": 19,
+						"y": 17,
 						"w": 48,
-						"h": 54
+						"h": 56
 					},
 					"frame": {
 						"x": 1264,
 						"y": 709,
 						"w": 48,
-						"h": 54
+						"h": 56
 					}
 				},
 				{
@@ -3259,7 +3238,7 @@
 					},
 					"frame": {
 						"x": 1260,
-						"y": 765,
+						"y": 767,
 						"w": 48,
 						"h": 47
 					}
@@ -3328,7 +3307,7 @@
 					}
 				},
 				{
-					"filename": "enemy_runner_6",
+					"filename": "enemy_runner_1",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -3349,6 +3328,27 @@
 					}
 				},
 				{
+					"filename": "enemy_runner_6",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 73,
+						"h": 60
+					},
+					"spriteSourceSize": {
+						"x": 16,
+						"y": 5,
+						"w": 44,
+						"h": 49
+					},
+					"frame": {
+						"x": 1491,
+						"y": 778,
+						"w": 44,
+						"h": 49
+					}
+				},
+				{
 					"filename": "bullet_3_1_4",
 					"rotated": false,
 					"trimmed": true,
@@ -3363,35 +3363,14 @@
 						"h": 31
 					},
 					"frame": {
-						"x": 1491,
-						"y": 778,
+						"x": 1438,
+						"y": 780,
 						"w": 44,
 						"h": 31
 					}
 				},
 				{
 					"filename": "enemy_soldier_3",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 73,
-						"h": 60
-					},
-					"spriteSourceSize": {
-						"x": 16,
-						"y": 3,
-						"w": 43,
-						"h": 54
-					},
-					"frame": {
-						"x": 1438,
-						"y": 780,
-						"w": 43,
-						"h": 54
-					}
-				},
-				{
-					"filename": "enemy_soldier_4",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
@@ -3412,6 +3391,27 @@
 					}
 				},
 				{
+					"filename": "enemy_soldier_4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 73,
+						"h": 60
+					},
+					"spriteSourceSize": {
+						"x": 16,
+						"y": 3,
+						"w": 43,
+						"h": 54
+					},
+					"frame": {
+						"x": 1537,
+						"y": 782,
+						"w": 43,
+						"h": 54
+					}
+				},
+				{
 					"filename": "enemy_soldier_5",
 					"rotated": false,
 					"trimmed": true,
@@ -3426,8 +3426,8 @@
 						"h": 53
 					},
 					"frame": {
-						"x": 1537,
-						"y": 782,
+						"x": 1364,
+						"y": 787,
 						"w": 43,
 						"h": 53
 					}
@@ -3447,8 +3447,8 @@
 						"h": 51
 					},
 					"frame": {
-						"x": 1483,
-						"y": 811,
+						"x": 1310,
+						"y": 812,
 						"w": 43,
 						"h": 51
 					}
@@ -3468,8 +3468,8 @@
 						"h": 51
 					},
 					"frame": {
-						"x": 1364,
-						"y": 787,
+						"x": 1258,
+						"y": 816,
 						"w": 43,
 						"h": 51
 					}
@@ -3489,8 +3489,8 @@
 						"h": 50
 					},
 					"frame": {
-						"x": 1310,
-						"y": 812,
+						"x": 1409,
+						"y": 813,
 						"w": 43,
 						"h": 50
 					}
@@ -3510,8 +3510,8 @@
 						"h": 62
 					},
 					"frame": {
-						"x": 1258,
-						"y": 814,
+						"x": 1355,
+						"y": 842,
 						"w": 42,
 						"h": 62
 					}
@@ -3531,8 +3531,8 @@
 						"h": 61
 					},
 					"frame": {
-						"x": 1409,
-						"y": 836,
+						"x": 1303,
+						"y": 865,
 						"w": 42,
 						"h": 61
 					}
@@ -3543,6 +3543,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:bb7ededa1494ae88e2c8d61b05624bb2:e49bd942965f793eb3a239790b28cf11:1bd3fbbbdaf54e41cf80e3e904578de4$"
+		"smartupdate": "$TexturePacker:SmartUpdate:950e5299b7b880fcd36bef75a718be62:a5de228787aff5ed1dd8a71e5a8d3e12:1bd3fbbbdaf54e41cf80e3e904578de4$"
 	}
 }

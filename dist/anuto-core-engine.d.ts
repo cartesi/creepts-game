@@ -56,6 +56,7 @@ declare module Anuto {
         type: string;
         id: number;
         life: number;
+        maxLife: number;
         speed: number;
         x: number;
         y: number;
@@ -116,15 +117,15 @@ declare module Anuto {
         };
         constructor(gameConfig: Types.GameConfig, enemyData: any, turretData: any, wavesData: any);
         update(): void;
-        newWave(): void;
+        newWave(): boolean;
         removeEnemy(enemy: Enemy): void;
         addTurret(type: string, p: {
             r: number;
             c: number;
         }): Turret;
-        sellTurret(id: number): void;
-        setNextStrategy(id: number): void;
-        setFixedTarget(id: number): void;
+        sellTurret(id: number): boolean;
+        setNextStrategy(id: number): boolean;
+        setFixedTarget(id: number): boolean;
         addBullet(bullet: Bullet, projectileTurret: ProjectileTurret): void;
         addGlueBullet(bullet: GlueBullet, glueTurret: GlueTurret): void;
         addGlue(glue: Glue, glueTurret: GlueTurret): void;
@@ -291,12 +292,13 @@ declare module Anuto {
         assignedEnemy: Enemy;
         damage: number;
         canonShoot: string;
+        turret: ProjectileTurret;
         private vx;
         private vy;
         constructor(p: {
             r: number;
             c: number;
-        }, angle: number, assignedEnemy: Enemy, damage: number, canonShoot: string);
+        }, angle: number, assignedEnemy: Enemy, damage: number, canonShoot: string, turret: ProjectileTurret);
         destroy(): void;
         update(): void;
         getPositionNextTick(): {
@@ -413,11 +415,11 @@ declare module Anuto {
         range: number;
         damage: number;
         detonate: boolean;
-        turretId: number;
+        turret: LaunchTurret;
         constructor(p: {
             r: number;
             c: number;
-        }, explosionRange: number, damage: number, turretId: number);
+        }, explosionRange: number, damage: number, turret: LaunchTurret);
         destroy(): void;
         update(): void;
         getEnemiesWithinExplosionRange(): {
@@ -437,6 +439,7 @@ declare module Anuto {
         explosionRange: number;
         creationTick: number;
         grade: number;
+        turret: LaunchTurret;
         private vx;
         private vy;
         private f;
@@ -444,7 +447,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        }, angle: number, ticksToImpact: number, explosionRange: number, damage: number, grade: number);
+        }, angle: number, ticksToImpact: number, explosionRange: number, damage: number, grade: number, turret: LaunchTurret);
         destroy(): void;
         update(): void;
         getEnemiesWithinExplosionRange(): {

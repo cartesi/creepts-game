@@ -34,7 +34,7 @@ export class HUD extends Phaser.GameObjects.Container {
         creditIcon.setScale(.9);
         this.add(creditIcon);
 
-        this.creditsLabel = new Phaser.GameObjects.Text(this.scene, 35, 5, BattleManager.anutoEngine.credits.toString(), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff"});
+        this.creditsLabel = new Phaser.GameObjects.Text(this.scene, 35, 5, GameVars.formatNumber(BattleManager.anutoEngine.credits), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff"});
         this.add(this.creditsLabel);
 
         let lifesIcon = new Phaser.GameObjects.Image(this.scene, GameConstants.GAME_WIDTH / 2 - 2, 8, "texture_atlas_1", "lives_icon");
@@ -45,7 +45,7 @@ export class HUD extends Phaser.GameObjects.Container {
         this.lifesLabel = new Phaser.GameObjects.Text(this.scene, GameConstants.GAME_WIDTH / 2 + 2, 5, BattleManager.anutoEngine.lifes.toString(), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff"});
         this.add(this.lifesLabel);
 
-        this.roundLabel = new Phaser.GameObjects.Text(this.scene, GameConstants.GAME_WIDTH - 5, 5, "Round " + BattleManager.anutoEngine.round, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff"});
+        this.roundLabel = new Phaser.GameObjects.Text(this.scene, GameConstants.GAME_WIDTH - 5, 5, "Round " + GameVars.formatNumber(BattleManager.anutoEngine.round), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff"});
         this.roundLabel.setOrigin(1, 0);
         this.add(this.roundLabel);
 
@@ -64,7 +64,7 @@ export class HUD extends Phaser.GameObjects.Container {
 
     public update(time: number, delta: number): void {
 
-        this.creditsLabel.text = BattleManager.anutoEngine.credits.toString();
+        this.creditsLabel.text = GameVars.formatNumber(BattleManager.anutoEngine.credits);
 
         if (this.ticksLabel) {
             this.ticksLabel.text = "ticks: " + BattleManager.anutoEngine.ticksCounter;
@@ -73,7 +73,7 @@ export class HUD extends Phaser.GameObjects.Container {
 
     public updateLifes(): void {
 
-        this.lifesLabel.setText(BattleManager.anutoEngine.lifes.toString());
+        this.lifesLabel.setText(BattleManager.anutoEngine.lifes < 0 ? "0" : BattleManager.anutoEngine.lifes.toString());
     }
 
     public updateRound(): void {

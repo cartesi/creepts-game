@@ -55,42 +55,34 @@ module Anuto {
 
                 case 1:
 
-                    this.damage = Math.floor( 1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 66);
-                    this.reload = Math.round(((-1 / 18) * this.level + 19 / 18 ) * 10) / 10;
-                    this.range =  Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
-                    this.priceImprovement =  Math.floor( 29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+                    this.damage = Math.round( (1 / 3) * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + (95 / 3) * this.level + 66);
+                    this.reload = Math.round((-.05 * this.level + 1.05) * 100) / 100;
+                    this.range =  Math.round((.05 * this.level + 2.45) * 100) / 100;
+                    this.priceImprovement =  Math.round(1 * Math.pow(this.level, 2) + 7 * this.level + 42);
+                    this.priceUpgrade = 5600;
             
                     break;
 
                 case 2:
 
-                    this.damage = Math.floor( 1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 150);
-                    this.reload = Math.round(((-1 / 18) * this.level + 12 / 18 ) * 10) / 10;
-                    this.range =  Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
-                    this.priceImprovement =  Math.floor( 29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+                    this.damage = Math.round( (13 / 3) * Math.pow(this.level, 3) + 6 * Math.pow(this.level, 2) + (335 / 3) * this.level + 3278);
+                    this.reload = Math.round((-.05 * this.level + .6) * 100) / 100;
+                    this.range =  Math.round((.05 * this.level + 2.95) * 100) / 100;
+                    this.priceImprovement =  Math.round( (31 / 6) * Math.pow(this.level, 3) + (13 / 2) * Math.pow(this.level, 2) + (397 / 3) * this.level + 326);
+                    this.priceUpgrade = 88500;
           
                     break;
 
                 case 3: 
 
-                    this.damage = Math.floor( 1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 250);
-                    this.reload = Math.round(((-1 / 18) * this.level + 12 / 18 ) * 10) / 10;
-                    this.range =  Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
-                    this.priceImprovement =  Math.floor( 29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+                    this.damage = Math.round( 50 * Math.pow(this.level, 2) - 50 * this.level + 20000);
+                    this.reload = Math.round((-.01 * this.level + .21) * 100) / 100;
+                    this.range =  Math.round((.05 * this.level + 3.45) * 100) / 100;
+                    this.priceImprovement =  Math.round( (46 / 3) * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + (785 / 3) * this.level + 471);
             
                     break;
 
                 default:
-            }
-            
-            // esto hay que calcularlo tambien
-            this.priceUpgrade = 5600 * this.grade;
-
-            if (this.level === 1) {
-                this.value = GameVars.turretData[this.type].price;
-            } else {
-                // calcular value con la formuula correspondiente
-                // this.value = ????????;
             }
 
             super.calculateTurretParameters();
@@ -137,7 +129,7 @@ module Anuto {
             if (this.range * this.range > impactSquareDistance) {
 
                 this.shootAngle = MathUtils.fixNumber(Math.atan2(dy, dx));
-                const bullet = new Bullet({c: this.position.c, r: this.position.r}, this.shootAngle, enemy, this.damage, this.canonShoot);
+                const bullet = new Bullet({c: this.position.c, r: this.position.r}, this.shootAngle, enemy, this.damage, this.canonShoot, this);
 
                 Engine.currentInstance.addBullet(bullet, this);
 

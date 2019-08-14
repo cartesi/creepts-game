@@ -7,6 +7,7 @@ module Anuto {
         public type: string;
         public id: number;
         public life: number;
+        public maxLife: number;
         public speed: number;
         public x: number;
         public y: number;
@@ -37,6 +38,7 @@ module Anuto {
             this.enemyData = GameVars.enemyData[this.type];
 
             this.life =  this.enemyData.life;
+            this.maxLife = this.enemyData.life;
             this.value = this.enemyData.value;
             this.speed = this.enemyData.speed;
 
@@ -146,8 +148,17 @@ module Anuto {
             
             this.life -= damage;
 
-            if (this.life <= 0) {
+            if (bullet && bullet.turret) {
+                bullet.turret.inflicted += Math.round(damage);
+            } else if (mortar && mortar.turret) {
+                mortar.turret.inflicted += Math.round(damage);
+            } else if (mine && mine.turret) {
+                mine.turret.inflicted += Math.round(damage);
+            } else if (laserTurret) {
+                laserTurret.inflicted += Math.round(damage);
+            }
 
+            if (this.life <= 0) {
                 this.life = 0;
                 Engine.currentInstance.onEnemyKilled(this);
             }
@@ -162,7 +173,7 @@ module Anuto {
 
         public restoreHealth(): void {
 
-            this.life = this.enemyData.life;
+            this.life = this.maxLife;
         }
 
         public getNextPosition(deltaTicks: number): {x: number, y: number} {

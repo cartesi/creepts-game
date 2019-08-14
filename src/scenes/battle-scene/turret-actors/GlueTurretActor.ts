@@ -1,11 +1,12 @@
 import { TurretActor } from "./TurretActor";
 import { AudioManager } from "../../../AudioManager";
+import { GameVars } from "../../../GameVars";
 
 export class GlueTurretActor extends TurretActor {
 
-    constructor(scene: Phaser.Scene, position: {r: number, c: number}) {
+    constructor(scene: Phaser.Scene, position: {r: number, c: number}, turret: Anuto.Turret) {
 
-        super(scene, Anuto.GameConstants.TURRET_GLUE, position);
+        super(scene, Anuto.GameConstants.TURRET_GLUE, position, turret);
 
         this.base = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "base_3_1");
         this.base.setInteractive();
@@ -41,11 +42,20 @@ export class GlueTurretActor extends TurretActor {
     }
 
     public shootGlue(): void {
-        // hacer que el cañon retroceda
+        
         this.canon.rotation = this.anutoTurret.shootAngle + Math.PI / 2;
 
         if (this.anutoTurret.grade === 2) {
             AudioManager.playSound("t2_hielo");
         }
+
+        this.scene.tweens.add({
+            targets: this.canon,
+            x: this.canon.x - 5 * Math.sin(this.canon.rotation),
+            y: this.canon.y + 5 * Math.cos(this.canon.rotation),
+            ease: Phaser.Math.Easing.Cubic.Out,
+            duration: GameVars.timeStepFactor === 4 ? 20 : 80,
+            yoyo: true
+        });
     }
 }

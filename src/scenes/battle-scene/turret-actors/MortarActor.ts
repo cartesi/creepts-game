@@ -44,6 +44,10 @@ export class MortarActor extends Phaser.GameObjects.Container {
 
             let d = Math.sqrt((this.x - this.launchTurretActor.x) * (this.x - this.launchTurretActor.x) + (this.x - this.launchTurretActor.x) * (this.x - this.launchTurretActor.x));
 
+
+            if (this.anutoMortar.grade === 3) {
+                d *= 2;
+            }
             // la longitud del cañón más un poco más debido al diámetro del mortero 
             if (d > this.launchTurretActor.canonLength) {
                 this.visible = true;

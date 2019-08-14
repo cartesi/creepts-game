@@ -2,7 +2,7 @@
 {
     "turrets": {
                 "projectile" : {
-                    "price": 150
+                    "price": 100
                 },
                 "laser" : {
                     "price": 150

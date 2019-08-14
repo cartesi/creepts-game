@@ -92,15 +92,13 @@ export class BattleManager {
 
     public static newWave(): void {
 
-        if (BattleManager.anutoEngine.waveActivated) {
-            return;
+        if (BattleManager.anutoEngine.newWave()) {
+            BattleScene.currentInstance.hud.updateRound();
+
+            let action = {type: GameConstants.TYPE_NEXT_WAVE, tick: BattleManager.anutoEngine.ticksCounter};
+            BattleManager.addAction(action);
         }
-
-        BattleManager.anutoEngine.newWave();
-        BattleScene.currentInstance.hud.updateRound();
-
-        let action = {type: GameConstants.TYPE_NEXT_WAVE, tick: BattleManager.anutoEngine.ticksCounter};
-        BattleManager.addAction(action);
+        
     }
 
     public static createTurret(type: string): void {
@@ -117,21 +115,24 @@ export class BattleManager {
 
         let turret = BattleManager.anutoEngine.addTurret(type, position);
 
-        let action = {type: GameConstants.TYPE_ADD_TURRET, tick: BattleManager.anutoEngine.ticksCounter, typeTurret: turret.type, position: position};
-        BattleManager.addAction(action);
+        if (turret) {
+            let action = {type: GameConstants.TYPE_ADD_TURRET, tick: BattleManager.anutoEngine.ticksCounter, typeTurret: turret.type, position: position};
+            BattleManager.addAction(action);
+        }
 
         return turret;
     }
 
     public static sellTurret(turret: Anuto.Turret): void {
 
-        BattleManager.anutoEngine.sellTurret(turret.id);
+        if (BattleManager.anutoEngine.sellTurret(turret.id)) {
 
-        let action = {type: GameConstants.TYPE_SELL_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: turret.id};
-        BattleManager.addAction(action);
+            let action = {type: GameConstants.TYPE_SELL_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: turret.id};
+            BattleManager.addAction(action);
 
-        BoardContainer.currentInstance.removeTurret(turret);
-        BattleScene.currentInstance.gui.updateTurretButtons();
+            BoardContainer.currentInstance.removeTurret(turret);
+            BattleScene.currentInstance.gui.updateTurretButtons();
+        }
     }
 
     public static onClickMenu(): void {
@@ -141,18 +142,19 @@ export class BattleManager {
 
     public static improveTurret(id: number): void {
 
-        BattleManager.anutoEngine.improveTurret(id);
+        const sucess = BattleManager.anutoEngine.improveTurret(id);
 
-        let action = {type: GameConstants.TYPE_LEVEL_UP_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
-        BattleManager.addAction(action);
+        if (sucess) {
+            let action = {type: GameConstants.TYPE_LEVEL_UP_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
+            BattleManager.addAction(action);
 
-        BoardContainer.currentInstance.improveTurret(id);
-        BattleScene.currentInstance.gui.updateTurretButtons();
+            BoardContainer.currentInstance.improveTurret(id);
+            BattleScene.currentInstance.gui.updateTurretButtons();
+        }
     }
 
     public static upgradeTower(id: number): void {
         
-        // hay creditos suficientes ?
         const sucess = BattleManager.anutoEngine.upgradeTurret(id);
 
         if (sucess) {
@@ -167,18 +169,18 @@ export class BattleManager {
 
     public static setNextStrategy(id: number): void {
 
-        BattleManager.anutoEngine.setNextStrategy(id);
-
-        let action = {type: GameConstants.TYPE_CHANGE_STRATEGY_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
-        BattleManager.addAction(action);
+        if (BattleManager.anutoEngine.setNextStrategy(id)) {
+            let action = {type: GameConstants.TYPE_CHANGE_STRATEGY_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
+            BattleManager.addAction(action);
+        }
     }
 
     public static setFixedTarget(id: number): void {
 
-        BattleManager.anutoEngine.setFixedTarget(id);
-
-        let action = {type: GameConstants.TYPE_CHANGE_FIXED_TARGET_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
-        BattleManager.addAction(action);
+        if (BattleManager.anutoEngine.setFixedTarget(id)) {
+            let action = {type: GameConstants.TYPE_CHANGE_FIXED_TARGET_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
+            BattleManager.addAction(action);
+        }
     }
 
     public static createRangeCircle(range: number, x: number, y: number): Phaser.GameObjects.Graphics {
@@ -291,18 +293,18 @@ export class BattleManager {
 
     private static onNoEnemiesOnStage(): void {
 
-        // TODO: si se tiene mas de 0 vidas se enseña cartel de round completed o algo asi
+        if (!BattleManager.anutoEngine.gameOver) {
+            BoardContainer.currentInstance.showRoundCompletedLayer();
+        }
     }
 
     private static onWaveOver(): void {
     
         BattleScene.currentInstance.gui.activeNextWave();
-        console.log("WAVE OVER");
     }
 
     private static onGameOver(): void {
-    
-        // TODO: enseñar cartel de game over con la puntuacion
+        
         BoardContainer.currentInstance.showGameOverLayer();
 
         console.log(JSON.stringify(GameVars.logsObject));

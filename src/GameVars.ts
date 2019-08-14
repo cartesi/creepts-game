@@ -43,27 +43,8 @@ export class GameVars {
         return { str: h + ":" + m + ":" + s, h: h, m: m, s: s };
     }
 
-    public static formatNumber(n: number): string {
+    public static formatNumber(value: number): string {
 
-        let ret: string;
-
-        if (n >= 0) {
-            if (n > 99) {
-                ret = n.toString();
-            } else if (n > 9) {
-                ret = "0" + n.toString();
-            } else {
-                ret = "00" + n.toString();
-            }
-        } else {
-
-            if (n < -9) {
-                ret = "-" + Math.abs(n);
-            } else {
-                ret = "-0" + Math.abs(n);
-            }
-        }
-
-        return ret;
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 }

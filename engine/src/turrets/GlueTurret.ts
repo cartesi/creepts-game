@@ -13,6 +13,7 @@ module Anuto {
             super(GameConstants.TURRET_GLUE, p);
 
             this.maxLevel = 5;
+            this.teleportDistance = 0;
 
             this.calculateTurretParameters();
         }
@@ -24,48 +25,39 @@ module Anuto {
 
                 case 1:
 
-                    this.damage = Math.floor( 1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 66);
-                    this.reload = 5;
-                    this.range =  Math.round((2 / 45 * this.level + 12 / 9) * 10) / 10;
-                    this.duration = 3;
-                    this.durationTicks = Math.floor(GameConstants.RELOAD_BASE_TICKS * this.duration);
-                    this.intensity = 2;
-                    this.priceImprovement = Math.floor( 29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+                    this.intensity = Math.round((.2 * this.level + 1) * 100) / 100;
+                    this.duration = 1.5;
+                    this.reload = 2;
+                    this.range = Math.round((.1 * this.level + 1.4) * 100) / 100;
+                    this.priceImprovement = Math.floor( (1 / 6) * Math.pow(this.level, 3) + 1 * Math.pow(this.level, 2) + (95 / 6) * this.level + 83);
+                    this.priceUpgrade = 800;
             
                     break;
 
                 case 2:
 
-                    this.damage = Math.floor( 1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 66);
-                    this.reload = 5;
-                    this.range =  Math.round((2 / 45 * this.level + 12 / 9) * 10) / 10;
-                    this.duration = 3;
-                    this.durationTicks = Math.floor(GameConstants.RELOAD_BASE_TICKS * this.duration);
-                    this.intensity = 2;
-                    this.priceImprovement = Math.floor( 29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+                    this.intensity = Math.round((.3 * this.level + .9) * 100) / 100;
+                    this.duration = 2.5;
+                    this.reload = 3;
+                    this.range = Math.round((.2 * this.level + 2.3) * 100) / 100;
+                    this.priceImprovement = Math.floor( (1 / 3) * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + (95 / 3) * this.level + 166);
+                    this.priceUpgrade = 1700;
                 
                     break;
 
                 case 3: 
 
-                    this.teleportDistance = 5; // en el juego ANUTO son 15
-                    this.reload = 5;
-                    this.range =  Math.round((4 / 45 * this.level + 24 / 9) * 10) / 10;
-                    this.priceImprovement = Math.floor( 29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
+                    this.teleportDistance = Math.round((5 * this.level + 10) * 100) / 100;
+                    this.reload = Math.round((-.5 * this.level + 5.5) * 100) / 100;
+                    this.range = 3.5;
+                    this.priceImprovement = Math.floor( (10 / 3) * Math.pow(this.level, 3) + 20 * Math.pow(this.level, 2) + (950 / 3) * this.level + 1660);
             
                     break;
 
                 default:
             }
-                       
-            // esto hay que calcularlo tambien
-            this.priceUpgrade = 800 * this.grade;
 
-            if (this.level === 1 && this.grade === 1) {
-                this.value = GameVars.turretData[this.type].price;
-            } else {
-                // calcularlo
-            }
+            this.durationTicks = Math.floor(GameConstants.RELOAD_BASE_TICKS * this.duration);
 
             super.calculateTurretParameters();
         }

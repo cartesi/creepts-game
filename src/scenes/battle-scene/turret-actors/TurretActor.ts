@@ -15,7 +15,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
     
     private rangeCircle: Phaser.GameObjects.Graphics;
 
-    constructor(scene: Phaser.Scene, type: string, position: {r: number, c: number}) {
+    constructor(scene: Phaser.Scene, type: string, position: {r: number, c: number}, turret: Anuto.Turret) {
 
         super(scene);
 
@@ -24,13 +24,12 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
         this.setScale(.82);
         
-        this.anutoTurret = BattleManager.addTurret(type, this.p);
+        this.anutoTurret = turret;
         this.id = this.anutoTurret.id;
 
         this.x = GameConstants.CELLS_SIZE * (this.p.c + .5);
         this.y = GameConstants.CELLS_SIZE * (this.p.r + .5);
 
-        // este valor habra q sacarlo de la imagen del cañón
         this.canonLength = 40;
 
         this.rangeCircle = BattleManager.createRangeCircle(this.anutoTurret.range * GameConstants.CELLS_SIZE, this.x, this.y);

@@ -38,6 +38,12 @@ module Anuto {
                         default: 
                     }
 
+                    // cada ronda que pasa los enemigos tienen mas vida
+                    let extraLife = enemy.life * MathUtils.fixNumber(GameVars.round / 10);
+
+                    enemy.life += extraLife;
+                    enemy.maxLife = enemy.life;
+
                     GameVars.waveEnemies.shift();
                 }
             }

@@ -27,7 +27,7 @@ export class GameOverLayer extends Phaser.GameObjects.Container {
         title.setOrigin(.5, 0);
         this.add(title);
 
-        let score = new Phaser.GameObjects.Text(this.scene, 0, 50, "SCORE: " + BattleManager.anutoEngine.score, {fontFamily: "Rubik-Regular", fontSize: "65px", color: "#FFFFFF"});
+        let score = new Phaser.GameObjects.Text(this.scene, 0, 50, "SCORE: " + GameVars.formatNumber(BattleManager.anutoEngine.score), {fontFamily: "Rubik-Regular", fontSize: "65px", color: "#FFFFFF"});
         score.setOrigin(.5);
         this.add(score);
 

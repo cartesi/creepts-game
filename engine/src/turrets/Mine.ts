@@ -12,9 +12,9 @@ module Anuto {
         public damage: number;
         public detonate: boolean;
 
-        public turretId: number;
+        public turret: LaunchTurret;
 
-        constructor (p: {r: number, c: number}, explosionRange: number, damage: number, turretId: number) {
+        constructor (p: {r: number, c: number}, explosionRange: number, damage: number, turret: LaunchTurret) {
             
             this.id = Mine.id;
             Mine.id ++;
@@ -27,7 +27,7 @@ module Anuto {
             this.range = .5;
             this.detonate = false;
 
-            this.turretId = turretId;
+            this.turret = turret;
         }
 
         public destroy(): void {

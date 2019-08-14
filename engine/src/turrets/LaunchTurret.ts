@@ -24,22 +24,41 @@ module Anuto {
         // mirar en el ANUTO y generar las formulas que correspondan
         protected calculateTurretParameters(): void {
 
-            this.damage = Math.floor( 1 / 3 * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + 95 / 3 * this.level + 66);
-            this.reload = Math.round(((-2 / 18) * this.level + 38 / 18 ) * 10) / 10;
-            this.range =  Math.round((2 / 45 * this.level + 221 / 90) * 10) / 10;
-            
-            // mirar los parametros del juego anuto e implementar la correspondiente formula
-            this.explosionRange = this.range * .6;
-            
-            this.priceImprovement =  Math.floor( 29 / 336 * Math.pow(this.level, 3) + 27 / 56 * Math.pow(this.level, 2) + 2671 / 336 * this.level + 2323 / 56);
-            
-            // esto hay que calcularlo tambien
-            this.priceUpgrade = 10000 * this.grade;
+            switch (this.grade) {
 
-            if (this.level === 1) {
-                this.value = GameVars.turretData[this.type].price;
-            } else {
-                // calcularlo
+                case 1:
+
+                    this.damage = Math.round( (1 / 3) * Math.pow(this.level, 3) + 4 * Math.pow(this.level, 2) + (137 / 3) * this.level + 50);
+                    this.explosionRange = Math.round((.05 * this.level + 1.45) * 100) / 100;
+                    this.reload = Math.round((-.05 * this.level + 2.05) * 100) / 100;
+                    this.range =  Math.round((.05 * this.level + 2.45) * 100) / 100;
+                    this.priceImprovement =  Math.round( (1 / 6) * Math.pow(this.level, 3) + (3 / 2) * Math.pow(this.level, 2) + (58 / 3) * this.level + 104);
+                    this.priceUpgrade = 10000;
+            
+                    break;
+
+                case 2:
+
+                    this.damage = Math.round( (43 / 6) * Math.pow(this.level, 3) + 11 * Math.pow(this.level, 2) + (1121 / 3) * this.level + 2895);
+                    this.explosionRange = Math.round((.05 * this.level + 1.95) * 100) / 100;
+                    this.reload = Math.round((-.05 * this.level + 2.6) * 100) / 100;
+                    this.range =  2.5;
+                    this.priceImprovement =  Math.round( 8 * Math.pow(this.level, 3) + 12 * Math.pow(this.level, 2) + 208 * this.level + 522);
+                    this.priceUpgrade = 103000;
+          
+                    break;
+
+                case 3: 
+
+                    this.damage = Math.round( (50 / 3) * Math.pow(this.level, 3) + (850 / 3) * this.level + 47700);
+                    this.explosionRange = Math.round((.05 * this.level + 1.7) * 100) / 100;
+                    this.reload = Math.round((-.05 * this.level + 3.05) * 100) / 100;
+                    this.range =  Math.round((.1 * this.level + 2.9) * 100) / 100;
+                    this.priceImprovement =  Math.round( (39 / 2) * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + (665 / 2) * this.level + 596);
+            
+                    break;
+
+                default:
             }
 
             super.calculateTurretParameters();
@@ -84,12 +103,8 @@ module Anuto {
                     const dy = (cell.r + .5) - this.y;
                     this.shootAngle = MathUtils.fixNumber(Math.atan2(dy, dx));
 
-                    const mine = new Mine({c: cell.c, r: cell.r}, this.explosionRange, this.damage, this.id);
+                    const mine = new Mine({c: cell.c, r: cell.r}, this.explosionRange, this.damage, this);
                     Engine.currentInstance.addMine(mine, this);
-
-                    
-        
-                    
 
                 } else {
                     this.readyToShoot = true;
@@ -140,7 +155,7 @@ module Anuto {
                     const dy = impactPosition.y - this.y;
         
                     this.shootAngle =  MathUtils.fixNumber(Math.atan2(dy, dx));
-                    const mortar = new Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage, this.grade);
+                    const mortar = new Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage, this.grade, this);
         
                     Engine.currentInstance.addMortar(mortar, this);
 

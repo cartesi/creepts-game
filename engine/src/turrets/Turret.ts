@@ -55,6 +55,8 @@ module Anuto {
 
             this.x = this.position.c + .5;
             this.y = this.position.r + .5;
+
+            this.value = GameVars.turretData[this.type].price;
         }
 
         public destroy(): void {
@@ -91,14 +93,23 @@ module Anuto {
 
         public improve(): void {
 
+            this.value += this.priceImprovement;
+
             this.level ++;
             this.calculateTurretParameters();                                                                                                                                        
         }
 
         public upgrade(): void {
 
+            this.value += this.priceUpgrade;
+
             this.grade ++;
             this.level = 1;
+
+            if (this.grade === 3 && this.type !== GameConstants.TURRET_GLUE) {
+                this.maxLevel = 15;
+            }
+            
             this.calculateTurretParameters();
         }
 
@@ -131,8 +142,10 @@ module Anuto {
 
                 const enemy = GameVars.enemies[i];
 
-                // TODO: AÑADIR LA CONDICION DE QUE SI ES UNA TORRETA GLUE IGNORE A LOS ENEMIGOS VOLADORES
-                // SIEMPRE QUE SEA DE GRADO 1 ó 2
+                if (this.type === GameConstants.TURRET_GLUE && this.grade !== 3 && enemy.type === GameConstants.ENEMY_FLIER) {
+                    continue;
+                }
+
                 if (enemy.life > 0 && enemy.l < GameVars.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
 
                     const dx = this.x - enemy.x;

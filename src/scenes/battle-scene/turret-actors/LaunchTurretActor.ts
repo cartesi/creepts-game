@@ -1,11 +1,12 @@
 import { TurretActor } from "./TurretActor";
 import { GameConstants } from "../../../GameConstants";
+import { GameVars } from "../../../GameVars";
 
 export class LaunchTurretActor extends TurretActor {
 
-    constructor(scene: Phaser.Scene, position: {r: number, c: number}) {
+    constructor(scene: Phaser.Scene, position: {r: number, c: number}, turret: Anuto.Turret) {
 
-        super(scene, Anuto.GameConstants.TURRET_LAUNCH, position);
+        super(scene, Anuto.GameConstants.TURRET_LAUNCH, position, turret);
 
         this.base = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "base_4_1");
         this.base.setInteractive();
@@ -41,10 +42,28 @@ export class LaunchTurretActor extends TurretActor {
     public shootMortar(): void {
         // girar el cañón
         this.canon.rotation = this.anutoTurret.shootAngle + Math.PI / 2;
+
+        this.scene.tweens.add({
+            targets: this.canon,
+            x: this.canon.x - 5 * Math.sin(this.canon.rotation),
+            y: this.canon.y + 5 * Math.cos(this.canon.rotation),
+            ease: Phaser.Math.Easing.Cubic.Out,
+            duration: GameVars.timeStepFactor === 4 ? 75 : 300,
+            yoyo: true
+        });
     }
 
     public shootMine(): void {
         
         this.canon.rotation = this.anutoTurret.shootAngle + Math.PI / 2;
+
+        this.scene.tweens.add({
+            targets: this.canon,
+            x: this.canon.x - 5 * Math.sin(this.canon.rotation),
+            y: this.canon.y + 5 * Math.cos(this.canon.rotation),
+            ease: Phaser.Math.Easing.Cubic.Out,
+            duration: GameVars.timeStepFactor === 4 ? 20 : 80,
+            yoyo: true
+        });
     }
 }

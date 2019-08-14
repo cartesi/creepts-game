@@ -1,21 +1,26 @@
+import { AudioManager } from './../../AudioManager';
 import { GameManager } from './../../GameManager';
 import { BattleManager } from './BattleManager';
 import { Button } from "../../utils/Utils";
 import { GameConstants } from "../../GameConstants";
 import { GameVars } from '../../GameVars';
+import { ClientHttp2Session } from 'http2';
 
 export class PauseMenu extends Phaser.GameObjects.Container {
 
     private restartButton: Phaser.GameObjects.Container;
-    private changeMapButton: Phaser.GameObjects.Container;
-    private configurationButton: Phaser.GameObjects.Container;
+
+    private soundButton: Phaser.GameObjects.Container;
+    private soundText: Phaser.GameObjects.Text;
 
     constructor(scene: Phaser.Scene) {
         super(scene);
 
+        this.y = -200;
+
         const bck = new Phaser.GameObjects.Graphics(this.scene);
         bck.fillStyle(0x000000);
-        bck.fillRect(-200, -200, 400, 400);
+        bck.fillRect(-200, -200, 400, 260);
         bck.alpha = .75;
         this.add(bck);
 
@@ -34,7 +39,7 @@ export class PauseMenu extends Phaser.GameObjects.Container {
         let width = 350;
         let height = 40;
 
-        let offY = 0;
+        let offY = -50;
 
         this.restartButton = new Phaser.GameObjects.Container(this.scene);
         this.restartButton.setPosition(0, offY);
@@ -57,47 +62,30 @@ export class PauseMenu extends Phaser.GameObjects.Container {
 
         offY += 65;
 
-        this.changeMapButton = new Phaser.GameObjects.Container(this.scene);
-        this.changeMapButton.setPosition(0, offY);
-        this.changeMapButton.setInteractive(new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height), Phaser.Geom.Rectangle.Contains);
-        this.changeMapButton.on("pointerover", () => { this.onBtnOver(this.changeMapButton); });
-        this.changeMapButton.on("pointerout", () => { this.onBtnOut(this.changeMapButton); });
-        this.changeMapButton.on("pointerdown", () => { this.onClickChangeMap(); });
-        this.changeMapButton.alpha = .5;
-        this.add(this.changeMapButton);
+        this.soundButton = new Phaser.GameObjects.Container(this.scene);
+        this.soundButton.setPosition(0, offY);
+        this.soundButton.setInteractive(new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height), Phaser.Geom.Rectangle.Contains);
+        this.soundButton.on("pointerover", () => { this.onBtnOver(this.soundButton); });
+        this.soundButton.on("pointerout", () => { this.onBtnOut(this.soundButton); });
+        this.soundButton.on("pointerdown", () => { this.onClickSound(); });
+        this.add(this.soundButton);
 
-        const changeMapBck = new Phaser.GameObjects.Graphics(this.scene);
-        changeMapBck.fillStyle(0xFFFFFF);
-        changeMapBck.fillRect(-width / 2, -height / 2, width, height);
-        changeMapBck.lineStyle(2, 0xFFFFFF);
-        changeMapBck.strokeRect(-width / 2 - 5, -height / 2 - 5, width + 10, height + 10);
-        this.changeMapButton.add(changeMapBck);
+        const soundBck = new Phaser.GameObjects.Graphics(this.scene);
+        soundBck.fillStyle(0xFFFFFF);
+        soundBck.fillRect(-width / 2, -height / 2, width, height);
+        soundBck.lineStyle(2, 0xFFFFFF);
+        soundBck.strokeRect(-width / 2 - 5, -height / 2 - 5, width + 10, height + 10);
+        this.soundButton.add(soundBck);
 
-        const changeMapText = new Phaser.GameObjects.Text(this.scene, 0, 0, "CHANGE MAP", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
-        changeMapText.setOrigin(.5);
-        this.changeMapButton.add(changeMapText);
+        this.soundText = new Phaser.GameObjects.Text(this.scene, 0, 0, "SOUND ON", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+        this.soundText.setOrigin(.5);
+        this.soundButton.add(this.soundText);
 
-        offY += 65;
-
-        this.configurationButton = new Phaser.GameObjects.Container(this.scene);
-        this.configurationButton.setPosition(0, offY);
-        this.configurationButton.setInteractive(new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height), Phaser.Geom.Rectangle.Contains);
-        this.configurationButton.on("pointerover", () => { this.onBtnOver(this.configurationButton); });
-        this.configurationButton.on("pointerout", () => { this.onBtnOut(this.configurationButton); });
-        this.configurationButton.on("pointerdown", () => { this.onClickConfiguration(); });
-        this.configurationButton.alpha = .5;
-        this.add(this.configurationButton);
-
-        const configurationBck = new Phaser.GameObjects.Graphics(this.scene);
-        configurationBck.fillStyle(0xFFFFFF);
-        configurationBck.fillRect(-width / 2, -height / 2, width, height);
-        configurationBck.lineStyle(2, 0xFFFFFF);
-        configurationBck.strokeRect(-width / 2 - 5, -height / 2 - 5, width + 10, height + 10);
-        this.configurationButton.add(configurationBck);
-
-        const configurationText = new Phaser.GameObjects.Text(this.scene, 0, 0, "CONFIGURATION", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
-        configurationText.setOrigin(.5);
-        this.configurationButton.add(configurationText);
+        if (GameVars.gameData.muted) {
+            this.soundText.setText("SOUND ON");
+        } else {
+            this.soundText.setText("SOUND OFF");
+        }
     }
 
     private onBtnOver(btn: Phaser.GameObjects.Container): void {
@@ -119,15 +107,14 @@ export class PauseMenu extends Phaser.GameObjects.Container {
         GameManager.reset();
     }
 
-    private onClickChangeMap(): void {
+    private onClickSound(): void {
 
-        console.log(" TO DO: change map menu");
-        // TODO: menu de seleccion de mapas
-    }
+        AudioManager.toggleAudioState();
 
-    private onClickConfiguration(): void {
-
-        console.log(" TO DO: configuration menu");
-        // TODO: menu de configuracion
+        if (GameVars.gameData.muted) {
+            this.soundText.setText("SOUND ON");
+        } else {
+            this.soundText.setText("SOUND OFF");
+        }
     }
 }

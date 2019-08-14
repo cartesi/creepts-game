@@ -11,11 +11,13 @@ module Anuto {
         public damage: number;
         public canonShoot: string;
 
+        public turret: ProjectileTurret;
+
         private vx: number;
         private vy: number;
 
         // bullet speed in cells / tick
-        constructor (p: {r: number, c: number}, angle: number, assignedEnemy: Enemy, damage: number, canonShoot: string) {
+        constructor (p: {r: number, c: number}, angle: number, assignedEnemy: Enemy, damage: number, canonShoot: string, turret: ProjectileTurret) {
             
             this.id = Bullet.id;
             Bullet.id ++;
@@ -27,6 +29,8 @@ module Anuto {
 
             this.damage = damage;
             this.canonShoot = canonShoot;
+
+            this.turret = turret;
 
             this.vx = MathUtils.fixNumber(GameConstants.BULLET_SPEED * Math.cos(angle));
             this.vy = MathUtils.fixNumber( GameConstants.BULLET_SPEED * Math.sin(angle));

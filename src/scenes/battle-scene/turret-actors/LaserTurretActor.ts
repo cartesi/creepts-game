@@ -1,12 +1,18 @@
 import { AudioManager } from './../../../AudioManager';
 import { TurretActor } from "./TurretActor";
 import { GameConstants } from "../../../GameConstants";
+import { GameVars } from '../../../GameVars';
+import { EnemyActor } from '../enemy-actors/EnemyActor';
 
 export class LaserTurretActor extends TurretActor {
 
-    constructor(scene: Phaser.Scene, position: {r: number, c: number}) {
+    private framesDuration: number;
+    private f: number;
+    private laserShoot: boolean;
 
-        super(scene, Anuto.GameConstants.TURRET_LASER, position);
+    constructor(scene: Phaser.Scene, position: {r: number, c: number}, turret: Anuto.Turret) {
+
+        super(scene, Anuto.GameConstants.TURRET_LASER, position, turret);
 
         this.base = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "base_2_1");
         this.base.setInteractive();
@@ -17,6 +23,20 @@ export class LaserTurretActor extends TurretActor {
         this.add(this.canon);
 
         this.canonLength = 30;
+
+        this.laserShoot = false;
+    }
+
+    public update(time: number, delta: number): void {
+
+        if (this.laserShoot) {
+            if (this.f ++ === this.framesDuration) {
+                this.laserShoot = false;
+            }
+            return;
+        }
+
+        super.update(time, delta);
     }
 
     public upgrade(): void {
@@ -37,7 +57,16 @@ export class LaserTurretActor extends TurretActor {
         }
     }
 
-    public shootLaser(): void {
+    public shootLaser(enemyActors: EnemyActor[]): void {
+
+        const dx = enemyActors[0].x - this.x;
+        const dy = enemyActors[0].y - this.y;
+
+        this.canon.rotation = Math.atan2(dy, dx) + Math.PI / 2;
+
+        this.laserShoot = true;
+        this.framesDuration = GameVars.timeStepFactor === 1 ? 24 : 6;
+        this.f = 0;
 
         AudioManager.playSound("t2_laser" + this.anutoTurret.grade);
     }

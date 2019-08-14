@@ -38,6 +38,22 @@ export class EnemyActor extends Phaser.GameObjects.Container {
             return;
         }
 
+        if (this.anutoEnemy.affectedByGlue || this.anutoEnemy.affectedByGlueBullet) {
+            if (this.img.tint !== 0xb2e5ff) {
+                this.img.setTint(0xb2e5ff);
+            }
+        } else {
+            if (this.anutoEnemy.hasBeenTeleported) {
+                if (this.img.tint !== 0xe4c0ff) {
+                    this.img.setTint(0xe4c0ff);
+                }
+            } else {
+                if (this.img.tint !== 0xFFFFFF) {
+                    this.img.setTint(0xFFFFFF);
+                }
+            }
+        }
+
         this.scaleX = 1;
         this.scaleY = 1;
 
