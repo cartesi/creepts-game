@@ -29,8 +29,6 @@ export class GameConstants {
     public static readonly TYPE_CHANGE_FIXED_TARGET_TURRET = "type change fixed target turret";
 
     public static readonly TYPE_NEXT_WAVE = "type next wave";
-
-
     
     // los caminos de los enemigos
     public static readonly ENEMY_PATH_1 = [

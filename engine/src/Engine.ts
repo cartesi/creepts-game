@@ -9,7 +9,7 @@ module Anuto {
 
         public waveActivated: boolean;
        
-        private turrets: Turret[];
+        public turrets: Turret[];
         private bullets: Bullet[];
         private glueBullets: GlueBullet[];
         private mortars: Mortar[];
@@ -137,7 +137,7 @@ module Anuto {
                 this.t = t;
             }
 
-            if (GameVars.paused || GameVars.gameOver) {
+            if (GameVars.paused) {
                 return;
             }
 
@@ -172,7 +172,6 @@ module Anuto {
                 this.checkCollisions();
                 this.spawnEnemies();
             }
-            
 
             GameVars.enemies.forEach(function (enemy) {
                 enemy.update();
@@ -226,11 +225,10 @@ module Anuto {
                 let lastTickValue = GameVars.waveEnemies[GameVars.waveEnemies.length - 1].t;
 
                 for (let j = 0; j < nextWaveEnemies.length; j++) {
-                    nextWaveEnemies[j].t += (lastTickValue  + 2);
+                    nextWaveEnemies[j].t += (lastTickValue + 2);
                 }
 
                 GameVars.waveEnemies = GameVars.waveEnemies.concat(nextWaveEnemies);
-
             }
 
             GameVars.lastWaveTick = GameVars.ticksCounter;
@@ -253,6 +251,8 @@ module Anuto {
             }
 
             enemy.destroy();
+
+
         }
 
         public addTurret(type: string, p: {r: number, c: number}): Turret {
@@ -418,7 +418,11 @@ module Anuto {
         public onEnemyReachedExit(enemy: Enemy): void {
 
             const i = GameVars.enemies.indexOf(enemy);
-            GameVars.enemies.splice(i, 1);
+
+            if (i !== -1) {
+                GameVars.enemies.splice(i, 1);
+            }
+
             enemy.destroy();
 
             GameVars.lifes -= 1;
@@ -438,7 +442,11 @@ module Anuto {
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_KILLED, [enemy]));
 
             const i = GameVars.enemies.indexOf(enemy);
-            GameVars.enemies.splice(i, 1);
+
+            if (i !== -1) {
+                GameVars.enemies.splice(i, 1);
+            }
+
             enemy.destroy();
 
             if (GameVars.enemies.length === 0 && this.allEnemiesSpawned) {
@@ -587,7 +595,7 @@ module Anuto {
                 const bullet = this.bulletsColliding[i];
                 const enemy = bullet.assignedEnemy;
 
-                if (enemy === null || enemy.life === 0) {
+                if (enemy === null || enemy.life <= 0) {
                     // ya esta muerto o el enemigo ha sido teletransportado
                     this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[], bullet]));
                 } else {

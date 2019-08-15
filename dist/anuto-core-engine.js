@@ -84,6 +84,13 @@ var Anuto;
         };
         Turret.prototype.update = function () {
             this.enemiesWithinRange = this.getEnemiesWithinRange();
+            // if (this.enemiesWithinRange && this.enemiesWithinRange.length > 0) {
+            //     let str = "";
+            //     for (let i = 0; i < this.enemiesWithinRange.length; i++) {
+            //         str += this.enemiesWithinRange[i].id + " ";
+            //     }
+            //     console.log(str);
+            // }
             if (this.readyToShoot) {
                 // si es la de las minas no necesita tener a enemigos en rango
                 if (this.type === Anuto.GameConstants.TURRET_LAUNCH && this.grade === 2) {
@@ -153,19 +160,19 @@ var Anuto;
                 // ordenar a los enemigos dentro del radio de acción según la estrategia de disparo
                 switch (this.shootingStrategy) {
                     case Anuto.GameConstants.STRATEGY_SHOOT_LAST:
-                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort(function (e1, e2) { return e1.enemy.l - e2.enemy.l; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergesort(enemiesAndSquaredDistances, function (e1, e2) { return e1.enemy.l - e2.enemy.l; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_CLOSEST:
-                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort(function (e1, e2) { return e1.squareDist - e2.squareDist; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergesort(enemiesAndSquaredDistances, function (e1, e2) { return e1.squareDist - e2.squareDist; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_WEAKEST:
-                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort(function (e1, e2) { return e1.enemy.life - e2.enemy.life; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergesort(enemiesAndSquaredDistances, function (e1, e2) { return e1.enemy.life - e2.enemy.life; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_STRONGEST:
-                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort(function (e1, e2) { return e2.enemy.life - e1.enemy.life; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergesort(enemiesAndSquaredDistances, function (e1, e2) { return e2.enemy.life - e1.enemy.life; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_FIRST:
-                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort(function (e1, e2) { return e2.enemy.l - e1.enemy.l; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergesort(enemiesAndSquaredDistances, function (e1, e2) { return e2.enemy.l - e1.enemy.l; });
                         break;
                     default:
                 }
@@ -269,15 +276,19 @@ var Anuto;
             }
             this.life -= damage;
             if (bullet && bullet.turret) {
+                // console.log("BULLET " + bullet.turret.id + ": " + Math.round(damage) + " " + GameVars.ticksCounter);
                 bullet.turret.inflicted += Math.round(damage);
             }
             else if (mortar && mortar.turret) {
+                // console.log("MORTAR " + mortar.turret.id + ": " + Math.round(damage) + " " + GameVars.ticksCounter);
                 mortar.turret.inflicted += Math.round(damage);
             }
             else if (mine && mine.turret) {
+                // console.log("MINE " + mine.turret.id + ": " + Math.round(damage) + " " + GameVars.ticksCounter);
                 mine.turret.inflicted += Math.round(damage);
             }
             else if (laserTurret) {
+                // console.log("LASER " + laserTurret.id + ": " + Math.round(damage) + " " + GameVars.ticksCounter);
                 laserTurret.inflicted += Math.round(damage);
             }
             if (this.life <= 0) {
@@ -387,7 +398,7 @@ var Anuto;
                 }
                 this.t = t;
             }
-            if (Anuto.GameVars.paused || Anuto.GameVars.gameOver) {
+            if (Anuto.GameVars.paused) {
                 return;
             }
             // Esto esta comentado ya que las minas se pueden poner aunque las rondas no esten en marcha y los tiempos de recarga tienen que completarse por lo que el motor tiene que seguir funcionando
@@ -580,7 +591,9 @@ var Anuto;
         };
         Engine.prototype.onEnemyReachedExit = function (enemy) {
             var i = Anuto.GameVars.enemies.indexOf(enemy);
-            Anuto.GameVars.enemies.splice(i, 1);
+            if (i !== -1) {
+                Anuto.GameVars.enemies.splice(i, 1);
+            }
             enemy.destroy();
             Anuto.GameVars.lifes -= 1;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_REACHED_EXIT, [enemy]));
@@ -593,7 +606,9 @@ var Anuto;
             Anuto.GameVars.score += enemy.value;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_KILLED, [enemy]));
             var i = Anuto.GameVars.enemies.indexOf(enemy);
-            Anuto.GameVars.enemies.splice(i, 1);
+            if (i !== -1) {
+                Anuto.GameVars.enemies.splice(i, 1);
+            }
             enemy.destroy();
             if (Anuto.GameVars.enemies.length === 0 && this.allEnemiesSpawned) {
                 this.onNoEnemiesOnStage();
@@ -697,7 +712,7 @@ var Anuto;
             for (var i = 0; i < this.bulletsColliding.length; i++) {
                 var bullet = this.bulletsColliding[i];
                 var enemy = bullet.assignedEnemy;
-                if (enemy === null || enemy.life === 0) {
+                if (enemy === null || enemy.life <= 0) {
                     // ya esta muerto o el enemigo ha sido teletransportado
                     this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_HIT, [[], bullet]));
                 }
@@ -1765,6 +1780,67 @@ var Anuto;
             else {
                 return false;
             }
+        };
+        MathUtils.splitList = function (list) {
+            if (list.length === 0) {
+                return { leftHalf: [], rigthHalf: [] };
+            }
+            if (list.length === 1) {
+                return { leftHalf: list, rigthHalf: [] };
+            }
+            var index = Math.floor(list.length / 2);
+            return { leftHalf: list.slice(0, index), rigthHalf: list.slice(index) };
+        };
+        MathUtils.jointLists = function (list1, list2, compare) {
+            // getting the biggest array
+            var iterator = list1.length > list2.length ? list1.length : list2.length;
+            // defining auxiliar variables
+            var result = [];
+            var index1 = 0;
+            var index2 = 0;
+            // sortering previously ordered arrays
+            while (true) {
+                if (compare(list1[index1], list2[index2])) {
+                    result.push(list1[index1]);
+                    index1++;
+                }
+                else {
+                    result.push(list2[index2]);
+                    index2++;
+                }
+                if (index1 === list1.length || index2 === list2.length) {
+                    break;
+                }
+            }
+            // some of the array still have elements that are not listed on the result arrays,
+            // since this elements have a biggest value (according to the compare function)
+            // we can just push this elements at the very end of the result
+            if (index1 < list1.length) {
+                return result.concat(list1.slice(index1));
+            }
+            if (index2 < list2.length) {
+                return result.concat(list2.slice(index2));
+            }
+            return result;
+        };
+        MathUtils.mergesort = function (list, compare) {
+            // Set a default compare function 
+            var compare = compare;
+            if (!compare) {
+                compare = function (x, y) { return x < y; };
+            }
+            // breaking recursive call
+            if (list.length <= 1) {
+                return list;
+            }
+            var leftHalf, rigthHalf;
+            var splitingResult = MathUtils.splitList(list);
+            leftHalf = splitingResult.leftHalf;
+            rigthHalf = splitingResult.rigthHalf;
+            // Recursive call.
+            // Passing the compare function to recursive calls to prevent the creation of unnecessary
+            // functions on each call.
+            return MathUtils.jointLists(MathUtils.mergesort(leftHalf, compare), MathUtils.mergesort(rigthHalf, compare), compare);
         };
         return MathUtils;
     }());

@@ -70,6 +70,18 @@ module Anuto {
 
             this.enemiesWithinRange = this.getEnemiesWithinRange();
 
+
+            // if (this.enemiesWithinRange && this.enemiesWithinRange.length > 0) {
+            //     let str = "";
+
+            //     for (let i = 0; i < this.enemiesWithinRange.length; i++) {
+
+            //         str += this.enemiesWithinRange[i].id + " ";
+            //     }
+
+            //     console.log(str);
+            // }
+
             if (this.readyToShoot) {
 
                 // si es la de las minas no necesita tener a enemigos en rango
@@ -154,9 +166,9 @@ module Anuto {
                     const dx = this.x - enemy.x;
                     const dy = this.y - enemy.y;
 
-                    const squaredDist = MathUtils.fixNumber(dx * dx + dy * dy);
+                    const squaredDist = MathUtils.fixNumber(dx * dx + dy * dy);    
 
-                    if (squaredRange >= squaredDist) {
+                    if (squaredRange >= squaredDist) {   
                         enemiesAndSquaredDistances.push({enemy: enemy, squareDist: squaredDist});
                     }
                 }
@@ -168,19 +180,19 @@ module Anuto {
                 switch (this.shootingStrategy) {
 
                     case GameConstants.STRATEGY_SHOOT_LAST:
-                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort((e1, e2) => e1.enemy.l - e2.enemy.l);
+                        enemiesAndSquaredDistances = MathUtils.mergesort(enemiesAndSquaredDistances, (e1, e2) => e1.enemy.l - e2.enemy.l);
                         break;
                     case GameConstants.STRATEGY_SHOOT_CLOSEST:
-                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort((e1, e2) => e1.squareDist - e2.squareDist);
+                        enemiesAndSquaredDistances = MathUtils.mergesort(enemiesAndSquaredDistances, (e1, e2) => e1.squareDist - e2.squareDist);
                         break;
                     case GameConstants.STRATEGY_SHOOT_WEAKEST:
-                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort((e1, e2) => e1.enemy.life - e2.enemy.life);
+                        enemiesAndSquaredDistances = MathUtils.mergesort(enemiesAndSquaredDistances, (e1, e2) => e1.enemy.life - e2.enemy.life);
                         break;
                     case GameConstants.STRATEGY_SHOOT_STRONGEST:
-                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort((e1, e2) => e2.enemy.life - e1.enemy.life);
+                        enemiesAndSquaredDistances = MathUtils.mergesort(enemiesAndSquaredDistances, (e1, e2) => e2.enemy.life - e1.enemy.life);
                         break;
                     case GameConstants.STRATEGY_SHOOT_FIRST:
-                        enemiesAndSquaredDistances = enemiesAndSquaredDistances.sort((e1, e2) => e2.enemy.l - e1.enemy.l);
+                        enemiesAndSquaredDistances = MathUtils.mergesort(enemiesAndSquaredDistances, (e1, e2) => e2.enemy.l - e1.enemy.l);
                         break;
                     default:
                 }
@@ -194,5 +206,7 @@ module Anuto {
 
             return enemies;
         }
+
+
     }
 }

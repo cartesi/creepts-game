@@ -73,6 +73,78 @@ module Anuto {
                 return false;
             }
         }
+
+        public static splitList(list){
+            if (list.length === 0) {
+                return {leftHalf : [], rigthHalf: []};
+            }
+            if (list.length === 1) {
+                return {leftHalf : list , rigthHalf : []};
+            }
+
+            var index = Math.floor(list.length / 2);
+            return {leftHalf : list.slice(0, index), rigthHalf : list.slice(index)};
+        }
+          
+        public static jointLists(list1, list2, compare){
+          
+            // getting the biggest array
+            var iterator = list1.length > list2.length ? list1.length : list2.length;
+          
+            // defining auxiliar variables
+            var result = [];
+            var index1 = 0;
+            var index2 = 0;
+          
+            // sortering previously ordered arrays
+            while (true){
+                if (compare(list1[index1], list2[index2])){
+                    result.push(list1[index1]);
+                    index1++;
+                } else {
+                    result.push(list2[index2]);
+                    index2++;
+                }
+                if (index1 === list1.length || index2 === list2.length) {
+                    break;
+                }
+            }
+          
+            // some of the array still have elements that are not listed on the result arrays,
+            // since this elements have a biggest value (according to the compare function)
+            // we can just push this elements at the very end of the result
+            if (index1 < list1.length) {
+                return result.concat(list1.slice(index1));
+            }
+            if (index2 < list2.length) {
+                return result.concat(list2.slice(index2));
+            }
+            return result;
+        }
+
+        public static mergesort (list, compare) {
+  
+            // Set a default compare function 
+            var compare = compare;
+            if (!compare) {
+                compare = function (x, y) {return x < y};
+            }
+          
+            // breaking recursive call
+            if (list.length <= 1) {
+                return list;
+            }
+          
+            var leftHalf, rigthHalf;
+            var splitingResult = MathUtils.splitList(list);
+            leftHalf = splitingResult.leftHalf;
+            rigthHalf = splitingResult.rigthHalf;
+          
+            // Recursive call.
+            // Passing the compare function to recursive calls to prevent the creation of unnecessary
+            // functions on each call.
+            return MathUtils.jointLists(MathUtils.mergesort(leftHalf, compare), MathUtils.mergesort(rigthHalf, compare), compare);
+          }
     }
 }
 

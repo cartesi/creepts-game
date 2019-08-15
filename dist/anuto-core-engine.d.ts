@@ -94,7 +94,7 @@ declare module Anuto {
     class Engine {
         static currentInstance: Engine;
         waveActivated: boolean;
-        private turrets;
+        turrets: Turret[];
         private bullets;
         private glueBullets;
         private mortars;
@@ -486,5 +486,11 @@ declare module Anuto {
         }, r: number): boolean;
         static isPointInLineSegment(x1: number, y1: number, x2: number, y2: number, px: number, py: number): boolean;
         static isPointInsideCircle(x: number, y: number, cx: number, cy: number, r: number): boolean;
+        static splitList(list: any): {
+            leftHalf: any;
+            rigthHalf: any;
+        };
+        static jointLists(list1: any, list2: any, compare: any): any[];
+        static mergesort(list: any, compare: any): any;
     }
 }
