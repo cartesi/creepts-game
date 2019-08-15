@@ -3,11 +3,14 @@ declare interface GameData {
 }
 
 declare interface LogsObject {
+    actions: Action[];
+}
+
+declare interface LevelObject {
     gameConfig: Anuto.Types.GameConfig;
     enemiesData: any;
     turretsData: any;
     wavesData: any;
-    actions: Action[];
 }
 
 declare interface Action {

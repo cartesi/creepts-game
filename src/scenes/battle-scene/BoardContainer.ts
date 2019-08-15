@@ -152,6 +152,13 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }); 
     }
 
+    public updateTurretMenu(): void {
+
+        if (this.turretMenu) {
+            this.turretMenu.checkAndUpdateInfo();
+        }
+    }
+
     public addEnemy(anutoEnemy: Anuto.Enemy, position: {r: number, c: number}): void {
 
         let enemyActor: EnemyActor = null;
@@ -246,7 +253,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.actorsContainer.add(turret);
         this.turretActors.push(turret);
 
-        BattleScene.currentInstance.gui.updateTurretButtons();
+        BattleScene.currentInstance.updateTurretButtons();
     }
 
     public removeTurret(anutoTurret: Anuto.Turret): void {
@@ -417,7 +424,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
             this.deadEnemyActors.push(enemyActor);
         }
 
-        BattleScene.currentInstance.gui.updateTurretButtons();
+        BattleScene.currentInstance.updateTurretButtons();
     }
 
     public teleportEnemy(anutoEnemy: Anuto.Enemy, anutoGlueTurret: Anuto.GlueTurret): void {
@@ -622,6 +629,12 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         this.gameOverLayer = new GameOverLayer(this.scene);
         this.add(this.gameOverLayer);
+
+        this.hideTurretMenu();
+
+        if (this.pauseMenu) {
+            this.hidePauseMenu();
+        }
     }
 
     public showRoundCompletedLayer(): void {

@@ -235,14 +235,14 @@ export class TurretMenu extends Phaser.GameObjects.Container {
         sellBck.strokeRect(-width / 2 - 5, -height / 2 - 5, width + 10, height + 10);
         this.sellButton.add(sellBck);
 
-        this.sellText = new Phaser.GameObjects.Text(this.scene, 0, 0, "SELL (" + GameVars.formatNumber(anutoTurret.value) + ")" , {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+        this.sellText = new Phaser.GameObjects.Text(this.scene, 0, 0, "SELL (" + GameVars.formatNumber(anutoTurret.sellValue) + ")" , {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
         this.sellText.setOrigin(.5);
         this.sellButton.add(this.sellText);
 
         this.checkAndUpdateInfo();
     }
 
-    private checkAndUpdateInfo(): void {
+    public checkAndUpdateInfo(): void {
 
         if (this.anutoTurret.type === Anuto.GameConstants.TURRET_GLUE) {
 
@@ -273,7 +273,7 @@ export class TurretMenu extends Phaser.GameObjects.Container {
 
         this.levelUpText.setText("LEVEL UP (" + GameVars.formatNumber(this.anutoTurret.priceImprovement) + ")" );
         this.upgradeText.setText("UPGRADE (" + GameVars.formatNumber(this.anutoTurret.priceUpgrade) + ")" );
-        this.sellText.setText("SELL (" + GameVars.formatNumber(this.anutoTurret.value) + ")" );
+        this.sellText.setText("SELL (" + GameVars.formatNumber(this.anutoTurret.sellValue) + ")" );
 
         // desactivar botones no necesarios
 

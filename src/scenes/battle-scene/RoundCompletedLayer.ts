@@ -16,7 +16,7 @@ export class RoundCompletedLayer extends Phaser.GameObjects.Container {
         bck.alpha = .75;
         this.add(bck);
 
-        let score = new Phaser.GameObjects.Text(this.scene, 0, 0, "ROUND " + BattleManager.anutoEngine.round + " COMPLETED", {fontFamily: "Rubik-Regular", fontSize: "55px", color: "#FFFFFF"});
+        let score = new Phaser.GameObjects.Text(this.scene, 0, 0, "ROUND  " + BattleManager.anutoEngine.round + "  COMPLETED", {fontFamily: "Rubik-Regular", fontSize: "52px", color: "#FFFFFF"});
         score.setOrigin(.5);
         this.add(score);
 

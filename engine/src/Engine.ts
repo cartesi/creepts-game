@@ -141,14 +141,17 @@ module Anuto {
                 return;
             }
 
+            // Esto esta comentado ya que las minas se pueden poner aunque las rondas no esten en marcha y los tiempos de recarga tienen que completarse por lo que el motor tiene que seguir funcionando
             // if (!this.waveActivated) {
-            //     GameVars.ticksCounter ++;
             //     return;
             // }
 
             if (GameVars.lifes <= 0 && !GameVars.gameOver) {
                 this.eventDispatcher.dispatchEvent(new Event(Event.GAME_OVER));
                 GameVars.gameOver = true;
+
+                console.log("TICKS: " + GameVars.ticksCounter);
+                console.log("SCORE: " + GameVars.score);
             }
 
             if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
@@ -311,7 +314,7 @@ module Anuto {
                 this.turrets.splice(i, 1);
             }
 
-            GameVars.credits += turret.value;
+            GameVars.credits += turret.sellValue;
             turret.destroy();
 
             return true;
@@ -490,19 +493,21 @@ module Anuto {
                 const bullet = this.bullets[i];
                 const enemy = this.bullets[i].assignedEnemy;
 
-                if (enemy.life === 0) {
-                    this.bulletsColliding.push(bullet);
-                } else {
-                    const bp1 = {x: bullet.x, y: bullet.y};
-                    const bp2 = bullet.getPositionNextTick();
-                    const enemyPosition = {x: enemy.x, y: enemy.y};
-
-                    const enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
-
-                    if (enemyHit) {
+                if (enemy) {
+                    if (enemy.life === 0) {
                         this.bulletsColliding.push(bullet);
-                    }
-                } 
+                    } else {
+                        const bp1 = {x: bullet.x, y: bullet.y};
+                        const bp2 = bullet.getPositionNextTick();
+                        const enemyPosition = {x: enemy.x, y: enemy.y};
+    
+                        const enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
+    
+                        if (enemyHit) {
+                            this.bulletsColliding.push(bullet);
+                        }
+                    } 
+                }
             } 
 
             for (let i = 0; i < this.glueBullets.length; i ++) {
@@ -510,15 +515,17 @@ module Anuto {
                 const bullet = this.glueBullets[i];
                 const enemy = this.glueBullets[i].assignedEnemy;
 
-                const bp1 = {x: bullet.x, y: bullet.y};
-                const bp2 = bullet.getPositionNextTick();
-                const enemyPosition = {x: enemy.x, y: enemy.y};
+                if (enemy) {
+                    const bp1 = {x: bullet.x, y: bullet.y};
+                    const bp2 = bullet.getPositionNextTick();
+                    const enemyPosition = {x: enemy.x, y: enemy.y};
 
-                const enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
+                    const enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
 
-                if (enemyHit) {
-                    this.glueBulletsColliding.push(bullet);
-                } 
+                    if (enemyHit) {
+                        this.glueBulletsColliding.push(bullet);
+                    } 
+                }
             } 
 
             for (let i = 0; i < this.mortars.length; i ++) {

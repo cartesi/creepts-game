@@ -7,6 +7,7 @@ declare module Anuto {
 declare module Anuto {
     class Turret {
         static id: number;
+        static downgradePercent: number;
         id: number;
         creationTick: number;
         type: string;
@@ -22,6 +23,7 @@ declare module Anuto {
         priceImprovement: number;
         priceUpgrade: number;
         value: number;
+        sellValue: number;
         position: {
             r: number;
             c: number;

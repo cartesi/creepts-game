@@ -42,7 +42,7 @@ var Anuto;
                         default:
                     }
                     // cada ronda que pasa los enemigos tienen mas vida
-                    var extraLife = enemy.life * Anuto.MathUtils.fixNumber(Anuto.GameVars.round / 10);
+                    var extraLife = Math.round(enemy.life * (Anuto.GameVars.round / 10));
                     enemy.life += extraLife;
                     enemy.maxLife = enemy.life;
                     Anuto.GameVars.waveEnemies.shift();
@@ -77,6 +77,7 @@ var Anuto;
             this.x = this.position.c + .5;
             this.y = this.position.r + .5;
             this.value = Anuto.GameVars.turretData[this.type].price;
+            this.sellValue = Math.round(Anuto.GameVars.turretData[this.type].price * Turret.downgradePercent);
         }
         Turret.prototype.destroy = function () {
             //
@@ -98,7 +99,7 @@ var Anuto;
             }
             else {
                 this.f++;
-                if (this.f === this.reloadTicks) {
+                if (this.f >= this.reloadTicks) {
                     this.readyToShoot = true;
                     this.f = 0;
                 }
@@ -106,16 +107,19 @@ var Anuto;
         };
         Turret.prototype.improve = function () {
             this.value += this.priceImprovement;
+            this.sellValue += Math.round(this.priceImprovement * Turret.downgradePercent);
             this.level++;
             this.calculateTurretParameters();
         };
         Turret.prototype.upgrade = function () {
             this.value += this.priceUpgrade;
+            this.sellValue += Math.round(this.priceUpgrade * Turret.downgradePercent);
             this.grade++;
             this.level = 1;
             if (this.grade === 3 && this.type !== Anuto.GameConstants.TURRET_GLUE) {
                 this.maxLevel = 15;
             }
+            this.f = 0;
             this.calculateTurretParameters();
         };
         Turret.prototype.setNextStrategy = function () {
@@ -136,9 +140,6 @@ var Anuto;
             var squaredRange = Anuto.MathUtils.fixNumber(this.range * this.range);
             for (var i = 0; i < Anuto.GameVars.enemies.length; i++) {
                 var enemy = Anuto.GameVars.enemies[i];
-                if (this.type === Anuto.GameConstants.TURRET_GLUE && this.grade !== 3 && enemy.type === Anuto.GameConstants.ENEMY_FLIER) {
-                    continue;
-                }
                 if (enemy.life > 0 && enemy.l < Anuto.GameVars.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
                     var dx = this.x - enemy.x;
                     var dy = this.y - enemy.y;
@@ -175,6 +176,7 @@ var Anuto;
             }
             return enemies;
         };
+        Turret.downgradePercent = .9;
         return Turret;
     }());
     Anuto.Turret = Turret;
@@ -388,13 +390,15 @@ var Anuto;
             if (Anuto.GameVars.paused || Anuto.GameVars.gameOver) {
                 return;
             }
+            // Esto esta comentado ya que las minas se pueden poner aunque las rondas no esten en marcha y los tiempos de recarga tienen que completarse por lo que el motor tiene que seguir funcionando
             // if (!this.waveActivated) {
-            //     GameVars.ticksCounter ++;
             //     return;
             // }
             if (Anuto.GameVars.lifes <= 0 && !Anuto.GameVars.gameOver) {
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.GAME_OVER));
                 Anuto.GameVars.gameOver = true;
+                console.log("TICKS: " + Anuto.GameVars.ticksCounter);
+                console.log("SCORE: " + Anuto.GameVars.score);
             }
             if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
                 this.waveActivated = false;
@@ -509,7 +513,7 @@ var Anuto;
             if (i !== -1) {
                 this.turrets.splice(i, 1);
             }
-            Anuto.GameVars.credits += turret.value;
+            Anuto.GameVars.credits += turret.sellValue;
             turret.destroy();
             return true;
         };
@@ -625,28 +629,32 @@ var Anuto;
             for (var i = 0; i < this.bullets.length; i++) {
                 var bullet = this.bullets[i];
                 var enemy = this.bullets[i].assignedEnemy;
-                if (enemy.life === 0) {
-                    this.bulletsColliding.push(bullet);
-                }
-                else {
-                    var bp1 = { x: bullet.x, y: bullet.y };
-                    var bp2 = bullet.getPositionNextTick();
-                    var enemyPosition = { x: enemy.x, y: enemy.y };
-                    var enemyHit = Anuto.MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
-                    if (enemyHit) {
+                if (enemy) {
+                    if (enemy.life === 0) {
                         this.bulletsColliding.push(bullet);
+                    }
+                    else {
+                        var bp1 = { x: bullet.x, y: bullet.y };
+                        var bp2 = bullet.getPositionNextTick();
+                        var enemyPosition = { x: enemy.x, y: enemy.y };
+                        var enemyHit = Anuto.MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
+                        if (enemyHit) {
+                            this.bulletsColliding.push(bullet);
+                        }
                     }
                 }
             }
             for (var i = 0; i < this.glueBullets.length; i++) {
                 var bullet = this.glueBullets[i];
                 var enemy = this.glueBullets[i].assignedEnemy;
-                var bp1 = { x: bullet.x, y: bullet.y };
-                var bp2 = bullet.getPositionNextTick();
-                var enemyPosition = { x: enemy.x, y: enemy.y };
-                var enemyHit = Anuto.MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
-                if (enemyHit) {
-                    this.glueBulletsColliding.push(bullet);
+                if (enemy) {
+                    var bp1 = { x: bullet.x, y: bullet.y };
+                    var bp2 = bullet.getPositionNextTick();
+                    var enemyPosition = { x: enemy.x, y: enemy.y };
+                    var enemyHit = Anuto.MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
+                    if (enemyHit) {
+                        this.glueBulletsColliding.push(bullet);
+                    }
                 }
             }
             for (var i = 0; i < this.mortars.length; i++) {
@@ -1513,6 +1521,9 @@ var Anuto;
                 for (var i = 0; i < Anuto.GameVars.enemies.length; i++) {
                     var enemy = Anuto.GameVars.enemies[i];
                     var distance = Anuto.MathUtils.fixNumber(Math.sqrt((enemy.x - this.x) * (enemy.x - this.x) + (enemy.y - this.y) * (enemy.y - this.y)));
+                    if (enemy.type === Anuto.GameConstants.ENEMY_FLIER) {
+                        continue;
+                    }
                     if (distance <= this.range) {
                         this.detonate = true;
                         break;

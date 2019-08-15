@@ -30,11 +30,15 @@ export class BattleManager {
         GameVars.wavesData = wavesData.waves;
 
         GameVars.logsObject = {
+            actions: []
+        };
+
+
+        GameVars.levelObject = {
             gameConfig: gameConfig,
             enemiesData: GameVars.enemiesData,
             turretsData: GameVars.turretsData,
-            wavesData: GameVars.wavesData,
-            actions: []
+            wavesData: GameVars.wavesData
         };
 
         GameVars.timeStepFactor = 1;
@@ -131,7 +135,7 @@ export class BattleManager {
             BattleManager.addAction(action);
 
             BoardContainer.currentInstance.removeTurret(turret);
-            BattleScene.currentInstance.gui.updateTurretButtons();
+            BattleScene.currentInstance.updateTurretButtons();
         }
     }
 
@@ -149,7 +153,7 @@ export class BattleManager {
             BattleManager.addAction(action);
 
             BoardContainer.currentInstance.improveTurret(id);
-            BattleScene.currentInstance.gui.updateTurretButtons();
+            BattleScene.currentInstance.updateTurretButtons();
         }
     }
 
@@ -163,7 +167,7 @@ export class BattleManager {
             BattleManager.addAction(action);
 
             BoardContainer.currentInstance.upgradeTurret(id);
-            BattleScene.currentInstance.gui.updateTurretButtons();
+            BattleScene.currentInstance.updateTurretButtons();
         }
     }
 
@@ -307,6 +311,30 @@ export class BattleManager {
         
         BoardContainer.currentInstance.showGameOverLayer();
 
-        console.log(JSON.stringify(GameVars.logsObject));
+        if (GameConstants.DEVELOPMENT) {
+            let data = JSON.stringify(GameVars.logsObject);
+            let bl = new Blob([data], {
+                type: "text/html"
+            });
+            let a = document.createElement("a");
+            a.href = URL.createObjectURL(bl);
+            a.download = "log.json";
+            a.hidden = true;
+            document.body.appendChild(a);
+            a.innerHTML = "someinnerhtml";
+            a.click();
+
+            let data2 = JSON.stringify(GameVars.levelObject);
+            let bl2 = new Blob([data2], {
+                type: "text/html"
+            });
+            let a2 = document.createElement("a");
+            a2.href = URL.createObjectURL(bl2);
+            a2.download = "level.json";
+            a2.hidden = true;
+            document.body.appendChild(a2);
+            a2.innerHTML = "someinnerhtml";
+            a2.click();
+        } 
     }
 }

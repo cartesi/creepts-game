@@ -11,7 +11,7 @@ export class GameOverLayer extends Phaser.GameObjects.Container {
 
         const bck = new Phaser.GameObjects.Graphics(this.scene);
         bck.fillStyle(0x000000);
-        bck.fillRect(-GameConstants.GAME_WIDTH / 2, -100, GameConstants.GAME_WIDTH, 200);
+        bck.fillRect(-GameConstants.GAME_WIDTH / 2, -100, GameConstants.GAME_WIDTH, 275);
         bck.alpha = .75;
         this.add(bck);
 
@@ -31,6 +31,28 @@ export class GameOverLayer extends Phaser.GameObjects.Container {
         score.setOrigin(.5);
         this.add(score);
 
+        let width = 350;
+        let height = 40;
+
+        let restartButton = new Phaser.GameObjects.Container(this.scene);
+        restartButton.setPosition(0, 125);
+        restartButton.setInteractive(new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height), Phaser.Geom.Rectangle.Contains);
+        restartButton.on("pointerover", () => { this.onBtnOver(restartButton); });
+        restartButton.on("pointerout", () => { this.onBtnOut(restartButton); });
+        restartButton.on("pointerdown", () => { this.onClickRestart(); });
+        this.add(restartButton);
+
+        const restartBck = new Phaser.GameObjects.Graphics(this.scene);
+        restartBck.fillStyle(0xFFFFFF);
+        restartBck.fillRect(-width / 2, -height / 2, width, height);
+        restartBck.lineStyle(2, 0xFFFFFF);
+        restartBck.strokeRect(-width / 2 - 5, -height / 2 - 5, width + 10, height + 10);
+        restartButton.add(restartBck);
+
+        const restartText = new Phaser.GameObjects.Text(this.scene, 0, 0, "RESTART", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+        restartText.setOrigin(.5);
+        restartButton.add(restartText);
+
         this.alpha = 0;
 
         this.scene.tweens.add({
@@ -39,5 +61,24 @@ export class GameOverLayer extends Phaser.GameObjects.Container {
             ease: Phaser.Math.Easing.Cubic.Out,
             duration: 500
         });
+    }
+
+    private onBtnOver(btn: Phaser.GameObjects.Container): void {
+
+        if (btn.alpha === 1) {
+            btn.setScale(1.025);
+        }
+    }
+
+    private onBtnOut(btn: Phaser.GameObjects.Container): void {
+        
+        if (btn.alpha === 1) {
+            btn.setScale(1);
+        }
+    }
+
+    private onClickRestart(): void {
+
+        GameManager.reset();
     }
 }

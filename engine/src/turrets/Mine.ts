@@ -42,6 +42,10 @@ module Anuto {
 
                     const enemy = GameVars.enemies[i];
                     const distance = MathUtils.fixNumber(Math.sqrt((enemy.x - this.x) *  (enemy.x - this.x) + (enemy.y - this.y) *  (enemy.y - this.y)));
+
+                    if (enemy.type === GameConstants.ENEMY_FLIER) {
+                        continue;
+                    }
     
                     if (distance <= this.range) {
                         this.detonate = true;

@@ -52,4 +52,10 @@ export class BattleScene extends Phaser.Scene {
         this.boardContainer.hideTurretMenu();
         this.boardContainer.hideRangeCircles();
     }
+
+    public updateTurretButtons(): void {
+
+        this.gui.updateTurretButtons();
+        this.boardContainer.updateTurretMenu();
+    }
 }

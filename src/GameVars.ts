@@ -13,6 +13,7 @@ export class GameVars {
     public static enemiesPathCells: {r: number, c: number} [];
 
     public static logsObject: LogsObject;
+    public static levelObject: LevelObject;
    
     public static formatTime(timeInSeconds: number): { str: string, h: string, m: string, s: string } {
 

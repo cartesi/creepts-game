@@ -13,8 +13,8 @@ export class BulletActor extends Phaser.GameObjects.Image {
 
         this.anutoBullet = anutoBullet;
 
-        this.setScale(1);
-        this.setOrigin(.5, 1);
+        this.setScale(.75);
+        this.setOrigin(.5, 0);
         this.visible = false;
 
         this.x = this.anutoBullet.x * GameConstants.CELLS_SIZE;

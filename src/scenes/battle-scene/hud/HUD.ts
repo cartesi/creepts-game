@@ -66,7 +66,7 @@ export class HUD extends Phaser.GameObjects.Container {
 
         this.creditsLabel.text = GameVars.formatNumber(BattleManager.anutoEngine.credits);
 
-        if (this.ticksLabel) {
+        if (this.ticksLabel && !BattleManager.anutoEngine.gameOver) {
             this.ticksLabel.text = "ticks: " + BattleManager.anutoEngine.ticksCounter;
         }
     }

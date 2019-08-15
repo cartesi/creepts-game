@@ -30,13 +30,13 @@ export class PreloadScene extends Phaser.Scene {
     
     private composeScene(): void {
 
-        const loadingLabel = this.add.text(4, GameConstants.GAME_HEIGHT - 10, " LOADING...", {fontFamily: "Rubik-Regular", fontSize: "20px", color: "#FFFFFF"});
+        const loadingLabel = this.add.text(4, GameConstants.GAME_HEIGHT - 15, " LOADING...", {fontFamily: "Rubik-Regular", fontSize: "40px", color: "#FFFFFF"});
         loadingLabel.setOrigin(0, 1);
         loadingLabel.scaleY = GameVars.scaleY;
 
         this.progressBar = this.add.graphics();
         this.progressBar.fillStyle(0xFFFFFF);
-        this.progressBar.fillRect(0, GameConstants.GAME_HEIGHT - 6, GameConstants.GAME_WIDTH, 6);
+        this.progressBar.fillRect(0, GameConstants.GAME_HEIGHT - 10, GameConstants.GAME_WIDTH, 10);
         this.progressBar.scaleX = 0;
     }
 

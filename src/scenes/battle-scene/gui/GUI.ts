@@ -117,6 +117,10 @@ export class GUI extends Phaser.GameObjects.Container {
 
     private onClickMenu(): void {
 
+        if (BattleManager.anutoEngine.gameOver) {
+            return;
+        }
+
         BattleManager.onClickMenu();
     }
 

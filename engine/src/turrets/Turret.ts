@@ -3,6 +3,7 @@ module Anuto {
     export class Turret {
 
         public static id: number;
+        public static downgradePercent: number = .9;
 
         public id: number;
         public creationTick: number;
@@ -19,6 +20,7 @@ module Anuto {
         public priceImprovement: number;
         public priceUpgrade: number;
         public value: number;
+        public sellValue: number;
         public position: {r: number, c: number};
         public shootingStrategy: string;
         public shootingStrategyIndex: number;
@@ -57,6 +59,7 @@ module Anuto {
             this.y = this.position.r + .5;
 
             this.value = GameVars.turretData[this.type].price;
+            this.sellValue = Math.round(GameVars.turretData[this.type].price * Turret.downgradePercent);
         }
 
         public destroy(): void {
@@ -84,7 +87,7 @@ module Anuto {
 
                 this.f ++;
 
-                if (this.f === this.reloadTicks) {
+                if (this.f >= this.reloadTicks) {
                     this.readyToShoot = true;
                     this.f = 0;
                 }
@@ -94,6 +97,7 @@ module Anuto {
         public improve(): void {
 
             this.value += this.priceImprovement;
+            this.sellValue += Math.round(this.priceImprovement * Turret.downgradePercent);
 
             this.level ++;
             this.calculateTurretParameters();                                                                                                                                        
@@ -102,6 +106,7 @@ module Anuto {
         public upgrade(): void {
 
             this.value += this.priceUpgrade;
+            this.sellValue += Math.round(this.priceUpgrade * Turret.downgradePercent);
 
             this.grade ++;
             this.level = 1;
@@ -109,6 +114,8 @@ module Anuto {
             if (this.grade === 3 && this.type !== GameConstants.TURRET_GLUE) {
                 this.maxLevel = 15;
             }
+
+            this.f = 0;
             
             this.calculateTurretParameters();
         }
@@ -141,10 +148,6 @@ module Anuto {
             for (let i = 0; i < GameVars.enemies.length; i ++) {
 
                 const enemy = GameVars.enemies[i];
-
-                if (this.type === GameConstants.TURRET_GLUE && this.grade !== 3 && enemy.type === GameConstants.ENEMY_FLIER) {
-                    continue;
-                }
 
                 if (enemy.life > 0 && enemy.l < GameVars.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
 
