@@ -21,22 +21,28 @@ export class TurretSelected extends Phaser.GameObjects.Container {
         this.typeTurret = type;
         this.gui = gui;
 
+        let range = GameConstants.CELLS_SIZE;
+
         switch (type) {
 
             case Anuto.GameConstants.TURRET_PROJECTILE:
                 base_name = "base_1_1";
                 canon_name = "canon_1_1_1";
+                range *= 2.5;
                 break;
             case Anuto.GameConstants.TURRET_LASER:
                 base_name = "base_2_1";
                 canon_name = "canon_2_1_1";
+                range *= 3.05;
                 break;
             case Anuto.GameConstants.TURRET_LAUNCH:
                 base_name = "base_4_1";
                 canon_name = "canon_4_1_3";
+                range *= 2.5;
                 break;
             case Anuto.GameConstants.TURRET_GLUE:
                 base_name = "base_3_1";
+                range *= 1.5;
                 break;
             default:
         }
@@ -48,6 +54,12 @@ export class TurretSelected extends Phaser.GameObjects.Container {
             this.canon = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", canon_name);
             this.add(this.canon);
         }
+
+        let rangeCircle = new Phaser.GameObjects.Graphics(this.scene);
+        rangeCircle.setPosition(0, 0);
+        rangeCircle.lineStyle(2, 0x00FF00);
+        rangeCircle.strokeCircle(0, 0, range);
+        this.add(rangeCircle);
 
         this.scene.sys.updateList.add(this);
 

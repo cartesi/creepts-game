@@ -39,7 +39,7 @@ export class GUI extends Phaser.GameObjects.Container {
         menuBck.fillRect(-55, -30, 110, 60);
         this.menuButton.add(menuBck);
 
-        const menuText = new Phaser.GameObjects.Text(this.scene, 0, 0, "PAUSE" , {fontFamily: "Rubik-Regular", fontSize: "28px", color: "#FFFFFF"});
+        const menuText = new Phaser.GameObjects.Text(this.scene, 0, 0, "MENU" , {fontFamily: "Rubik-Regular", fontSize: "28px", color: "#FFFFFF"});
         menuText.setOrigin(.5);
         this.menuButton.add(menuText);
 
