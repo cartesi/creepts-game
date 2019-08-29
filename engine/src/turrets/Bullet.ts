@@ -10,7 +10,6 @@ module Anuto {
         public assignedEnemy: Enemy;
         public damage: number;
         public canonShoot: string;
-
         public turret: ProjectileTurret;
 
         private vx: number;

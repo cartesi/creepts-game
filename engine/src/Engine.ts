@@ -147,6 +147,7 @@ module Anuto {
             // }
 
             if (GameVars.lifes <= 0 && !GameVars.gameOver) {
+
                 this.eventDispatcher.dispatchEvent(new Event(Event.GAME_OVER));
                 GameVars.gameOver = true;
 
@@ -251,8 +252,6 @@ module Anuto {
             }
 
             enemy.destroy();
-
-
         }
 
         public addTurret(type: string, p: {r: number, c: number}): Turret {

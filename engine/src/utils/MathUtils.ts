@@ -1,7 +1,5 @@
 module Anuto {
 
-    // http://www.jeffreythompson.org/collision-detection/line-circle.php
-
     export class MathUtils {
 
         public static fixNumber(n: number): number {
@@ -74,22 +72,22 @@ module Anuto {
             }
         }
 
-        public static splitList(list){
+        public static splitList(list: any[]): {leftHalf: any[], rigthHalf: any[]} {
+
             if (list.length === 0) {
                 return {leftHalf : [], rigthHalf: []};
             }
+
             if (list.length === 1) {
                 return {leftHalf : list , rigthHalf : []};
             }
 
-            var index = Math.floor(list.length / 2);
+            const index = Math.floor(list.length / 2);
+
             return {leftHalf : list.slice(0, index), rigthHalf : list.slice(index)};
         }
           
-        public static jointLists(list1, list2, compare){
-          
-            // getting the biggest array
-            var iterator = list1.length > list2.length ? list1.length : list2.length;
+        public static jointLists(list1: any[], list2: any[], compare: Function): any[] {
           
             // defining auxiliar variables
             var result = [];
@@ -119,15 +117,17 @@ module Anuto {
             if (index2 < list2.length) {
                 return result.concat(list2.slice(index2));
             }
+            
             return result;
         }
 
-        public static mergesort (list, compare) {
+        public static mergeSort(list: any[], compare): any[] {
   
             // Set a default compare function 
-            var compare = compare;
             if (!compare) {
-                compare = function (x, y) {return x < y};
+                compare = function (x: number, y: number) {
+                    return x < y; 
+                };
             }
           
             // breaking recursive call
@@ -135,15 +135,17 @@ module Anuto {
                 return list;
             }
           
-            var leftHalf, rigthHalf;
-            var splitingResult = MathUtils.splitList(list);
+            let leftHalf: any[];
+            let rigthHalf: any[];
+
+            const splitingResult = MathUtils.splitList(list);
             leftHalf = splitingResult.leftHalf;
             rigthHalf = splitingResult.rigthHalf;
           
             // Recursive call.
             // Passing the compare function to recursive calls to prevent the creation of unnecessary
             // functions on each call.
-            return MathUtils.jointLists(MathUtils.mergesort(leftHalf, compare), MathUtils.mergesort(rigthHalf, compare), compare);
+            return MathUtils.jointLists(MathUtils.mergeSort(leftHalf, compare), MathUtils.mergeSort(rigthHalf, compare), compare);
           }
     }
 }
