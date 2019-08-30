@@ -1,6 +1,7 @@
 declare module Anuto {
     class EnemiesSpawner {
-        constructor();
+        private engine;
+        constructor(engine: Engine);
         getEnemy(): Enemy;
     }
 }
@@ -37,10 +38,11 @@ declare module Anuto {
         protected f: number;
         protected reloadTicks: number;
         protected readyToShoot: boolean;
+        protected engine: Engine;
         constructor(type: string, p: {
             r: number;
             c: number;
-        });
+        }, engine: Engine);
         destroy(): void;
         update(): void;
         improve(): void;
@@ -76,7 +78,8 @@ declare module Anuto {
         teleporting: boolean;
         protected enemyData: any;
         protected t: number;
-        constructor(type: string, creationTick: number);
+        protected engine: Engine;
+        constructor(type: string, creationTick: number, engine: Engine);
         destroy(): void;
         update(): void;
         teleport(teleportDistance: number): void;
@@ -92,7 +95,6 @@ declare module Anuto {
 }
 declare module Anuto {
     class Engine {
-        static currentInstance: Engine;
         waveActivated: boolean;
         turrets: Turret[];
         private bullets;
@@ -246,7 +248,7 @@ declare module Anuto {
     class HealerEnemy extends Enemy {
         healing: boolean;
         private f;
-        constructor(creationTick: number);
+        constructor(creationTick: number, engine: Engine);
         update(): void;
         private heal;
     }
@@ -362,7 +364,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        });
+        }, engine: Engine);
         protected calculateTurretParameters(): void;
         protected shoot(): void;
     }
@@ -372,7 +374,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        });
+        }, engine: Engine);
         update(): void;
         protected calculateTurretParameters(): void;
         protected getEnemiesWithinLine(enemy: Enemy): Enemy[];
@@ -399,7 +401,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        });
+        }, engine: any);
         protected calculateTurretParameters(): void;
         protected getPathCellsInRange(): {
             r: number;
@@ -465,7 +467,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        });
+        }, engine: Engine);
         update(): void;
         protected calculateTurretParameters(): void;
         protected shoot(): void;
@@ -486,11 +488,11 @@ declare module Anuto {
         }, r: number): boolean;
         static isPointInLineSegment(x1: number, y1: number, x2: number, y2: number, px: number, py: number): boolean;
         static isPointInsideCircle(x: number, y: number, cx: number, cy: number, r: number): boolean;
-        static splitList(list: any): {
-            leftHalf: any;
-            rigthHalf: any;
+        static splitList(list: any[]): {
+            leftHalf: any[];
+            rigthHalf: any[];
         };
-        static jointLists(list1: any, list2: any, compare: any): any[];
-        static mergesort(list: any, compare: any): any;
+        static jointLists(list1: any[], list2: any[], compare: Function): any[];
+        static mergeSort(list: any[], compare: any): any[];
     }
 }

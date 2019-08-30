@@ -26,13 +26,15 @@ module Anuto {
         
         protected enemyData: any;
         protected t: number;
+        protected engine: Engine;
 
-        constructor (type: string, creationTick: number) {
+        constructor (type: string, creationTick: number, engine: Engine) {
             
             this.id = Enemy.id;
             Enemy.id ++;
 
             this.creationTick = creationTick;
+            this.engine = engine;
 
             this.type = type;
             this.enemyData = GameVars.enemyData[this.type];
@@ -105,7 +107,7 @@ module Anuto {
                 this.x = GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].c;
                 this.y = GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].r;
 
-                Engine.currentInstance.onEnemyReachedExit(this);
+                this.engine.onEnemyReachedExit(this);
 
             } else {
 
@@ -164,7 +166,7 @@ module Anuto {
 
             if (this.life <= 0) {
                 this.life = 0;
-                Engine.currentInstance.onEnemyKilled(this);
+                this.engine.onEnemyKilled(this);
             }
         }
 

@@ -6,9 +6,9 @@ module Anuto {
 
         private f: number;
     
-        constructor (creationTick: number) {
+        constructor (creationTick: number, engine: Engine) {
             
-            super(GameConstants.ENEMY_HEALER, creationTick);
+            super(GameConstants.ENEMY_HEALER, creationTick, engine);
 
             // para que no se paren todos en el mismo lugar y al mismo tiempo
             this.f = GameConstants.HEALER_HEALING_TICKS - creationTick % GameConstants.HEALER_HEALING_TICKS;

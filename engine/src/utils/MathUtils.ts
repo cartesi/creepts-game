@@ -87,16 +87,16 @@ module Anuto {
             return {leftHalf : list.slice(0, index), rigthHalf : list.slice(index)};
         }
           
-        public static jointLists(list1: any[], list2: any[], compare: Function): any[] {
+        public static jointLists(list1: any[], list2: any[], compareFunction: Function): any[] {
           
             // defining auxiliar variables
-            var result = [];
-            var index1 = 0;
-            var index2 = 0;
+            const result = [];
+            let index1 = 0;
+            let index2 = 0;
           
             // sortering previously ordered arrays
             while (true){
-                if (compare(list1[index1], list2[index2])){
+                if (compareFunction(list1[index1], list2[index2])){
                     result.push(list1[index1]);
                     index1++;
                 } else {
@@ -121,11 +121,11 @@ module Anuto {
             return result;
         }
 
-        public static mergeSort(list: any[], compare): any[] {
+        public static mergeSort(list: any[], compareFunction?: Function): any[] {
   
             // Set a default compare function 
-            if (!compare) {
-                compare = function (x: number, y: number) {
+            if (!compareFunction) {
+                compareFunction = function (x: number, y: number) {
                     return x < y; 
                 };
             }
@@ -145,7 +145,7 @@ module Anuto {
             // Recursive call.
             // Passing the compare function to recursive calls to prevent the creation of unnecessary
             // functions on each call.
-            return MathUtils.jointLists(MathUtils.mergeSort(leftHalf, compare), MathUtils.mergeSort(rigthHalf, compare), compare);
+            return MathUtils.jointLists(MathUtils.mergeSort(leftHalf, compareFunction), MathUtils.mergeSort(rigthHalf, compareFunction), compareFunction);
           }
     }
 }

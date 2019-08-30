@@ -2,9 +2,9 @@ module Anuto {
 
     export class LaserTurret extends Turret {
 
-        constructor (p: {r: number, c: number}) {
+        constructor (p: {r: number, c: number}, engine: Engine) {
             
-            super(GameConstants.TURRET_LASER, p);
+            super(GameConstants.TURRET_LASER, p, engine);
 
             this.calculateTurretParameters();
         }
@@ -163,7 +163,7 @@ module Anuto {
             }
             
             if (enemies[0].life > 0) {
-                Engine.currentInstance.addLaserRay(this, enemies);
+                this.engine.addLaserRay(this, enemies);
             } else {
                 this.readyToShoot = true;
             }

@@ -11,9 +11,9 @@ module Anuto {
 
         private minesCounter: number;
 
-        constructor (p: {r: number, c: number}) {
+        constructor (p: {r: number, c: number}, engine) {
             
-            super(GameConstants.TURRET_LAUNCH, p);
+            super(GameConstants.TURRET_LAUNCH, p, engine);
 
             this.calculateTurretParameters();
 
@@ -104,7 +104,7 @@ module Anuto {
                     this.shootAngle = MathUtils.fixNumber(Math.atan2(dy, dx));
 
                     const mine = new Mine({c: cell.c, r: cell.r}, this.explosionRange, this.damage, this);
-                    Engine.currentInstance.addMine(mine, this);
+                    this.engine.addMine(mine, this);
 
                 } else {
                     this.readyToShoot = true;
@@ -157,7 +157,7 @@ module Anuto {
                     this.shootAngle =  MathUtils.fixNumber(Math.atan2(dy, dx));
                     const mortar = new Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage, this.grade, this);
         
-                    Engine.currentInstance.addMortar(mortar, this);
+                    this.engine.addMortar(mortar, this);
 
                 } else {
 

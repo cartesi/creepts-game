@@ -5,11 +5,9 @@ module Anuto {
 
     export class Engine {
 
-        public static currentInstance: Engine;
-
         public waveActivated: boolean;
-       
         public turrets: Turret[];
+
         private bullets: Bullet[];
         private glueBullets: GlueBullet[];
         private mortars: Mortar[];
@@ -61,8 +59,6 @@ module Anuto {
      
         constructor (gameConfig: Types.GameConfig, enemyData: any, turretData: any, wavesData: any) {
 
-            Engine.currentInstance = this;
-
             Turret.id = 0;
             Enemy.id = 0;
             Bullet.id = 0;
@@ -91,7 +87,7 @@ module Anuto {
             this.t = 0;
 
             this.eventDispatcher = new EventDispatcher();
-            this.enemiesSpawner = new EnemiesSpawner();
+            this.enemiesSpawner = new EnemiesSpawner(this);
          
             GameVars.ticksCounter = 0;
             GameVars.lastWaveTick = 0;
@@ -108,6 +104,7 @@ module Anuto {
             this.t = Date.now();
 
             GameVars.enemies = [];
+            
             this.bullets = [];
             this.glueBullets = [];
             this.mortars = [];
@@ -274,16 +271,16 @@ module Anuto {
 
             switch (type) {
                 case GameConstants.TURRET_PROJECTILE:
-                    turret = new ProjectileTurret(p);
+                    turret = new ProjectileTurret(p, this);
                     break;
                 case GameConstants.TURRET_LASER:
-                    turret = new LaserTurret(p);
+                    turret = new LaserTurret(p, this);
                     break;
                 case GameConstants.TURRET_LAUNCH:
-                    turret = new LaunchTurret(p);
+                    turret = new LaunchTurret(p, this);
                     break;
                 case GameConstants.TURRET_GLUE:
-                    turret = new GlueTurret(p);
+                    turret = new GlueTurret(p, this);
                     break;
                 default:
             }

@@ -32,14 +32,17 @@ module Anuto {
         protected f: number;
         protected reloadTicks: number;
         protected readyToShoot: boolean;
+        protected engine: Engine;
         
-        constructor (type: string, p: {r: number, c: number}) {
+        constructor (type: string, p: {r: number, c: number}, engine: Engine) {
+
+            this.engine = engine;
 
             this.id = Turret.id;
             Turret.id ++;
 
             this.creationTick = GameVars.ticksCounter;
-
+            
             this.type = type;
             this.f = 0;
             this.level = 1;

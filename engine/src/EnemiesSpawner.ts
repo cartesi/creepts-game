@@ -2,8 +2,11 @@ module Anuto {
 
     export class EnemiesSpawner {
 
-        constructor () {
-            //
+        private engine: Engine;
+
+        constructor (engine: Engine) {
+            
+            this.engine = engine;
         }
 
         public getEnemy(): Enemy {
@@ -21,19 +24,19 @@ module Anuto {
                     switch (nextEnemyData.type) {
 
                         case GameConstants.ENEMY_SOLDIER:
-                            enemy = new Enemy(GameConstants.ENEMY_SOLDIER, GameVars.ticksCounter);
+                            enemy = new Enemy(GameConstants.ENEMY_SOLDIER, GameVars.ticksCounter, this.engine);
                             break;
                         case GameConstants.ENEMY_RUNNER:
-                            enemy = new Enemy(GameConstants.ENEMY_RUNNER, GameVars.ticksCounter);
+                            enemy = new Enemy(GameConstants.ENEMY_RUNNER, GameVars.ticksCounter, this.engine);
                             break;
                         case GameConstants.ENEMY_HEALER:
-                            enemy = new HealerEnemy(GameVars.ticksCounter);
+                            enemy = new HealerEnemy(GameVars.ticksCounter, this.engine);
                             break;
                         case GameConstants.ENEMY_BLOB:
-                            enemy = new Enemy(GameConstants.ENEMY_BLOB, GameVars.ticksCounter);
+                            enemy = new Enemy(GameConstants.ENEMY_BLOB, GameVars.ticksCounter, this.engine);
                             break;
                         case GameConstants.ENEMY_FLIER:
-                            enemy = new Enemy(GameConstants.ENEMY_FLIER, GameVars.ticksCounter);
+                            enemy = new Enemy(GameConstants.ENEMY_FLIER, GameVars.ticksCounter, this.engine);
                             break;
                         default: 
                     }

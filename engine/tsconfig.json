@@ -1,10 +1,10 @@
 {
     "compilerOptions": {
+        "target": "ES5",
+        "module": "amd",
         "outFile": "../dist/anuto-core-engine.js",
         "sourceMap": true,
         "declaration": true,
-        "target": "ES5",
-        "module": "CommonJS",
         "noImplicitAny": false,
         "strict": false,
         "resolveJsonModule": true,

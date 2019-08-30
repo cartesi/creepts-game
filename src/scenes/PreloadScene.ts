@@ -63,8 +63,6 @@ export class PreloadScene extends Phaser.Scene {
         AudioManager.sound = new Howl(json);
     
         AudioManager.sound.on("load", function() {
-
-            console.log("Howl audio loaded.");
             GameManager.setCurrentScene(PreloadScene.currentInstance);
             PreloadScene.currentInstance.scene.setVisible(false);
             GameManager.onGameAssetsLoaded();
