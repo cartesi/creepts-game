@@ -117,6 +117,7 @@ declare module Anuto {
         private allEnemiesSpawned;
         private _credits;
         private _score;
+        private _lifes;
         static getPathPosition(l: number): {
             x: number;
             y: number;
@@ -189,7 +190,6 @@ declare module Anuto {
 }
 declare module Anuto {
     class GameVars {
-        static lifes: number;
         static gameOver: boolean;
         static round: number;
         static timeStep: number;

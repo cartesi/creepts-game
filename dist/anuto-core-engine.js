@@ -326,7 +326,7 @@ var Anuto;
             Anuto.Mine.id = 0;
             Anuto.GameVars.runningInClientSide = gameConfig.runningInClientSide;
             this._credits = gameConfig.credits;
-            Anuto.GameVars.lifes = gameConfig.lifes;
+            this._lifes = gameConfig.lifes;
             Anuto.GameVars.timeStep = gameConfig.timeStep;
             Anuto.GameVars.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
             Anuto.GameVars.paused = false;
@@ -399,7 +399,7 @@ var Anuto;
             // if (!this.waveActivated) {
             //     return;
             // }
-            if (Anuto.GameVars.lifes <= 0 && !Anuto.GameVars.gameOver) {
+            if (this._lifes <= 0 && !Anuto.GameVars.gameOver) {
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.GAME_OVER));
                 Anuto.GameVars.gameOver = true;
                 console.log("TICKS: " + Anuto.GameVars.ticksCounter);
@@ -407,7 +407,7 @@ var Anuto;
             }
             if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
                 this.waveActivated = false;
-                if (Anuto.GameVars.lifes > 0) {
+                if (this._lifes > 0) {
                     this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.WAVE_OVER));
                 }
                 else {
@@ -589,7 +589,7 @@ var Anuto;
                 Anuto.GameVars.enemies.splice(i, 1);
             }
             enemy.destroy();
-            Anuto.GameVars.lifes -= 1;
+            this._lifes -= 1;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_REACHED_EXIT, [enemy]));
             if (Anuto.GameVars.enemies.length === 0 && this.allEnemiesSpawned) {
                 this.onNoEnemiesOnStage();
@@ -864,7 +864,7 @@ var Anuto;
         });
         Object.defineProperty(Engine.prototype, "lifes", {
             get: function () {
-                return Anuto.GameVars.lifes;
+                return this._lifes;
             },
             enumerable: true,
             configurable: true

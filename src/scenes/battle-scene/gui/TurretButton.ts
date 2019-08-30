@@ -66,7 +66,6 @@ export class TurretButton extends Phaser.GameObjects.Container {
         if (this.typeTurret === Anuto.GameConstants.TURRET_GLUE) {
             text.x = 15;
         }
-        
     }
 
     public updateTurret(): void {

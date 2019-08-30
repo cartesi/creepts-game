@@ -30,6 +30,7 @@ module Anuto {
         // variables que antes estaban en GameVars
         private _credits: number;
         private _score: number;
+        private _lifes: number;
 
         public static getPathPosition(l: number): {x: number, y: number} {
 
@@ -72,7 +73,7 @@ module Anuto {
  
             GameVars.runningInClientSide = gameConfig.runningInClientSide;
             this._credits = gameConfig.credits;
-            GameVars.lifes = gameConfig.lifes;
+            this._lifes = gameConfig.lifes;
 
             GameVars.timeStep = gameConfig.timeStep;
             GameVars.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
@@ -147,7 +148,7 @@ module Anuto {
             //     return;
             // }
 
-            if (GameVars.lifes <= 0 && !GameVars.gameOver) {
+            if (this._lifes <= 0 && !GameVars.gameOver) {
 
                 this.eventDispatcher.dispatchEvent(new Event(Event.GAME_OVER));
                 GameVars.gameOver = true;
@@ -159,7 +160,7 @@ module Anuto {
             if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
                 this.waveActivated = false;
 
-                if (GameVars.lifes > 0) {
+                if (this._lifes > 0) {
                     this.eventDispatcher.dispatchEvent(new Event(Event.WAVE_OVER));
                 } else {
                     return;
@@ -425,7 +426,7 @@ module Anuto {
 
             enemy.destroy();
 
-            GameVars.lifes -= 1;
+            this._lifes -= 1;
 
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_REACHED_EXIT, [enemy]));
 
@@ -799,7 +800,7 @@ module Anuto {
 
         public get lifes(): number {
             
-            return GameVars.lifes;
+            return this._lifes;
         }
 
         public get round(): number {

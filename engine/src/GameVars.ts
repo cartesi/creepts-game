@@ -2,7 +2,6 @@ module Anuto {
 
     export class GameVars {
 
-        public static lifes: number;
         public static gameOver: boolean;
         public static round: number;
         public static timeStep: number;
