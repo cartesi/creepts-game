@@ -115,6 +115,8 @@ declare module Anuto {
         private waveEnemiesLength;
         private enemiesSpawned;
         private allEnemiesSpawned;
+        private _credits;
+        private _score;
         static getPathPosition(l: number): {
             x: number;
             y: number;
@@ -150,10 +152,10 @@ declare module Anuto {
         private spawnEnemies;
         private onNoEnemiesOnStage;
         private getTurretById;
+        readonly credits: number;
         readonly ticksCounter: number;
         readonly score: number;
         readonly gameOver: boolean;
-        readonly credits: number;
         readonly lifes: number;
         readonly round: number;
         timeStep: number;
@@ -187,8 +189,6 @@ declare module Anuto {
 }
 declare module Anuto {
     class GameVars {
-        static credits: number;
-        static score: number;
         static lifes: number;
         static gameOver: boolean;
         static round: number;
@@ -492,7 +492,7 @@ declare module Anuto {
             leftHalf: any[];
             rigthHalf: any[];
         };
-        static jointLists(list1: any[], list2: any[], compare: Function): any[];
-        static mergeSort(list: any[], compare: any): any[];
+        static jointLists(list1: any[], list2: any[], compareFunction: Function): any[];
+        static mergeSort(list: any[], compareFunction?: Function): any[];
     }
 }

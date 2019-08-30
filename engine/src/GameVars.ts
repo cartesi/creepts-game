@@ -2,8 +2,6 @@ module Anuto {
 
     export class GameVars {
 
-        public static credits: number;
-        public static score: number;
         public static lifes: number;
         public static gameOver: boolean;
         public static round: number;

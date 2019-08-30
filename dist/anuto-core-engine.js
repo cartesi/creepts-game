@@ -318,7 +318,6 @@ var Anuto;
 (function (Anuto) {
     var Engine = /** @class */ (function () {
         function Engine(gameConfig, enemyData, turretData, wavesData) {
-            console.log("CALAMAR VALIENTE!");
             Anuto.Turret.id = 0;
             Anuto.Enemy.id = 0;
             Anuto.Bullet.id = 0;
@@ -326,7 +325,7 @@ var Anuto;
             Anuto.Glue.id = 0;
             Anuto.Mine.id = 0;
             Anuto.GameVars.runningInClientSide = gameConfig.runningInClientSide;
-            Anuto.GameVars.credits = gameConfig.credits;
+            this._credits = gameConfig.credits;
             Anuto.GameVars.lifes = gameConfig.lifes;
             Anuto.GameVars.timeStep = gameConfig.timeStep;
             Anuto.GameVars.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
@@ -336,7 +335,7 @@ var Anuto;
             Anuto.GameVars.turretData = turretData;
             Anuto.GameVars.wavesData = wavesData;
             Anuto.GameVars.round = 0;
-            Anuto.GameVars.score = 0;
+            this._score = 0;
             Anuto.GameVars.gameOver = false;
             this.waveActivated = false;
             this.t = 0;
@@ -404,7 +403,7 @@ var Anuto;
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.GAME_OVER));
                 Anuto.GameVars.gameOver = true;
                 console.log("TICKS: " + Anuto.GameVars.ticksCounter);
-                console.log("SCORE: " + Anuto.GameVars.score);
+                console.log("SCORE: " + this._score);
             }
             if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
                 this.waveActivated = false;
@@ -503,11 +502,11 @@ var Anuto;
                     break;
                 default:
             }
-            if (Anuto.GameVars.credits < turret.value) {
+            if (this._credits < turret.value) {
                 return null;
             }
             this.turrets.push(turret);
-            Anuto.GameVars.credits -= turret.value;
+            this._credits -= turret.value;
             return turret;
         };
         Engine.prototype.sellTurret = function (id) {
@@ -519,7 +518,7 @@ var Anuto;
             if (i !== -1) {
                 this.turrets.splice(i, 1);
             }
-            Anuto.GameVars.credits += turret.sellValue;
+            this._credits += turret.sellValue;
             turret.destroy();
             return true;
         };
@@ -597,8 +596,8 @@ var Anuto;
             }
         };
         Engine.prototype.onEnemyKilled = function (enemy) {
-            Anuto.GameVars.credits += enemy.value;
-            Anuto.GameVars.score += enemy.value;
+            this._credits += enemy.value;
+            this._score += enemy.value;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_KILLED, [enemy]));
             var i = Anuto.GameVars.enemies.indexOf(enemy);
             if (i !== -1) {
@@ -612,8 +611,8 @@ var Anuto;
         Engine.prototype.improveTurret = function (id) {
             var success = false;
             var turret = this.getTurretById(id);
-            if (turret && turret.level < turret.maxLevel && Anuto.GameVars.credits >= turret.priceImprovement) {
-                Anuto.GameVars.credits -= turret.priceImprovement;
+            if (turret && turret.level < turret.maxLevel && this._credits >= turret.priceImprovement) {
+                this._credits -= turret.priceImprovement;
                 turret.improve();
                 success = true;
             }
@@ -622,8 +621,8 @@ var Anuto;
         Engine.prototype.upgradeTurret = function (id) {
             var success = false;
             var turret = this.getTurretById(id);
-            if (turret && turret.grade < 3 && Anuto.GameVars.credits >= turret.priceUpgrade) {
-                Anuto.GameVars.credits -= turret.priceUpgrade;
+            if (turret && turret.grade < 3 && this._credits >= turret.priceUpgrade) {
+                this._credits -= turret.priceUpgrade;
                 turret.upgrade();
                 success = true;
             }
@@ -834,6 +833,14 @@ var Anuto;
             }
             return turret;
         };
+        Object.defineProperty(Engine.prototype, "credits", {
+            // GETTERS Y SETTERS
+            get: function () {
+                return this._credits;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Engine.prototype, "ticksCounter", {
             get: function () {
                 return Anuto.GameVars.ticksCounter;
@@ -843,7 +850,7 @@ var Anuto;
         });
         Object.defineProperty(Engine.prototype, "score", {
             get: function () {
-                return Anuto.GameVars.score;
+                return this._score;
             },
             enumerable: true,
             configurable: true
@@ -851,13 +858,6 @@ var Anuto;
         Object.defineProperty(Engine.prototype, "gameOver", {
             get: function () {
                 return Anuto.GameVars.gameOver;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Engine.prototype, "credits", {
-            get: function () {
-                return Anuto.GameVars.credits;
             },
             enumerable: true,
             configurable: true
@@ -1777,14 +1777,14 @@ var Anuto;
             var index = Math.floor(list.length / 2);
             return { leftHalf: list.slice(0, index), rigthHalf: list.slice(index) };
         };
-        MathUtils.jointLists = function (list1, list2, compare) {
+        MathUtils.jointLists = function (list1, list2, compareFunction) {
             // defining auxiliar variables
             var result = [];
             var index1 = 0;
             var index2 = 0;
             // sortering previously ordered arrays
             while (true) {
-                if (compare(list1[index1], list2[index2])) {
+                if (compareFunction(list1[index1], list2[index2])) {
                     result.push(list1[index1]);
                     index1++;
                 }
@@ -1807,10 +1807,10 @@ var Anuto;
             }
             return result;
         };
-        MathUtils.mergeSort = function (list, compare) {
+        MathUtils.mergeSort = function (list, compareFunction) {
             // Set a default compare function 
-            if (!compare) {
-                compare = function (x, y) {
+            if (!compareFunction) {
+                compareFunction = function (x, y) {
                     return x < y;
                 };
             }
@@ -1826,7 +1826,7 @@ var Anuto;
             // Recursive call.
             // Passing the compare function to recursive calls to prevent the creation of unnecessary
             // functions on each call.
-            return MathUtils.jointLists(MathUtils.mergeSort(leftHalf, compare), MathUtils.mergeSort(rigthHalf, compare), compare);
+            return MathUtils.jointLists(MathUtils.mergeSort(leftHalf, compareFunction), MathUtils.mergeSort(rigthHalf, compareFunction), compareFunction);
         };
         return MathUtils;
     }());

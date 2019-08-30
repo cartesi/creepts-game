@@ -5276,10 +5276,10 @@ var TurretMenu = /** @class */ (function (_super) {
             this.upgradeText.setText("UPGRADE");
         }
         // si no hay suficientes creditos desactivar botones de level up y upgrade
-        if (Anuto.GameVars.credits < this.anutoTurret.priceImprovement) {
+        if (BattleManager_1.BattleManager.anutoEngine.credits < this.anutoTurret.priceImprovement) {
             this.levelButton.alpha = .5;
         }
-        if (Anuto.GameVars.credits < this.anutoTurret.priceUpgrade) {
+        if (BattleManager_1.BattleManager.anutoEngine.credits < this.anutoTurret.priceUpgrade) {
             this.upgradeButton.alpha = .5;
         }
         // update de la informacion en texto
@@ -6007,7 +6007,7 @@ var TurretButton = /** @class */ (function (_super) {
         return _this;
     }
     TurretButton.prototype.updateTurret = function () {
-        if (Anuto.GameVars.turretData[this.typeTurret].price > Anuto.GameVars.credits) {
+        if (Anuto.GameVars.turretData[this.typeTurret].price > BattleManager_1.BattleManager.anutoEngine.credits) {
             this.alpha = .5;
         }
         else {

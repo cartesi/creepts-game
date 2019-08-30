@@ -5,6 +5,7 @@
         "outFile": "../dist/anuto-core-engine.js",
         "sourceMap": true,
         "declaration": true,
+        "declarationDir": "../types/",
         "noImplicitAny": false,
         "strict": false,
         "resolveJsonModule": true,

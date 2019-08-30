@@ -1,5 +1,5 @@
-import { BattleManager } from './../BattleManager';
-import { GameVars } from '../../../GameVars';
+import { BattleManager } from "./../BattleManager";
+import { GameVars } from "../../../GameVars";
 
 export class TurretButton extends Phaser.GameObjects.Container {
 
@@ -71,7 +71,7 @@ export class TurretButton extends Phaser.GameObjects.Container {
 
     public updateTurret(): void {
 
-        if (Anuto.GameVars.turretData[this.typeTurret].price > Anuto.GameVars.credits) {
+        if (Anuto.GameVars.turretData[this.typeTurret].price > BattleManager.anutoEngine.credits) {
             this.alpha = .5;
         } else {
             this.alpha = 1;

@@ -27,6 +27,10 @@ module Anuto {
         private enemiesSpawned: number;
         private allEnemiesSpawned: boolean;
 
+        // variables que antes estaban en GameVars
+        private _credits: number;
+        private _score: number;
+
         public static getPathPosition(l: number): {x: number, y: number} {
 
             let x: number;
@@ -67,7 +71,7 @@ module Anuto {
             Mine.id = 0;
  
             GameVars.runningInClientSide = gameConfig.runningInClientSide;
-            GameVars.credits = gameConfig.credits;
+            this._credits = gameConfig.credits;
             GameVars.lifes = gameConfig.lifes;
 
             GameVars.timeStep = gameConfig.timeStep;
@@ -80,7 +84,7 @@ module Anuto {
             GameVars.wavesData = wavesData;
 
             GameVars.round = 0;
-            GameVars.score = 0;
+            this._score = 0;
             GameVars.gameOver = false;
             
             this.waveActivated = false;
@@ -149,7 +153,7 @@ module Anuto {
                 GameVars.gameOver = true;
 
                 console.log("TICKS: " + GameVars.ticksCounter);
-                console.log("SCORE: " + GameVars.score);
+                console.log("SCORE: " + this._score);
             }
 
             if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
@@ -285,13 +289,13 @@ module Anuto {
                 default:
             }
 
-            if (GameVars.credits < turret.value) {
+            if (this._credits < turret.value) {
                 return null;
             }
 
             this.turrets.push(turret);
 
-            GameVars.credits -= turret.value;
+            this._credits -= turret.value;
 
             return turret;
         }
@@ -310,7 +314,7 @@ module Anuto {
                 this.turrets.splice(i, 1);
             }
 
-            GameVars.credits += turret.sellValue;
+            this._credits += turret.sellValue;
             turret.destroy();
 
             return true;
@@ -432,8 +436,8 @@ module Anuto {
 
         public onEnemyKilled(enemy: Enemy): void {
 
-            GameVars.credits += enemy.value;
-            GameVars.score += enemy.value;
+            this._credits += enemy.value;
+            this._score += enemy.value;
 
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_KILLED, [enemy]));
 
@@ -456,8 +460,8 @@ module Anuto {
 
             const turret = this.getTurretById(id);
 
-            if (turret && turret.level < turret.maxLevel && GameVars.credits >= turret.priceImprovement) {
-                GameVars.credits -= turret.priceImprovement;
+            if (turret && turret.level < turret.maxLevel && this._credits >= turret.priceImprovement) {
+                this._credits -= turret.priceImprovement;
                 turret.improve();
                 success = true;
             }
@@ -471,8 +475,8 @@ module Anuto {
 
             const turret = this.getTurretById(id);
 
-            if (turret && turret.grade < 3 && GameVars.credits >= turret.priceUpgrade) {
-                GameVars.credits -= turret.priceUpgrade;
+            if (turret && turret.grade < 3 && this._credits >= turret.priceUpgrade) {
+                this._credits -= turret.priceUpgrade;
                 turret.upgrade();
                 success = true;
             }
@@ -772,6 +776,12 @@ module Anuto {
             return turret;
         }
 
+        // GETTERS Y SETTERS
+        public get credits(): number {
+            
+            return this._credits;
+        }
+
         public get ticksCounter(): number {
 
             return GameVars.ticksCounter;
@@ -779,17 +789,12 @@ module Anuto {
 
         public get score(): number {
 
-            return GameVars.score;
+            return this._score;
         }
 
         public get gameOver(): boolean {
 
             return GameVars.gameOver;
-        }
-
-        public get credits(): number {
-            
-            return GameVars.credits;
         }
 
         public get lifes(): number {

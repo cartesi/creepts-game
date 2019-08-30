@@ -303,11 +303,12 @@ export class TurretMenu extends Phaser.GameObjects.Container {
 
         // si no hay suficientes creditos desactivar botones de level up y upgrade
 
-        if (Anuto.GameVars.credits < this.anutoTurret.priceImprovement) {
+        if (BattleManager.anutoEngine.credits < this.anutoTurret.priceImprovement) {
             this.levelButton.alpha = .5;
         }
 
-        if (Anuto.GameVars.credits < this.anutoTurret.priceUpgrade) {
+        
+        if (BattleManager.anutoEngine.credits < this.anutoTurret.priceUpgrade) {
             this.upgradeButton.alpha = .5;
         }
 
