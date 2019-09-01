@@ -28,10 +28,13 @@ module Anuto {
         private allEnemiesSpawned: boolean;
 
         // variables que antes estaban en GameVars
+        private runningInClientSide: boolean;
         private _credits: number;
         private _score: number;
         private _lifes: number;
-
+        private _paused: boolean;
+        private _timeStep: number;
+        
         public static getPathPosition(l: number): {x: number, y: number} {
 
             let x: number;
@@ -71,13 +74,14 @@ module Anuto {
             Glue.id = 0;
             Mine.id = 0;
  
-            GameVars.runningInClientSide = gameConfig.runningInClientSide;
+            this.runningInClientSide = gameConfig.runningInClientSide;
             this._credits = gameConfig.credits;
             this._lifes = gameConfig.lifes;
+            this._paused = false;
+            this._timeStep = gameConfig.timeStep;
 
-            GameVars.timeStep = gameConfig.timeStep;
             GameVars.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
-            GameVars.paused = false;
+           
             GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
 
             GameVars.enemyData = enemyData;
@@ -128,18 +132,18 @@ module Anuto {
 
         public update(): void {
 
-            if (GameVars.runningInClientSide) {
+            if (this.runningInClientSide) {
 
                 const t = Date.now();
 
-                if (t - this.t < GameVars.timeStep) {
+                if (t - this.t < this._timeStep) {
                     return;
                 }
     
                 this.t = t;
             }
 
-            if (GameVars.paused) {
+            if (this._paused) {
                 return;
             }
 
@@ -810,17 +814,17 @@ module Anuto {
 
         public get timeStep(): number {
 
-            return GameVars.timeStep;
+            return this._timeStep;
         }
 
         public set timeStep(value: number) {
 
-            GameVars.timeStep = value;
+            this._timeStep = value;
         }
 
         public set paused(value: boolean) {
 
-            GameVars.paused = value;
+            this._paused = value;
         }
     }
 }

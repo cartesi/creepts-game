@@ -324,12 +324,12 @@ var Anuto;
             Anuto.Mortar.id = 0;
             Anuto.Glue.id = 0;
             Anuto.Mine.id = 0;
-            Anuto.GameVars.runningInClientSide = gameConfig.runningInClientSide;
+            this.runningInClientSide = gameConfig.runningInClientSide;
             this._credits = gameConfig.credits;
             this._lifes = gameConfig.lifes;
-            Anuto.GameVars.timeStep = gameConfig.timeStep;
+            this._paused = false;
+            this._timeStep = gameConfig.timeStep;
             Anuto.GameVars.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
-            Anuto.GameVars.paused = false;
             Anuto.GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
             Anuto.GameVars.enemyData = enemyData;
             Anuto.GameVars.turretData = turretData;
@@ -385,14 +385,14 @@ var Anuto;
             this.enemiesSpawned = 0;
         };
         Engine.prototype.update = function () {
-            if (Anuto.GameVars.runningInClientSide) {
+            if (this.runningInClientSide) {
                 var t = Date.now();
-                if (t - this.t < Anuto.GameVars.timeStep) {
+                if (t - this.t < this._timeStep) {
                     return;
                 }
                 this.t = t;
             }
-            if (Anuto.GameVars.paused) {
+            if (this._paused) {
                 return;
             }
             // Esto esta comentado ya que las minas se pueden poner aunque las rondas no esten en marcha y los tiempos de recarga tienen que completarse por lo que el motor tiene que seguir funcionando
@@ -878,17 +878,17 @@ var Anuto;
         });
         Object.defineProperty(Engine.prototype, "timeStep", {
             get: function () {
-                return Anuto.GameVars.timeStep;
+                return this._timeStep;
             },
             set: function (value) {
-                Anuto.GameVars.timeStep = value;
+                this._timeStep = value;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Engine.prototype, "paused", {
             set: function (value) {
-                Anuto.GameVars.paused = value;
+                this._paused = value;
             },
             enumerable: true,
             configurable: true

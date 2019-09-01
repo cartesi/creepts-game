@@ -115,9 +115,12 @@ declare module Anuto {
         private waveEnemiesLength;
         private enemiesSpawned;
         private allEnemiesSpawned;
+        private runningInClientSide;
         private _credits;
         private _score;
         private _lifes;
+        private _paused;
+        private _timeStep;
         static getPathPosition(l: number): {
             x: number;
             y: number;
@@ -192,12 +195,9 @@ declare module Anuto {
     class GameVars {
         static gameOver: boolean;
         static round: number;
-        static timeStep: number;
         static enemySpawningDeltaTicks: number;
         static ticksCounter: number;
         static lastWaveTick: number;
-        static runningInClientSide: boolean;
-        static paused: boolean;
         static enemyData: any;
         static turretData: any;
         static wavesData: any;
@@ -205,11 +205,6 @@ declare module Anuto {
             "type": string;
             "t": number;
         }[];
-        static level: number;
-        static boardDimensions: {
-            r: number;
-            c: number;
-        };
         static enemiesPathCells: {
             r: number;
             c: number;
