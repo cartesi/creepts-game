@@ -2,8 +2,6 @@ module Anuto {
 
     export class Mine {
 
-        public static id: number;
-
         public id: number;
         public x: number;
         public y: number;
@@ -17,8 +15,8 @@ module Anuto {
 
         constructor (p: {r: number, c: number}, explosionRange: number, damage: number, turret: LaunchTurret, engine: Engine) {
             
-            this.id = Mine.id;
-            Mine.id ++;
+            this.id = engine.mineId;
+            engine.mineId ++;
 
             this.x = p.c + .5;
             this.y = p.r + .5;

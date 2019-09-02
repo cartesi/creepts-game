@@ -69,7 +69,7 @@ module Anuto {
 
             switch (this.grade) {
                 case 1:
-                    const glue = new Glue(this.position, this.intensity, this.durationTicks, this.range);
+                    const glue = new Glue(this.position, this.intensity, this.durationTicks, this.range, this.engine);
                     this.engine.addGlue(glue, this);
                     break;
                 case 2:
@@ -97,7 +97,7 @@ module Anuto {
                     if (this.range * this.range > impactSquareDistance) {
         
                         this.shootAngle = MathUtils.fixNumber(Math.atan2(dy, dx));
-                        const bullet = new GlueBullet({c: this.position.c, r: this.position.r}, this.shootAngle, enemy, this.intensity, this.durationTicks);
+                        const bullet = new GlueBullet({c: this.position.c, r: this.position.r}, this.shootAngle, enemy, this.intensity, this.durationTicks, this.engine);
         
                         this.engine.addGlueBullet(bullet, this);
         

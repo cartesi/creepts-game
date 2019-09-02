@@ -2,8 +2,6 @@ module Anuto {
 
     export class Enemy {
 
-        public static id: number;
-
         public type: string;
         public id: number;
         public life: number;
@@ -30,8 +28,8 @@ module Anuto {
 
         constructor (type: string, creationTick: number, engine: Engine) {
             
-            this.id = Enemy.id;
-            Enemy.id ++;
+            this.id = engine.enemyId;
+            engine.enemyId ++;
 
             this.creationTick = creationTick;
             this.engine = engine;

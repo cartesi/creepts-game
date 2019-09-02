@@ -2,8 +2,6 @@ module Anuto {
 
     export class Bullet {
 
-        public static id: number;
-
         public id: number;
         public x: number;
         public y: number;
@@ -16,10 +14,10 @@ module Anuto {
         private vy: number;
 
         // bullet speed in cells / tick
-        constructor (p: {r: number, c: number}, angle: number, assignedEnemy: Enemy, damage: number, canonShoot: string, turret: ProjectileTurret) {
+        constructor (p: {r: number, c: number}, angle: number, assignedEnemy: Enemy, damage: number, canonShoot: string, turret: ProjectileTurret, engine: Engine) {
             
-            this.id = Bullet.id;
-            Bullet.id ++;
+            this.id = engine.bulletId;
+            engine.bulletId ++;
 
             this.x = p.c + .5;
             this.y = p.r + .5;

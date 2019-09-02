@@ -7,8 +7,7 @@ declare module Anuto {
 }
 declare module Anuto {
     class Turret {
-        static id: number;
-        static downgradePercent: number;
+        static readonly DOWNGRADE_PERCENT = 0.9;
         id: number;
         creationTick: number;
         type: string;
@@ -56,7 +55,6 @@ declare module Anuto {
 }
 declare module Anuto {
     class Enemy {
-        static id: number;
         type: string;
         id: number;
         life: number;
@@ -108,6 +106,12 @@ declare module Anuto {
             r: number;
             c: number;
         }[];
+        turretId: number;
+        enemyId: number;
+        bulletId: number;
+        mortarId: number;
+        glueId: number;
+        mineId: number;
         private runningInClientSide;
         private _credits;
         private _score;
@@ -278,7 +282,6 @@ declare module Anuto {
 }
 declare module Anuto {
     class Bullet {
-        static id: number;
         id: number;
         x: number;
         y: number;
@@ -291,7 +294,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        }, angle: number, assignedEnemy: Enemy, damage: number, canonShoot: string, turret: ProjectileTurret);
+        }, angle: number, assignedEnemy: Enemy, damage: number, canonShoot: string, turret: ProjectileTurret, engine: Engine);
         destroy(): void;
         update(): void;
         getPositionNextTick(): {
@@ -302,7 +305,6 @@ declare module Anuto {
 }
 declare module Anuto {
     class Glue {
-        static id: number;
         id: number;
         x: number;
         y: number;
@@ -314,14 +316,13 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        }, intensity: number, duration: number, range: number);
+        }, intensity: number, duration: number, range: number, engine: Engine);
         destroy(): void;
         update(): void;
     }
 }
 declare module Anuto {
     class GlueBullet {
-        static id: number;
         id: number;
         x: number;
         y: number;
@@ -334,7 +335,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        }, angle: number, assignedEnemy: Enemy, intensity: number, durationTicks: number);
+        }, angle: number, assignedEnemy: Enemy, intensity: number, durationTicks: number, engine: Engine);
         destroy(): void;
         update(): void;
         getPositionNextTick(): {
@@ -400,7 +401,6 @@ declare module Anuto {
 }
 declare module Anuto {
     class Mine {
-        static id: number;
         id: number;
         x: number;
         y: number;
@@ -424,7 +424,6 @@ declare module Anuto {
 }
 declare module Anuto {
     class Mortar {
-        static id: number;
         id: number;
         x: number;
         y: number;

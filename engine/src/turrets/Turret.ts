@@ -2,8 +2,7 @@ module Anuto {
 
     export class Turret {
 
-        public static id: number;
-        public static downgradePercent: number = .9;
+        public static readonly DOWNGRADE_PERCENT = .9;
 
         public id: number;
         public creationTick: number;
@@ -28,7 +27,7 @@ module Anuto {
         public enemiesWithinRange: Enemy[];
         public followedEnemy: Enemy;
         public shootAngle: number;
-    
+        
         protected f: number;
         protected reloadTicks: number;
         protected readyToShoot: boolean;
@@ -38,8 +37,8 @@ module Anuto {
 
             this.engine = engine;
 
-            this.id = Turret.id;
-            Turret.id ++;
+            this.id = engine.turretId;
+            engine.turretId ++;
 
             this.creationTick = this.engine.ticksCounter;
             
@@ -61,7 +60,7 @@ module Anuto {
             this.y = this.position.r + .5;
 
             this.value = this.engine.turretData[this.type].price;
-            this.sellValue = Math.round(this.engine.turretData[this.type].price * Turret.downgradePercent);
+            this.sellValue = Math.round(this.engine.turretData[this.type].price * Turret.DOWNGRADE_PERCENT);
         }
 
         public destroy(): void {
@@ -99,7 +98,7 @@ module Anuto {
         public improve(): void {
 
             this.value += this.priceImprovement;
-            this.sellValue += Math.round(this.priceImprovement * Turret.downgradePercent);
+            this.sellValue += Math.round(this.priceImprovement * Turret.DOWNGRADE_PERCENT);
 
             this.level ++;
             this.calculateTurretParameters();                                                                                                                                        
@@ -108,7 +107,7 @@ module Anuto {
         public upgrade(): void {
 
             this.value += this.priceUpgrade;
-            this.sellValue += Math.round(this.priceUpgrade * Turret.downgradePercent);
+            this.sellValue += Math.round(this.priceUpgrade * Turret.DOWNGRADE_PERCENT);
 
             this.grade ++;
             this.level = 1;

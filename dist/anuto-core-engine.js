@@ -59,8 +59,8 @@ var Anuto;
     var Turret = /** @class */ (function () {
         function Turret(type, p, engine) {
             this.engine = engine;
-            this.id = Turret.id;
-            Turret.id++;
+            this.id = engine.turretId;
+            engine.turretId++;
             this.creationTick = this.engine.ticksCounter;
             this.type = type;
             this.f = 0;
@@ -78,7 +78,7 @@ var Anuto;
             this.x = this.position.c + .5;
             this.y = this.position.r + .5;
             this.value = this.engine.turretData[this.type].price;
-            this.sellValue = Math.round(this.engine.turretData[this.type].price * Turret.downgradePercent);
+            this.sellValue = Math.round(this.engine.turretData[this.type].price * Turret.DOWNGRADE_PERCENT);
         }
         Turret.prototype.destroy = function () {
             //
@@ -108,13 +108,13 @@ var Anuto;
         };
         Turret.prototype.improve = function () {
             this.value += this.priceImprovement;
-            this.sellValue += Math.round(this.priceImprovement * Turret.downgradePercent);
+            this.sellValue += Math.round(this.priceImprovement * Turret.DOWNGRADE_PERCENT);
             this.level++;
             this.calculateTurretParameters();
         };
         Turret.prototype.upgrade = function () {
             this.value += this.priceUpgrade;
-            this.sellValue += Math.round(this.priceUpgrade * Turret.downgradePercent);
+            this.sellValue += Math.round(this.priceUpgrade * Turret.DOWNGRADE_PERCENT);
             this.grade++;
             this.level = 1;
             if (this.grade === 3 && this.type !== Anuto.GameConstants.TURRET_GLUE) {
@@ -177,7 +177,7 @@ var Anuto;
             }
             return enemies;
         };
-        Turret.downgradePercent = .9;
+        Turret.DOWNGRADE_PERCENT = .9;
         return Turret;
     }());
     Anuto.Turret = Turret;
@@ -186,8 +186,8 @@ var Anuto;
 (function (Anuto) {
     var Enemy = /** @class */ (function () {
         function Enemy(type, creationTick, engine) {
-            this.id = Enemy.id;
-            Enemy.id++;
+            this.id = engine.enemyId;
+            engine.enemyId++;
             this.creationTick = creationTick;
             this.engine = engine;
             this.type = type;
@@ -318,12 +318,12 @@ var Anuto;
 (function (Anuto) {
     var Engine = /** @class */ (function () {
         function Engine(gameConfig, enemyData, turretData, wavesData) {
-            Anuto.Turret.id = 0;
-            Anuto.Enemy.id = 0;
-            Anuto.Bullet.id = 0;
-            Anuto.Mortar.id = 0;
-            Anuto.Glue.id = 0;
-            Anuto.Mine.id = 0;
+            this.turretId = 0;
+            this.enemyId = 0;
+            this.bulletId = 0;
+            this.mortarId = 0;
+            this.glueId = 0;
+            this.mineId = 0;
             this.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
             this.runningInClientSide = gameConfig.runningInClientSide;
             this._credits = gameConfig.credits;
@@ -1060,9 +1060,9 @@ var Anuto;
 (function (Anuto) {
     var Bullet = /** @class */ (function () {
         // bullet speed in cells / tick
-        function Bullet(p, angle, assignedEnemy, damage, canonShoot, turret) {
-            this.id = Bullet.id;
-            Bullet.id++;
+        function Bullet(p, angle, assignedEnemy, damage, canonShoot, turret, engine) {
+            this.id = engine.bulletId;
+            engine.bulletId++;
             this.x = p.c + .5;
             this.y = p.r + .5;
             this.assignedEnemy = assignedEnemy;
@@ -1089,9 +1089,9 @@ var Anuto;
 var Anuto;
 (function (Anuto) {
     var Glue = /** @class */ (function () {
-        function Glue(p, intensity, duration, range) {
-            this.id = Glue.id;
-            Glue.id++;
+        function Glue(p, intensity, duration, range, engine) {
+            this.id = engine.glueId;
+            engine.glueId++;
             this.x = p.c + .5;
             this.y = p.r + .5;
             this.intensity = intensity;
@@ -1117,9 +1117,9 @@ var Anuto;
 (function (Anuto) {
     var GlueBullet = /** @class */ (function () {
         // bullet speed in cells / tick
-        function GlueBullet(p, angle, assignedEnemy, intensity, durationTicks) {
-            this.id = Anuto.Bullet.id;
-            Anuto.Bullet.id++;
+        function GlueBullet(p, angle, assignedEnemy, intensity, durationTicks, engine) {
+            this.id = engine.bulletId;
+            engine.bulletId++;
             this.x = p.c + .5;
             this.y = p.r + .5;
             this.assignedEnemy = assignedEnemy;
@@ -1188,7 +1188,7 @@ var Anuto;
             var enemy;
             switch (this.grade) {
                 case 1:
-                    var glue = new Anuto.Glue(this.position, this.intensity, this.durationTicks, this.range);
+                    var glue = new Anuto.Glue(this.position, this.intensity, this.durationTicks, this.range, this.engine);
                     this.engine.addGlue(glue, this);
                     break;
                 case 2:
@@ -1209,7 +1209,7 @@ var Anuto;
                     var impactSquareDistance = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
                     if (this.range * this.range > impactSquareDistance) {
                         this.shootAngle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
-                        var bullet = new Anuto.GlueBullet({ c: this.position.c, r: this.position.r }, this.shootAngle, enemy, this.intensity, this.durationTicks);
+                        var bullet = new Anuto.GlueBullet({ c: this.position.c, r: this.position.r }, this.shootAngle, enemy, this.intensity, this.durationTicks, this.engine);
                         this.engine.addGlueBullet(bullet, this);
                     }
                     else {
@@ -1504,8 +1504,8 @@ var Anuto;
 (function (Anuto) {
     var Mine = /** @class */ (function () {
         function Mine(p, explosionRange, damage, turret, engine) {
-            this.id = Mine.id;
-            Mine.id++;
+            this.id = engine.mineId;
+            engine.mineId++;
             this.x = p.c + .5;
             this.y = p.r + .5;
             this.explosionRange = explosionRange;
@@ -1554,8 +1554,8 @@ var Anuto;
     var Mortar = /** @class */ (function () {
         // mortar speed in cells / tick
         function Mortar(p, angle, ticksToImpact, explosionRange, damage, grade, turret, engine) {
-            this.id = Mortar.id;
-            Mortar.id++;
+            this.id = engine.mortarId;
+            engine.mortarId++;
             this.creationTick = engine.ticksCounter;
             this.x = p.c + .5;
             this.y = p.r + .5;
@@ -1688,7 +1688,7 @@ var Anuto;
             }
             if (this.range * this.range > impactSquareDistance) {
                 this.shootAngle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
-                var bullet = new Anuto.Bullet({ c: this.position.c, r: this.position.r }, this.shootAngle, enemy, this.damage, this.canonShoot, this);
+                var bullet = new Anuto.Bullet({ c: this.position.c, r: this.position.r }, this.shootAngle, enemy, this.damage, this.canonShoot, this, this.engine);
                 this.engine.addBullet(bullet, this);
             }
             else {

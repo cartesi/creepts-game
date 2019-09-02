@@ -2,8 +2,6 @@ module Anuto {
 
     export class Mortar {
 
-        public static id: number;
-
         public id: number;
         public x: number;
         public y: number;
@@ -23,8 +21,8 @@ module Anuto {
         // mortar speed in cells / tick
         constructor (p: {r: number, c: number}, angle: number, ticksToImpact: number, explosionRange: number, damage: number, grade: number, turret: LaunchTurret, engine: Engine) {
             
-            this.id = Mortar.id;
-            Mortar.id ++;
+            this.id = engine.mortarId;
+            engine.mortarId ++;
 
             this.creationTick = engine.ticksCounter;
 

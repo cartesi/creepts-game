@@ -119,7 +119,7 @@ module Anuto {
             if (this.range * this.range > impactSquareDistance) {
 
                 this.shootAngle = MathUtils.fixNumber(Math.atan2(dy, dx));
-                const bullet = new Bullet({c: this.position.c, r: this.position.r}, this.shootAngle, enemy, this.damage, this.canonShoot, this);
+                const bullet = new Bullet({c: this.position.c, r: this.position.r}, this.shootAngle, enemy, this.damage, this.canonShoot, this, this.engine);
 
                 this.engine.addBullet(bullet, this);
 

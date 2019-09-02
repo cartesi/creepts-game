@@ -17,6 +17,12 @@ module Anuto {
         public waveEnemies: any;
         public enemies: Enemy[];
         public enemiesPathCells: {r: number, c: number} [];
+        public turretId: number;
+        public enemyId: number;
+        public bulletId: number;
+        public mortarId: number;
+        public glueId: number;
+        public mineId: number;
 
         private runningInClientSide: boolean;
         private _credits: number;
@@ -49,12 +55,12 @@ module Anuto {
 
         constructor (gameConfig: Types.GameConfig, enemyData: any, turretData: any, wavesData: any) {
 
-            Turret.id = 0;
-            Enemy.id = 0;
-            Bullet.id = 0;
-            Mortar.id = 0;
-            Glue.id = 0;
-            Mine.id = 0;
+            this.turretId = 0;
+            this.enemyId = 0;
+            this.bulletId = 0;
+            this.mortarId = 0;
+            this.glueId = 0;
+            this.mineId = 0;
  
             this.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
             this.runningInClientSide = gameConfig.runningInClientSide;
