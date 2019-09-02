@@ -2,8 +2,7 @@ module Anuto {
 
     export class Turret {
 
-        public static id: number;
-        public static downgradePercent: number = .9;
+        public static readonly DOWNGRADE_PERCENT = .9;
 
         public id: number;
         public creationTick: number;
@@ -28,19 +27,21 @@ module Anuto {
         public enemiesWithinRange: Enemy[];
         public followedEnemy: Enemy;
         public shootAngle: number;
-    
-
+        
         protected f: number;
         protected reloadTicks: number;
         protected readyToShoot: boolean;
+        protected engine: Engine;
         
-        constructor (type: string, p: {r: number, c: number}) {
+        constructor (type: string, p: {r: number, c: number}, engine: Engine) {
 
-            this.id = Turret.id;
-            Turret.id ++;
+            this.engine = engine;
 
-            this.creationTick = GameVars.ticksCounter;
+            this.id = engine.turretId;
+            engine.turretId ++;
 
+            this.creationTick = this.engine.ticksCounter;
+            
             this.type = type;
             this.f = 0;
             this.level = 1;
@@ -58,8 +59,8 @@ module Anuto {
             this.x = this.position.c + .5;
             this.y = this.position.r + .5;
 
-            this.value = GameVars.turretData[this.type].price;
-            this.sellValue = Math.round(GameVars.turretData[this.type].price * Turret.downgradePercent);
+            this.value = this.engine.turretData[this.type].price;
+            this.sellValue = Math.round(this.engine.turretData[this.type].price * Turret.DOWNGRADE_PERCENT);
         }
 
         public destroy(): void {
@@ -69,18 +70,6 @@ module Anuto {
         public update(): void {
 
             this.enemiesWithinRange = this.getEnemiesWithinRange();
-
-
-            // if (this.enemiesWithinRange && this.enemiesWithinRange.length > 0) {
-            //     let str = "";
-
-            //     for (let i = 0; i < this.enemiesWithinRange.length; i++) {
-
-            //         str += this.enemiesWithinRange[i].id + " ";
-            //     }
-
-            //     console.log(str);
-            // }
 
             if (this.readyToShoot) {
 
@@ -109,7 +98,7 @@ module Anuto {
         public improve(): void {
 
             this.value += this.priceImprovement;
-            this.sellValue += Math.round(this.priceImprovement * Turret.downgradePercent);
+            this.sellValue += Math.round(this.priceImprovement * Turret.DOWNGRADE_PERCENT);
 
             this.level ++;
             this.calculateTurretParameters();                                                                                                                                        
@@ -118,7 +107,7 @@ module Anuto {
         public upgrade(): void {
 
             this.value += this.priceUpgrade;
-            this.sellValue += Math.round(this.priceUpgrade * Turret.downgradePercent);
+            this.sellValue += Math.round(this.priceUpgrade * Turret.DOWNGRADE_PERCENT);
 
             this.grade ++;
             this.level = 1;
@@ -157,11 +146,11 @@ module Anuto {
             let enemiesAndSquaredDistances: {enemy: Enemy, squareDist: number} [] = [];
             let squaredRange = MathUtils.fixNumber(this.range * this.range);
             
-            for (let i = 0; i < GameVars.enemies.length; i ++) {
+            for (let i = 0; i < this.engine.enemies.length; i ++) {
 
-                const enemy = GameVars.enemies[i];
+                const enemy = this.engine.enemies[i];
 
-                if (enemy.life > 0 && enemy.l < GameVars.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
+                if (enemy.life > 0 && enemy.l < this.engine.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
 
                     const dx = this.x - enemy.x;
                     const dy = this.y - enemy.y;
@@ -177,22 +166,22 @@ module Anuto {
             if (enemiesAndSquaredDistances.length > 1 && (this.type === GameConstants.TURRET_PROJECTILE || this.type === GameConstants.TURRET_LASER)) {
                 
                 // ordenar a los enemigos dentro del radio de acción según la estrategia de disparo
+              
                 switch (this.shootingStrategy) {
-
                     case GameConstants.STRATEGY_SHOOT_LAST:
-                        enemiesAndSquaredDistances = MathUtils.mergesort(enemiesAndSquaredDistances, (e1, e2) => e1.enemy.l - e2.enemy.l);
+                        enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.enemy.l - e2.enemy.l) < 0);
                         break;
                     case GameConstants.STRATEGY_SHOOT_CLOSEST:
-                        enemiesAndSquaredDistances = MathUtils.mergesort(enemiesAndSquaredDistances, (e1, e2) => e1.squareDist - e2.squareDist);
+                        enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.squareDist - e2.squareDist) < 0);
                         break;
                     case GameConstants.STRATEGY_SHOOT_WEAKEST:
-                        enemiesAndSquaredDistances = MathUtils.mergesort(enemiesAndSquaredDistances, (e1, e2) => e1.enemy.life - e2.enemy.life);
+                        enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.enemy.life - e2.enemy.life) < 0);
                         break;
                     case GameConstants.STRATEGY_SHOOT_STRONGEST:
-                        enemiesAndSquaredDistances = MathUtils.mergesort(enemiesAndSquaredDistances, (e1, e2) => e2.enemy.life - e1.enemy.life);
+                        enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e2.enemy.life - e1.enemy.life) < 0);
                         break;
                     case GameConstants.STRATEGY_SHOOT_FIRST:
-                        enemiesAndSquaredDistances = MathUtils.mergesort(enemiesAndSquaredDistances, (e1, e2) => e2.enemy.l - e1.enemy.l);
+                        enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.enemy.l - e2.enemy.l) > 0);
                         break;
                     default:
                 }
@@ -206,7 +195,5 @@ module Anuto {
 
             return enemies;
         }
-
-
     }
 }

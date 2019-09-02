@@ -1,22 +1,12 @@
 module Anuto {
-    // usando esto:
-    // https://www.symbolab.com/solver/system-of-equations-calculator/
-   
-    // damage se calcula en funcion de level mediante una equacion de tercer grado
-    // damage = a * level ^ 3 + b * level ^ 2 + c * level + d
-    // siendo a = 1 / 3, b = 2, c = 95/3 y d = 66
-
-    // reload = (-1/18) * level + 19/18
-    // range = 2/45 * level + 221 / 90
-    // priceNextImprovement =  29 / 336 * level ^ 3  + 27 / 56 * level ^ 2 + 2671 / 336 * this.level + 2323 / 56
 
     export class ProjectileTurret extends Turret {
 
         private canonShoot: string;
 
-        constructor (p: {r: number, c: number}) {
+        constructor (p: {r: number, c: number}, engine: Engine) {
             
-            super(GameConstants.TURRET_PROJECTILE, p);
+            super(GameConstants.TURRET_PROJECTILE, p, engine);
 
             this.canonShoot = "center";
 
@@ -129,9 +119,9 @@ module Anuto {
             if (this.range * this.range > impactSquareDistance) {
 
                 this.shootAngle = MathUtils.fixNumber(Math.atan2(dy, dx));
-                const bullet = new Bullet({c: this.position.c, r: this.position.r}, this.shootAngle, enemy, this.damage, this.canonShoot, this);
+                const bullet = new Bullet({c: this.position.c, r: this.position.r}, this.shootAngle, enemy, this.damage, this.canonShoot, this, this.engine);
 
-                Engine.currentInstance.addBullet(bullet, this);
+                this.engine.addBullet(bullet, this);
 
             } else {
                 // no se dispara y se vuelve a estar disponible para disparar

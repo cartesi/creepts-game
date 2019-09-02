@@ -1,8 +1,7 @@
-import { AudioManager } from './../../../AudioManager';
+import { AudioManager } from "./../../../AudioManager";
 import { TurretActor } from "./TurretActor";
-import { GameConstants } from "../../../GameConstants";
-import { GameVars } from '../../../GameVars';
-import { EnemyActor } from '../enemy-actors/EnemyActor';
+import { GameVars } from "../../../GameVars";
+import { EnemyActor } from "../enemy-actors/EnemyActor";
 
 export class LaserTurretActor extends TurretActor {
 
@@ -46,13 +45,13 @@ export class LaserTurretActor extends TurretActor {
         switch (this.anutoTurret.grade) {
  
              case 2:
-                 this.base.setFrame("base_2_2");
-                 this.canon.setFrame("canon_2_2_1");
-                 break;
+                this.base.setFrame("base_2_2");
+                this.canon.setFrame("canon_2_2_1");
+                break;
              case 3: 
-                 this.base.setFrame("base_2_2");
-                 this.canon.setFrame("canon_2_3_1");
-                 break;
+                this.base.setFrame("base_2_2");
+                this.canon.setFrame("canon_2_3_1");
+                break;
              default:
         }
     }

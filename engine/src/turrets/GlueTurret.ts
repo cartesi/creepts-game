@@ -4,13 +4,12 @@ module Anuto {
 
         public intensity: number;
         public teleportDistance: number;
-
         public duration: number;
         public durationTicks: number;
 
-        constructor (p: {r: number, c: number}) {
+        constructor (p: {r: number, c: number}, engine: Engine) {
             
-            super(GameConstants.TURRET_GLUE, p);
+            super(GameConstants.TURRET_GLUE, p, engine);
 
             this.maxLevel = 5;
             this.teleportDistance = 0;
@@ -70,8 +69,8 @@ module Anuto {
 
             switch (this.grade) {
                 case 1:
-                    const glue = new Glue(this.position, this.intensity, this.durationTicks, this.range);
-                    Engine.currentInstance.addGlue(glue, this);
+                    const glue = new Glue(this.position, this.intensity, this.durationTicks, this.range, this.engine);
+                    this.engine.addGlue(glue, this);
                     break;
                 case 2:
 
@@ -98,9 +97,9 @@ module Anuto {
                     if (this.range * this.range > impactSquareDistance) {
         
                         this.shootAngle = MathUtils.fixNumber(Math.atan2(dy, dx));
-                        const bullet = new GlueBullet({c: this.position.c, r: this.position.r}, this.shootAngle, enemy, this.intensity, this.durationTicks);
+                        const bullet = new GlueBullet({c: this.position.c, r: this.position.r}, this.shootAngle, enemy, this.intensity, this.durationTicks, this.engine);
         
-                        Engine.currentInstance.addGlueBullet(bullet, this);
+                        this.engine.addGlueBullet(bullet, this);
         
                     } else {
                         // no se dispara y se vuelve a estar disponible para disparar
@@ -116,7 +115,7 @@ module Anuto {
                     }
                     
                     if (enemy.life > 0 && !enemy.hasBeenTeleported) { 
-                        Engine.currentInstance.flagEnemyToTeleport(enemy, this);
+                        this.engine.flagEnemyToTeleport(enemy, this);
                     } else {
                         this.readyToShoot = true;
                     }

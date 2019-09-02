@@ -46,7 +46,7 @@ export class ProjectileTurretActor extends TurretActor {
             x: this.canon.x - 5 * Math.sin(this.canon.rotation),
             y: this.canon.y + 5 * Math.cos(this.canon.rotation),
             ease: Phaser.Math.Easing.Cubic.Out,
-            duration: GameVars.timeStepFactor === 4 ? 20 : 80,
+            duration: GameVars.timeStepFactor === 1 ? 80 : 20,
             yoyo: true
         });
     }

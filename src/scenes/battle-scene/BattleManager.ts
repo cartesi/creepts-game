@@ -1,7 +1,6 @@
 import { BattleScene } from "./BattleScene";
 import { GameConstants } from "../../GameConstants";
 import { GameVars } from "../../GameVars";
-
 import enemiesData from "../../../assets/config/enemies.json";
 import turretsData from "../../../assets/config/turrets.json";
 import wavesData from "../../../assets/config/waves.json";
@@ -115,7 +114,6 @@ export class BattleManager {
             let action = {type: GameConstants.TYPE_NEXT_WAVE, tick: BattleManager.anutoEngine.ticksCounter};
             BattleManager.addAction(action);
         }
-        
     }
 
     public static createTurret(type: string): void {

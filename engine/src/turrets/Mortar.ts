@@ -2,8 +2,6 @@ module Anuto {
 
     export class Mortar {
 
-        public static id: number;
-
         public id: number;
         public x: number;
         public y: number;
@@ -18,14 +16,15 @@ module Anuto {
         private vy: number;
         private f: number;
         private damage: number;
+        private engine: Engine;
         
         // mortar speed in cells / tick
-        constructor (p: {r: number, c: number}, angle: number, ticksToImpact: number, explosionRange: number, damage: number, grade: number, turret: LaunchTurret) {
+        constructor (p: {r: number, c: number}, angle: number, ticksToImpact: number, explosionRange: number, damage: number, grade: number, turret: LaunchTurret, engine: Engine) {
             
-            this.id = Mortar.id;
-            Mortar.id ++;
+            this.id = engine.mortarId;
+            engine.mortarId ++;
 
-            this.creationTick = GameVars.ticksCounter;
+            this.creationTick = engine.ticksCounter;
 
             this.x = p.c + .5;
             this.y = p.r + .5;
@@ -35,11 +34,12 @@ module Anuto {
             this.damage = damage;
             this.grade = grade;
             this.turret = turret;
+            this.engine = engine;
 
             this.detonate = false;
             this.f = 0;
 
-            let speed = this.grade === 3 ? GameConstants.MORTAR_SPEED * 5 : GameConstants.MORTAR_SPEED;
+            const speed = this.grade === 3 ? GameConstants.MORTAR_SPEED * 5 : GameConstants.MORTAR_SPEED;
 
             this.vx = MathUtils.fixNumber(speed * Math.cos(angle));
             this.vy = MathUtils.fixNumber(speed * Math.sin(angle));
@@ -65,9 +65,9 @@ module Anuto {
 
             const hitEnemiesData: {enemy: Enemy, damage: number} [] = [];
 
-            for (let i = 0; i < GameVars.enemies.length; i ++) {
+            for (let i = 0; i < this.engine.enemies.length; i ++) {
 
-                const enemy = GameVars.enemies[i];
+                const enemy = this.engine.enemies[i];
                 const distance = MathUtils.fixNumber(Math.sqrt((enemy.x - this.x) *  (enemy.x - this.x) + (enemy.y - this.y) *  (enemy.y - this.y)));
 
                 if (distance <= this.explosionRange) {

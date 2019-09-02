@@ -32,7 +32,7 @@ export class MineActor extends Phaser.GameObjects.Container {
             x: this.anutoMine.x * GameConstants.CELLS_SIZE + randX,
             y: this.anutoMine.y * GameConstants.CELLS_SIZE + randY,
             ease: Phaser.Math.Easing.Cubic.Out,
-            duration: GameVars.timeStepFactor === 4 ? 200 : 600,
+            duration: GameVars.timeStepFactor === 1 ? 600 : 200,
         });
 
     }

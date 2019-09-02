@@ -11,9 +11,9 @@ module Anuto {
 
         private minesCounter: number;
 
-        constructor (p: {r: number, c: number}) {
+        constructor (p: {r: number, c: number}, engine) {
             
-            super(GameConstants.TURRET_LAUNCH, p);
+            super(GameConstants.TURRET_LAUNCH, p, engine);
 
             this.calculateTurretParameters();
 
@@ -68,9 +68,9 @@ module Anuto {
 
             let cells = [];
 
-            for (let i = 0; i < GameVars.enemiesPathCells.length; i++) {
+            for (let i = 0; i < this.engine.enemiesPathCells.length; i++) {
 
-                let cell = GameVars.enemiesPathCells[i];
+                let cell = this.engine.enemiesPathCells[i];
 
                 if (cell.c >= this.position.c && cell.c <= this.position.c + this.range ||
                     cell.c <= this.position.c && cell.c >= this.position.c - this.range) {
@@ -103,8 +103,8 @@ module Anuto {
                     const dy = (cell.r + .5) - this.y;
                     this.shootAngle = MathUtils.fixNumber(Math.atan2(dy, dx));
 
-                    const mine = new Mine({c: cell.c, r: cell.r}, this.explosionRange, this.damage, this);
-                    Engine.currentInstance.addMine(mine, this);
+                    const mine = new Mine({c: cell.c, r: cell.r}, this.explosionRange, this.damage, this, this.engine);
+                    this.engine.addMine(mine, this);
 
                 } else {
                     this.readyToShoot = true;
@@ -155,9 +155,9 @@ module Anuto {
                     const dy = impactPosition.y - this.y;
         
                     this.shootAngle =  MathUtils.fixNumber(Math.atan2(dy, dx));
-                    const mortar = new Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage, this.grade, this);
+                    const mortar = new Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage, this.grade, this, this.engine);
         
-                    Engine.currentInstance.addMortar(mortar, this);
+                    this.engine.addMortar(mortar, this);
 
                 } else {
 

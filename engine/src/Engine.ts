@@ -5,11 +5,35 @@ module Anuto {
 
     export class Engine {
 
-        public static currentInstance: Engine;
-
         public waveActivated: boolean;
-       
         public turrets: Turret[];
+
+        // variables que antes estaban en GameVars
+        public enemySpawningDeltaTicks: number;
+        public lastWaveTick: number;
+        public enemyData: any;
+        public turretData: any;
+        public wavesData: any;
+        public waveEnemies: any;
+        public enemies: Enemy[];
+        public enemiesPathCells: {r: number, c: number} [];
+        public turretId: number;
+        public enemyId: number;
+        public bulletId: number;
+        public mortarId: number;
+        public glueId: number;
+        public mineId: number;
+
+        private runningInClientSide: boolean;
+        private _credits: number;
+        private _score: number;
+        private _lifes: number;
+        private _paused: boolean;
+        private _timeStep: number;
+        private _gameOver: boolean;
+        private _round: number;
+        private _ticksCounter: number;
+
         private bullets: Bullet[];
         private glueBullets: GlueBullet[];
         private mortars: Mortar[];
@@ -29,72 +53,40 @@ module Anuto {
         private enemiesSpawned: number;
         private allEnemiesSpawned: boolean;
 
-        public static getPathPosition(l: number): {x: number, y: number} {
-
-            let x: number;
-            let y: number;
-
-            const i = Math.floor(l);
-
-            if (i === GameVars.enemiesPathCells.length - 1) {
-
-                x = GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].c;
-                y = GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].r;
-
-            } else {
-
-                const dl = MathUtils.fixNumber(l - i);
-
-                // interpolar entre i e i + 1
-                x = GameVars.enemiesPathCells[i].c + .5;
-                y = GameVars.enemiesPathCells[i].r + .5;
-    
-                const dx = MathUtils.fixNumber(GameVars.enemiesPathCells[i + 1].c - GameVars.enemiesPathCells[i].c);
-                const dy = MathUtils.fixNumber(GameVars.enemiesPathCells[i + 1].r - GameVars.enemiesPathCells[i].r);
-    
-                x = MathUtils.fixNumber(x + dx * dl);
-                y = MathUtils.fixNumber(y + dy * dl);
-            }
-
-            return {x: x, y: y};
-        }
-     
         constructor (gameConfig: Types.GameConfig, enemyData: any, turretData: any, wavesData: any) {
 
-            Engine.currentInstance = this;
-
-            Turret.id = 0;
-            Enemy.id = 0;
-            Bullet.id = 0;
-            Mortar.id = 0;
-            Glue.id = 0;
-            Mine.id = 0;
+            this.turretId = 0;
+            this.enemyId = 0;
+            this.bulletId = 0;
+            this.mortarId = 0;
+            this.glueId = 0;
+            this.mineId = 0;
  
-            GameVars.runningInClientSide = gameConfig.runningInClientSide;
-            GameVars.credits = gameConfig.credits;
-            GameVars.lifes = gameConfig.lifes;
+            this.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
+            this.runningInClientSide = gameConfig.runningInClientSide;
+            this._credits = gameConfig.credits;
+            this._lifes = gameConfig.lifes;
+            this._paused = false;
+            this._timeStep = gameConfig.timeStep;
 
-            GameVars.timeStep = gameConfig.timeStep;
-            GameVars.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
-            GameVars.paused = false;
-            GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
+            this.enemiesPathCells = gameConfig.enemiesPathCells;
 
-            GameVars.enemyData = enemyData;
-            GameVars.turretData = turretData;
-            GameVars.wavesData = wavesData;
+            this.enemyData = enemyData;
+            this.turretData = turretData;
+            this.wavesData = wavesData;
 
-            GameVars.round = 0;
-            GameVars.score = 0;
-            GameVars.gameOver = false;
+            this._score = 0;
+            this._gameOver = false;
+            this._round = 0;
             
             this.waveActivated = false;
             this.t = 0;
 
             this.eventDispatcher = new EventDispatcher();
-            this.enemiesSpawner = new EnemiesSpawner();
+            this.enemiesSpawner = new EnemiesSpawner(this);
          
-            GameVars.ticksCounter = 0;
-            GameVars.lastWaveTick = 0;
+            this._ticksCounter = 0;
+            this.lastWaveTick = 0;
 
             this.turrets = [];
             this.mines = [];
@@ -107,7 +99,8 @@ module Anuto {
 
             this.t = Date.now();
 
-            GameVars.enemies = [];
+            this.enemies = [];
+            
             this.bullets = [];
             this.glueBullets = [];
             this.mortars = [];
@@ -126,38 +119,34 @@ module Anuto {
 
         public update(): void {
 
-            if (GameVars.runningInClientSide) {
+            if (this.runningInClientSide) {
 
                 const t = Date.now();
 
-                if (t - this.t < GameVars.timeStep) {
+                if (t - this.t < this._timeStep) {
                     return;
                 }
     
                 this.t = t;
             }
 
-            if (GameVars.paused) {
+            if (this._paused || !this.waveActivated) {
                 return;
             }
 
-            // Esto esta comentado ya que las minas se pueden poner aunque las rondas no esten en marcha y los tiempos de recarga tienen que completarse por lo que el motor tiene que seguir funcionando
-            if (!this.waveActivated) {
-                return;
-            }
+            if (this._lifes <= 0 && !this._gameOver) {
 
-            if (GameVars.lifes <= 0 && !GameVars.gameOver) {
                 this.eventDispatcher.dispatchEvent(new Event(Event.GAME_OVER));
-                GameVars.gameOver = true;
+                this._gameOver = true;
 
-                console.log("TICKS: " + GameVars.ticksCounter);
-                console.log("SCORE: " + GameVars.score);
+                console.log("TICKS: " + this._ticksCounter);
+                console.log("SCORE: " + this._score);
             }
 
             if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
                 this.waveActivated = false;
 
-                if (GameVars.lifes > 0) {
+                if (this._lifes > 0) {
                     this.eventDispatcher.dispatchEvent(new Event(Event.WAVE_OVER));
                 } else {
                     return;
@@ -173,7 +162,7 @@ module Anuto {
                 this.spawnEnemies();
             }
 
-            GameVars.enemies.forEach(function (enemy) {
+            this.enemies.forEach(function (enemy) {
                 enemy.update();
             }, this); 
 
@@ -201,7 +190,7 @@ module Anuto {
                 glue.update();
             });
 
-            GameVars.ticksCounter ++;
+            this._ticksCounter ++;
         }
 
         public newWave(): boolean {
@@ -210,56 +199,54 @@ module Anuto {
                 return false;
             }
 
-            let length = Object.keys(GameVars.wavesData).length;
+            let length = Object.keys(this.wavesData).length;
             
-            let initialWaveEnemies = GameVars.wavesData["wave_" + (GameVars.round % length + 1)].slice(0);
-            GameVars.waveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
+            let initialWaveEnemies = this.wavesData["wave_" + (this._round % length + 1)].slice(0);
+            this.waveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
 
-            let extraWaves = Math.floor(GameVars.round / length) * 2;
+            const extraWaves = Math.floor(this._round / length) * 2;
 
-            GameVars.round++;
+            this._round++;
 
             for (let i = 0; i < extraWaves; i++) {
 
                 let nextWaveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
-                let lastTickValue = GameVars.waveEnemies[GameVars.waveEnemies.length - 1].t;
+                let lastTickValue = this.waveEnemies[this.waveEnemies.length - 1].t;
 
                 for (let j = 0; j < nextWaveEnemies.length; j++) {
                     nextWaveEnemies[j].t += (lastTickValue + 2);
                 }
 
-                GameVars.waveEnemies = GameVars.waveEnemies.concat(nextWaveEnemies);
+                this.waveEnemies = this.waveEnemies.concat(nextWaveEnemies);
             }
 
-            GameVars.lastWaveTick = GameVars.ticksCounter;
+            this.lastWaveTick = this._ticksCounter;
 
             this.waveActivated = true;
            
             this.initWaveVars();
 
-            this.waveEnemiesLength = GameVars.waveEnemies.length;
+            this.waveEnemiesLength = this.waveEnemies.length;
 
             return true;
         }
 
         public removeEnemy(enemy: Enemy): void {
 
-            const i = GameVars.enemies.indexOf(enemy);
+            const i = this.enemies.indexOf(enemy);
 
             if (i !== -1) {
-                GameVars.enemies.splice(i, 1);
+                this.enemies.splice(i, 1);
             }
 
             enemy.destroy();
-
-
         }
 
         public addTurret(type: string, p: {r: number, c: number}): Turret {
 
             // mirar si estamos poniendo la torreta encima del camino
-            for (let i = 0; i < GameVars.enemiesPathCells.length; i++) {
-                if (p.c === GameVars.enemiesPathCells[i].c && p.r === GameVars.enemiesPathCells[i].r) {
+            for (let i = 0; i < this.enemiesPathCells.length; i++) {
+                if (p.c === this.enemiesPathCells[i].c && p.r === this.enemiesPathCells[i].r) {
                     return null;
                 }
             }
@@ -275,27 +262,27 @@ module Anuto {
 
             switch (type) {
                 case GameConstants.TURRET_PROJECTILE:
-                    turret = new ProjectileTurret(p);
+                    turret = new ProjectileTurret(p, this);
                     break;
                 case GameConstants.TURRET_LASER:
-                    turret = new LaserTurret(p);
+                    turret = new LaserTurret(p, this);
                     break;
                 case GameConstants.TURRET_LAUNCH:
-                    turret = new LaunchTurret(p);
+                    turret = new LaunchTurret(p, this);
                     break;
                 case GameConstants.TURRET_GLUE:
-                    turret = new GlueTurret(p);
+                    turret = new GlueTurret(p, this);
                     break;
                 default:
             }
 
-            if (GameVars.credits < turret.value) {
+            if (this._credits < turret.value) {
                 return null;
             }
 
             this.turrets.push(turret);
 
-            GameVars.credits -= turret.value;
+            this._credits -= turret.value;
 
             return turret;
         }
@@ -314,7 +301,7 @@ module Anuto {
                 this.turrets.splice(i, 1);
             }
 
-            GameVars.credits += turret.sellValue;
+            this._credits += turret.sellValue;
             turret.destroy();
 
             return true;
@@ -328,8 +315,8 @@ module Anuto {
                 turret.setNextStrategy();
                 return true;
             }
+
             return false;
-            
         }
 
         public setFixedTarget(id: number): boolean {
@@ -417,39 +404,39 @@ module Anuto {
 
         public onEnemyReachedExit(enemy: Enemy): void {
 
-            const i = GameVars.enemies.indexOf(enemy);
+            const i = this.enemies.indexOf(enemy);
 
             if (i !== -1) {
-                GameVars.enemies.splice(i, 1);
+                this.enemies.splice(i, 1);
             }
 
             enemy.destroy();
 
-            GameVars.lifes -= 1;
+            this._lifes -= 1;
 
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_REACHED_EXIT, [enemy]));
 
-            if (GameVars.enemies.length === 0 && this.allEnemiesSpawned) {
+            if (this.enemies.length === 0 && this.allEnemiesSpawned) {
                 this.onNoEnemiesOnStage();
             }
         }
 
         public onEnemyKilled(enemy: Enemy): void {
 
-            GameVars.credits += enemy.value;
-            GameVars.score += enemy.value;
+            this._credits += enemy.value;
+            this._score += enemy.value;
 
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_KILLED, [enemy]));
 
-            const i = GameVars.enemies.indexOf(enemy);
+            const i = this.enemies.indexOf(enemy);
 
             if (i !== -1) {
-                GameVars.enemies.splice(i, 1);
+                this.enemies.splice(i, 1);
             }
 
             enemy.destroy();
 
-            if (GameVars.enemies.length === 0 && this.allEnemiesSpawned) {
+            if (this.enemies.length === 0 && this.allEnemiesSpawned) {
                 this.onNoEnemiesOnStage();
             }
         }
@@ -460,8 +447,8 @@ module Anuto {
 
             const turret = this.getTurretById(id);
 
-            if (turret && turret.level < turret.maxLevel && GameVars.credits >= turret.priceImprovement) {
-                GameVars.credits -= turret.priceImprovement;
+            if (turret && turret.level < turret.maxLevel && this._credits >= turret.priceImprovement) {
+                this._credits -= turret.priceImprovement;
                 turret.improve();
                 success = true;
             }
@@ -475,13 +462,43 @@ module Anuto {
 
             const turret = this.getTurretById(id);
 
-            if (turret && turret.grade < 3 && GameVars.credits >= turret.priceUpgrade) {
-                GameVars.credits -= turret.priceUpgrade;
+            if (turret && turret.grade < 3 && this._credits >= turret.priceUpgrade) {
+                this._credits -= turret.priceUpgrade;
                 turret.upgrade();
                 success = true;
             }
 
             return success;
+        }
+
+        public getPathPosition(l: number): {x: number, y: number} {
+
+            let x: number;
+            let y: number;
+
+            const i = Math.floor(l);
+
+            if (i === this.enemiesPathCells.length - 1) {
+
+                x = this.enemiesPathCells[this.enemiesPathCells.length - 1].c;
+                y = this.enemiesPathCells[this.enemiesPathCells.length - 1].r;
+
+            } else {
+
+                const dl = MathUtils.fixNumber(l - i);
+
+                // interpolar entre i e i + 1
+                x = this.enemiesPathCells[i].c + .5;
+                y = this.enemiesPathCells[i].r + .5;
+    
+                const dx = MathUtils.fixNumber(this.enemiesPathCells[i + 1].c - this.enemiesPathCells[i].c);
+                const dy = MathUtils.fixNumber(this.enemiesPathCells[i + 1].r - this.enemiesPathCells[i].r);
+    
+                x = MathUtils.fixNumber(x + dx * dl);
+                y = MathUtils.fixNumber(y + dy * dl);
+            }
+
+            return {x: x, y: y};
         }
 
         public addEventListener(type: string, listenerFunction: Function, scope: any): void {
@@ -557,9 +574,9 @@ module Anuto {
                 }
             }
 
-            for (let i = 0; i < GameVars.enemies.length; i ++) {
+            for (let i = 0; i < this.enemies.length; i ++) {
 
-                const enemy = GameVars.enemies[i];
+                const enemy = this.enemies[i];
 
                 if (enemy.type !== GameConstants.ENEMY_FLIER) {
 
@@ -743,8 +760,8 @@ module Anuto {
                     this.allEnemiesSpawned = true;
                 }
 
-                GameVars.enemies.push(enemy);
-                this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_SPAWNED, [enemy, GameVars.enemiesPathCells[0]]));
+                this.enemies.push(enemy);
+                this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_SPAWNED, [enemy, this.enemiesPathCells[0]]));
             }
         }
 
@@ -776,49 +793,50 @@ module Anuto {
             return turret;
         }
 
+        // GETTERS Y SETTERS
+        public get credits(): number {
+            
+            return this._credits;
+        }
+
         public get ticksCounter(): number {
 
-            return GameVars.ticksCounter;
+            return this._ticksCounter;
         }
 
         public get score(): number {
 
-            return GameVars.score;
+            return this._score;
         }
 
         public get gameOver(): boolean {
 
-            return GameVars.gameOver;
-        }
-
-        public get credits(): number {
-            
-            return GameVars.credits;
+            return this._gameOver;
         }
 
         public get lifes(): number {
             
-            return GameVars.lifes;
+            return this._lifes;
         }
 
         public get round(): number {
             
-            return GameVars.round;
+            return this._round;
         }
 
         public get timeStep(): number {
 
-            return GameVars.timeStep;
+            return this._timeStep;
         }
 
         public set timeStep(value: number) {
 
-            GameVars.timeStep = value;
+            this._timeStep = value;
         }
 
         public set paused(value: boolean) {
 
-            GameVars.paused = value;
+            this._paused = value;
         }
     }
 }

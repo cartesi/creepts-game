@@ -1,13 +1,13 @@
 declare module Anuto {
     class EnemiesSpawner {
-        constructor();
+        private engine;
+        constructor(engine: Engine);
         getEnemy(): Enemy;
     }
 }
 declare module Anuto {
     class Turret {
-        static id: number;
-        static downgradePercent: number;
+        static readonly DOWNGRADE_PERCENT = 0.9;
         id: number;
         creationTick: number;
         type: string;
@@ -37,10 +37,11 @@ declare module Anuto {
         protected f: number;
         protected reloadTicks: number;
         protected readyToShoot: boolean;
+        protected engine: Engine;
         constructor(type: string, p: {
             r: number;
             c: number;
-        });
+        }, engine: Engine);
         destroy(): void;
         update(): void;
         improve(): void;
@@ -54,7 +55,6 @@ declare module Anuto {
 }
 declare module Anuto {
     class Enemy {
-        static id: number;
         type: string;
         id: number;
         life: number;
@@ -76,7 +76,8 @@ declare module Anuto {
         teleporting: boolean;
         protected enemyData: any;
         protected t: number;
-        constructor(type: string, creationTick: number);
+        protected engine: Engine;
+        constructor(type: string, creationTick: number, engine: Engine);
         destroy(): void;
         update(): void;
         teleport(teleportDistance: number): void;
@@ -92,9 +93,34 @@ declare module Anuto {
 }
 declare module Anuto {
     class Engine {
-        static currentInstance: Engine;
         waveActivated: boolean;
         turrets: Turret[];
+        enemySpawningDeltaTicks: number;
+        lastWaveTick: number;
+        enemyData: any;
+        turretData: any;
+        wavesData: any;
+        waveEnemies: any;
+        enemies: Enemy[];
+        enemiesPathCells: {
+            r: number;
+            c: number;
+        }[];
+        turretId: number;
+        enemyId: number;
+        bulletId: number;
+        mortarId: number;
+        glueId: number;
+        mineId: number;
+        private runningInClientSide;
+        private _credits;
+        private _score;
+        private _lifes;
+        private _paused;
+        private _timeStep;
+        private _gameOver;
+        private _round;
+        private _ticksCounter;
         private bullets;
         private glueBullets;
         private mortars;
@@ -113,10 +139,6 @@ declare module Anuto {
         private waveEnemiesLength;
         private enemiesSpawned;
         private allEnemiesSpawned;
-        static getPathPosition(l: number): {
-            x: number;
-            y: number;
-        };
         constructor(gameConfig: Types.GameConfig, enemyData: any, turretData: any, wavesData: any);
         initWaveVars(): void;
         update(): void;
@@ -140,6 +162,10 @@ declare module Anuto {
         onEnemyKilled(enemy: Enemy): void;
         improveTurret(id: number): boolean;
         upgradeTurret(id: number): boolean;
+        getPathPosition(l: number): {
+            x: number;
+            y: number;
+        };
         addEventListener(type: string, listenerFunction: Function, scope: any): void;
         removeEventListener(type: string, listenerFunction: any): void;
         private checkCollisions;
@@ -148,10 +174,10 @@ declare module Anuto {
         private spawnEnemies;
         private onNoEnemiesOnStage;
         private getTurretById;
+        readonly credits: number;
         readonly ticksCounter: number;
         readonly score: number;
         readonly gameOver: boolean;
-        readonly credits: number;
         readonly lifes: number;
         readonly round: number;
         timeStep: number;
@@ -181,38 +207,6 @@ declare module Anuto {
         static readonly HEALER_HEALING_TICKS = 100;
         static readonly HEALER_STOP_TICKS = 30;
         static readonly HEALER_HEALING_RADIUS = 2;
-    }
-}
-declare module Anuto {
-    class GameVars {
-        static credits: number;
-        static score: number;
-        static lifes: number;
-        static gameOver: boolean;
-        static round: number;
-        static timeStep: number;
-        static enemySpawningDeltaTicks: number;
-        static ticksCounter: number;
-        static lastWaveTick: number;
-        static runningInClientSide: boolean;
-        static paused: boolean;
-        static enemyData: any;
-        static turretData: any;
-        static wavesData: any;
-        static waveEnemies: {
-            "type": string;
-            "t": number;
-        }[];
-        static level: number;
-        static boardDimensions: {
-            r: number;
-            c: number;
-        };
-        static enemiesPathCells: {
-            r: number;
-            c: number;
-        }[];
-        static enemies: Enemy[];
     }
 }
 declare module Anuto.Types {
@@ -246,7 +240,7 @@ declare module Anuto {
     class HealerEnemy extends Enemy {
         healing: boolean;
         private f;
-        constructor(creationTick: number);
+        constructor(creationTick: number, engine: Engine);
         update(): void;
         private heal;
     }
@@ -288,7 +282,6 @@ declare module Anuto {
 }
 declare module Anuto {
     class Bullet {
-        static id: number;
         id: number;
         x: number;
         y: number;
@@ -301,7 +294,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        }, angle: number, assignedEnemy: Enemy, damage: number, canonShoot: string, turret: ProjectileTurret);
+        }, angle: number, assignedEnemy: Enemy, damage: number, canonShoot: string, turret: ProjectileTurret, engine: Engine);
         destroy(): void;
         update(): void;
         getPositionNextTick(): {
@@ -312,7 +305,6 @@ declare module Anuto {
 }
 declare module Anuto {
     class Glue {
-        static id: number;
         id: number;
         x: number;
         y: number;
@@ -324,14 +316,13 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        }, intensity: number, duration: number, range: number);
+        }, intensity: number, duration: number, range: number, engine: Engine);
         destroy(): void;
         update(): void;
     }
 }
 declare module Anuto {
     class GlueBullet {
-        static id: number;
         id: number;
         x: number;
         y: number;
@@ -344,7 +335,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        }, angle: number, assignedEnemy: Enemy, intensity: number, durationTicks: number);
+        }, angle: number, assignedEnemy: Enemy, intensity: number, durationTicks: number, engine: Engine);
         destroy(): void;
         update(): void;
         getPositionNextTick(): {
@@ -362,7 +353,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        });
+        }, engine: Engine);
         protected calculateTurretParameters(): void;
         protected shoot(): void;
     }
@@ -372,7 +363,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        });
+        }, engine: Engine);
         update(): void;
         protected calculateTurretParameters(): void;
         protected getEnemiesWithinLine(enemy: Enemy): Enemy[];
@@ -399,7 +390,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        });
+        }, engine: any);
         protected calculateTurretParameters(): void;
         protected getPathCellsInRange(): {
             r: number;
@@ -410,7 +401,6 @@ declare module Anuto {
 }
 declare module Anuto {
     class Mine {
-        static id: number;
         id: number;
         x: number;
         y: number;
@@ -419,10 +409,11 @@ declare module Anuto {
         damage: number;
         detonate: boolean;
         turret: LaunchTurret;
+        private engine;
         constructor(p: {
             r: number;
             c: number;
-        }, explosionRange: number, damage: number, turret: LaunchTurret);
+        }, explosionRange: number, damage: number, turret: LaunchTurret, engine: Engine);
         destroy(): void;
         update(): void;
         getEnemiesWithinExplosionRange(): {
@@ -433,7 +424,6 @@ declare module Anuto {
 }
 declare module Anuto {
     class Mortar {
-        static id: number;
         id: number;
         x: number;
         y: number;
@@ -447,10 +437,11 @@ declare module Anuto {
         private vy;
         private f;
         private damage;
+        private engine;
         constructor(p: {
             r: number;
             c: number;
-        }, angle: number, ticksToImpact: number, explosionRange: number, damage: number, grade: number, turret: LaunchTurret);
+        }, angle: number, ticksToImpact: number, explosionRange: number, damage: number, grade: number, turret: LaunchTurret, engine: Engine);
         destroy(): void;
         update(): void;
         getEnemiesWithinExplosionRange(): {
@@ -465,7 +456,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        });
+        }, engine: Engine);
         update(): void;
         protected calculateTurretParameters(): void;
         protected shoot(): void;
@@ -486,11 +477,8 @@ declare module Anuto {
         }, r: number): boolean;
         static isPointInLineSegment(x1: number, y1: number, x2: number, y2: number, px: number, py: number): boolean;
         static isPointInsideCircle(x: number, y: number, cx: number, cy: number, r: number): boolean;
-        static splitList(list: any): {
-            leftHalf: any;
-            rigthHalf: any;
-        };
-        static jointLists(list1: any, list2: any, compare: any): any[];
-        static mergesort(list: any, compare: any): any;
+        static mergeSort(list: any[], compareFunction?: Function): any[];
+        private static splitList;
+        private static jointLists;
     }
 }

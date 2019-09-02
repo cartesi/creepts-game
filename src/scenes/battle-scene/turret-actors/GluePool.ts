@@ -35,7 +35,7 @@ export class GluePool extends Phaser.GameObjects.Container {
             scaleY: 1,
             alpha: 1,
             ease: Phaser.Math.Easing.Cubic.Out,
-            duration: GameVars.timeStepFactor === 4 ? 200 : 600,
+            duration: GameVars.timeStepFactor === 1 ? 600 : 200,
         });
 
         this.setScale(0);
@@ -50,7 +50,7 @@ export class GluePool extends Phaser.GameObjects.Container {
             targets: this,
             alpha: 0,
             ease: Phaser.Math.Easing.Cubic.Out,
-            duration: GameVars.timeStepFactor === 4 ? 200 : 600,
+            duration: GameVars.timeStepFactor === 1 ? 600 : 200,
             onComplete: () => {
                 super.destroy();
             },

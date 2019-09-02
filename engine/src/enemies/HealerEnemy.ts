@@ -6,9 +6,9 @@ module Anuto {
 
         private f: number;
     
-        constructor (creationTick: number) {
+        constructor (creationTick: number, engine: Engine) {
             
-            super(GameConstants.ENEMY_HEALER, creationTick);
+            super(GameConstants.ENEMY_HEALER, creationTick, engine);
 
             // para que no se paren todos en el mismo lugar y al mismo tiempo
             this.f = GameConstants.HEALER_HEALING_TICKS - creationTick % GameConstants.HEALER_HEALING_TICKS;
@@ -34,7 +34,7 @@ module Anuto {
                 super.update();
 
                 // no cura si ya esta muy cerca de la salida
-                if (this.f === GameConstants.HEALER_HEALING_TICKS && this.l < GameVars.enemiesPathCells.length - 2) {
+                if (this.f === GameConstants.HEALER_HEALING_TICKS && this.l < this.engine.enemiesPathCells.length - 2) {
                     this.f = 0;
                     this.healing = true;
                 }
@@ -44,9 +44,9 @@ module Anuto {
         private heal(): void {
 
             // encontrar a todos los enemigos que esten dentro de un determinado radio y restaurarles la salud
-            for (let i = 0; i < GameVars.enemies.length; i ++) {
+            for (let i = 0; i < this.engine.enemies.length; i ++) {
 
-                const enemy = GameVars.enemies[i];
+                const enemy = this.engine.enemies[i];
 
                 if (enemy.id === this.id) {
                     // se cura a si mismo

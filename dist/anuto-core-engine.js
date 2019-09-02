@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -14,38 +14,38 @@ var __extends = (this && this.__extends) || (function () {
 var Anuto;
 (function (Anuto) {
     var EnemiesSpawner = /** @class */ (function () {
-        function EnemiesSpawner() {
-            //
+        function EnemiesSpawner(engine) {
+            this.engine = engine;
         }
         EnemiesSpawner.prototype.getEnemy = function () {
             var enemy = null;
-            var partialTicks = Anuto.GameVars.ticksCounter - Anuto.GameVars.lastWaveTick;
-            if (partialTicks % Anuto.GameVars.enemySpawningDeltaTicks === 0 && Anuto.GameVars.waveEnemies.length > 0) {
-                var nextEnemyData = Anuto.GameVars.waveEnemies[0];
-                if (nextEnemyData.t === partialTicks / Anuto.GameVars.enemySpawningDeltaTicks) {
+            var partialTicks = this.engine.ticksCounter - this.engine.lastWaveTick;
+            if (partialTicks % this.engine.enemySpawningDeltaTicks === 0 && this.engine.waveEnemies.length > 0) {
+                var nextEnemyData = this.engine.waveEnemies[0];
+                if (nextEnemyData.t === partialTicks / this.engine.enemySpawningDeltaTicks) {
                     switch (nextEnemyData.type) {
                         case Anuto.GameConstants.ENEMY_SOLDIER:
-                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_SOLDIER, Anuto.GameVars.ticksCounter);
+                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_SOLDIER, this.engine.ticksCounter, this.engine);
                             break;
                         case Anuto.GameConstants.ENEMY_RUNNER:
-                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_RUNNER, Anuto.GameVars.ticksCounter);
+                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_RUNNER, this.engine.ticksCounter, this.engine);
                             break;
                         case Anuto.GameConstants.ENEMY_HEALER:
-                            enemy = new Anuto.HealerEnemy(Anuto.GameVars.ticksCounter);
+                            enemy = new Anuto.HealerEnemy(this.engine.ticksCounter, this.engine);
                             break;
                         case Anuto.GameConstants.ENEMY_BLOB:
-                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_BLOB, Anuto.GameVars.ticksCounter);
+                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_BLOB, this.engine.ticksCounter, this.engine);
                             break;
                         case Anuto.GameConstants.ENEMY_FLIER:
-                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_FLIER, Anuto.GameVars.ticksCounter);
+                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_FLIER, this.engine.ticksCounter, this.engine);
                             break;
                         default:
                     }
                     // cada ronda que pasa los enemigos tienen mas vida
-                    var extraLife = Math.round(enemy.life * (Anuto.GameVars.round / 10));
+                    var extraLife = Math.round(enemy.life * (this.engine.round / 10));
                     enemy.life += extraLife;
                     enemy.maxLife = enemy.life;
-                    Anuto.GameVars.waveEnemies.shift();
+                    this.engine.waveEnemies.shift();
                 }
             }
             return enemy;
@@ -57,10 +57,11 @@ var Anuto;
 var Anuto;
 (function (Anuto) {
     var Turret = /** @class */ (function () {
-        function Turret(type, p) {
-            this.id = Turret.id;
-            Turret.id++;
-            this.creationTick = Anuto.GameVars.ticksCounter;
+        function Turret(type, p, engine) {
+            this.engine = engine;
+            this.id = engine.turretId;
+            engine.turretId++;
+            this.creationTick = this.engine.ticksCounter;
             this.type = type;
             this.f = 0;
             this.level = 1;
@@ -76,21 +77,14 @@ var Anuto;
             this.followedEnemy = null;
             this.x = this.position.c + .5;
             this.y = this.position.r + .5;
-            this.value = Anuto.GameVars.turretData[this.type].price;
-            this.sellValue = Math.round(Anuto.GameVars.turretData[this.type].price * Turret.downgradePercent);
+            this.value = this.engine.turretData[this.type].price;
+            this.sellValue = Math.round(this.engine.turretData[this.type].price * Turret.DOWNGRADE_PERCENT);
         }
         Turret.prototype.destroy = function () {
             //
         };
         Turret.prototype.update = function () {
             this.enemiesWithinRange = this.getEnemiesWithinRange();
-            // if (this.enemiesWithinRange && this.enemiesWithinRange.length > 0) {
-            //     let str = "";
-            //     for (let i = 0; i < this.enemiesWithinRange.length; i++) {
-            //         str += this.enemiesWithinRange[i].id + " ";
-            //     }
-            //     console.log(str);
-            // }
             if (this.readyToShoot) {
                 // si es la de las minas no necesita tener a enemigos en rango
                 if (this.type === Anuto.GameConstants.TURRET_LAUNCH && this.grade === 2) {
@@ -114,13 +108,13 @@ var Anuto;
         };
         Turret.prototype.improve = function () {
             this.value += this.priceImprovement;
-            this.sellValue += Math.round(this.priceImprovement * Turret.downgradePercent);
+            this.sellValue += Math.round(this.priceImprovement * Turret.DOWNGRADE_PERCENT);
             this.level++;
             this.calculateTurretParameters();
         };
         Turret.prototype.upgrade = function () {
             this.value += this.priceUpgrade;
-            this.sellValue += Math.round(this.priceUpgrade * Turret.downgradePercent);
+            this.sellValue += Math.round(this.priceUpgrade * Turret.DOWNGRADE_PERCENT);
             this.grade++;
             this.level = 1;
             if (this.grade === 3 && this.type !== Anuto.GameConstants.TURRET_GLUE) {
@@ -145,9 +139,9 @@ var Anuto;
         Turret.prototype.getEnemiesWithinRange = function () {
             var enemiesAndSquaredDistances = [];
             var squaredRange = Anuto.MathUtils.fixNumber(this.range * this.range);
-            for (var i = 0; i < Anuto.GameVars.enemies.length; i++) {
-                var enemy = Anuto.GameVars.enemies[i];
-                if (enemy.life > 0 && enemy.l < Anuto.GameVars.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
+            for (var i = 0; i < this.engine.enemies.length; i++) {
+                var enemy = this.engine.enemies[i];
+                if (enemy.life > 0 && enemy.l < this.engine.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
                     var dx = this.x - enemy.x;
                     var dy = this.y - enemy.y;
                     var squaredDist = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
@@ -160,19 +154,19 @@ var Anuto;
                 // ordenar a los enemigos dentro del radio de acción según la estrategia de disparo
                 switch (this.shootingStrategy) {
                     case Anuto.GameConstants.STRATEGY_SHOOT_LAST:
-                        enemiesAndSquaredDistances = Anuto.MathUtils.mergesort(enemiesAndSquaredDistances, function (e1, e2) { return e1.enemy.l - e2.enemy.l; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e1.enemy.l - e2.enemy.l) < 0; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_CLOSEST:
-                        enemiesAndSquaredDistances = Anuto.MathUtils.mergesort(enemiesAndSquaredDistances, function (e1, e2) { return e1.squareDist - e2.squareDist; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e1.squareDist - e2.squareDist) < 0; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_WEAKEST:
-                        enemiesAndSquaredDistances = Anuto.MathUtils.mergesort(enemiesAndSquaredDistances, function (e1, e2) { return e1.enemy.life - e2.enemy.life; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e1.enemy.life - e2.enemy.life) < 0; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_STRONGEST:
-                        enemiesAndSquaredDistances = Anuto.MathUtils.mergesort(enemiesAndSquaredDistances, function (e1, e2) { return e2.enemy.life - e1.enemy.life; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e2.enemy.life - e1.enemy.life) < 0; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_FIRST:
-                        enemiesAndSquaredDistances = Anuto.MathUtils.mergesort(enemiesAndSquaredDistances, function (e1, e2) { return e2.enemy.l - e1.enemy.l; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e1.enemy.l - e2.enemy.l) > 0; });
                         break;
                     default:
                 }
@@ -183,7 +177,7 @@ var Anuto;
             }
             return enemies;
         };
-        Turret.downgradePercent = .9;
+        Turret.DOWNGRADE_PERCENT = .9;
         return Turret;
     }());
     Anuto.Turret = Turret;
@@ -191,12 +185,13 @@ var Anuto;
 var Anuto;
 (function (Anuto) {
     var Enemy = /** @class */ (function () {
-        function Enemy(type, creationTick) {
-            this.id = Enemy.id;
-            Enemy.id++;
+        function Enemy(type, creationTick, engine) {
+            this.id = engine.enemyId;
+            engine.enemyId++;
             this.creationTick = creationTick;
+            this.engine = engine;
             this.type = type;
-            this.enemyData = Anuto.GameVars.enemyData[this.type];
+            this.enemyData = this.engine.enemyData[this.type];
             this.life = this.enemyData.life;
             this.maxLife = this.enemyData.life;
             this.value = this.enemyData.value;
@@ -211,7 +206,7 @@ var Anuto;
             this.teleporting = false;
             this.l = 0;
             this.t = 0;
-            var p = Anuto.Engine.getPathPosition(this.l);
+            var p = this.engine.getPathPosition(this.l);
             this.x = p.x;
             this.y = p.y;
             this.boundingRadius = .4; // en proporcion al tamaño de las celdas
@@ -243,13 +238,13 @@ var Anuto;
                 }
             }
             this.l = Anuto.MathUtils.fixNumber(this.l + speed);
-            if (this.l >= Anuto.GameVars.enemiesPathCells.length - 1) {
-                this.x = Anuto.GameVars.enemiesPathCells[Anuto.GameVars.enemiesPathCells.length - 1].c;
-                this.y = Anuto.GameVars.enemiesPathCells[Anuto.GameVars.enemiesPathCells.length - 1].r;
-                Anuto.Engine.currentInstance.onEnemyReachedExit(this);
+            if (this.l >= this.engine.enemiesPathCells.length - 1) {
+                this.x = this.engine.enemiesPathCells[this.engine.enemiesPathCells.length - 1].c;
+                this.y = this.engine.enemiesPathCells[this.engine.enemiesPathCells.length - 1].r;
+                this.engine.onEnemyReachedExit(this);
             }
             else {
-                var p = Anuto.Engine.getPathPosition(this.l);
+                var p = this.engine.getPathPosition(this.l);
                 this.x = p.x;
                 this.y = p.y;
             }
@@ -262,7 +257,7 @@ var Anuto;
             if (this.l < 0) {
                 this.l = 0;
             }
-            var p = Anuto.Engine.getPathPosition(this.l);
+            var p = this.engine.getPathPosition(this.l);
             this.x = p.x;
             this.y = p.y;
         };
@@ -293,7 +288,7 @@ var Anuto;
             }
             if (this.life <= 0) {
                 this.life = 0;
-                Anuto.Engine.currentInstance.onEnemyKilled(this);
+                this.engine.onEnemyKilled(this);
             }
         };
         Enemy.prototype.glueHit = function (intensity, duration, bullet) {
@@ -310,7 +305,7 @@ var Anuto;
                 speed = Anuto.MathUtils.fixNumber(this.speed / this.glueIntensity);
             }
             var l = Anuto.MathUtils.fixNumber(this.l + speed * deltaTicks);
-            var p = Anuto.Engine.getPathPosition(l);
+            var p = this.engine.getPathPosition(l);
             return { x: p.x, y: p.y };
         };
         return Enemy;
@@ -323,60 +318,39 @@ var Anuto;
 (function (Anuto) {
     var Engine = /** @class */ (function () {
         function Engine(gameConfig, enemyData, turretData, wavesData) {
-            Engine.currentInstance = this;
-            Anuto.Turret.id = 0;
-            Anuto.Enemy.id = 0;
-            Anuto.Bullet.id = 0;
-            Anuto.Mortar.id = 0;
-            Anuto.Glue.id = 0;
-            Anuto.Mine.id = 0;
-            Anuto.GameVars.runningInClientSide = gameConfig.runningInClientSide;
-            Anuto.GameVars.credits = gameConfig.credits;
-            Anuto.GameVars.lifes = gameConfig.lifes;
-            Anuto.GameVars.timeStep = gameConfig.timeStep;
-            Anuto.GameVars.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
-            Anuto.GameVars.paused = false;
-            Anuto.GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
-            Anuto.GameVars.enemyData = enemyData;
-            Anuto.GameVars.turretData = turretData;
-            Anuto.GameVars.wavesData = wavesData;
-            Anuto.GameVars.round = 0;
-            Anuto.GameVars.score = 0;
-            Anuto.GameVars.gameOver = false;
+            this.turretId = 0;
+            this.enemyId = 0;
+            this.bulletId = 0;
+            this.mortarId = 0;
+            this.glueId = 0;
+            this.mineId = 0;
+            this.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
+            this.runningInClientSide = gameConfig.runningInClientSide;
+            this._credits = gameConfig.credits;
+            this._lifes = gameConfig.lifes;
+            this._paused = false;
+            this._timeStep = gameConfig.timeStep;
+            this.enemiesPathCells = gameConfig.enemiesPathCells;
+            this.enemyData = enemyData;
+            this.turretData = turretData;
+            this.wavesData = wavesData;
+            this._score = 0;
+            this._gameOver = false;
+            this._round = 0;
             this.waveActivated = false;
             this.t = 0;
             this.eventDispatcher = new Anuto.EventDispatcher();
-            this.enemiesSpawner = new Anuto.EnemiesSpawner();
-            Anuto.GameVars.ticksCounter = 0;
-            Anuto.GameVars.lastWaveTick = 0;
+            this.enemiesSpawner = new Anuto.EnemiesSpawner(this);
+            this._ticksCounter = 0;
+            this.lastWaveTick = 0;
             this.turrets = [];
             this.mines = [];
             this.minesImpacting = [];
             this.initWaveVars();
         }
-        Engine.getPathPosition = function (l) {
-            var x;
-            var y;
-            var i = Math.floor(l);
-            if (i === Anuto.GameVars.enemiesPathCells.length - 1) {
-                x = Anuto.GameVars.enemiesPathCells[Anuto.GameVars.enemiesPathCells.length - 1].c;
-                y = Anuto.GameVars.enemiesPathCells[Anuto.GameVars.enemiesPathCells.length - 1].r;
-            }
-            else {
-                var dl = Anuto.MathUtils.fixNumber(l - i);
-                // interpolar entre i e i + 1
-                x = Anuto.GameVars.enemiesPathCells[i].c + .5;
-                y = Anuto.GameVars.enemiesPathCells[i].r + .5;
-                var dx = Anuto.MathUtils.fixNumber(Anuto.GameVars.enemiesPathCells[i + 1].c - Anuto.GameVars.enemiesPathCells[i].c);
-                var dy = Anuto.MathUtils.fixNumber(Anuto.GameVars.enemiesPathCells[i + 1].r - Anuto.GameVars.enemiesPathCells[i].r);
-                x = Anuto.MathUtils.fixNumber(x + dx * dl);
-                y = Anuto.MathUtils.fixNumber(y + dy * dl);
-            }
-            return { x: x, y: y };
-        };
         Engine.prototype.initWaveVars = function () {
             this.t = Date.now();
-            Anuto.GameVars.enemies = [];
+            this.enemies = [];
             this.bullets = [];
             this.glueBullets = [];
             this.mortars = [];
@@ -391,29 +365,33 @@ var Anuto;
             this.enemiesSpawned = 0;
         };
         Engine.prototype.update = function () {
-            if (Anuto.GameVars.runningInClientSide) {
+            if (this.runningInClientSide) {
                 var t = Date.now();
-                if (t - this.t < Anuto.GameVars.timeStep) {
+                if (t - this.t < this._timeStep) {
                     return;
                 }
                 this.t = t;
             }
-            if (Anuto.GameVars.paused) {
+            if (this._paused || !this.waveActivated) {
                 return;
             }
+<<<<<<< HEAD
             // Esto esta comentado ya que las minas se pueden poner aunque las rondas no esten en marcha y los tiempos de recarga tienen que completarse por lo que el motor tiene que seguir funcionando
             if (!this.waveActivated) {
                 return;
             }
             if (Anuto.GameVars.lifes <= 0 && !Anuto.GameVars.gameOver) {
+=======
+            if (this._lifes <= 0 && !this._gameOver) {
+>>>>>>> develop
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.GAME_OVER));
-                Anuto.GameVars.gameOver = true;
-                console.log("TICKS: " + Anuto.GameVars.ticksCounter);
-                console.log("SCORE: " + Anuto.GameVars.score);
+                this._gameOver = true;
+                console.log("TICKS: " + this._ticksCounter);
+                console.log("SCORE: " + this._score);
             }
             if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
                 this.waveActivated = false;
-                if (Anuto.GameVars.lifes > 0) {
+                if (this._lifes > 0) {
                     this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.WAVE_OVER));
                 }
                 else {
@@ -426,7 +404,7 @@ var Anuto;
                 this.checkCollisions();
                 this.spawnEnemies();
             }
-            Anuto.GameVars.enemies.forEach(function (enemy) {
+            this.enemies.forEach(function (enemy) {
                 enemy.update();
             }, this);
             this.turrets.forEach(function (turret) {
@@ -447,42 +425,42 @@ var Anuto;
             this.glues.forEach(function (glue) {
                 glue.update();
             });
-            Anuto.GameVars.ticksCounter++;
+            this._ticksCounter++;
         };
         Engine.prototype.newWave = function () {
             if (this.waveActivated) {
                 return false;
             }
-            var length = Object.keys(Anuto.GameVars.wavesData).length;
-            var initialWaveEnemies = Anuto.GameVars.wavesData["wave_" + (Anuto.GameVars.round % length + 1)].slice(0);
-            Anuto.GameVars.waveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
-            var extraWaves = Math.floor(Anuto.GameVars.round / length) * 2;
-            Anuto.GameVars.round++;
+            var length = Object.keys(this.wavesData).length;
+            var initialWaveEnemies = this.wavesData["wave_" + (this._round % length + 1)].slice(0);
+            this.waveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
+            var extraWaves = Math.floor(this._round / length) * 2;
+            this._round++;
             for (var i = 0; i < extraWaves; i++) {
                 var nextWaveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
-                var lastTickValue = Anuto.GameVars.waveEnemies[Anuto.GameVars.waveEnemies.length - 1].t;
+                var lastTickValue = this.waveEnemies[this.waveEnemies.length - 1].t;
                 for (var j = 0; j < nextWaveEnemies.length; j++) {
                     nextWaveEnemies[j].t += (lastTickValue + 2);
                 }
-                Anuto.GameVars.waveEnemies = Anuto.GameVars.waveEnemies.concat(nextWaveEnemies);
+                this.waveEnemies = this.waveEnemies.concat(nextWaveEnemies);
             }
-            Anuto.GameVars.lastWaveTick = Anuto.GameVars.ticksCounter;
+            this.lastWaveTick = this._ticksCounter;
             this.waveActivated = true;
             this.initWaveVars();
-            this.waveEnemiesLength = Anuto.GameVars.waveEnemies.length;
+            this.waveEnemiesLength = this.waveEnemies.length;
             return true;
         };
         Engine.prototype.removeEnemy = function (enemy) {
-            var i = Anuto.GameVars.enemies.indexOf(enemy);
+            var i = this.enemies.indexOf(enemy);
             if (i !== -1) {
-                Anuto.GameVars.enemies.splice(i, 1);
+                this.enemies.splice(i, 1);
             }
             enemy.destroy();
         };
         Engine.prototype.addTurret = function (type, p) {
             // mirar si estamos poniendo la torreta encima del camino
-            for (var i = 0; i < Anuto.GameVars.enemiesPathCells.length; i++) {
-                if (p.c === Anuto.GameVars.enemiesPathCells[i].c && p.r === Anuto.GameVars.enemiesPathCells[i].r) {
+            for (var i = 0; i < this.enemiesPathCells.length; i++) {
+                if (p.c === this.enemiesPathCells[i].c && p.r === this.enemiesPathCells[i].r) {
                     return null;
                 }
             }
@@ -495,24 +473,24 @@ var Anuto;
             var turret = null;
             switch (type) {
                 case Anuto.GameConstants.TURRET_PROJECTILE:
-                    turret = new Anuto.ProjectileTurret(p);
+                    turret = new Anuto.ProjectileTurret(p, this);
                     break;
                 case Anuto.GameConstants.TURRET_LASER:
-                    turret = new Anuto.LaserTurret(p);
+                    turret = new Anuto.LaserTurret(p, this);
                     break;
                 case Anuto.GameConstants.TURRET_LAUNCH:
-                    turret = new Anuto.LaunchTurret(p);
+                    turret = new Anuto.LaunchTurret(p, this);
                     break;
                 case Anuto.GameConstants.TURRET_GLUE:
-                    turret = new Anuto.GlueTurret(p);
+                    turret = new Anuto.GlueTurret(p, this);
                     break;
                 default:
             }
-            if (Anuto.GameVars.credits < turret.value) {
+            if (this._credits < turret.value) {
                 return null;
             }
             this.turrets.push(turret);
-            Anuto.GameVars.credits -= turret.value;
+            this._credits -= turret.value;
             return turret;
         };
         Engine.prototype.sellTurret = function (id) {
@@ -524,7 +502,7 @@ var Anuto;
             if (i !== -1) {
                 this.turrets.splice(i, 1);
             }
-            Anuto.GameVars.credits += turret.sellValue;
+            this._credits += turret.sellValue;
             turret.destroy();
             return true;
         };
@@ -590,35 +568,35 @@ var Anuto;
             }
         };
         Engine.prototype.onEnemyReachedExit = function (enemy) {
-            var i = Anuto.GameVars.enemies.indexOf(enemy);
+            var i = this.enemies.indexOf(enemy);
             if (i !== -1) {
-                Anuto.GameVars.enemies.splice(i, 1);
+                this.enemies.splice(i, 1);
             }
             enemy.destroy();
-            Anuto.GameVars.lifes -= 1;
+            this._lifes -= 1;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_REACHED_EXIT, [enemy]));
-            if (Anuto.GameVars.enemies.length === 0 && this.allEnemiesSpawned) {
+            if (this.enemies.length === 0 && this.allEnemiesSpawned) {
                 this.onNoEnemiesOnStage();
             }
         };
         Engine.prototype.onEnemyKilled = function (enemy) {
-            Anuto.GameVars.credits += enemy.value;
-            Anuto.GameVars.score += enemy.value;
+            this._credits += enemy.value;
+            this._score += enemy.value;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_KILLED, [enemy]));
-            var i = Anuto.GameVars.enemies.indexOf(enemy);
+            var i = this.enemies.indexOf(enemy);
             if (i !== -1) {
-                Anuto.GameVars.enemies.splice(i, 1);
+                this.enemies.splice(i, 1);
             }
             enemy.destroy();
-            if (Anuto.GameVars.enemies.length === 0 && this.allEnemiesSpawned) {
+            if (this.enemies.length === 0 && this.allEnemiesSpawned) {
                 this.onNoEnemiesOnStage();
             }
         };
         Engine.prototype.improveTurret = function (id) {
             var success = false;
             var turret = this.getTurretById(id);
-            if (turret && turret.level < turret.maxLevel && Anuto.GameVars.credits >= turret.priceImprovement) {
-                Anuto.GameVars.credits -= turret.priceImprovement;
+            if (turret && turret.level < turret.maxLevel && this._credits >= turret.priceImprovement) {
+                this._credits -= turret.priceImprovement;
                 turret.improve();
                 success = true;
             }
@@ -627,12 +605,32 @@ var Anuto;
         Engine.prototype.upgradeTurret = function (id) {
             var success = false;
             var turret = this.getTurretById(id);
-            if (turret && turret.grade < 3 && Anuto.GameVars.credits >= turret.priceUpgrade) {
-                Anuto.GameVars.credits -= turret.priceUpgrade;
+            if (turret && turret.grade < 3 && this._credits >= turret.priceUpgrade) {
+                this._credits -= turret.priceUpgrade;
                 turret.upgrade();
                 success = true;
             }
             return success;
+        };
+        Engine.prototype.getPathPosition = function (l) {
+            var x;
+            var y;
+            var i = Math.floor(l);
+            if (i === this.enemiesPathCells.length - 1) {
+                x = this.enemiesPathCells[this.enemiesPathCells.length - 1].c;
+                y = this.enemiesPathCells[this.enemiesPathCells.length - 1].r;
+            }
+            else {
+                var dl = Anuto.MathUtils.fixNumber(l - i);
+                // interpolar entre i e i + 1
+                x = this.enemiesPathCells[i].c + .5;
+                y = this.enemiesPathCells[i].r + .5;
+                var dx = Anuto.MathUtils.fixNumber(this.enemiesPathCells[i + 1].c - this.enemiesPathCells[i].c);
+                var dy = Anuto.MathUtils.fixNumber(this.enemiesPathCells[i + 1].r - this.enemiesPathCells[i].r);
+                x = Anuto.MathUtils.fixNumber(x + dx * dl);
+                y = Anuto.MathUtils.fixNumber(y + dy * dl);
+            }
+            return { x: x, y: y };
         };
         Engine.prototype.addEventListener = function (type, listenerFunction, scope) {
             this.eventDispatcher.addEventListener(type, listenerFunction, scope);
@@ -687,8 +685,8 @@ var Anuto;
                     this.consumedGlues.push(this.glues[i]);
                 }
             }
-            for (var i = 0; i < Anuto.GameVars.enemies.length; i++) {
-                var enemy = Anuto.GameVars.enemies[i];
+            for (var i = 0; i < this.enemies.length; i++) {
+                var enemy = this.enemies[i];
                 if (enemy.type !== Anuto.GameConstants.ENEMY_FLIER) {
                     enemy.affectedByGlue = false;
                     for (var j = 0; j < this.glues.length; j++) {
@@ -815,8 +813,8 @@ var Anuto;
                 if (this.enemiesSpawned === this.waveEnemiesLength) {
                     this.allEnemiesSpawned = true;
                 }
-                Anuto.GameVars.enemies.push(enemy);
-                this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_SPAWNED, [enemy, Anuto.GameVars.enemiesPathCells[0]]));
+                this.enemies.push(enemy);
+                this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_SPAWNED, [enemy, this.enemiesPathCells[0]]));
             }
         };
         Engine.prototype.onNoEnemiesOnStage = function () {
@@ -839,61 +837,62 @@ var Anuto;
             }
             return turret;
         };
+        Object.defineProperty(Engine.prototype, "credits", {
+            // GETTERS Y SETTERS
+            get: function () {
+                return this._credits;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Engine.prototype, "ticksCounter", {
             get: function () {
-                return Anuto.GameVars.ticksCounter;
+                return this._ticksCounter;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Engine.prototype, "score", {
             get: function () {
-                return Anuto.GameVars.score;
+                return this._score;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Engine.prototype, "gameOver", {
             get: function () {
-                return Anuto.GameVars.gameOver;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Engine.prototype, "credits", {
-            get: function () {
-                return Anuto.GameVars.credits;
+                return this._gameOver;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Engine.prototype, "lifes", {
             get: function () {
-                return Anuto.GameVars.lifes;
+                return this._lifes;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Engine.prototype, "round", {
             get: function () {
-                return Anuto.GameVars.round;
+                return this._round;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Engine.prototype, "timeStep", {
             get: function () {
-                return Anuto.GameVars.timeStep;
+                return this._timeStep;
             },
             set: function (value) {
-                Anuto.GameVars.timeStep = value;
+                this._timeStep = value;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Engine.prototype, "paused", {
             set: function (value) {
-                Anuto.GameVars.paused = value;
+                this._paused = value;
             },
             enumerable: true,
             configurable: true
@@ -942,19 +941,10 @@ var Anuto;
 })(Anuto || (Anuto = {}));
 var Anuto;
 (function (Anuto) {
-    var GameVars = /** @class */ (function () {
-        function GameVars() {
-        }
-        return GameVars;
-    }());
-    Anuto.GameVars = GameVars;
-})(Anuto || (Anuto = {}));
-var Anuto;
-(function (Anuto) {
     var HealerEnemy = /** @class */ (function (_super) {
         __extends(HealerEnemy, _super);
-        function HealerEnemy(creationTick) {
-            var _this = _super.call(this, Anuto.GameConstants.ENEMY_HEALER, creationTick) || this;
+        function HealerEnemy(creationTick, engine) {
+            var _this = _super.call(this, Anuto.GameConstants.ENEMY_HEALER, creationTick, engine) || this;
             // para que no se paren todos en el mismo lugar y al mismo tiempo
             _this.f = Anuto.GameConstants.HEALER_HEALING_TICKS - creationTick % Anuto.GameConstants.HEALER_HEALING_TICKS;
             _this.healing = false;
@@ -972,7 +962,7 @@ var Anuto;
             else {
                 _super.prototype.update.call(this);
                 // no cura si ya esta muy cerca de la salida
-                if (this.f === Anuto.GameConstants.HEALER_HEALING_TICKS && this.l < Anuto.GameVars.enemiesPathCells.length - 2) {
+                if (this.f === Anuto.GameConstants.HEALER_HEALING_TICKS && this.l < this.engine.enemiesPathCells.length - 2) {
                     this.f = 0;
                     this.healing = true;
                 }
@@ -980,8 +970,8 @@ var Anuto;
         };
         HealerEnemy.prototype.heal = function () {
             // encontrar a todos los enemigos que esten dentro de un determinado radio y restaurarles la salud
-            for (var i = 0; i < Anuto.GameVars.enemies.length; i++) {
-                var enemy = Anuto.GameVars.enemies[i];
+            for (var i = 0; i < this.engine.enemies.length; i++) {
+                var enemy = this.engine.enemies[i];
                 if (enemy.id === this.id) {
                     // se cura a si mismo
                     enemy.restoreHealth();
@@ -1074,9 +1064,9 @@ var Anuto;
 (function (Anuto) {
     var Bullet = /** @class */ (function () {
         // bullet speed in cells / tick
-        function Bullet(p, angle, assignedEnemy, damage, canonShoot, turret) {
-            this.id = Bullet.id;
-            Bullet.id++;
+        function Bullet(p, angle, assignedEnemy, damage, canonShoot, turret, engine) {
+            this.id = engine.bulletId;
+            engine.bulletId++;
             this.x = p.c + .5;
             this.y = p.r + .5;
             this.assignedEnemy = assignedEnemy;
@@ -1103,9 +1093,9 @@ var Anuto;
 var Anuto;
 (function (Anuto) {
     var Glue = /** @class */ (function () {
-        function Glue(p, intensity, duration, range) {
-            this.id = Glue.id;
-            Glue.id++;
+        function Glue(p, intensity, duration, range, engine) {
+            this.id = engine.glueId;
+            engine.glueId++;
             this.x = p.c + .5;
             this.y = p.r + .5;
             this.intensity = intensity;
@@ -1131,9 +1121,9 @@ var Anuto;
 (function (Anuto) {
     var GlueBullet = /** @class */ (function () {
         // bullet speed in cells / tick
-        function GlueBullet(p, angle, assignedEnemy, intensity, durationTicks) {
-            this.id = Anuto.Bullet.id;
-            Anuto.Bullet.id++;
+        function GlueBullet(p, angle, assignedEnemy, intensity, durationTicks, engine) {
+            this.id = engine.bulletId;
+            engine.bulletId++;
             this.x = p.c + .5;
             this.y = p.r + .5;
             this.assignedEnemy = assignedEnemy;
@@ -1160,8 +1150,8 @@ var Anuto;
 (function (Anuto) {
     var GlueTurret = /** @class */ (function (_super) {
         __extends(GlueTurret, _super);
-        function GlueTurret(p) {
-            var _this = _super.call(this, Anuto.GameConstants.TURRET_GLUE, p) || this;
+        function GlueTurret(p, engine) {
+            var _this = _super.call(this, Anuto.GameConstants.TURRET_GLUE, p, engine) || this;
             _this.maxLevel = 5;
             _this.teleportDistance = 0;
             _this.calculateTurretParameters();
@@ -1202,8 +1192,8 @@ var Anuto;
             var enemy;
             switch (this.grade) {
                 case 1:
-                    var glue = new Anuto.Glue(this.position, this.intensity, this.durationTicks, this.range);
-                    Anuto.Engine.currentInstance.addGlue(glue, this);
+                    var glue = new Anuto.Glue(this.position, this.intensity, this.durationTicks, this.range, this.engine);
+                    this.engine.addGlue(glue, this);
                     break;
                 case 2:
                     if (this.fixedTarget) {
@@ -1223,8 +1213,8 @@ var Anuto;
                     var impactSquareDistance = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
                     if (this.range * this.range > impactSquareDistance) {
                         this.shootAngle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
-                        var bullet = new Anuto.GlueBullet({ c: this.position.c, r: this.position.r }, this.shootAngle, enemy, this.intensity, this.durationTicks);
-                        Anuto.Engine.currentInstance.addGlueBullet(bullet, this);
+                        var bullet = new Anuto.GlueBullet({ c: this.position.c, r: this.position.r }, this.shootAngle, enemy, this.intensity, this.durationTicks, this.engine);
+                        this.engine.addGlueBullet(bullet, this);
                     }
                     else {
                         // no se dispara y se vuelve a estar disponible para disparar
@@ -1239,7 +1229,7 @@ var Anuto;
                         enemy = this.enemiesWithinRange[0];
                     }
                     if (enemy.life > 0 && !enemy.hasBeenTeleported) {
-                        Anuto.Engine.currentInstance.flagEnemyToTeleport(enemy, this);
+                        this.engine.flagEnemyToTeleport(enemy, this);
                     }
                     else {
                         this.readyToShoot = true;
@@ -1256,8 +1246,8 @@ var Anuto;
 (function (Anuto) {
     var LaserTurret = /** @class */ (function (_super) {
         __extends(LaserTurret, _super);
-        function LaserTurret(p) {
-            var _this = _super.call(this, Anuto.GameConstants.TURRET_LASER, p) || this;
+        function LaserTurret(p, engine) {
+            var _this = _super.call(this, Anuto.GameConstants.TURRET_LASER, p, engine) || this;
             _this.calculateTurretParameters();
             return _this;
         }
@@ -1306,8 +1296,8 @@ var Anuto;
         };
         LaserTurret.prototype.getEnemiesWithinLine = function (enemy) {
             var newEnemies = [];
-            for (var i = 0; i < Anuto.GameVars.enemies.length; i++) {
-                var newEnemy = Anuto.GameVars.enemies[i];
+            for (var i = 0; i < this.engine.enemies.length; i++) {
+                var newEnemy = this.engine.enemies[i];
                 // if (newEnemy !== enemy && this.inLine({x: this.position.c, y: this.position.r}, {x: Math.floor(newEnemy.x), y: Math.floor(newEnemy.y)}, {x: Math.floor(enemy.x), y: Math.floor(enemy.y)})) {
                 //     newEnemies.push(newEnemy);
                 // }
@@ -1383,7 +1373,7 @@ var Anuto;
                 }
             }
             if (enemies[0].life > 0) {
-                Anuto.Engine.currentInstance.addLaserRay(this, enemies);
+                this.engine.addLaserRay(this, enemies);
             }
             else {
                 this.readyToShoot = true;
@@ -1397,8 +1387,8 @@ var Anuto;
 (function (Anuto) {
     var LaunchTurret = /** @class */ (function (_super) {
         __extends(LaunchTurret, _super);
-        function LaunchTurret(p) {
-            var _this = _super.call(this, Anuto.GameConstants.TURRET_LAUNCH, p) || this;
+        function LaunchTurret(p, engine) {
+            var _this = _super.call(this, Anuto.GameConstants.TURRET_LAUNCH, p, engine) || this;
             _this.calculateTurretParameters();
             _this.minesCounter = 0;
             _this.numMines = 0;
@@ -1436,8 +1426,8 @@ var Anuto;
         };
         LaunchTurret.prototype.getPathCellsInRange = function () {
             var cells = [];
-            for (var i = 0; i < Anuto.GameVars.enemiesPathCells.length; i++) {
-                var cell = Anuto.GameVars.enemiesPathCells[i];
+            for (var i = 0; i < this.engine.enemiesPathCells.length; i++) {
+                var cell = this.engine.enemiesPathCells[i];
                 if (cell.c >= this.position.c && cell.c <= this.position.c + this.range ||
                     cell.c <= this.position.c && cell.c >= this.position.c - this.range) {
                     if (cell.r >= this.position.r && cell.r <= this.position.r + this.range ||
@@ -1459,8 +1449,8 @@ var Anuto;
                     var dx = (cell.c + .5) - this.x;
                     var dy = (cell.r + .5) - this.y;
                     this.shootAngle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
-                    var mine = new Anuto.Mine({ c: cell.c, r: cell.r }, this.explosionRange, this.damage, this);
-                    Anuto.Engine.currentInstance.addMine(mine, this);
+                    var mine = new Anuto.Mine({ c: cell.c, r: cell.r }, this.explosionRange, this.damage, this, this.engine);
+                    this.engine.addMine(mine, this);
                 }
                 else {
                     this.readyToShoot = true;
@@ -1498,8 +1488,8 @@ var Anuto;
                     var dx = impactPosition.x - this.x;
                     var dy = impactPosition.y - this.y;
                     this.shootAngle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
-                    var mortar = new Anuto.Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage, this.grade, this);
-                    Anuto.Engine.currentInstance.addMortar(mortar, this);
+                    var mortar = new Anuto.Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage, this.grade, this, this.engine);
+                    this.engine.addMortar(mortar, this);
                 }
                 else {
                     // no se lanza el mortero y se vuelve a estar disponible para disparar
@@ -1517,15 +1507,16 @@ var Anuto;
 var Anuto;
 (function (Anuto) {
     var Mine = /** @class */ (function () {
-        function Mine(p, explosionRange, damage, turret) {
-            this.id = Mine.id;
-            Mine.id++;
+        function Mine(p, explosionRange, damage, turret, engine) {
+            this.id = engine.mineId;
+            engine.mineId++;
             this.x = p.c + .5;
             this.y = p.r + .5;
             this.explosionRange = explosionRange;
             this.damage = damage;
             this.range = .5;
             this.detonate = false;
+            this.engine = engine;
             this.turret = turret;
         }
         Mine.prototype.destroy = function () {
@@ -1533,8 +1524,8 @@ var Anuto;
         };
         Mine.prototype.update = function () {
             if (!this.detonate) {
-                for (var i = 0; i < Anuto.GameVars.enemies.length; i++) {
-                    var enemy = Anuto.GameVars.enemies[i];
+                for (var i = 0; i < this.engine.enemies.length; i++) {
+                    var enemy = this.engine.enemies[i];
                     var distance = Anuto.MathUtils.fixNumber(Math.sqrt((enemy.x - this.x) * (enemy.x - this.x) + (enemy.y - this.y) * (enemy.y - this.y)));
                     if (enemy.type === Anuto.GameConstants.ENEMY_FLIER) {
                         continue;
@@ -1548,8 +1539,8 @@ var Anuto;
         };
         Mine.prototype.getEnemiesWithinExplosionRange = function () {
             var hitEnemiesData = [];
-            for (var i = 0; i < Anuto.GameVars.enemies.length; i++) {
-                var enemy = Anuto.GameVars.enemies[i];
+            for (var i = 0; i < this.engine.enemies.length; i++) {
+                var enemy = this.engine.enemies[i];
                 var distance = Anuto.MathUtils.fixNumber(Math.sqrt((enemy.x - this.x) * (enemy.x - this.x) + (enemy.y - this.y) * (enemy.y - this.y)));
                 if (distance <= this.explosionRange) {
                     var damage = Anuto.MathUtils.fixNumber(this.damage * (1 - distance / this.explosionRange));
@@ -1566,10 +1557,10 @@ var Anuto;
 (function (Anuto) {
     var Mortar = /** @class */ (function () {
         // mortar speed in cells / tick
-        function Mortar(p, angle, ticksToImpact, explosionRange, damage, grade, turret) {
-            this.id = Mortar.id;
-            Mortar.id++;
-            this.creationTick = Anuto.GameVars.ticksCounter;
+        function Mortar(p, angle, ticksToImpact, explosionRange, damage, grade, turret, engine) {
+            this.id = engine.mortarId;
+            engine.mortarId++;
+            this.creationTick = engine.ticksCounter;
             this.x = p.c + .5;
             this.y = p.r + .5;
             this.ticksToImpact = ticksToImpact;
@@ -1577,6 +1568,7 @@ var Anuto;
             this.damage = damage;
             this.grade = grade;
             this.turret = turret;
+            this.engine = engine;
             this.detonate = false;
             this.f = 0;
             var speed = this.grade === 3 ? Anuto.GameConstants.MORTAR_SPEED * 5 : Anuto.GameConstants.MORTAR_SPEED;
@@ -1596,8 +1588,8 @@ var Anuto;
         };
         Mortar.prototype.getEnemiesWithinExplosionRange = function () {
             var hitEnemiesData = [];
-            for (var i = 0; i < Anuto.GameVars.enemies.length; i++) {
-                var enemy = Anuto.GameVars.enemies[i];
+            for (var i = 0; i < this.engine.enemies.length; i++) {
+                var enemy = this.engine.enemies[i];
                 var distance = Anuto.MathUtils.fixNumber(Math.sqrt((enemy.x - this.x) * (enemy.x - this.x) + (enemy.y - this.y) * (enemy.y - this.y)));
                 if (distance <= this.explosionRange) {
                     var damage = Anuto.MathUtils.fixNumber(this.damage * (1 - distance / this.explosionRange));
@@ -1612,18 +1604,10 @@ var Anuto;
 })(Anuto || (Anuto = {}));
 var Anuto;
 (function (Anuto) {
-    // usando esto:
-    // https://www.symbolab.com/solver/system-of-equations-calculator/
-    // damage se calcula en funcion de level mediante una equacion de tercer grado
-    // damage = a * level ^ 3 + b * level ^ 2 + c * level + d
-    // siendo a = 1 / 3, b = 2, c = 95/3 y d = 66
-    // reload = (-1/18) * level + 19/18
-    // range = 2/45 * level + 221 / 90
-    // priceNextImprovement =  29 / 336 * level ^ 3  + 27 / 56 * level ^ 2 + 2671 / 336 * this.level + 2323 / 56
     var ProjectileTurret = /** @class */ (function (_super) {
         __extends(ProjectileTurret, _super);
-        function ProjectileTurret(p) {
-            var _this = _super.call(this, Anuto.GameConstants.TURRET_PROJECTILE, p) || this;
+        function ProjectileTurret(p, engine) {
+            var _this = _super.call(this, Anuto.GameConstants.TURRET_PROJECTILE, p, engine) || this;
             _this.canonShoot = "center";
             switch (_this.grade) {
                 case 2:
@@ -1708,8 +1692,8 @@ var Anuto;
             }
             if (this.range * this.range > impactSquareDistance) {
                 this.shootAngle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
-                var bullet = new Anuto.Bullet({ c: this.position.c, r: this.position.r }, this.shootAngle, enemy, this.damage, this.canonShoot, this);
-                Anuto.Engine.currentInstance.addBullet(bullet, this);
+                var bullet = new Anuto.Bullet({ c: this.position.c, r: this.position.r }, this.shootAngle, enemy, this.damage, this.canonShoot, this, this.engine);
+                this.engine.addBullet(bullet, this);
             }
             else {
                 // no se dispara y se vuelve a estar disponible para disparar
@@ -1722,7 +1706,6 @@ var Anuto;
 })(Anuto || (Anuto = {}));
 var Anuto;
 (function (Anuto) {
-    // http://www.jeffreythompson.org/collision-detection/line-circle.php
     var MathUtils = /** @class */ (function () {
         function MathUtils() {
         }
@@ -1781,6 +1764,27 @@ var Anuto;
                 return false;
             }
         };
+        MathUtils.mergeSort = function (list, compareFunction) {
+            // Set a default compare function 
+            if (!compareFunction) {
+                compareFunction = function (x, y) {
+                    return x < y;
+                };
+            }
+            // breaking recursive call
+            if (list.length <= 1) {
+                return list;
+            }
+            var leftHalf;
+            var rigthHalf;
+            var splitingResult = MathUtils.splitList(list);
+            leftHalf = splitingResult.leftHalf;
+            rigthHalf = splitingResult.rigthHalf;
+            // Recursive call.
+            // Passing the compare function to recursive calls to prevent the creation of unnecessary
+            // functions on each call.
+            return MathUtils.jointLists(MathUtils.mergeSort(leftHalf, compareFunction), MathUtils.mergeSort(rigthHalf, compareFunction), compareFunction);
+        };
         MathUtils.splitList = function (list) {
             if (list.length === 0) {
                 return { leftHalf: [], rigthHalf: [] };
@@ -1791,16 +1795,14 @@ var Anuto;
             var index = Math.floor(list.length / 2);
             return { leftHalf: list.slice(0, index), rigthHalf: list.slice(index) };
         };
-        MathUtils.jointLists = function (list1, list2, compare) {
-            // getting the biggest array
-            var iterator = list1.length > list2.length ? list1.length : list2.length;
+        MathUtils.jointLists = function (list1, list2, compareFunction) {
             // defining auxiliar variables
             var result = [];
             var index1 = 0;
             var index2 = 0;
             // sortering previously ordered arrays
             while (true) {
-                if (compare(list1[index1], list2[index2])) {
+                if (compareFunction(list1[index1], list2[index2])) {
                     result.push(list1[index1]);
                     index1++;
                 }
@@ -1822,25 +1824,6 @@ var Anuto;
                 return result.concat(list2.slice(index2));
             }
             return result;
-        };
-        MathUtils.mergesort = function (list, compare) {
-            // Set a default compare function 
-            var compare = compare;
-            if (!compare) {
-                compare = function (x, y) { return x < y; };
-            }
-            // breaking recursive call
-            if (list.length <= 1) {
-                return list;
-            }
-            var leftHalf, rigthHalf;
-            var splitingResult = MathUtils.splitList(list);
-            leftHalf = splitingResult.leftHalf;
-            rigthHalf = splitingResult.rigthHalf;
-            // Recursive call.
-            // Passing the compare function to recursive calls to prevent the creation of unnecessary
-            // functions on each call.
-            return MathUtils.jointLists(MathUtils.mergesort(leftHalf, compare), MathUtils.mergesort(rigthHalf, compare), compare);
         };
         return MathUtils;
     }());

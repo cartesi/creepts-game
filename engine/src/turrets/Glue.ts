@@ -2,8 +2,6 @@ module Anuto {
 
     export class Glue {
 
-        public static id: number;
-
         public id: number;
         public x: number;
         public y: number;
@@ -14,10 +12,10 @@ module Anuto {
        
         private f: number;
 
-        constructor (p: {r: number, c: number}, intensity: number, duration: number, range: number) {
+        constructor (p: {r: number, c: number}, intensity: number, duration: number, range: number, engine: Engine) {
             
-            this.id = Glue.id;
-            Glue.id ++;
+            this.id = engine.glueId;
+            engine.glueId ++;
 
             this.x = p.c + .5;
             this.y = p.r + .5;

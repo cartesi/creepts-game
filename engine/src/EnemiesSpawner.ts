@@ -2,49 +2,52 @@ module Anuto {
 
     export class EnemiesSpawner {
 
-        constructor () {
-            //
+        private engine: Engine;
+
+        constructor (engine: Engine) {
+            
+            this.engine = engine;
         }
 
         public getEnemy(): Enemy {
 
             let enemy: Enemy = null;
 
-            let partialTicks = GameVars.ticksCounter - GameVars.lastWaveTick;
+            let partialTicks = this.engine.ticksCounter - this.engine.lastWaveTick;
             
-            if (partialTicks % GameVars.enemySpawningDeltaTicks === 0 && GameVars.waveEnemies.length > 0) {
+            if (partialTicks % this.engine.enemySpawningDeltaTicks === 0 && this.engine.waveEnemies.length > 0) {
 
-                const nextEnemyData = GameVars.waveEnemies[0];
+                const nextEnemyData = this.engine.waveEnemies[0];
                 
-                if (nextEnemyData.t === partialTicks / GameVars.enemySpawningDeltaTicks) {
+                if (nextEnemyData.t === partialTicks / this.engine.enemySpawningDeltaTicks) {
 
                     switch (nextEnemyData.type) {
 
                         case GameConstants.ENEMY_SOLDIER:
-                            enemy = new Enemy(GameConstants.ENEMY_SOLDIER, GameVars.ticksCounter);
+                            enemy = new Enemy(GameConstants.ENEMY_SOLDIER, this.engine.ticksCounter, this.engine);
                             break;
                         case GameConstants.ENEMY_RUNNER:
-                            enemy = new Enemy(GameConstants.ENEMY_RUNNER, GameVars.ticksCounter);
+                            enemy = new Enemy(GameConstants.ENEMY_RUNNER, this.engine.ticksCounter, this.engine);
                             break;
                         case GameConstants.ENEMY_HEALER:
-                            enemy = new HealerEnemy(GameVars.ticksCounter);
+                            enemy = new HealerEnemy(this.engine.ticksCounter, this.engine);
                             break;
                         case GameConstants.ENEMY_BLOB:
-                            enemy = new Enemy(GameConstants.ENEMY_BLOB, GameVars.ticksCounter);
+                            enemy = new Enemy(GameConstants.ENEMY_BLOB, this.engine.ticksCounter, this.engine);
                             break;
                         case GameConstants.ENEMY_FLIER:
-                            enemy = new Enemy(GameConstants.ENEMY_FLIER, GameVars.ticksCounter);
+                            enemy = new Enemy(GameConstants.ENEMY_FLIER, this.engine.ticksCounter, this.engine);
                             break;
                         default: 
                     }
 
                     // cada ronda que pasa los enemigos tienen mas vida
-                    let extraLife = Math.round(enemy.life * (GameVars.round / 10));
+                    const extraLife = Math.round(enemy.life * (this.engine.round / 10));
 
                     enemy.life += extraLife;
                     enemy.maxLife = enemy.life;
 
-                    GameVars.waveEnemies.shift();
+                    this.engine.waveEnemies.shift();
                 }
             }
 
