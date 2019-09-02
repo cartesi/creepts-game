@@ -72,7 +72,36 @@ module Anuto {
             }
         }
 
-        public static splitList(list: any[]): {leftHalf: any[], rigthHalf: any[]} {
+        public static mergeSort(list: any[], compareFunction?: Function): any[] {
+  
+            // Set a default compare function 
+            if (!compareFunction) {
+                compareFunction = function (x: number, y: number) {
+                    return x < y; 
+                };
+            }
+
+           
+          
+            // breaking recursive call
+            if (list.length <= 1) {
+                return list;
+            }
+          
+            let leftHalf: any[];
+            let rigthHalf: any[];
+
+            const splitingResult = MathUtils.splitList(list);
+            leftHalf = splitingResult.leftHalf;
+            rigthHalf = splitingResult.rigthHalf;
+          
+            // Recursive call.
+            // Passing the compare function to recursive calls to prevent the creation of unnecessary
+            // functions on each call.
+            return MathUtils.jointLists(MathUtils.mergeSort(leftHalf, compareFunction), MathUtils.mergeSort(rigthHalf, compareFunction), compareFunction);
+          }
+
+        private static splitList(list: any[]): {leftHalf: any[], rigthHalf: any[]} {
 
             if (list.length === 0) {
                 return {leftHalf : [], rigthHalf: []};
@@ -87,7 +116,7 @@ module Anuto {
             return {leftHalf : list.slice(0, index), rigthHalf : list.slice(index)};
         }
           
-        public static jointLists(list1: any[], list2: any[], compareFunction: Function): any[] {
+        private static jointLists(list1: any[], list2: any[], compareFunction: Function): any[] {
           
             // defining auxiliar variables
             const result = [];
@@ -96,6 +125,7 @@ module Anuto {
           
             // sortering previously ordered arrays
             while (true){
+                
                 if (compareFunction(list1[index1], list2[index2])){
                     result.push(list1[index1]);
                     index1++;
@@ -120,33 +150,6 @@ module Anuto {
             
             return result;
         }
-
-        public static mergeSort(list: any[], compareFunction?: Function): any[] {
-  
-            // Set a default compare function 
-            if (!compareFunction) {
-                compareFunction = function (x: number, y: number) {
-                    return x < y; 
-                };
-            }
-          
-            // breaking recursive call
-            if (list.length <= 1) {
-                return list;
-            }
-          
-            let leftHalf: any[];
-            let rigthHalf: any[];
-
-            const splitingResult = MathUtils.splitList(list);
-            leftHalf = splitingResult.leftHalf;
-            rigthHalf = splitingResult.rigthHalf;
-          
-            // Recursive call.
-            // Passing the compare function to recursive calls to prevent the creation of unnecessary
-            // functions on each call.
-            return MathUtils.jointLists(MathUtils.mergeSort(leftHalf, compareFunction), MathUtils.mergeSort(rigthHalf, compareFunction), compareFunction);
-          }
     }
 }
 

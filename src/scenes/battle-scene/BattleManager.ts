@@ -1,7 +1,6 @@
 import { BattleScene } from "./BattleScene";
 import { GameConstants } from "../../GameConstants";
 import { GameVars } from "../../GameVars";
-
 import enemiesData from "../../../assets/config/enemies.json";
 import turretsData from "../../../assets/config/turrets.json";
 import wavesData from "../../../assets/config/waves.json";

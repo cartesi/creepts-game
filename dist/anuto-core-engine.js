@@ -154,19 +154,19 @@ var Anuto;
                 // ordenar a los enemigos dentro del radio de acción según la estrategia de disparo
                 switch (this.shootingStrategy) {
                     case Anuto.GameConstants.STRATEGY_SHOOT_LAST:
-                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return e1.enemy.l - e2.enemy.l; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e1.enemy.l - e2.enemy.l) < 0; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_CLOSEST:
-                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return e1.squareDist - e2.squareDist; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e1.squareDist - e2.squareDist) < 0; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_WEAKEST:
-                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return e1.enemy.life - e2.enemy.life; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e1.enemy.life - e2.enemy.life) < 0; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_STRONGEST:
-                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return e2.enemy.life - e1.enemy.life; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e2.enemy.life - e1.enemy.life) < 0; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_FIRST:
-                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return e2.enemy.l - e1.enemy.l; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e1.enemy.l - e2.enemy.l) > 0; });
                         break;
                     default:
                 }
@@ -186,8 +186,8 @@ var Anuto;
 (function (Anuto) {
     var Enemy = /** @class */ (function () {
         function Enemy(type, creationTick, engine) {
-            // this.id = engine.enemyId;
-            // engine.enemyId ++;
+            this.id = engine.enemyId;
+            engine.enemyId++;
             this.creationTick = creationTick;
             this.engine = engine;
             this.type = type;
@@ -1756,6 +1756,27 @@ var Anuto;
                 return false;
             }
         };
+        MathUtils.mergeSort = function (list, compareFunction) {
+            // Set a default compare function 
+            if (!compareFunction) {
+                compareFunction = function (x, y) {
+                    return x < y;
+                };
+            }
+            // breaking recursive call
+            if (list.length <= 1) {
+                return list;
+            }
+            var leftHalf;
+            var rigthHalf;
+            var splitingResult = MathUtils.splitList(list);
+            leftHalf = splitingResult.leftHalf;
+            rigthHalf = splitingResult.rigthHalf;
+            // Recursive call.
+            // Passing the compare function to recursive calls to prevent the creation of unnecessary
+            // functions on each call.
+            return MathUtils.jointLists(MathUtils.mergeSort(leftHalf, compareFunction), MathUtils.mergeSort(rigthHalf, compareFunction), compareFunction);
+        };
         MathUtils.splitList = function (list) {
             if (list.length === 0) {
                 return { leftHalf: [], rigthHalf: [] };
@@ -1795,27 +1816,6 @@ var Anuto;
                 return result.concat(list2.slice(index2));
             }
             return result;
-        };
-        MathUtils.mergeSort = function (list, compareFunction) {
-            // Set a default compare function 
-            if (!compareFunction) {
-                compareFunction = function (x, y) {
-                    return x < y;
-                };
-            }
-            // breaking recursive call
-            if (list.length <= 1) {
-                return list;
-            }
-            var leftHalf;
-            var rigthHalf;
-            var splitingResult = MathUtils.splitList(list);
-            leftHalf = splitingResult.leftHalf;
-            rigthHalf = splitingResult.rigthHalf;
-            // Recursive call.
-            // Passing the compare function to recursive calls to prevent the creation of unnecessary
-            // functions on each call.
-            return MathUtils.jointLists(MathUtils.mergeSort(leftHalf, compareFunction), MathUtils.mergeSort(rigthHalf, compareFunction), compareFunction);
         };
         return MathUtils;
     }());

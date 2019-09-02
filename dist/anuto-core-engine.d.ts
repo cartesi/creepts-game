@@ -477,11 +477,8 @@ declare module Anuto {
         }, r: number): boolean;
         static isPointInLineSegment(x1: number, y1: number, x2: number, y2: number, px: number, py: number): boolean;
         static isPointInsideCircle(x: number, y: number, cx: number, cy: number, r: number): boolean;
-        static splitList(list: any[]): {
-            leftHalf: any[];
-            rigthHalf: any[];
-        };
-        static jointLists(list1: any[], list2: any[], compareFunction: Function): any[];
         static mergeSort(list: any[], compareFunction?: Function): any[];
+        private static splitList;
+        private static jointLists;
     }
 }
