@@ -8,6 +8,21 @@ module Anuto {
         public waveActivated: boolean;
         public turrets: Turret[];
 
+        // variables que antes estaban en GameVars
+        public enemySpawningDeltaTicks: number;
+        public lastWaveTick: number;
+        public enemyData: any;
+
+        private runningInClientSide: boolean;
+        private _credits: number;
+        private _score: number;
+        private _lifes: number;
+        private _paused: boolean;
+        private _timeStep: number;
+        private _gameOver: boolean;
+        private _round: number;
+        private _ticksCounter: number;
+
         private bullets: Bullet[];
         private glueBullets: GlueBullet[];
         private mortars: Mortar[];
@@ -27,13 +42,7 @@ module Anuto {
         private enemiesSpawned: number;
         private allEnemiesSpawned: boolean;
 
-        // variables que antes estaban en GameVars
-        private runningInClientSide: boolean;
-        private _credits: number;
-        private _score: number;
-        private _lifes: number;
-        private _paused: boolean;
-        private _timeStep: number;
+       
         
         public static getPathPosition(l: number): {x: number, y: number} {
 
@@ -74,23 +83,22 @@ module Anuto {
             Glue.id = 0;
             Mine.id = 0;
  
+            this.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
             this.runningInClientSide = gameConfig.runningInClientSide;
             this._credits = gameConfig.credits;
             this._lifes = gameConfig.lifes;
             this._paused = false;
             this._timeStep = gameConfig.timeStep;
 
-            GameVars.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
-           
             GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
 
-            GameVars.enemyData = enemyData;
+            this.enemyData = enemyData;
             GameVars.turretData = turretData;
             GameVars.wavesData = wavesData;
 
-            GameVars.round = 0;
             this._score = 0;
-            GameVars.gameOver = false;
+            this._gameOver = false;
+            this._round = 0;
             
             this.waveActivated = false;
             this.t = 0;
@@ -98,8 +106,8 @@ module Anuto {
             this.eventDispatcher = new EventDispatcher();
             this.enemiesSpawner = new EnemiesSpawner(this);
          
-            GameVars.ticksCounter = 0;
-            GameVars.lastWaveTick = 0;
+            this._ticksCounter = 0;
+            this.lastWaveTick = 0;
 
             this.turrets = [];
             this.mines = [];
@@ -152,12 +160,12 @@ module Anuto {
             //     return;
             // }
 
-            if (this._lifes <= 0 && !GameVars.gameOver) {
+            if (this._lifes <= 0 && !this._gameOver) {
 
                 this.eventDispatcher.dispatchEvent(new Event(Event.GAME_OVER));
-                GameVars.gameOver = true;
+                this._gameOver = true;
 
-                console.log("TICKS: " + GameVars.ticksCounter);
+                console.log("TICKS: " + this._ticksCounter);
                 console.log("SCORE: " + this._score);
             }
 
@@ -208,7 +216,7 @@ module Anuto {
                 glue.update();
             });
 
-            GameVars.ticksCounter ++;
+            this._ticksCounter ++;
         }
 
         public newWave(): boolean {
@@ -219,12 +227,12 @@ module Anuto {
 
             let length = Object.keys(GameVars.wavesData).length;
             
-            let initialWaveEnemies = GameVars.wavesData["wave_" + (GameVars.round % length + 1)].slice(0);
+            let initialWaveEnemies = GameVars.wavesData["wave_" + (this._round % length + 1)].slice(0);
             GameVars.waveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
 
-            let extraWaves = Math.floor(GameVars.round / length) * 2;
+            const extraWaves = Math.floor(this._round / length) * 2;
 
-            GameVars.round++;
+            this._round++;
 
             for (let i = 0; i < extraWaves; i++) {
 
@@ -238,7 +246,7 @@ module Anuto {
                 GameVars.waveEnemies = GameVars.waveEnemies.concat(nextWaveEnemies);
             }
 
-            GameVars.lastWaveTick = GameVars.ticksCounter;
+            this.lastWaveTick = this._ticksCounter;
 
             this.waveActivated = true;
            
@@ -789,7 +797,7 @@ module Anuto {
 
         public get ticksCounter(): number {
 
-            return GameVars.ticksCounter;
+            return this._ticksCounter;
         }
 
         public get score(): number {
@@ -799,7 +807,7 @@ module Anuto {
 
         public get gameOver(): boolean {
 
-            return GameVars.gameOver;
+            return this._gameOver;
         }
 
         public get lifes(): number {
@@ -809,7 +817,7 @@ module Anuto {
 
         public get round(): number {
             
-            return GameVars.round;
+            return this._round;
         }
 
         public get timeStep(): number {

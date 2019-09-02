@@ -41,7 +41,7 @@ module Anuto {
             this.id = Turret.id;
             Turret.id ++;
 
-            this.creationTick = GameVars.ticksCounter;
+            this.creationTick = this.engine.ticksCounter;
             
             this.type = type;
             this.f = 0;

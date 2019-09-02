@@ -20,12 +20,12 @@ module Anuto {
         private damage: number;
         
         // mortar speed in cells / tick
-        constructor (p: {r: number, c: number}, angle: number, ticksToImpact: number, explosionRange: number, damage: number, grade: number, turret: LaunchTurret) {
+        constructor (p: {r: number, c: number}, angle: number, ticksToImpact: number, explosionRange: number, damage: number, grade: number, turret: LaunchTurret, engine: Engine) {
             
             this.id = Mortar.id;
             Mortar.id ++;
 
-            this.creationTick = GameVars.ticksCounter;
+            this.creationTick = engine.ticksCounter;
 
             this.x = p.c + .5;
             this.y = p.r + .5;
@@ -39,7 +39,7 @@ module Anuto {
             this.detonate = false;
             this.f = 0;
 
-            let speed = this.grade === 3 ? GameConstants.MORTAR_SPEED * 5 : GameConstants.MORTAR_SPEED;
+            const speed = this.grade === 3 ? GameConstants.MORTAR_SPEED * 5 : GameConstants.MORTAR_SPEED;
 
             this.vx = MathUtils.fixNumber(speed * Math.cos(angle));
             this.vy = MathUtils.fixNumber(speed * Math.sin(angle));

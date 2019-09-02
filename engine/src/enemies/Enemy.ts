@@ -37,7 +37,7 @@ module Anuto {
             this.engine = engine;
 
             this.type = type;
-            this.enemyData = GameVars.enemyData[this.type];
+            this.enemyData = this.engine.enemyData[this.type];
 
             this.life =  this.enemyData.life;
             this.maxLife = this.enemyData.life;

@@ -2,11 +2,6 @@ module Anuto {
 
     export class GameVars {
 
-        public static gameOver: boolean;
-        public static round: number;
-        public static enemySpawningDeltaTicks: number;
-        public static ticksCounter: number;
-        public static lastWaveTick: number;
         public static enemyData: any;
         public static turretData: any;
         public static wavesData: any;

@@ -97,6 +97,18 @@ declare module Anuto {
     class Engine {
         waveActivated: boolean;
         turrets: Turret[];
+        enemySpawningDeltaTicks: number;
+        lastWaveTick: number;
+        enemyData: any;
+        private runningInClientSide;
+        private _credits;
+        private _score;
+        private _lifes;
+        private _paused;
+        private _timeStep;
+        private _gameOver;
+        private _round;
+        private _ticksCounter;
         private bullets;
         private glueBullets;
         private mortars;
@@ -115,12 +127,6 @@ declare module Anuto {
         private waveEnemiesLength;
         private enemiesSpawned;
         private allEnemiesSpawned;
-        private runningInClientSide;
-        private _credits;
-        private _score;
-        private _lifes;
-        private _paused;
-        private _timeStep;
         static getPathPosition(l: number): {
             x: number;
             y: number;
@@ -193,11 +199,6 @@ declare module Anuto {
 }
 declare module Anuto {
     class GameVars {
-        static gameOver: boolean;
-        static round: number;
-        static enemySpawningDeltaTicks: number;
-        static ticksCounter: number;
-        static lastWaveTick: number;
         static enemyData: any;
         static turretData: any;
         static wavesData: any;
@@ -447,7 +448,7 @@ declare module Anuto {
         constructor(p: {
             r: number;
             c: number;
-        }, angle: number, ticksToImpact: number, explosionRange: number, damage: number, grade: number, turret: LaunchTurret);
+        }, angle: number, ticksToImpact: number, explosionRange: number, damage: number, grade: number, turret: LaunchTurret, engine: Engine);
         destroy(): void;
         update(): void;
         getEnemiesWithinExplosionRange(): {

@@ -155,7 +155,7 @@ module Anuto {
                     const dy = impactPosition.y - this.y;
         
                     this.shootAngle =  MathUtils.fixNumber(Math.atan2(dy, dx));
-                    const mortar = new Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage, this.grade, this);
+                    const mortar = new Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage, this.grade, this, this.engine);
         
                     this.engine.addMortar(mortar, this);
 

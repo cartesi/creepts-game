@@ -19,30 +19,30 @@ var Anuto;
         }
         EnemiesSpawner.prototype.getEnemy = function () {
             var enemy = null;
-            var partialTicks = Anuto.GameVars.ticksCounter - Anuto.GameVars.lastWaveTick;
-            if (partialTicks % Anuto.GameVars.enemySpawningDeltaTicks === 0 && Anuto.GameVars.waveEnemies.length > 0) {
+            var partialTicks = this.engine.ticksCounter - this.engine.lastWaveTick;
+            if (partialTicks % this.engine.enemySpawningDeltaTicks === 0 && Anuto.GameVars.waveEnemies.length > 0) {
                 var nextEnemyData = Anuto.GameVars.waveEnemies[0];
-                if (nextEnemyData.t === partialTicks / Anuto.GameVars.enemySpawningDeltaTicks) {
+                if (nextEnemyData.t === partialTicks / this.engine.enemySpawningDeltaTicks) {
                     switch (nextEnemyData.type) {
                         case Anuto.GameConstants.ENEMY_SOLDIER:
-                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_SOLDIER, Anuto.GameVars.ticksCounter, this.engine);
+                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_SOLDIER, this.engine.ticksCounter, this.engine);
                             break;
                         case Anuto.GameConstants.ENEMY_RUNNER:
-                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_RUNNER, Anuto.GameVars.ticksCounter, this.engine);
+                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_RUNNER, this.engine.ticksCounter, this.engine);
                             break;
                         case Anuto.GameConstants.ENEMY_HEALER:
-                            enemy = new Anuto.HealerEnemy(Anuto.GameVars.ticksCounter, this.engine);
+                            enemy = new Anuto.HealerEnemy(this.engine.ticksCounter, this.engine);
                             break;
                         case Anuto.GameConstants.ENEMY_BLOB:
-                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_BLOB, Anuto.GameVars.ticksCounter, this.engine);
+                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_BLOB, this.engine.ticksCounter, this.engine);
                             break;
                         case Anuto.GameConstants.ENEMY_FLIER:
-                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_FLIER, Anuto.GameVars.ticksCounter, this.engine);
+                            enemy = new Anuto.Enemy(Anuto.GameConstants.ENEMY_FLIER, this.engine.ticksCounter, this.engine);
                             break;
                         default:
                     }
                     // cada ronda que pasa los enemigos tienen mas vida
-                    var extraLife = Math.round(enemy.life * (Anuto.GameVars.round / 10));
+                    var extraLife = Math.round(enemy.life * (this.engine.round / 10));
                     enemy.life += extraLife;
                     enemy.maxLife = enemy.life;
                     Anuto.GameVars.waveEnemies.shift();
@@ -61,7 +61,7 @@ var Anuto;
             this.engine = engine;
             this.id = Turret.id;
             Turret.id++;
-            this.creationTick = Anuto.GameVars.ticksCounter;
+            this.creationTick = this.engine.ticksCounter;
             this.type = type;
             this.f = 0;
             this.level = 1;
@@ -191,7 +191,7 @@ var Anuto;
             this.creationTick = creationTick;
             this.engine = engine;
             this.type = type;
-            this.enemyData = Anuto.GameVars.enemyData[this.type];
+            this.enemyData = this.engine.enemyData[this.type];
             this.life = this.enemyData.life;
             this.maxLife = this.enemyData.life;
             this.value = this.enemyData.value;
@@ -324,25 +324,25 @@ var Anuto;
             Anuto.Mortar.id = 0;
             Anuto.Glue.id = 0;
             Anuto.Mine.id = 0;
+            this.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
             this.runningInClientSide = gameConfig.runningInClientSide;
             this._credits = gameConfig.credits;
             this._lifes = gameConfig.lifes;
             this._paused = false;
             this._timeStep = gameConfig.timeStep;
-            Anuto.GameVars.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
             Anuto.GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
-            Anuto.GameVars.enemyData = enemyData;
+            this.enemyData = enemyData;
             Anuto.GameVars.turretData = turretData;
             Anuto.GameVars.wavesData = wavesData;
-            Anuto.GameVars.round = 0;
             this._score = 0;
-            Anuto.GameVars.gameOver = false;
+            this._gameOver = false;
+            this._round = 0;
             this.waveActivated = false;
             this.t = 0;
             this.eventDispatcher = new Anuto.EventDispatcher();
             this.enemiesSpawner = new Anuto.EnemiesSpawner(this);
-            Anuto.GameVars.ticksCounter = 0;
-            Anuto.GameVars.lastWaveTick = 0;
+            this._ticksCounter = 0;
+            this.lastWaveTick = 0;
             this.turrets = [];
             this.mines = [];
             this.minesImpacting = [];
@@ -399,10 +399,10 @@ var Anuto;
             // if (!this.waveActivated) {
             //     return;
             // }
-            if (this._lifes <= 0 && !Anuto.GameVars.gameOver) {
+            if (this._lifes <= 0 && !this._gameOver) {
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.GAME_OVER));
-                Anuto.GameVars.gameOver = true;
-                console.log("TICKS: " + Anuto.GameVars.ticksCounter);
+                this._gameOver = true;
+                console.log("TICKS: " + this._ticksCounter);
                 console.log("SCORE: " + this._score);
             }
             if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
@@ -441,17 +441,17 @@ var Anuto;
             this.glues.forEach(function (glue) {
                 glue.update();
             });
-            Anuto.GameVars.ticksCounter++;
+            this._ticksCounter++;
         };
         Engine.prototype.newWave = function () {
             if (this.waveActivated) {
                 return false;
             }
             var length = Object.keys(Anuto.GameVars.wavesData).length;
-            var initialWaveEnemies = Anuto.GameVars.wavesData["wave_" + (Anuto.GameVars.round % length + 1)].slice(0);
+            var initialWaveEnemies = Anuto.GameVars.wavesData["wave_" + (this._round % length + 1)].slice(0);
             Anuto.GameVars.waveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
-            var extraWaves = Math.floor(Anuto.GameVars.round / length) * 2;
-            Anuto.GameVars.round++;
+            var extraWaves = Math.floor(this._round / length) * 2;
+            this._round++;
             for (var i = 0; i < extraWaves; i++) {
                 var nextWaveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
                 var lastTickValue = Anuto.GameVars.waveEnemies[Anuto.GameVars.waveEnemies.length - 1].t;
@@ -460,7 +460,7 @@ var Anuto;
                 }
                 Anuto.GameVars.waveEnemies = Anuto.GameVars.waveEnemies.concat(nextWaveEnemies);
             }
-            Anuto.GameVars.lastWaveTick = Anuto.GameVars.ticksCounter;
+            this.lastWaveTick = this._ticksCounter;
             this.waveActivated = true;
             this.initWaveVars();
             this.waveEnemiesLength = Anuto.GameVars.waveEnemies.length;
@@ -843,7 +843,7 @@ var Anuto;
         });
         Object.defineProperty(Engine.prototype, "ticksCounter", {
             get: function () {
-                return Anuto.GameVars.ticksCounter;
+                return this._ticksCounter;
             },
             enumerable: true,
             configurable: true
@@ -857,7 +857,7 @@ var Anuto;
         });
         Object.defineProperty(Engine.prototype, "gameOver", {
             get: function () {
-                return Anuto.GameVars.gameOver;
+                return this._gameOver;
             },
             enumerable: true,
             configurable: true
@@ -871,7 +871,7 @@ var Anuto;
         });
         Object.defineProperty(Engine.prototype, "round", {
             get: function () {
-                return Anuto.GameVars.round;
+                return this._round;
             },
             enumerable: true,
             configurable: true
@@ -1493,7 +1493,7 @@ var Anuto;
                     var dx = impactPosition.x - this.x;
                     var dy = impactPosition.y - this.y;
                     this.shootAngle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
-                    var mortar = new Anuto.Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage, this.grade, this);
+                    var mortar = new Anuto.Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage, this.grade, this, this.engine);
                     this.engine.addMortar(mortar, this);
                 }
                 else {
@@ -1561,10 +1561,10 @@ var Anuto;
 (function (Anuto) {
     var Mortar = /** @class */ (function () {
         // mortar speed in cells / tick
-        function Mortar(p, angle, ticksToImpact, explosionRange, damage, grade, turret) {
+        function Mortar(p, angle, ticksToImpact, explosionRange, damage, grade, turret, engine) {
             this.id = Mortar.id;
             Mortar.id++;
-            this.creationTick = Anuto.GameVars.ticksCounter;
+            this.creationTick = engine.ticksCounter;
             this.x = p.c + .5;
             this.y = p.r + .5;
             this.ticksToImpact = ticksToImpact;
