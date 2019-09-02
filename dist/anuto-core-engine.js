@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    };
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -375,15 +375,7 @@ var Anuto;
             if (this._paused || !this.waveActivated) {
                 return;
             }
-<<<<<<< HEAD
-            // Esto esta comentado ya que las minas se pueden poner aunque las rondas no esten en marcha y los tiempos de recarga tienen que completarse por lo que el motor tiene que seguir funcionando
-            if (!this.waveActivated) {
-                return;
-            }
-            if (Anuto.GameVars.lifes <= 0 && !Anuto.GameVars.gameOver) {
-=======
             if (this._lifes <= 0 && !this._gameOver) {
->>>>>>> develop
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.GAME_OVER));
                 this._gameOver = true;
                 console.log("TICKS: " + this._ticksCounter);
