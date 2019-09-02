@@ -1,10 +1,13 @@
 import { GameConstants } from "./GameConstants";
 import { GameVars } from "./GameVars";
 import { AudioManager } from "./AudioManager";
+import mapsData from "../assets/config/maps.json";
 
 export class GameManager {
 
     public static init(): void {  
+
+        GameVars.mapsData = mapsData;
 
         if (GameVars.currentScene.sys.game.device.os.desktop) {
             GameVars.scaleY = 1;
@@ -40,6 +43,8 @@ export class GameManager {
                 } else {
                     GameVars.gameData = {
                         muted: false,
+                        scores: [],
+                        currentMapIndex: 0
                     };
                 }
 
@@ -60,9 +65,23 @@ export class GameManager {
         GameManager.enterBattleScene();
     }
 
+    public static mapSelected(index: number): void {
+
+        GameVars.currentMapData = GameVars.mapsData[index];
+        GameVars.gameData.currentMapIndex = index;
+        GameManager.writeGameData();
+
+        GameManager.enterBattleScene();
+    }
+
     public static enterBattleScene(): void {
 
         GameVars.currentScene.scene.start("BattleScene");
+    }
+
+    public static enterMapScene(): void {
+
+        GameVars.currentScene.scene.start("MapsScene");
     }
 
     public static reset(): void {
@@ -95,6 +114,15 @@ export class GameManager {
     }
 
     private static startGame(): void {
+
+        if (GameVars.gameData.scores.length === 0) {
+            for (let i = 0; i < GameVars.mapsData.length; i++) {
+                GameVars.gameData.scores[i] = 0;
+            }
+        }
+
+        GameVars.gameData.currentMapIndex = GameVars.gameData.currentMapIndex;
+        GameVars.currentMapData = GameVars.mapsData[GameVars.gameData.currentMapIndex];
 
         GameVars.currentScene.scene.start("PreloadScene");
     }

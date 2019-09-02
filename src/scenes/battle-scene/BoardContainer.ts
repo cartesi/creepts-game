@@ -208,7 +208,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
     public addTurret(type: string, position: {r: number, c: number}): void {
 
-        if ( position.r < 0 || position.c < 0 || position.r >= GameConstants.BOARD_SIZE.r || position.c >= GameConstants.BOARD_SIZE.c) {
+        if ( position.r < 0 || position.c < 0 || position.r >= GameVars.currentMapData.size.r || position.c >= GameVars.currentMapData.size.c) {
             return;
         }
 

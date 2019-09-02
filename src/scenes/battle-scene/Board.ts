@@ -3,35 +3,39 @@ import { GameVars } from "../../GameVars";
 
 export class Board extends Phaser.GameObjects.Container {
 
+    public pathContainer: Phaser.GameObjects.Container;
+
     constructor(scene: Phaser.Scene) {
 
         super(scene);
 
-        this.x = - GameConstants.CELLS_SIZE * GameConstants.BOARD_SIZE.c / 2;
-        this.y = - GameConstants.CELLS_SIZE * GameConstants.BOARD_SIZE.r / 2;
+        this.x = - GameConstants.CELLS_SIZE * GameVars.currentMapData.size.c / 2;
+        this.y = - GameConstants.CELLS_SIZE * GameVars.currentMapData.size.r / 2;
 
-        let map = [ [ "08", "14", "07", "00", "06", "11", "11", "30", "14", "07"],
-                    [ "13", "02", "15", "00", "00", "00", "00", "13", "02", "15"],
-                    [ "13", "02", "28", "37", "11", "04", "00", "13", "02", "15"],
-                    [ "13", "02", "02", "15", "00", "00", "00", "13", "02", "15"],
-                    [ "13", "02", "02", "15", "00", "08", "14", "27", "02", "15"],
-                    [ "13", "02", "02", "15", "00", "13", "02", "02", "02", "15"],
-                    [ "13", "02", "02", "15", "00", "13", "02", "02", "02", "15"],
-                    [ "13", "02", "02", "15", "00", "13", "02", "02", "02", "15"],
-                    [ "13", "02", "02", "15", "00", "13", "02", "02", "02", "15"],
-                    [ "36", "16", "16", "09", "00", "13", "02", "02", "02", "15"],
-                    [ "12", "00", "00", "00", "00", "13", "02", "02", "02", "15"],
-                    [ "12", "00", "06", "11", "11", "33", "16", "16", "16", "31"],
-                    [ "12", "00", "00", "00", "00", "00", "00", "00", "00", "12"],
-                    [ "35", "14", "14", "14", "14", "14", "14", "07", "00", "12"],
-                    [ "10", "16", "16", "16", "16", "16", "16", "09", "00", "05"]];
+        this.pathContainer = new Phaser.GameObjects.Container(this.scene);
+        this.add(this.pathContainer);
 
-        for (let i = 0; i < GameConstants.BOARD_SIZE.c; i ++) {
-            for (let j = 0; j < GameConstants.BOARD_SIZE.r; j ++) {
+        // TODO: cambiar esto para pillar bien las imagenes con los bordes
+        for (let i = 0; i < GameVars.currentMapData.size.c; i ++) {
+            for (let j = 0; j < GameVars.currentMapData.size.r; j ++) {
 
-                if (map[j][i] !== "00") {
-                    let img = new Phaser.GameObjects.Image(this.scene, GameConstants.CELLS_SIZE * i + GameConstants.CELLS_SIZE / 2, GameConstants.CELLS_SIZE * j + GameConstants.CELLS_SIZE / 2, "texture_atlas_1", "celda_" + map[j][i]);
+                let isPath = false;
+
+                for (let k = 0; k < GameVars.enemiesPathCells.length; k++) {
+                    if (GameVars.enemiesPathCells[k].c === i && GameVars.enemiesPathCells[k].r === j) {
+                        isPath = true;
+                        break;
+                    }
+                }
+
+                if (!isPath) {
+                    let img = new Phaser.GameObjects.Image(this.scene, GameConstants.CELLS_SIZE * i + GameConstants.CELLS_SIZE / 2, GameConstants.CELLS_SIZE * j + GameConstants.CELLS_SIZE / 2, "texture_atlas_1", "celda_02");
                     this.add(img);
+                } else {
+                    let path = new Phaser.GameObjects.Graphics(this.scene);
+                    path.fillStyle(0x555555);
+                    path.fillRect(GameConstants.CELLS_SIZE * i, GameConstants.CELLS_SIZE * j, GameConstants.CELLS_SIZE, GameConstants.CELLS_SIZE);
+                    this.pathContainer.add(path);
                 }
             }
         }
@@ -40,5 +44,6 @@ export class Board extends Phaser.GameObjects.Container {
     public sendActorBack(actor: any): void {
 
         this.sendToBack(actor);
+        this.sendToBack(this.pathContainer);
     }
 }

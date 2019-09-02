@@ -402,9 +402,9 @@ var Anuto;
                 return;
             }
             // Esto esta comentado ya que las minas se pueden poner aunque las rondas no esten en marcha y los tiempos de recarga tienen que completarse por lo que el motor tiene que seguir funcionando
-            // if (!this.waveActivated) {
-            //     return;
-            // }
+            if (!this.waveActivated) {
+                return;
+            }
             if (Anuto.GameVars.lifes <= 0 && !Anuto.GameVars.gameOver) {
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.GAME_OVER));
                 Anuto.GameVars.gameOver = true;

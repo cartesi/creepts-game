@@ -6,6 +6,7 @@ import enemiesData from "../../../assets/config/enemies.json";
 import turretsData from "../../../assets/config/turrets.json";
 import wavesData from "../../../assets/config/waves.json";
 import { BoardContainer } from "./BoardContainer";
+import { GameManager } from "../../GameManager";
 
 export class BattleManager {
 
@@ -13,7 +14,19 @@ export class BattleManager {
 
     public static init(): void {  
 
-        GameVars.enemiesPathCells = GameConstants.ENEMY_PATH_1;
+        GameVars.enemiesPathCells = GameVars.currentMapData.path;
+
+        const aspectRatio = window.innerHeight / window.innerWidth;
+
+        if (aspectRatio > 1.5) {
+            if (GameVars.currentMapData.size.c > 11) {
+                GameVars.scaleCorrectionFactor = 1;
+            } else if (GameVars.currentMapData.size.c > 10) {
+                GameVars.scaleCorrectionFactor = 1.1;
+            } else {
+                GameVars.scaleCorrectionFactor = 1.2;
+            }
+        }
 
         const gameConfig: Anuto.Types.GameConfig = {
             timeStep: GameConstants.TIME_STEP,
@@ -21,7 +34,7 @@ export class BattleManager {
             enemySpawningDeltaTicks: GameConstants.ENEMY_SPAWNING_DELTA_TICKS,
             credits: GameConstants.INITIAL_CREDITS,
             lifes: GameConstants.INITIAL_LIFES,
-            boardSize: GameConstants.BOARD_SIZE,
+            boardSize: GameVars.currentMapData.size,
             enemiesPathCells : GameVars.enemiesPathCells
         };
 
@@ -308,6 +321,11 @@ export class BattleManager {
     }
 
     private static onGameOver(): void {
+
+        if (BattleManager.anutoEngine.score > GameVars.gameData.scores[GameVars.gameData.currentMapIndex]) {
+            GameVars.gameData.scores[GameVars.gameData.currentMapIndex] = BattleManager.anutoEngine.score;
+        }
+        GameManager.writeGameData();
         
         BoardContainer.currentInstance.showGameOverLayer();
 

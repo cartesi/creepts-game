@@ -1,5 +1,7 @@
 declare interface GameData {
-    muted: boolean,
+    muted: boolean;
+    scores: number[];
+    currentMapIndex: number;
 }
 
 declare interface LogsObject {
@@ -19,4 +21,10 @@ declare interface Action {
     turretType?: string;
     id?: number;
     position?: any;
+}
+
+declare interface MapObject {
+    name: string;
+    size: {r: number, c: number};
+    path: {r: number, c: number}[];
 }

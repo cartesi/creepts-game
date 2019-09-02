@@ -9,6 +9,7 @@ import { ClientHttp2Session } from 'http2';
 export class PauseMenu extends Phaser.GameObjects.Container {
 
     private restartButton: Phaser.GameObjects.Container;
+    private changeMapButton: Phaser.GameObjects.Container;
 
     private soundButton: Phaser.GameObjects.Container;
     private soundText: Phaser.GameObjects.Text;
@@ -20,7 +21,7 @@ export class PauseMenu extends Phaser.GameObjects.Container {
 
         const bck = new Phaser.GameObjects.Graphics(this.scene);
         bck.fillStyle(0x000000);
-        bck.fillRect(-200, -200, 400, 260);
+        bck.fillRect(-200, -200, 400, 325);
         bck.alpha = .75;
         this.add(bck);
 
@@ -86,6 +87,28 @@ export class PauseMenu extends Phaser.GameObjects.Container {
         } else {
             this.soundText.setText("SOUND OFF");
         }
+
+        offY += 65;
+
+        this.changeMapButton = new Phaser.GameObjects.Container(this.scene);
+        this.changeMapButton.setPosition(0, offY);
+        this.changeMapButton.setInteractive(new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height), Phaser.Geom.Rectangle.Contains);
+        this.changeMapButton.on("pointerover", () => { this.onBtnOver(this.changeMapButton); });
+        this.changeMapButton.on("pointerout", () => { this.onBtnOut(this.changeMapButton); });
+        this.changeMapButton.on("pointerdown", () => { this.onClickChangeMap(); });
+        this.add(this.changeMapButton);
+
+        const changeMapBck = new Phaser.GameObjects.Graphics(this.scene);
+        changeMapBck.fillStyle(0xFFFFFF);
+        changeMapBck.fillRect(-width / 2, -height / 2, width, height);
+        changeMapBck.lineStyle(2, 0xFFFFFF);
+        changeMapBck.strokeRect(-width / 2 - 5, -height / 2 - 5, width + 10, height + 10);
+        this.changeMapButton.add(changeMapBck);
+
+        const changeMapText = new Phaser.GameObjects.Text(this.scene, 0, 0, "CHANGE MAP", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+        changeMapText.setOrigin(.5);
+        this.changeMapButton.add(changeMapText);
+        
     }
 
     private onBtnOver(btn: Phaser.GameObjects.Container): void {
@@ -105,6 +128,11 @@ export class PauseMenu extends Phaser.GameObjects.Container {
     private onClickRestart(): void {
 
         GameManager.reset();
+    }
+
+    private onClickChangeMap(): void {
+
+        GameManager.enterMapScene();
     }
 
     private onClickSound(): void {

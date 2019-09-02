@@ -55,7 +55,8 @@ export class HUD extends Phaser.GameObjects.Container {
         this.add(this.enemyIcon);
 
         if (GameConstants.DEVELOPMENT) {
-            this.ticksLabel = new Phaser.GameObjects.Text(this.scene, 15, GameConstants.GAME_HEIGHT - 35, "ticks: " + BattleManager.anutoEngine.ticksCounter, {fontFamily: "Rubik-Regular", fontSize: "25px", color: "#000000"});
+            this.ticksLabel = new Phaser.GameObjects.Text(this.scene, GameConstants.GAME_WIDTH / 2, GameConstants.GAME_HEIGHT - 5, "ticks: " + BattleManager.anutoEngine.ticksCounter, {fontFamily: "Rubik-Regular", fontSize: "25px", color: "#000000"});
+            this.ticksLabel.setOrigin(.5, 1);
             this.add(this.ticksLabel);
         } else {
             this.ticksLabel = null;

@@ -5,6 +5,7 @@ import { GameConstants } from "./GameConstants";
 import { BootScene } from "./scenes/BootScene";
 import { PreloadScene } from "./scenes/PreloadScene";
 import { BattleScene } from "./scenes/battle-scene/BattleScene";
+import { MapsScene } from "./scenes/maps-scene/MapsScene";
 
 let game: Game;
 
@@ -14,7 +15,7 @@ window.onload = () => {
 
         version: GameConstants.VERSION,
         type: Phaser.AUTO,
-        backgroundColor: "#555555",
+        backgroundColor: "#000000",
         scale: {
             mode: Phaser.Scale.FIT,
             parent: "content",
@@ -25,7 +26,8 @@ window.onload = () => {
         scene:  [
                     BootScene, 
                     PreloadScene, 
-                    BattleScene
+                    BattleScene,
+                    MapsScene
                 ]
     };
 

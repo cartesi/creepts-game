@@ -2,6 +2,7 @@ import { BoardContainer } from "./BoardContainer";
 import { GUI } from "./gui/GUI";
 import { HUD } from "./hud/HUD";
 import { BattleManager } from "./BattleManager";
+import { GameVars } from "../../GameVars";
 
 export class BattleScene extends Phaser.Scene {
 
@@ -18,6 +19,10 @@ export class BattleScene extends Phaser.Scene {
     }
 
     public create(): void {
+
+        GameVars.currentScene = this;
+
+        this.cameras.main.setBackgroundColor(0xCCCCCC);
 
         BattleManager.init();
 

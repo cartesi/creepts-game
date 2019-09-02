@@ -81,8 +81,8 @@ export class TurretSelected extends Phaser.GameObjects.Container {
 
     private onPointerUp(pointer: Phaser.Input.Pointer): void {
 
-        let posX = (pointer.x - GameConstants.GAME_WIDTH / 2) / GameVars.scaleCorrectionFactor + ((GameConstants.BOARD_SIZE.c * GameConstants.CELLS_SIZE) / 2);
-        let posY = (pointer.y - GameConstants.GAME_HEIGHT / 2 - GameConstants.CELLS_SIZE) / (GameVars.scaleCorrectionFactor * GameVars.scaleY) + ((GameConstants.BOARD_SIZE.r * GameConstants.CELLS_SIZE) / 2);
+        let posX = (pointer.x - GameConstants.GAME_WIDTH / 2) / GameVars.scaleCorrectionFactor + ((GameVars.currentMapData.size.c * GameConstants.CELLS_SIZE) / 2);
+        let posY = (pointer.y - GameConstants.GAME_HEIGHT / 2 - GameConstants.CELLS_SIZE) / (GameVars.scaleCorrectionFactor * GameVars.scaleY) + ((GameVars.currentMapData.size.r * GameConstants.CELLS_SIZE) / 2);
 
         let c = Math.floor(posX / GameConstants.CELLS_SIZE);
         let r = Math.floor(posY / GameConstants.CELLS_SIZE);
