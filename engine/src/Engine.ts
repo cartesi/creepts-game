@@ -12,6 +12,11 @@ module Anuto {
         public enemySpawningDeltaTicks: number;
         public lastWaveTick: number;
         public enemyData: any;
+        public turretData: any;
+        public wavesData: any;
+        public waveEnemies: any;
+        public enemies: Enemy[];
+        public enemiesPathCells: {r: number, c: number} [];
 
         private runningInClientSide: boolean;
         private _credits: number;
@@ -42,38 +47,6 @@ module Anuto {
         private enemiesSpawned: number;
         private allEnemiesSpawned: boolean;
 
-       
-        
-        public static getPathPosition(l: number): {x: number, y: number} {
-
-            let x: number;
-            let y: number;
-
-            const i = Math.floor(l);
-
-            if (i === GameVars.enemiesPathCells.length - 1) {
-
-                x = GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].c;
-                y = GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].r;
-
-            } else {
-
-                const dl = MathUtils.fixNumber(l - i);
-
-                // interpolar entre i e i + 1
-                x = GameVars.enemiesPathCells[i].c + .5;
-                y = GameVars.enemiesPathCells[i].r + .5;
-    
-                const dx = MathUtils.fixNumber(GameVars.enemiesPathCells[i + 1].c - GameVars.enemiesPathCells[i].c);
-                const dy = MathUtils.fixNumber(GameVars.enemiesPathCells[i + 1].r - GameVars.enemiesPathCells[i].r);
-    
-                x = MathUtils.fixNumber(x + dx * dl);
-                y = MathUtils.fixNumber(y + dy * dl);
-            }
-
-            return {x: x, y: y};
-        }
-     
         constructor (gameConfig: Types.GameConfig, enemyData: any, turretData: any, wavesData: any) {
 
             Turret.id = 0;
@@ -90,11 +63,11 @@ module Anuto {
             this._paused = false;
             this._timeStep = gameConfig.timeStep;
 
-            GameVars.enemiesPathCells = gameConfig.enemiesPathCells;
+            this.enemiesPathCells = gameConfig.enemiesPathCells;
 
             this.enemyData = enemyData;
-            GameVars.turretData = turretData;
-            GameVars.wavesData = wavesData;
+            this.turretData = turretData;
+            this.wavesData = wavesData;
 
             this._score = 0;
             this._gameOver = false;
@@ -120,7 +93,7 @@ module Anuto {
 
             this.t = Date.now();
 
-            GameVars.enemies = [];
+            this.enemies = [];
             
             this.bullets = [];
             this.glueBullets = [];
@@ -188,7 +161,7 @@ module Anuto {
                 this.spawnEnemies();
             }
 
-            GameVars.enemies.forEach(function (enemy) {
+            this.enemies.forEach(function (enemy) {
                 enemy.update();
             }, this); 
 
@@ -225,10 +198,10 @@ module Anuto {
                 return false;
             }
 
-            let length = Object.keys(GameVars.wavesData).length;
+            let length = Object.keys(this.wavesData).length;
             
-            let initialWaveEnemies = GameVars.wavesData["wave_" + (this._round % length + 1)].slice(0);
-            GameVars.waveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
+            let initialWaveEnemies = this.wavesData["wave_" + (this._round % length + 1)].slice(0);
+            this.waveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
 
             const extraWaves = Math.floor(this._round / length) * 2;
 
@@ -237,13 +210,13 @@ module Anuto {
             for (let i = 0; i < extraWaves; i++) {
 
                 let nextWaveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
-                let lastTickValue = GameVars.waveEnemies[GameVars.waveEnemies.length - 1].t;
+                let lastTickValue = this.waveEnemies[this.waveEnemies.length - 1].t;
 
                 for (let j = 0; j < nextWaveEnemies.length; j++) {
                     nextWaveEnemies[j].t += (lastTickValue + 2);
                 }
 
-                GameVars.waveEnemies = GameVars.waveEnemies.concat(nextWaveEnemies);
+                this.waveEnemies = this.waveEnemies.concat(nextWaveEnemies);
             }
 
             this.lastWaveTick = this._ticksCounter;
@@ -252,17 +225,17 @@ module Anuto {
            
             this.initWaveVars();
 
-            this.waveEnemiesLength = GameVars.waveEnemies.length;
+            this.waveEnemiesLength = this.waveEnemies.length;
 
             return true;
         }
 
         public removeEnemy(enemy: Enemy): void {
 
-            const i = GameVars.enemies.indexOf(enemy);
+            const i = this.enemies.indexOf(enemy);
 
             if (i !== -1) {
-                GameVars.enemies.splice(i, 1);
+                this.enemies.splice(i, 1);
             }
 
             enemy.destroy();
@@ -271,8 +244,8 @@ module Anuto {
         public addTurret(type: string, p: {r: number, c: number}): Turret {
 
             // mirar si estamos poniendo la torreta encima del camino
-            for (let i = 0; i < GameVars.enemiesPathCells.length; i++) {
-                if (p.c === GameVars.enemiesPathCells[i].c && p.r === GameVars.enemiesPathCells[i].r) {
+            for (let i = 0; i < this.enemiesPathCells.length; i++) {
+                if (p.c === this.enemiesPathCells[i].c && p.r === this.enemiesPathCells[i].r) {
                     return null;
                 }
             }
@@ -341,8 +314,8 @@ module Anuto {
                 turret.setNextStrategy();
                 return true;
             }
+
             return false;
-            
         }
 
         public setFixedTarget(id: number): boolean {
@@ -430,10 +403,10 @@ module Anuto {
 
         public onEnemyReachedExit(enemy: Enemy): void {
 
-            const i = GameVars.enemies.indexOf(enemy);
+            const i = this.enemies.indexOf(enemy);
 
             if (i !== -1) {
-                GameVars.enemies.splice(i, 1);
+                this.enemies.splice(i, 1);
             }
 
             enemy.destroy();
@@ -442,7 +415,7 @@ module Anuto {
 
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_REACHED_EXIT, [enemy]));
 
-            if (GameVars.enemies.length === 0 && this.allEnemiesSpawned) {
+            if (this.enemies.length === 0 && this.allEnemiesSpawned) {
                 this.onNoEnemiesOnStage();
             }
         }
@@ -454,15 +427,15 @@ module Anuto {
 
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_KILLED, [enemy]));
 
-            const i = GameVars.enemies.indexOf(enemy);
+            const i = this.enemies.indexOf(enemy);
 
             if (i !== -1) {
-                GameVars.enemies.splice(i, 1);
+                this.enemies.splice(i, 1);
             }
 
             enemy.destroy();
 
-            if (GameVars.enemies.length === 0 && this.allEnemiesSpawned) {
+            if (this.enemies.length === 0 && this.allEnemiesSpawned) {
                 this.onNoEnemiesOnStage();
             }
         }
@@ -495,6 +468,36 @@ module Anuto {
             }
 
             return success;
+        }
+
+        public getPathPosition(l: number): {x: number, y: number} {
+
+            let x: number;
+            let y: number;
+
+            const i = Math.floor(l);
+
+            if (i === this.enemiesPathCells.length - 1) {
+
+                x = this.enemiesPathCells[this.enemiesPathCells.length - 1].c;
+                y = this.enemiesPathCells[this.enemiesPathCells.length - 1].r;
+
+            } else {
+
+                const dl = MathUtils.fixNumber(l - i);
+
+                // interpolar entre i e i + 1
+                x = this.enemiesPathCells[i].c + .5;
+                y = this.enemiesPathCells[i].r + .5;
+    
+                const dx = MathUtils.fixNumber(this.enemiesPathCells[i + 1].c - this.enemiesPathCells[i].c);
+                const dy = MathUtils.fixNumber(this.enemiesPathCells[i + 1].r - this.enemiesPathCells[i].r);
+    
+                x = MathUtils.fixNumber(x + dx * dl);
+                y = MathUtils.fixNumber(y + dy * dl);
+            }
+
+            return {x: x, y: y};
         }
 
         public addEventListener(type: string, listenerFunction: Function, scope: any): void {
@@ -570,9 +573,9 @@ module Anuto {
                 }
             }
 
-            for (let i = 0; i < GameVars.enemies.length; i ++) {
+            for (let i = 0; i < this.enemies.length; i ++) {
 
-                const enemy = GameVars.enemies[i];
+                const enemy = this.enemies[i];
 
                 if (enemy.type !== GameConstants.ENEMY_FLIER) {
 
@@ -756,8 +759,8 @@ module Anuto {
                     this.allEnemiesSpawned = true;
                 }
 
-                GameVars.enemies.push(enemy);
-                this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_SPAWNED, [enemy, GameVars.enemiesPathCells[0]]));
+                this.enemies.push(enemy);
+                this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_SPAWNED, [enemy, this.enemiesPathCells[0]]));
             }
         }
 

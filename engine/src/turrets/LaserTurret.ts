@@ -70,9 +70,9 @@ module Anuto {
 
             let newEnemies = [];
 
-            for (let i = 0; i < GameVars.enemies.length; i ++) {
+            for (let i = 0; i < this.engine.enemies.length; i ++) {
 
-                const newEnemy = GameVars.enemies[i];
+                const newEnemy = this.engine.enemies[i];
 
                 // if (newEnemy !== enemy && this.inLine({x: this.position.c, y: this.position.r}, {x: Math.floor(newEnemy.x), y: Math.floor(newEnemy.y)}, {x: Math.floor(enemy.x), y: Math.floor(enemy.y)})) {
                 //     newEnemies.push(newEnemy);

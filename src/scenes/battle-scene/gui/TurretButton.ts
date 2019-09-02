@@ -59,7 +59,7 @@ export class TurretButton extends Phaser.GameObjects.Container {
         creditIcon.setTint(0x000000);
         this.add(creditIcon);
 
-        let text = new Phaser.GameObjects.Text(this.scene, 12, 42, Anuto.GameVars.turretData[this.typeTurret].price, {fontFamily: "Rubik-Light", fontSize: "30px", color: "#000000"});
+        let text = new Phaser.GameObjects.Text(this.scene, 12, 42, BattleManager.anutoEngine.turretData[this.typeTurret].price, {fontFamily: "Rubik-Light", fontSize: "30px", color: "#000000"});
         text.setOrigin(.5);
         this.add(text);
 
@@ -70,7 +70,7 @@ export class TurretButton extends Phaser.GameObjects.Container {
 
     public updateTurret(): void {
 
-        if (Anuto.GameVars.turretData[this.typeTurret].price > BattleManager.anutoEngine.credits) {
+        if (BattleManager.anutoEngine.turretData[this.typeTurret].price > BattleManager.anutoEngine.credits) {
             this.alpha = .5;
         } else {
             this.alpha = 1;

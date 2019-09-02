@@ -18,6 +18,7 @@ module Anuto {
         private vy: number;
         private f: number;
         private damage: number;
+        private engine: Engine;
         
         // mortar speed in cells / tick
         constructor (p: {r: number, c: number}, angle: number, ticksToImpact: number, explosionRange: number, damage: number, grade: number, turret: LaunchTurret, engine: Engine) {
@@ -35,6 +36,7 @@ module Anuto {
             this.damage = damage;
             this.grade = grade;
             this.turret = turret;
+            this.engine = engine;
 
             this.detonate = false;
             this.f = 0;
@@ -65,9 +67,9 @@ module Anuto {
 
             const hitEnemiesData: {enemy: Enemy, damage: number} [] = [];
 
-            for (let i = 0; i < GameVars.enemies.length; i ++) {
+            for (let i = 0; i < this.engine.enemies.length; i ++) {
 
-                const enemy = GameVars.enemies[i];
+                const enemy = this.engine.enemies[i];
                 const distance = MathUtils.fixNumber(Math.sqrt((enemy.x - this.x) *  (enemy.x - this.x) + (enemy.y - this.y) *  (enemy.y - this.y)));
 
                 if (distance <= this.explosionRange) {

@@ -15,9 +15,9 @@ module Anuto {
 
             let partialTicks = this.engine.ticksCounter - this.engine.lastWaveTick;
             
-            if (partialTicks % this.engine.enemySpawningDeltaTicks === 0 && GameVars.waveEnemies.length > 0) {
+            if (partialTicks % this.engine.enemySpawningDeltaTicks === 0 && this.engine.waveEnemies.length > 0) {
 
-                const nextEnemyData = GameVars.waveEnemies[0];
+                const nextEnemyData = this.engine.waveEnemies[0];
                 
                 if (nextEnemyData.t === partialTicks / this.engine.enemySpawningDeltaTicks) {
 
@@ -47,7 +47,7 @@ module Anuto {
                     enemy.life += extraLife;
                     enemy.maxLife = enemy.life;
 
-                    GameVars.waveEnemies.shift();
+                    this.engine.waveEnemies.shift();
                 }
             }
 

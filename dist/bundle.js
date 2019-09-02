@@ -5998,7 +5998,7 @@ var TurretButton = /** @class */ (function (_super) {
         var creditIcon = new Phaser.GameObjects.Image(_this.scene, -30, 42, "texture_atlas_1", "coin_icon");
         creditIcon.setTint(0x000000);
         _this.add(creditIcon);
-        var text = new Phaser.GameObjects.Text(_this.scene, 12, 42, Anuto.GameVars.turretData[_this.typeTurret].price, { fontFamily: "Rubik-Light", fontSize: "30px", color: "#000000" });
+        var text = new Phaser.GameObjects.Text(_this.scene, 12, 42, BattleManager_1.BattleManager.anutoEngine.turretData[_this.typeTurret].price, { fontFamily: "Rubik-Light", fontSize: "30px", color: "#000000" });
         text.setOrigin(.5);
         _this.add(text);
         if (_this.typeTurret === Anuto.GameConstants.TURRET_GLUE) {
@@ -6007,7 +6007,7 @@ var TurretButton = /** @class */ (function (_super) {
         return _this;
     }
     TurretButton.prototype.updateTurret = function () {
-        if (Anuto.GameVars.turretData[this.typeTurret].price > BattleManager_1.BattleManager.anutoEngine.credits) {
+        if (BattleManager_1.BattleManager.anutoEngine.turretData.turretData[this.typeTurret].price > BattleManager_1.BattleManager.anutoEngine.credits) {
             this.alpha = .5;
         }
         else {

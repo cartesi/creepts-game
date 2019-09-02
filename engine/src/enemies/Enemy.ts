@@ -56,7 +56,7 @@ module Anuto {
             this.l = 0;
             this.t = 0;
 
-            const p = Engine.getPathPosition(this.l);
+            const p = this.engine.getPathPosition(this.l);
 
             this.x = p.x;
             this.y = p.y; 
@@ -102,16 +102,16 @@ module Anuto {
            
             this.l = MathUtils.fixNumber(this.l + speed);
 
-            if (this.l >= GameVars.enemiesPathCells.length - 1) {
+            if (this.l >= this.engine.enemiesPathCells.length - 1) {
 
-                this.x = GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].c;
-                this.y = GameVars.enemiesPathCells[GameVars.enemiesPathCells.length - 1].r;
+                this.x = this.engine.enemiesPathCells[this.engine.enemiesPathCells.length - 1].c;
+                this.y = this.engine.enemiesPathCells[this.engine.enemiesPathCells.length - 1].r;
 
                 this.engine.onEnemyReachedExit(this);
 
             } else {
 
-                const p = Engine.getPathPosition(this.l);
+                const p = this.engine.getPathPosition(this.l);
 
                 this.x = p.x;
                 this.y = p.y;
@@ -130,7 +130,7 @@ module Anuto {
                 this.l = 0;
             }
 
-            const p = Engine.getPathPosition(this.l);
+            const p = this.engine.getPathPosition(this.l);
 
             this.x = p.x;
             this.y = p.y;
@@ -192,7 +192,7 @@ module Anuto {
 
             let l = MathUtils.fixNumber(this.l + speed * deltaTicks);
 
-            const p = Engine.getPathPosition(l);
+            const p = this.engine.getPathPosition(l);
 
             return{x: p.x, y: p.y};
         }

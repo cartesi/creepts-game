@@ -60,8 +60,8 @@ module Anuto {
             this.x = this.position.c + .5;
             this.y = this.position.r + .5;
 
-            this.value = GameVars.turretData[this.type].price;
-            this.sellValue = Math.round(GameVars.turretData[this.type].price * Turret.downgradePercent);
+            this.value = this.engine.turretData[this.type].price;
+            this.sellValue = Math.round(this.engine.turretData[this.type].price * Turret.downgradePercent);
         }
 
         public destroy(): void {
@@ -147,11 +147,11 @@ module Anuto {
             let enemiesAndSquaredDistances: {enemy: Enemy, squareDist: number} [] = [];
             let squaredRange = MathUtils.fixNumber(this.range * this.range);
             
-            for (let i = 0; i < GameVars.enemies.length; i ++) {
+            for (let i = 0; i < this.engine.enemies.length; i ++) {
 
-                const enemy = GameVars.enemies[i];
+                const enemy = this.engine.enemies[i];
 
-                if (enemy.life > 0 && enemy.l < GameVars.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
+                if (enemy.life > 0 && enemy.l < this.engine.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
 
                     const dx = this.x - enemy.x;
                     const dy = this.y - enemy.y;

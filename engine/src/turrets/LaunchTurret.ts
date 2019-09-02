@@ -68,9 +68,9 @@ module Anuto {
 
             let cells = [];
 
-            for (let i = 0; i < GameVars.enemiesPathCells.length; i++) {
+            for (let i = 0; i < this.engine.enemiesPathCells.length; i++) {
 
-                let cell = GameVars.enemiesPathCells[i];
+                let cell = this.engine.enemiesPathCells[i];
 
                 if (cell.c >= this.position.c && cell.c <= this.position.c + this.range ||
                     cell.c <= this.position.c && cell.c >= this.position.c - this.range) {
@@ -103,7 +103,7 @@ module Anuto {
                     const dy = (cell.r + .5) - this.y;
                     this.shootAngle = MathUtils.fixNumber(Math.atan2(dy, dx));
 
-                    const mine = new Mine({c: cell.c, r: cell.r}, this.explosionRange, this.damage, this);
+                    const mine = new Mine({c: cell.c, r: cell.r}, this.explosionRange, this.damage, this, this.engine);
                     this.engine.addMine(mine, this);
 
                 } else {
