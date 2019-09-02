@@ -362,7 +362,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
             scaleY: 1,
             alpha: 1,
             ease: Phaser.Math.Easing.Cubic.Out,
-            duration: GameVars.timeStepFactor === 4 ? 200 : 600,
+            duration: GameVars.timeStepFactor === 1 ? 600 : 200,
         });
     }
 
@@ -383,7 +383,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
                     targets: glueCircle,
                     alpha: 0,
                     ease: Phaser.Math.Easing.Cubic.Out,
-                    duration: GameVars.timeStepFactor === 4 ? 200 : 600,
+                    duration: GameVars.timeStepFactor === 1 ? 600 : 200,
                     onComplete: () => {
                         glueCircle.destroy();
                     },

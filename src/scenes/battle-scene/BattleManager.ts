@@ -102,7 +102,6 @@ export class BattleManager {
             let action = {type: GameConstants.TYPE_NEXT_WAVE, tick: BattleManager.anutoEngine.ticksCounter};
             BattleManager.addAction(action);
         }
-        
     }
 
     public static createTurret(type: string): void {

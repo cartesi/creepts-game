@@ -60,7 +60,7 @@ export class EnemyActor extends Phaser.GameObjects.Container {
         let smoothFactor: number;
 
         if (GameConstants.INTERPOLATE_TRAJECTORIES) {
-            smoothFactor = GameVars.timeStepFactor === 4 ? .5 : .15;
+            smoothFactor = GameVars.timeStepFactor === 1 ? .15 : .5;
         } else {
             smoothFactor = 1;
         }
@@ -72,7 +72,7 @@ export class EnemyActor extends Phaser.GameObjects.Container {
 
         // para suavizar la aparición
         if (this.alpha < 1) {
-            this.alpha += GameVars.timeStepFactor === 4 ? .1 : .035;
+            this.alpha += GameVars.timeStepFactor === 1 ? .035 : .1;
         }
     }
 

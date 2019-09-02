@@ -1,9 +1,7 @@
-import { TurretSelected } from './TurretSelected';
-import { BuyTurrets } from './BuyTurrets';
-import { Button } from "../../../utils/Utils";
+import { TurretSelected } from "./TurretSelected";
+import { BuyTurrets } from "./BuyTurrets";
 import { BattleManager } from "../BattleManager";
 import { GameVars } from "../../../GameVars";
-import { GameManager } from "../../../GameManager";
 
 export class GUI extends Phaser.GameObjects.Container {
 
@@ -109,6 +107,9 @@ export class GUI extends Phaser.GameObjects.Container {
         if (GameVars.timeStepFactor === 1) {
             BattleManager.setTimeStepFactor(4);
             this.timeStepText.setText("x4");
+        } else if (GameVars.timeStepFactor === 4) {
+            BattleManager.setTimeStepFactor(8);
+            this.timeStepText.setText("x8");
         } else {
             BattleManager.setTimeStepFactor(1);
             this.timeStepText.setText("x1");

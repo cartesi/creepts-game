@@ -186,8 +186,8 @@ var Anuto;
 (function (Anuto) {
     var Enemy = /** @class */ (function () {
         function Enemy(type, creationTick, engine) {
-            this.id = engine.enemyId;
-            engine.enemyId++;
+            // this.id = engine.enemyId;
+            // engine.enemyId ++;
             this.creationTick = creationTick;
             this.engine = engine;
             this.type = type;

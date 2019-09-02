@@ -69,7 +69,7 @@ export class MortarActor extends Phaser.GameObjects.Container {
         let smoothFactor: number;
 
         if (GameConstants.INTERPOLATE_TRAJECTORIES) {
-            smoothFactor = GameVars.timeStepFactor === 4 ? .65 : .2;
+            smoothFactor = GameVars.timeStepFactor === 1 ? .2 : .65;
         } else {
             smoothFactor = 1;
         }
