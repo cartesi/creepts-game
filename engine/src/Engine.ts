@@ -130,14 +130,9 @@ module Anuto {
                 this.t = t;
             }
 
-            if (this._paused) {
+            if (this._paused || !this.waveActivated) {
                 return;
             }
-
-            // Esto esta comentado ya que las minas se pueden poner aunque las rondas no esten en marcha y los tiempos de recarga tienen que completarse por lo que el motor tiene que seguir funcionando
-            // if (!this.waveActivated) {
-            //     return;
-            // }
 
             if (this._lifes <= 0 && !this._gameOver) {
 
