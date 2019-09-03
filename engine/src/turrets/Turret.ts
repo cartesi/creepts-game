@@ -166,19 +166,46 @@ module Anuto {
             if (enemiesAndSquaredDistances.length > 1 && (this.type === GameConstants.TURRET_PROJECTILE || this.type === GameConstants.TURRET_LASER)) {
                 
                 // ordenar a los enemigos dentro del radio de acción según la estrategia de disparo
-              
                 switch (this.shootingStrategy) {
                     case GameConstants.STRATEGY_SHOOT_LAST:
                         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.enemy.l - e2.enemy.l) < 0);
                         break;
                     case GameConstants.STRATEGY_SHOOT_CLOSEST:
+                        // TODO: hacer untie
                         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.squareDist - e2.squareDist) < 0);
                         break;
                     case GameConstants.STRATEGY_SHOOT_WEAKEST:
-                        enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.enemy.life - e2.enemy.life) < 0);
+            
+                        enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): boolean {
+                            
+                            let ret: boolean;
+
+                            if (e1.enemy.life === e2.enemy.life) {
+                                ret = (e1.enemy.l - e2.enemy.l) > 0;
+                            } else {
+                                ret = e1.enemy.life - e2.enemy.life < 0;
+                            }
+
+                            return ret;
+                        });
+                        
                         break;
+
                     case GameConstants.STRATEGY_SHOOT_STRONGEST:
-                        enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e2.enemy.life - e1.enemy.life) < 0);
+  
+                        enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): boolean {
+                            
+                            let ret: boolean;
+
+                            if (e1.enemy.life === e2.enemy.life) {
+                                ret = (e1.enemy.l - e2.enemy.l) > 0;
+                            } else {
+                                ret = e1.enemy.life - e2.enemy.life > 0;
+                            }
+
+                            return ret;
+                        });
+                        
                         break;
                     case GameConstants.STRATEGY_SHOOT_FIRST:
                         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.enemy.l - e2.enemy.l) > 0);

@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -157,13 +157,32 @@ var Anuto;
                         enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e1.enemy.l - e2.enemy.l) < 0; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_CLOSEST:
+                        // TODO: hacer untie
                         enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e1.squareDist - e2.squareDist) < 0; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_WEAKEST:
-                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e1.enemy.life - e2.enemy.life) < 0; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) {
+                            var ret;
+                            if (e1.enemy.life === e2.enemy.life) {
+                                ret = (e1.enemy.l - e2.enemy.l) > 0;
+                            }
+                            else {
+                                ret = e1.enemy.life - e2.enemy.life < 0;
+                            }
+                            return ret;
+                        });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_STRONGEST:
-                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e2.enemy.life - e1.enemy.life) < 0; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) {
+                            var ret;
+                            if (e1.enemy.life === e2.enemy.life) {
+                                ret = (e1.enemy.l - e2.enemy.l) > 0;
+                            }
+                            else {
+                                ret = e1.enemy.life - e2.enemy.life > 0;
+                            }
+                            return ret;
+                        });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_FIRST:
                         enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e1.enemy.l - e2.enemy.l) > 0; });

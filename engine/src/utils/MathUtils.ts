@@ -81,8 +81,6 @@ module Anuto {
                 };
             }
 
-           
-          
             // breaking recursive call
             if (list.length <= 1) {
                 return list;
