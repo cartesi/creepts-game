@@ -198,12 +198,12 @@ declare module Anuto {
         static readonly TURRET_LASER = "laser";
         static readonly TURRET_LAUNCH = "launch";
         static readonly TURRET_GLUE = "glue";
-        static readonly STRATEGY_SHOOT_FIRST = "First";
-        static readonly STRATEGY_SHOOT_LAST = "Last";
-        static readonly STRATEGY_SHOOT_CLOSEST = "Closest";
-        static readonly STRATEGY_SHOOT_WEAKEST = "Weakest";
-        static readonly STRATEGY_SHOOT_STRONGEST = "Strongest";
-        static readonly STRATEGYS_ARRAY: string[];
+        static readonly STRATEGY_SHOOT_FIRST = "first";
+        static readonly STRATEGY_SHOOT_LAST = "last";
+        static readonly STRATEGY_SHOOT_CLOSEST = "closest";
+        static readonly STRATEGY_SHOOT_WEAKEST = "weakest";
+        static readonly STRATEGY_SHOOT_STRONGEST = "strongest";
+        static readonly STRATEGIES_ARRAY: string[];
         static readonly HEALER_HEALING_TICKS = 100;
         static readonly HEALER_STOP_TICKS = 30;
         static readonly HEALER_HEALING_RADIUS = 2;
@@ -367,26 +367,16 @@ declare module Anuto {
         update(): void;
         protected calculateTurretParameters(): void;
         protected getEnemiesWithinLine(enemy: Enemy): Enemy[];
-        protected inLine(A: {
-            x: number;
-            y: number;
-        }, B: {
-            x: number;
-            y: number;
-        }, C: {
-            x: number;
-            y: number;
-        }): boolean;
         protected shoot(): void;
     }
 }
 declare module Anuto {
     class LaunchTurret extends Turret {
-        private static deviationRadius;
-        private static deviationAngle;
         explosionRange: number;
         numMines: number;
         private minesCounter;
+        private deviationRadius;
+        private deviationAngle;
         constructor(p: {
             r: number;
             c: number;

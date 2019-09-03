@@ -106,13 +106,13 @@ export class GUI extends Phaser.GameObjects.Container {
 
         if (GameVars.timeStepFactor === 1) {
             BattleManager.setTimeStepFactor(4);
-            this.timeStepText.setText("x4");
+            this.timeStepText.setText("4x");
         } else if (GameVars.timeStepFactor === 4) {
             BattleManager.setTimeStepFactor(8);
-            this.timeStepText.setText("x8");
+            this.timeStepText.setText("8x");
         } else {
             BattleManager.setTimeStepFactor(1);
-            this.timeStepText.setText("x1");
+            this.timeStepText.setText("1x");
         }
     }
 

@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -71,7 +71,7 @@ var Anuto;
             this.position = p;
             this.fixedTarget = true;
             this.shootingStrategyIndex = 0;
-            this.shootingStrategy = Anuto.GameConstants.STRATEGYS_ARRAY[this.shootingStrategyIndex];
+            this.shootingStrategy = Anuto.GameConstants.STRATEGIES_ARRAY[this.shootingStrategyIndex];
             this.readyToShoot = true;
             this.enemiesWithinRange = [];
             this.followedEnemy = null;
@@ -124,8 +124,8 @@ var Anuto;
             this.calculateTurretParameters();
         };
         Turret.prototype.setNextStrategy = function () {
-            this.shootingStrategyIndex = this.shootingStrategyIndex === Anuto.GameConstants.STRATEGYS_ARRAY.length - 1 ? 0 : this.shootingStrategyIndex + 1;
-            this.shootingStrategy = Anuto.GameConstants.STRATEGYS_ARRAY[this.shootingStrategyIndex];
+            this.shootingStrategyIndex = this.shootingStrategyIndex === Anuto.GameConstants.STRATEGIES_ARRAY.length - 1 ? 0 : this.shootingStrategyIndex + 1;
+            this.shootingStrategy = Anuto.GameConstants.STRATEGIES_ARRAY[this.shootingStrategyIndex];
         };
         Turret.prototype.setFixedTarget = function () {
             this.fixedTarget = !this.fixedTarget;
@@ -160,10 +160,28 @@ var Anuto;
                         enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e1.squareDist - e2.squareDist) < 0; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_WEAKEST:
-                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e1.enemy.life - e2.enemy.life) < 0; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) {
+                            var ret;
+                            if (e1.enemy.life === e2.enemy.life) {
+                                ret = (e1.enemy.l - e2.enemy.l) > 0;
+                            }
+                            else {
+                                ret = e1.enemy.life - e2.enemy.life < 0;
+                            }
+                            return ret;
+                        });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_STRONGEST:
-                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e2.enemy.life - e1.enemy.life) < 0; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) {
+                            var ret;
+                            if (e1.enemy.life === e2.enemy.life) {
+                                ret = (e1.enemy.l - e2.enemy.l) > 0;
+                            }
+                            else {
+                                ret = e1.enemy.life - e2.enemy.life > 0;
+                            }
+                            return ret;
+                        });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_FIRST:
                         enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e1.enemy.l - e2.enemy.l) > 0; });
@@ -913,16 +931,18 @@ var Anuto;
         GameConstants.TURRET_LAUNCH = "launch";
         GameConstants.TURRET_GLUE = "glue";
         // estrategia de disparo
-        GameConstants.STRATEGY_SHOOT_FIRST = "First";
-        GameConstants.STRATEGY_SHOOT_LAST = "Last";
-        GameConstants.STRATEGY_SHOOT_CLOSEST = "Closest";
-        GameConstants.STRATEGY_SHOOT_WEAKEST = "Weakest";
-        GameConstants.STRATEGY_SHOOT_STRONGEST = "Strongest";
-        GameConstants.STRATEGYS_ARRAY = [GameConstants.STRATEGY_SHOOT_FIRST,
+        GameConstants.STRATEGY_SHOOT_FIRST = "first";
+        GameConstants.STRATEGY_SHOOT_LAST = "last";
+        GameConstants.STRATEGY_SHOOT_CLOSEST = "closest";
+        GameConstants.STRATEGY_SHOOT_WEAKEST = "weakest";
+        GameConstants.STRATEGY_SHOOT_STRONGEST = "strongest";
+        GameConstants.STRATEGIES_ARRAY = [
+            GameConstants.STRATEGY_SHOOT_FIRST,
             GameConstants.STRATEGY_SHOOT_LAST,
             GameConstants.STRATEGY_SHOOT_CLOSEST,
             GameConstants.STRATEGY_SHOOT_WEAKEST,
-            GameConstants.STRATEGY_SHOOT_STRONGEST];
+            GameConstants.STRATEGY_SHOOT_STRONGEST
+        ];
         // caracteristicas de los enemigos
         GameConstants.HEALER_HEALING_TICKS = 100;
         GameConstants.HEALER_STOP_TICKS = 30;
@@ -1290,9 +1310,6 @@ var Anuto;
             var newEnemies = [];
             for (var i = 0; i < this.engine.enemies.length; i++) {
                 var newEnemy = this.engine.enemies[i];
-                // if (newEnemy !== enemy && this.inLine({x: this.position.c, y: this.position.r}, {x: Math.floor(newEnemy.x), y: Math.floor(newEnemy.y)}, {x: Math.floor(enemy.x), y: Math.floor(enemy.y)})) {
-                //     newEnemies.push(newEnemy);
-                // }
                 var infiniteX = newEnemy.x + (enemy.x - this.x) * 1000;
                 var infiniteY = newEnemy.y + (enemy.y - this.y) * 1000;
                 if (newEnemy !== enemy && Anuto.MathUtils.isLineSegmentIntersectingCircle({ x: this.x, y: this.y }, { x: infiniteX, y: infiniteY }, { x: newEnemy.x, y: newEnemy.y }, .3)) {
@@ -1300,18 +1317,6 @@ var Anuto;
                 }
             }
             return newEnemies;
-        };
-        LaserTurret.prototype.inLine = function (A, B, C) {
-            // if AC is vertical
-            if (A.x === C.x) {
-                return B.x === C.x;
-            }
-            // if AC is horizontal
-            if (A.y === C.y) {
-                return B.y === C.y;
-            }
-            // match the gradients
-            return (A.x - C.x) * (A.y - C.y) === (C.x - B.x) * (C.y - B.y);
         };
         LaserTurret.prototype.shoot = function () {
             _super.prototype.shoot.call(this);
@@ -1382,11 +1387,12 @@ var Anuto;
         function LaunchTurret(p, engine) {
             var _this = _super.call(this, Anuto.GameConstants.TURRET_LAUNCH, p, engine) || this;
             _this.calculateTurretParameters();
-            _this.minesCounter = 0;
             _this.numMines = 0;
+            _this.minesCounter = 0;
+            _this.deviationAngle = 0;
+            _this.deviationRadius = 0;
             return _this;
         }
-        // mirar en el ANUTO y generar las formulas que correspondan
         LaunchTurret.prototype.calculateTurretParameters = function () {
             switch (this.grade) {
                 case 1:
@@ -1464,12 +1470,12 @@ var Anuto;
                 var impactPosition = enemy.getNextPosition(ticksToImpact);
                 if (this.grade === 1) {
                     // le damos una cierta desviacion para que no explote directamente justo encima del enemigo
-                    var deviation_x = Anuto.MathUtils.fixNumber(LaunchTurret.deviationRadius * Math.cos(LaunchTurret.deviationAngle * Math.PI / 180));
-                    var deviation_y = Anuto.MathUtils.fixNumber(LaunchTurret.deviationRadius * Math.sin(LaunchTurret.deviationAngle * Math.PI / 180));
+                    var deviation_x = Anuto.MathUtils.fixNumber(this.deviationRadius * Math.cos(this.deviationAngle * Math.PI / 180));
+                    var deviation_y = Anuto.MathUtils.fixNumber(this.deviationRadius * Math.sin(this.deviationAngle * Math.PI / 180));
                     impactPosition.x += deviation_x;
                     impactPosition.y += deviation_y;
-                    LaunchTurret.deviationRadius = LaunchTurret.deviationRadius === .75 ? 0 : LaunchTurret.deviationRadius + .25;
-                    LaunchTurret.deviationAngle = LaunchTurret.deviationAngle === 315 ? 0 : LaunchTurret.deviationAngle + 45;
+                    this.deviationRadius = this.deviationRadius === .75 ? 0 : this.deviationRadius + .25;
+                    this.deviationAngle = this.deviationAngle === 315 ? 0 : this.deviationAngle + 45;
                 }
                 // el impacto se producirá dentro del alcance de la torreta?
                 d = Anuto.MathUtils.fixNumber(Math.sqrt((this.x - impactPosition.x) * (this.x - impactPosition.x) + (this.y - impactPosition.y) * (this.y - impactPosition.y)));
@@ -1489,9 +1495,6 @@ var Anuto;
                 }
             }
         };
-        // se va desviando del objetivo de una manera ciclica
-        LaunchTurret.deviationRadius = 0; // puede ser 0, .25. .5 ó .75   1 de cada 4 veces disparara al enemigo en el centro
-        LaunchTurret.deviationAngle = 0; // se va incrementando de 45 en 45 grados
         return LaunchTurret;
     }(Anuto.Turret));
     Anuto.LaunchTurret = LaunchTurret;
@@ -1757,13 +1760,11 @@ var Anuto;
             }
         };
         MathUtils.mergeSort = function (list, compareFunction) {
-            // Set a default compare function 
             if (!compareFunction) {
                 compareFunction = function (x, y) {
                     return x < y;
                 };
             }
-            // breaking recursive call
             if (list.length <= 1) {
                 return list;
             }
@@ -1772,9 +1773,6 @@ var Anuto;
             var splitingResult = MathUtils.splitList(list);
             leftHalf = splitingResult.leftHalf;
             rigthHalf = splitingResult.rigthHalf;
-            // Recursive call.
-            // Passing the compare function to recursive calls to prevent the creation of unnecessary
-            // functions on each call.
             return MathUtils.jointLists(MathUtils.mergeSort(leftHalf, compareFunction), MathUtils.mergeSort(rigthHalf, compareFunction), compareFunction);
         };
         MathUtils.splitList = function (list) {
@@ -1788,11 +1786,9 @@ var Anuto;
             return { leftHalf: list.slice(0, index), rigthHalf: list.slice(index) };
         };
         MathUtils.jointLists = function (list1, list2, compareFunction) {
-            // defining auxiliar variables
             var result = [];
             var index1 = 0;
             var index2 = 0;
-            // sortering previously ordered arrays
             while (true) {
                 if (compareFunction(list1[index1], list2[index2])) {
                     result.push(list1[index1]);
@@ -1806,9 +1802,6 @@ var Anuto;
                     break;
                 }
             }
-            // some of the array still have elements that are not listed on the result arrays,
-            // since this elements have a biggest value (according to the compare function)
-            // we can just push this elements at the very end of the result
             if (index1 < list1.length) {
                 return result.concat(list1.slice(index1));
             }

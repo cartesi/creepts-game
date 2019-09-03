@@ -2,14 +2,13 @@ module Anuto {
 
     export class LaunchTurret extends Turret {
 
-        // se va desviando del objetivo de una manera ciclica
-        private static deviationRadius = 0; // puede ser 0, .25. .5 ó .75   1 de cada 4 veces disparara al enemigo en el centro
-        private static deviationAngle = 0; // se va incrementando de 45 en 45 grados
-
         public explosionRange: number;
         public numMines: number;
 
         private minesCounter: number;
+        // se va desviando del objetivo de una manera ciclica
+        private  deviationRadius: number; // puede ser 0, .25. .5 ó .75   1 de cada 4 veces disparara al enemigo en el centro
+        private  deviationAngle: number; // se va incrementando de 45 en 45 grados
 
         constructor (p: {r: number, c: number}, engine) {
             
@@ -17,11 +16,12 @@ module Anuto {
 
             this.calculateTurretParameters();
 
-            this.minesCounter = 0;
             this.numMines = 0;
+            this.minesCounter = 0;
+            this.deviationAngle = 0;
+            this.deviationRadius = 0;
         }
 
-        // mirar en el ANUTO y generar las formulas que correspondan
         protected calculateTurretParameters(): void {
 
             switch (this.grade) {
@@ -111,6 +111,7 @@ module Anuto {
                 }
 
             } else {
+
                 let enemy: Enemy;
 
                 if (this.fixedTarget) {
@@ -131,14 +132,14 @@ module Anuto {
 
                 if (this.grade === 1) {
                     // le damos una cierta desviacion para que no explote directamente justo encima del enemigo
-                    const deviation_x = MathUtils.fixNumber(LaunchTurret.deviationRadius * Math.cos(LaunchTurret.deviationAngle * Math.PI / 180));
-                    const deviation_y = MathUtils.fixNumber(LaunchTurret.deviationRadius * Math.sin(LaunchTurret.deviationAngle * Math.PI / 180));
+                    const deviation_x = MathUtils.fixNumber(this.deviationRadius * Math.cos(this.deviationAngle * Math.PI / 180));
+                    const deviation_y = MathUtils.fixNumber(this.deviationRadius * Math.sin(this.deviationAngle * Math.PI / 180));
 
                     impactPosition.x += deviation_x;
                     impactPosition.y += deviation_y;
 
-                    LaunchTurret.deviationRadius = LaunchTurret.deviationRadius === .75 ? 0 : LaunchTurret.deviationRadius + .25;
-                    LaunchTurret.deviationAngle = LaunchTurret.deviationAngle === 315 ? 0 : LaunchTurret.deviationAngle + 45;
+                    this.deviationRadius = this.deviationRadius === .75 ? 0 : this.deviationRadius + .25;
+                    this.deviationAngle = this.deviationAngle === 315 ? 0 : this.deviationAngle + 45;
                 }
 
                 // el impacto se producirá dentro del alcance de la torreta?
@@ -165,8 +166,6 @@ module Anuto {
                     this.readyToShoot = true;
                 }
             }
-
-            
         }
     }
 }

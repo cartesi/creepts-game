@@ -74,16 +74,12 @@ module Anuto {
 
         public static mergeSort(list: any[], compareFunction?: Function): any[] {
   
-            // Set a default compare function 
             if (!compareFunction) {
                 compareFunction = function (x: number, y: number) {
                     return x < y; 
                 };
             }
 
-           
-          
-            // breaking recursive call
             if (list.length <= 1) {
                 return list;
             }
@@ -95,9 +91,6 @@ module Anuto {
             leftHalf = splitingResult.leftHalf;
             rigthHalf = splitingResult.rigthHalf;
           
-            // Recursive call.
-            // Passing the compare function to recursive calls to prevent the creation of unnecessary
-            // functions on each call.
             return MathUtils.jointLists(MathUtils.mergeSort(leftHalf, compareFunction), MathUtils.mergeSort(rigthHalf, compareFunction), compareFunction);
           }
 
@@ -118,12 +111,11 @@ module Anuto {
           
         private static jointLists(list1: any[], list2: any[], compareFunction: Function): any[] {
           
-            // defining auxiliar variables
             const result = [];
+
             let index1 = 0;
             let index2 = 0;
           
-            // sortering previously ordered arrays
             while (true){
                 
                 if (compareFunction(list1[index1], list2[index2])){
@@ -138,9 +130,6 @@ module Anuto {
                 }
             }
           
-            // some of the array still have elements that are not listed on the result arrays,
-            // since this elements have a biggest value (according to the compare function)
-            // we can just push this elements at the very end of the result
             if (index1 < list1.length) {
                 return result.concat(list1.slice(index1));
             }

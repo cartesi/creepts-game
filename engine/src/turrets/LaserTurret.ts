@@ -74,10 +74,6 @@ module Anuto {
 
                 const newEnemy = this.engine.enemies[i];
 
-                // if (newEnemy !== enemy && this.inLine({x: this.position.c, y: this.position.r}, {x: Math.floor(newEnemy.x), y: Math.floor(newEnemy.y)}, {x: Math.floor(enemy.x), y: Math.floor(enemy.y)})) {
-                //     newEnemies.push(newEnemy);
-                // }
-
                 let infiniteX = newEnemy.x + (enemy.x - this.x) * 1000;
                 let infiniteY = newEnemy.y + (enemy.y - this.y) * 1000;
 
@@ -87,23 +83,7 @@ module Anuto {
             }
 
             return newEnemies;
-
         }
-
-        protected inLine(A: {x: number, y: number}, B: {x: number, y: number}, C: {x: number, y: number}): boolean {
-
-            // if AC is vertical
-            if (A.x === C.x) {
-                return B.x === C.x;
-            }
-
-            // if AC is horizontal
-            if (A.y === C.y) {
-                return B.y === C.y;
-            }
-            // match the gradients
-            return (A.x - C.x) * (A.y - C.y) === (C.x - B.x) * (C.y - B.y);
-         }
 
         protected shoot(): void {
 

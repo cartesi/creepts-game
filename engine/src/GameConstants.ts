@@ -20,17 +20,19 @@ module Anuto {
         public static readonly TURRET_GLUE = "glue";
 
         // estrategia de disparo
-        public static readonly STRATEGY_SHOOT_FIRST = "First";
-        public static readonly STRATEGY_SHOOT_LAST = "Last";
-        public static readonly STRATEGY_SHOOT_CLOSEST = "Closest";
-        public static readonly STRATEGY_SHOOT_WEAKEST = "Weakest";
-        public static readonly STRATEGY_SHOOT_STRONGEST = "Strongest";
+        public static readonly STRATEGY_SHOOT_FIRST = "first";
+        public static readonly STRATEGY_SHOOT_LAST = "last";
+        public static readonly STRATEGY_SHOOT_CLOSEST = "closest";
+        public static readonly STRATEGY_SHOOT_WEAKEST = "weakest";
+        public static readonly STRATEGY_SHOOT_STRONGEST = "strongest";
 
-        public static readonly STRATEGYS_ARRAY = [  GameConstants.STRATEGY_SHOOT_FIRST, 
+        public static readonly STRATEGIES_ARRAY = [  
+                                                    GameConstants.STRATEGY_SHOOT_FIRST, 
                                                     GameConstants.STRATEGY_SHOOT_LAST, 
                                                     GameConstants.STRATEGY_SHOOT_CLOSEST, 
                                                     GameConstants.STRATEGY_SHOOT_WEAKEST, 
-                                                    GameConstants.STRATEGY_SHOOT_STRONGEST];
+                                                    GameConstants.STRATEGY_SHOOT_STRONGEST
+                                                ];
 
         // caracteristicas de los enemigos
         public static readonly HEALER_HEALING_TICKS = 100;
