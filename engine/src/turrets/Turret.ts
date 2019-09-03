@@ -51,7 +51,7 @@ module Anuto {
             this.position = p;
             this.fixedTarget = true;
             this.shootingStrategyIndex = 0;
-            this.shootingStrategy = GameConstants.STRATEGYS_ARRAY[this.shootingStrategyIndex];
+            this.shootingStrategy = GameConstants.STRATEGIES_ARRAY[this.shootingStrategyIndex];
             this.readyToShoot = true;
             this.enemiesWithinRange = [];
             this.followedEnemy = null;
@@ -123,8 +123,8 @@ module Anuto {
 
         public setNextStrategy(): void {
 
-            this.shootingStrategyIndex = this.shootingStrategyIndex === GameConstants.STRATEGYS_ARRAY.length - 1 ? 0 : this.shootingStrategyIndex + 1;
-            this.shootingStrategy = GameConstants.STRATEGYS_ARRAY[this.shootingStrategyIndex];
+            this.shootingStrategyIndex = this.shootingStrategyIndex === GameConstants.STRATEGIES_ARRAY.length - 1 ? 0 : this.shootingStrategyIndex + 1;
+            this.shootingStrategy = GameConstants.STRATEGIES_ARRAY[this.shootingStrategyIndex];
         }
 
         public setFixedTarget(): void {
@@ -171,7 +171,7 @@ module Anuto {
                         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.enemy.l - e2.enemy.l) < 0);
                         break;
                     case GameConstants.STRATEGY_SHOOT_CLOSEST:
-                        // TODO: hacer untie
+                       
                         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.squareDist - e2.squareDist) < 0);
                         break;
                     case GameConstants.STRATEGY_SHOOT_WEAKEST:

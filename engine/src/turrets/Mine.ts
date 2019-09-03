@@ -52,7 +52,6 @@ module Anuto {
                         break;
                     }
                 }
-
             }
         }
 
