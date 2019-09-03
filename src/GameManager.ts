@@ -7,6 +7,8 @@ export class GameManager {
 
     public static init(): void {  
 
+        localStorage.clear();
+
         GameVars.mapsData = mapsData;
 
         if (GameVars.currentScene.sys.game.device.os.desktop) {

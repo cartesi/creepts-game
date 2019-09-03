@@ -45,7 +45,6 @@ export class BattleManager {
             actions: []
         };
 
-
         GameVars.levelObject = {
             gameConfig: gameConfig,
             enemiesData: GameVars.enemiesData,

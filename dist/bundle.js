@@ -3484,6 +3484,7 @@ var GameManager = /** @class */ (function () {
     function GameManager() {
     }
     GameManager.init = function () {
+        localStorage.clear();
         GameVars_1.GameVars.mapsData = maps_json_1.default;
         if (GameVars_1.GameVars.currentScene.sys.game.device.os.desktop) {
             GameVars_1.GameVars.scaleY = 1;
@@ -6075,6 +6076,13 @@ var TurretSelected = /** @class */ (function (_super) {
     __extends(TurretSelected, _super);
     function TurretSelected(scene, type, gui) {
         var _this = _super.call(this, scene) || this;
+        _this.prevWorldY = 0;
+        if (_this.scene.sys.game.device.os.desktop) {
+            _this.offY = 0;
+        }
+        else {
+            _this.offY = -30;
+        }
         var base_name;
         var canon_name;
         _this.typeTurret = type;
@@ -6123,11 +6131,20 @@ var TurretSelected = /** @class */ (function (_super) {
         // 
     };
     TurretSelected.prototype.onPointerMove = function (pointer) {
-        this.setPosition(pointer.x, pointer.y / GameVars_1.GameVars.scaleY);
+        if (!this.scene.sys.game.device.os.desktop) {
+            if (this.prevWorldY > GameConstants_1.GameConstants.GAME_HEIGHT / 4 && pointer.worldY <= GameConstants_1.GameConstants.GAME_HEIGHT / 4) {
+                this.offY = -60;
+            }
+            else if (this.prevWorldY < GameConstants_1.GameConstants.GAME_HEIGHT * (3 / 4) && pointer.worldY >= GameConstants_1.GameConstants.GAME_HEIGHT * (3 / 4)) {
+                this.offY = 60;
+            }
+        }
+        this.setPosition(pointer.x, (pointer.y + this.offY) / GameVars_1.GameVars.scaleY);
+        this.prevWorldY = pointer.worldY;
     };
     TurretSelected.prototype.onPointerUp = function (pointer) {
         var posX = (pointer.x - GameConstants_1.GameConstants.GAME_WIDTH / 2) / GameVars_1.GameVars.scaleCorrectionFactor + ((GameVars_1.GameVars.currentMapData.size.c * GameConstants_1.GameConstants.CELLS_SIZE) / 2);
-        var posY = (pointer.y - GameConstants_1.GameConstants.GAME_HEIGHT / 2 - GameConstants_1.GameConstants.CELLS_SIZE) / (GameVars_1.GameVars.scaleCorrectionFactor * GameVars_1.GameVars.scaleY) + ((GameVars_1.GameVars.currentMapData.size.r * GameConstants_1.GameConstants.CELLS_SIZE) / 2);
+        var posY = ((pointer.y + this.offY) - GameConstants_1.GameConstants.GAME_HEIGHT / 2 - GameConstants_1.GameConstants.CELLS_SIZE) / (GameVars_1.GameVars.scaleCorrectionFactor * GameVars_1.GameVars.scaleY) + ((GameVars_1.GameVars.currentMapData.size.r * GameConstants_1.GameConstants.CELLS_SIZE) / 2);
         var c = Math.floor(posX / GameConstants_1.GameConstants.CELLS_SIZE);
         var r = Math.floor(posY / GameConstants_1.GameConstants.CELLS_SIZE);
         BattleManager_1.BattleManager.addTurretToScene(this.typeTurret, { r: r, c: c });
@@ -6201,7 +6218,7 @@ var HUD = /** @class */ (function (_super) {
         _this.enemyIcon.setScale(.9);
         _this.add(_this.enemyIcon);
         if (GameConstants_1.GameConstants.DEVELOPMENT) {
-            _this.ticksLabel = new Phaser.GameObjects.Text(_this.scene, GameConstants_1.GameConstants.GAME_WIDTH / 2, GameConstants_1.GameConstants.GAME_HEIGHT - 5, "ticks: " + BattleManager_1.BattleManager.anutoEngine.ticksCounter, { fontFamily: "Rubik-Regular", fontSize: "25px", color: "#000000" });
+            _this.ticksLabel = new Phaser.GameObjects.Text(_this.scene, GameConstants_1.GameConstants.GAME_WIDTH / 2, GameConstants_1.GameConstants.GAME_HEIGHT / GameVars_1.GameVars.scaleY - 5, "ticks: " + BattleManager_1.BattleManager.anutoEngine.ticksCounter, { fontFamily: "Rubik-Regular", fontSize: "25px", color: "#000000" });
             _this.ticksLabel.setOrigin(.5, 1);
             _this.add(_this.ticksLabel);
         }

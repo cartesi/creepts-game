@@ -10,10 +10,21 @@ export class TurretSelected extends Phaser.GameObjects.Container {
     private gui: GUI;
 
     private typeTurret: string;
+    private offY: number;
+    private prevWorldY: number;
 
     constructor(scene: Phaser.Scene, type: string, gui: GUI) {
 
         super(scene);
+
+        this.prevWorldY = 0;
+
+        if (this.scene.sys.game.device.os.desktop) {
+            this.offY = 0;
+        } else {
+            this.offY = -30;
+        }
+        
 
         let base_name;
         let canon_name;
@@ -76,13 +87,22 @@ export class TurretSelected extends Phaser.GameObjects.Container {
 
     private onPointerMove(pointer: Phaser.Input.Pointer): void {
 
-        this.setPosition(pointer.x, pointer.y / GameVars.scaleY);
+        if (!this.scene.sys.game.device.os.desktop) {
+            if (this.prevWorldY > GameConstants.GAME_HEIGHT / 4 && pointer.worldY <= GameConstants.GAME_HEIGHT / 4) {
+                this.offY = -60;
+            } else if (this.prevWorldY < GameConstants.GAME_HEIGHT * (3 / 4) && pointer.worldY >= GameConstants.GAME_HEIGHT * (3 / 4)) {
+                this.offY = 60;
+            }
+        }
+
+        this.setPosition(pointer.x, (pointer.y + this.offY) / GameVars.scaleY);
+        this.prevWorldY = pointer.worldY;
     }
 
     private onPointerUp(pointer: Phaser.Input.Pointer): void {
 
         let posX = (pointer.x - GameConstants.GAME_WIDTH / 2) / GameVars.scaleCorrectionFactor + ((GameVars.currentMapData.size.c * GameConstants.CELLS_SIZE) / 2);
-        let posY = (pointer.y - GameConstants.GAME_HEIGHT / 2 - GameConstants.CELLS_SIZE) / (GameVars.scaleCorrectionFactor * GameVars.scaleY) + ((GameVars.currentMapData.size.r * GameConstants.CELLS_SIZE) / 2);
+        let posY = ((pointer.y + this.offY) - GameConstants.GAME_HEIGHT / 2 - GameConstants.CELLS_SIZE) / (GameVars.scaleCorrectionFactor * GameVars.scaleY) + ((GameVars.currentMapData.size.r * GameConstants.CELLS_SIZE) / 2);
 
         let c = Math.floor(posX / GameConstants.CELLS_SIZE);
         let r = Math.floor(posY / GameConstants.CELLS_SIZE);
