@@ -38,5 +38,15 @@ module Anuto {
         public static readonly HEALER_HEALING_TICKS = 100;
         public static readonly HEALER_STOP_TICKS = 30;
         public static readonly HEALER_HEALING_RADIUS = 2;
+
+        public static readonly DIFFICULTY_MODIFIER = 8e-4;
+        public static readonly DIFFICULTY_EXPONENT = 1.9;
+        public static readonly DIFFICULTY_LINEAR = 20;
+        public static readonly MIN_HEALTH_MODIFIER = 0.5;
+        public static readonly REWARD_MODIFIER = 0.4;
+        public static readonly REWARD_EXPONENT = 0.5;
+        public static readonly MIN_REWARD_MODIFIER = 1;
+        public static readonly EARLY_BONUS_MODIFIER = 3;
+        public static readonly EARLY_BONUS_EXPONENT = 0.6;
     }
 }

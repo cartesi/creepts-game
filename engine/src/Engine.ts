@@ -15,6 +15,8 @@ module Anuto {
         public turretData: any;
         public wavesData: any;
         public waveEnemies: any;
+        public waveReward: number;
+        public remainingReward: number;
         public enemies: Enemy[];
         public enemiesPathCells: {r: number, c: number} [];
         public turretId: number;
@@ -24,8 +26,13 @@ module Anuto {
         public glueId: number;
         public mineId: number;
 
+        public waveDefaultHealth: number;
+        public enemyHealthModifier: number;
+        public enemyRewardModifier: number;
+
         private runningInClientSide: boolean;
         private _credits: number;
+        private _creditsEarned: number;
         private _score: number;
         private _lifes: number;
         private _paused: boolean;
@@ -33,6 +40,7 @@ module Anuto {
         private _gameOver: boolean;
         private _round: number;
         private _ticksCounter: number;
+        private _bonus: number;
 
         private bullets: Bullet[];
         private glueBullets: GlueBullet[];
@@ -78,7 +86,11 @@ module Anuto {
             this._score = 0;
             this._gameOver = false;
             this._round = 0;
-            
+
+            this._creditsEarned = 0;
+            this.enemyHealthModifier = 1;
+            this.enemyRewardModifier = 1;
+
             this.waveActivated = false;
             this.t = 0;
 
@@ -146,6 +158,8 @@ module Anuto {
             if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
                 this.waveActivated = false;
 
+                this.ageTurrets();
+
                 if (this._lifes > 0) {
                     this.eventDispatcher.dispatchEvent(new Event(Event.WAVE_OVER));
                 } else {
@@ -201,7 +215,8 @@ module Anuto {
 
             let length = Object.keys(this.wavesData).length;
             
-            let initialWaveEnemies = this.wavesData["wave_" + (this._round % length + 1)].slice(0);
+            let initialWaveEnemies = this.wavesData["wave_" + (this._round % length + 1)].enemies.slice(0);
+            this.waveReward = this.wavesData["wave_" + (this._round % length + 1)].waveReward;
             this.waveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
 
             const extraWaves = Math.floor(this._round / length) * 2;
@@ -227,6 +242,26 @@ module Anuto {
             this.initWaveVars();
 
             this.waveEnemiesLength = this.waveEnemies.length;
+
+            this.remainingReward = 0;
+
+            this.waveDefaultHealth = 0;
+            for (let i = 0; i < this.waveEnemies.length; i++) {
+                this.waveDefaultHealth += this.enemyData[this.waveEnemies[i].type].life;
+                this.remainingReward += Math.round(this.enemyRewardModifier * this.enemyData[this.waveEnemies[i].type].value);
+            }
+
+            let damagePossible = Math.round(GameConstants.DIFFICULTY_LINEAR * this._creditsEarned + GameConstants.DIFFICULTY_MODIFIER * Math.pow(this._creditsEarned, GameConstants.DIFFICULTY_EXPONENT));
+            let healthModifier = MathUtils.fixNumber(damagePossible / this.waveDefaultHealth);
+            healthModifier = Math.max(healthModifier, GameConstants.MIN_HEALTH_MODIFIER);
+
+            let rewardModifier = GameConstants.REWARD_MODIFIER * Math.pow(healthModifier, GameConstants.REWARD_EXPONENT);
+            rewardModifier = Math.max(rewardModifier, GameConstants.MIN_REWARD_MODIFIER);
+
+            this.enemyHealthModifier = healthModifier;
+            this.enemyRewardModifier = rewardModifier;
+
+            this._bonus = Math.round(this.waveReward + Math.round(GameConstants.EARLY_BONUS_MODIFIER * Math.pow(Math.max(0, this.remainingReward), GameConstants.EARLY_BONUS_EXPONENT)));
 
             return true;
         }
@@ -410,11 +445,16 @@ module Anuto {
                 this.enemies.splice(i, 1);
             }
 
-            enemy.destroy();
+            this._score += enemy.value;
+            this.remainingReward -= enemy.value;
 
+            enemy.destroy();
+            
             this._lifes -= 1;
 
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_REACHED_EXIT, [enemy]));
+
+            this._bonus = Math.round(this.waveReward + Math.round(GameConstants.EARLY_BONUS_MODIFIER * Math.pow(Math.max(0, this.remainingReward), GameConstants.EARLY_BONUS_EXPONENT)));
 
             if (this.enemies.length === 0 && this.allEnemiesSpawned) {
                 this.onNoEnemiesOnStage();
@@ -423,8 +463,7 @@ module Anuto {
 
         public onEnemyKilled(enemy: Enemy): void {
 
-            this._credits += enemy.value;
-            this._score += enemy.value;
+            
 
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_KILLED, [enemy]));
 
@@ -434,7 +473,14 @@ module Anuto {
                 this.enemies.splice(i, 1);
             }
 
+            this._credits += enemy.value;
+            this._creditsEarned += enemy.value;
+            this._score += enemy.value;
+            this.remainingReward -= enemy.value;
+
             enemy.destroy();
+
+            this._bonus = Math.round(this.waveReward + Math.round(GameConstants.EARLY_BONUS_MODIFIER * Math.pow(Math.max(0, this.remainingReward), GameConstants.EARLY_BONUS_EXPONENT)));
 
             if (this.enemies.length === 0 && this.allEnemiesSpawned) {
                 this.onNoEnemiesOnStage();
@@ -749,6 +795,13 @@ module Anuto {
             }
         }
 
+        private ageTurrets(): void {
+
+            for (let i = 0; i < this.turrets.length; i++) {
+                this.turrets[i].ageTurret();
+            }
+        }
+
         private spawnEnemies(): void {
 
             const enemy = this.enemiesSpawner.getEnemy();
@@ -774,7 +827,10 @@ module Anuto {
                 const bullet = this.bullets[i];
                 bullet.assignedEnemy = null;
                 this.bulletsColliding.push(bullet);
-            }        
+            }       
+
+            this._credits += this._bonus;
+            this._creditsEarned += this._bonus;
 
             this.eventDispatcher.dispatchEvent(new Event(Event.NO_ENEMIES_ON_STAGE));
         }
@@ -797,6 +853,11 @@ module Anuto {
         public get credits(): number {
             
             return this._credits;
+        }
+
+        public get creditsEarned(): number {
+            
+            return this._creditsEarned;
         }
 
         public get ticksCounter(): number {

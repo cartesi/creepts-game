@@ -7,7 +7,7 @@ declare module Anuto {
 }
 declare module Anuto {
     class Turret {
-        static readonly DOWNGRADE_PERCENT = 0.9;
+        static readonly DOWNGRADE_PERCENT = 0.97;
         id: number;
         creationTick: number;
         type: string;
@@ -44,6 +44,7 @@ declare module Anuto {
         }, engine: Engine);
         destroy(): void;
         update(): void;
+        ageTurret(): void;
         improve(): void;
         upgrade(): void;
         setNextStrategy(): void;
@@ -101,6 +102,8 @@ declare module Anuto {
         turretData: any;
         wavesData: any;
         waveEnemies: any;
+        waveReward: number;
+        remainingReward: number;
         enemies: Enemy[];
         enemiesPathCells: {
             r: number;
@@ -112,8 +115,12 @@ declare module Anuto {
         mortarId: number;
         glueId: number;
         mineId: number;
+        waveDefaultHealth: number;
+        enemyHealthModifier: number;
+        enemyRewardModifier: number;
         private runningInClientSide;
         private _credits;
+        private _creditsEarned;
         private _score;
         private _lifes;
         private _paused;
@@ -121,6 +128,7 @@ declare module Anuto {
         private _gameOver;
         private _round;
         private _ticksCounter;
+        private _bonus;
         private bullets;
         private glueBullets;
         private mortars;
@@ -171,10 +179,12 @@ declare module Anuto {
         private checkCollisions;
         private removeProjectilesAndAccountDamage;
         private teleport;
+        private ageTurrets;
         private spawnEnemies;
         private onNoEnemiesOnStage;
         private getTurretById;
         readonly credits: number;
+        readonly creditsEarned: number;
         readonly ticksCounter: number;
         readonly score: number;
         readonly gameOver: boolean;
@@ -207,6 +217,15 @@ declare module Anuto {
         static readonly HEALER_HEALING_TICKS = 100;
         static readonly HEALER_STOP_TICKS = 30;
         static readonly HEALER_HEALING_RADIUS = 2;
+        static readonly DIFFICULTY_MODIFIER = 0.0008;
+        static readonly DIFFICULTY_EXPONENT = 1.9;
+        static readonly DIFFICULTY_LINEAR = 20;
+        static readonly MIN_HEALTH_MODIFIER = 0.5;
+        static readonly REWARD_MODIFIER = 0.4;
+        static readonly REWARD_EXPONENT = 0.5;
+        static readonly MIN_REWARD_MODIFIER = 1;
+        static readonly EARLY_BONUS_MODIFIER = 3;
+        static readonly EARLY_BONUS_EXPONENT = 0.6;
     }
 }
 declare module Anuto.Types {

@@ -2,7 +2,7 @@ module Anuto {
 
     export class Turret {
 
-        public static readonly DOWNGRADE_PERCENT = .9;
+        public static readonly DOWNGRADE_PERCENT = .97;
 
         public id: number;
         public creationTick: number;
@@ -95,10 +95,15 @@ module Anuto {
             }
         }
 
+        public ageTurret(): void {
+
+            this.sellValue = Math.round(this.sellValue * Turret.DOWNGRADE_PERCENT);
+        }
+
         public improve(): void {
 
             this.value += this.priceImprovement;
-            this.sellValue += Math.round(this.priceImprovement * Turret.DOWNGRADE_PERCENT);
+            this.sellValue += this.priceImprovement;
 
             this.level ++;
             this.calculateTurretParameters();                                                                                                                                        
@@ -107,7 +112,7 @@ module Anuto {
         public upgrade(): void {
 
             this.value += this.priceUpgrade;
-            this.sellValue += Math.round(this.priceUpgrade * Turret.DOWNGRADE_PERCENT);
+            this.sellValue += this.priceUpgrade;
 
             this.grade ++;
             this.level = 1;

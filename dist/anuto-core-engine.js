@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    };
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -42,9 +42,9 @@ var Anuto;
                         default:
                     }
                     // cada ronda que pasa los enemigos tienen mas vida
-                    var extraLife = Math.round(enemy.life * (this.engine.round / 10));
-                    enemy.life += extraLife;
+                    enemy.life = Math.round(enemy.life * this.engine.enemyHealthModifier);
                     enemy.maxLife = enemy.life;
+                    enemy.value = Math.round(enemy.value * this.engine.enemyRewardModifier);
                     this.engine.waveEnemies.shift();
                 }
             }
@@ -106,15 +106,18 @@ var Anuto;
                 }
             }
         };
+        Turret.prototype.ageTurret = function () {
+            this.sellValue = Math.round(this.sellValue * Turret.DOWNGRADE_PERCENT);
+        };
         Turret.prototype.improve = function () {
             this.value += this.priceImprovement;
-            this.sellValue += Math.round(this.priceImprovement * Turret.DOWNGRADE_PERCENT);
+            this.sellValue += this.priceImprovement;
             this.level++;
             this.calculateTurretParameters();
         };
         Turret.prototype.upgrade = function () {
             this.value += this.priceUpgrade;
-            this.sellValue += Math.round(this.priceUpgrade * Turret.DOWNGRADE_PERCENT);
+            this.sellValue += this.priceUpgrade;
             this.grade++;
             this.level = 1;
             if (this.grade === 3 && this.type !== Anuto.GameConstants.TURRET_GLUE) {
@@ -195,7 +198,7 @@ var Anuto;
             }
             return enemies;
         };
-        Turret.DOWNGRADE_PERCENT = .9;
+        Turret.DOWNGRADE_PERCENT = .97;
         return Turret;
     }());
     Anuto.Turret = Turret;
@@ -355,6 +358,9 @@ var Anuto;
             this._score = 0;
             this._gameOver = false;
             this._round = 0;
+            this._creditsEarned = 0;
+            this.enemyHealthModifier = 1;
+            this.enemyRewardModifier = 1;
             this.waveActivated = false;
             this.t = 0;
             this.eventDispatcher = new Anuto.EventDispatcher();
@@ -401,6 +407,7 @@ var Anuto;
             }
             if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
                 this.waveActivated = false;
+                this.ageTurrets();
                 if (this._lifes > 0) {
                     this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.WAVE_OVER));
                 }
@@ -442,7 +449,8 @@ var Anuto;
                 return false;
             }
             var length = Object.keys(this.wavesData).length;
-            var initialWaveEnemies = this.wavesData["wave_" + (this._round % length + 1)].slice(0);
+            var initialWaveEnemies = this.wavesData["wave_" + (this._round % length + 1)].enemies.slice(0);
+            this.waveReward = this.wavesData["wave_" + (this._round % length + 1)].waveReward;
             this.waveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
             var extraWaves = Math.floor(this._round / length) * 2;
             this._round++;
@@ -458,6 +466,20 @@ var Anuto;
             this.waveActivated = true;
             this.initWaveVars();
             this.waveEnemiesLength = this.waveEnemies.length;
+            this.remainingReward = 0;
+            this.waveDefaultHealth = 0;
+            for (var i = 0; i < this.waveEnemies.length; i++) {
+                this.waveDefaultHealth += this.enemyData[this.waveEnemies[i].type].life;
+                this.remainingReward += Math.round(this.enemyRewardModifier * this.enemyData[this.waveEnemies[i].type].value);
+            }
+            var damagePossible = Math.round(Anuto.GameConstants.DIFFICULTY_LINEAR * this._creditsEarned + Anuto.GameConstants.DIFFICULTY_MODIFIER * Math.pow(this._creditsEarned, Anuto.GameConstants.DIFFICULTY_EXPONENT));
+            var healthModifier = Anuto.MathUtils.fixNumber(damagePossible / this.waveDefaultHealth);
+            healthModifier = Math.max(healthModifier, Anuto.GameConstants.MIN_HEALTH_MODIFIER);
+            var rewardModifier = Anuto.GameConstants.REWARD_MODIFIER * Math.pow(healthModifier, Anuto.GameConstants.REWARD_EXPONENT);
+            rewardModifier = Math.max(rewardModifier, Anuto.GameConstants.MIN_REWARD_MODIFIER);
+            this.enemyHealthModifier = healthModifier;
+            this.enemyRewardModifier = rewardModifier;
+            this._bonus = Math.round(this.waveReward + Math.round(Anuto.GameConstants.EARLY_BONUS_MODIFIER * Math.pow(Math.max(0, this.remainingReward), Anuto.GameConstants.EARLY_BONUS_EXPONENT)));
             return true;
         };
         Engine.prototype.removeEnemy = function (enemy) {
@@ -582,22 +604,28 @@ var Anuto;
             if (i !== -1) {
                 this.enemies.splice(i, 1);
             }
+            this._score += enemy.value;
+            this.remainingReward -= enemy.value;
             enemy.destroy();
             this._lifes -= 1;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_REACHED_EXIT, [enemy]));
+            this._bonus = Math.round(this.waveReward + Math.round(Anuto.GameConstants.EARLY_BONUS_MODIFIER * Math.pow(Math.max(0, this.remainingReward), Anuto.GameConstants.EARLY_BONUS_EXPONENT)));
             if (this.enemies.length === 0 && this.allEnemiesSpawned) {
                 this.onNoEnemiesOnStage();
             }
         };
         Engine.prototype.onEnemyKilled = function (enemy) {
-            this._credits += enemy.value;
-            this._score += enemy.value;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_KILLED, [enemy]));
             var i = this.enemies.indexOf(enemy);
             if (i !== -1) {
                 this.enemies.splice(i, 1);
             }
+            this._credits += enemy.value;
+            this._creditsEarned += enemy.value;
+            this._score += enemy.value;
+            this.remainingReward -= enemy.value;
             enemy.destroy();
+            this._bonus = Math.round(this.waveReward + Math.round(Anuto.GameConstants.EARLY_BONUS_MODIFIER * Math.pow(Math.max(0, this.remainingReward), Anuto.GameConstants.EARLY_BONUS_EXPONENT)));
             if (this.enemies.length === 0 && this.allEnemiesSpawned) {
                 this.onNoEnemiesOnStage();
             }
@@ -816,6 +844,11 @@ var Anuto;
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMIES_TELEPORTED, [teleportedEnemiesData]));
             }
         };
+        Engine.prototype.ageTurrets = function () {
+            for (var i = 0; i < this.turrets.length; i++) {
+                this.turrets[i].ageTurret();
+            }
+        };
         Engine.prototype.spawnEnemies = function () {
             var enemy = this.enemiesSpawner.getEnemy();
             if (enemy) {
@@ -835,6 +868,8 @@ var Anuto;
                 bullet.assignedEnemy = null;
                 this.bulletsColliding.push(bullet);
             }
+            this._credits += this._bonus;
+            this._creditsEarned += this._bonus;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.NO_ENEMIES_ON_STAGE));
         };
         Engine.prototype.getTurretById = function (id) {
@@ -851,6 +886,13 @@ var Anuto;
             // GETTERS Y SETTERS
             get: function () {
                 return this._credits;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Engine.prototype, "creditsEarned", {
+            get: function () {
+                return this._creditsEarned;
             },
             enumerable: true,
             configurable: true
@@ -947,6 +989,15 @@ var Anuto;
         GameConstants.HEALER_HEALING_TICKS = 100;
         GameConstants.HEALER_STOP_TICKS = 30;
         GameConstants.HEALER_HEALING_RADIUS = 2;
+        GameConstants.DIFFICULTY_MODIFIER = 8e-4;
+        GameConstants.DIFFICULTY_EXPONENT = 1.9;
+        GameConstants.DIFFICULTY_LINEAR = 20;
+        GameConstants.MIN_HEALTH_MODIFIER = 0.5;
+        GameConstants.REWARD_MODIFIER = 0.4;
+        GameConstants.REWARD_EXPONENT = 0.5;
+        GameConstants.MIN_REWARD_MODIFIER = 1;
+        GameConstants.EARLY_BONUS_MODIFIER = 3;
+        GameConstants.EARLY_BONUS_EXPONENT = 0.6;
         return GameConstants;
     }());
     Anuto.GameConstants = GameConstants;
