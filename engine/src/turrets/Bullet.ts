@@ -9,6 +9,7 @@ module Anuto {
         public damage: number;
         public canonShoot: string;
         public turret: ProjectileTurret;
+        public outOfStageBoundaries: boolean;
 
         private vx: number;
         private vy: number;
@@ -23,6 +24,7 @@ module Anuto {
             this.y = p.r + .5;
             
             this.assignedEnemy = assignedEnemy;
+            this.outOfStageBoundaries = false;
 
             this.damage = damage;
             this.canonShoot = canonShoot;
@@ -41,6 +43,11 @@ module Anuto {
             
             this.x = MathUtils.fixNumber(this.x + this.vx);
             this.y = MathUtils.fixNumber(this.y + this.vy);
+
+            // TODO: MIRAR SI SE HA SALIDO DEL STAGE
+            // EN ESTE CASO MARCARLA PARA SER ELIMINADA
+
+            // this.outOfStageBoundaries = true;
         }
 
         public getPositionNextTick(): {x: number, y: number} {

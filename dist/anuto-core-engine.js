@@ -1034,7 +1034,7 @@ var Anuto;
         function GameConstants() {
         }
         GameConstants.RELOAD_BASE_TICKS = 10;
-        GameConstants.BULLET_SPEED = .5; // in cells / tick
+        GameConstants.BULLET_SPEED = .65; // in cells / tick
         GameConstants.MORTAR_SPEED = .1;
         // los nombres de los enemigos
         GameConstants.ENEMY_SOLDIER = "soldier";
@@ -1782,6 +1782,7 @@ var Anuto;
                     break;
                 default:
             }
+            // this.damage /= 2;
             _super.prototype.calculateTurretParameters.call(this);
         };
         ProjectileTurret.prototype.shoot = function () {

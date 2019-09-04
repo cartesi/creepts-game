@@ -584,7 +584,7 @@ module Anuto {
                 const bullet = this.bullets[i];
                 const enemy = this.bullets[i].assignedEnemy;
 
-                if (enemy) {
+                if (enemy !== null) {
                     if (enemy.life === 0) {
                         this.bulletsColliding.push(bullet);
                     } else {
@@ -598,6 +598,11 @@ module Anuto {
                             this.bulletsColliding.push(bullet);
                         }
                     } 
+                } else {
+
+                    // TODO: esto es debido a que el enemigo ha sido teletransportado
+                    // mirar si colisiona contra otro enemigo y en este caso reasignarle el enemigo
+                    // y meterla en el array de balas a eliminar
                 }
             } 
 
@@ -678,7 +683,19 @@ module Anuto {
                 const bullet = this.bulletsColliding[i];
                 const enemy = bullet.assignedEnemy;
 
-                if (enemy === null || enemy.life <= 0) {
+                // TODO: IDEA
+                // SI EL ENEMIGO YA ESTA MUERTO HACER QUE LA BALA DESAPAREZCA JUSTO DONDE HA MUERTO EL ENEMIGO
+                // SE FUERZA LA POSICION DE LA BALA A LA DEL ENEMIGO QUE YA HA MUERTO
+                // Y SE DESTRUYE LA BALA EN 1 FRAME O 2 DEPENDIENDO DE DONDE SE ENCUENTRE
+                // EL SUAVIZADO DEL ACTOR YA HARA QUE QUEDE BIEN
+
+                // USAR NUEVO EVENTO al que se le pasa como argumento si ha salido de los limites del escenario
+                // Event.REMOVE_BULLET;
+
+                // para aquella bala cuyo enemigo haya sido teletransportado mirar si colisiona con el resto de enemigos
+                // que hay en el escenario, en caso contrario dejar que salga de la escena
+
+                if (enemy === null || enemy.life === 0) {
                     // ya esta muerto o el enemigo ha sido teletransportado
                     this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[], bullet]));
                 } else {

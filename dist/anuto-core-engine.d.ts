@@ -205,7 +205,7 @@ declare module Anuto {
 declare module Anuto {
     class GameConstants {
         static readonly RELOAD_BASE_TICKS = 10;
-        static readonly BULLET_SPEED = 0.5;
+        static readonly BULLET_SPEED = 0.65;
         static readonly MORTAR_SPEED = 0.1;
         static readonly ENEMY_SOLDIER = "soldier";
         static readonly ENEMY_RUNNER = "runner";
