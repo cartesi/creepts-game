@@ -12,6 +12,7 @@ export class HUD extends Phaser.GameObjects.Container {
     private roundLabel: Phaser.GameObjects.Text;
 
     private enemyIcon: Phaser.GameObjects.Image;
+    private fpsLabel: Phaser.GameObjects.Text;
 
     constructor(scene: Phaser.Scene) {
 
@@ -59,11 +60,18 @@ export class HUD extends Phaser.GameObjects.Container {
         this.add(this.enemyIcon);
 
         if (GameConstants.DEVELOPMENT) {
+
             this.ticksLabel = new Phaser.GameObjects.Text(this.scene, GameConstants.GAME_WIDTH / 2, GameConstants.GAME_HEIGHT / GameVars.scaleY - 5, "ticks: " + BattleManager.anutoEngine.ticksCounter, {fontFamily: "Rubik-Regular", fontSize: "25px", color: "#000000"});
             this.ticksLabel.setOrigin(.5, 1);
             this.add(this.ticksLabel);
+
+            this.fpsLabel = new Phaser.GameObjects.Text(this.scene, 15, (GameConstants.GAME_HEIGHT - 30 ) / GameVars.scaleY, "", { fontFamily:  "Rubik-Regular", fontSize: "22px", color: "#FF0000"});
+            this.add(this.fpsLabel);
+
         } else {
+
             this.ticksLabel = null;
+            this.fpsLabel = null;
         }
     }
 
@@ -74,6 +82,10 @@ export class HUD extends Phaser.GameObjects.Container {
 
         if (this.ticksLabel && !BattleManager.anutoEngine.gameOver) {
             this.ticksLabel.text = "ticks: " + BattleManager.anutoEngine.ticksCounter;
+        }
+
+        if (GameConstants.DEVELOPMENT) {
+            this.fpsLabel.text = Math.round(this.scene.game.loop.actualFps).toString();
         }
     }
 
