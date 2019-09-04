@@ -14,6 +14,7 @@ export class BattleManager {
     public static init(): void {  
 
         GameVars.enemiesPathCells = GameVars.currentMapData.path;
+        GameVars.plateausCells = GameVars.currentMapData.plateaus;
 
         const aspectRatio = window.innerHeight / window.innerWidth;
 
@@ -34,7 +35,8 @@ export class BattleManager {
             credits: GameConstants.INITIAL_CREDITS,
             lifes: GameConstants.INITIAL_LIFES,
             boardSize: GameVars.currentMapData.size,
-            enemiesPathCells : GameVars.enemiesPathCells
+            enemiesPathCells : GameVars.enemiesPathCells,
+            plateausCells: GameVars.plateausCells
         };
 
         GameVars.enemiesData = enemiesData.enemies;

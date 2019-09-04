@@ -225,6 +225,24 @@ export class BoardContainer extends Phaser.GameObjects.Container {
             }
         }
 
+        let isOnPlateau = false;
+
+        // miramos si esta en una celda en la que se puede posicionar
+        if (GameVars.plateausCells.length !== 0) {
+            for (let i = 0; i < GameVars.plateausCells.length; i++) {
+                if (GameVars.plateausCells[i].c === position.c && GameVars.plateausCells[i].r === position.r) {
+                    isOnPlateau = true;
+                    break;
+                }
+            }
+        } else {
+            isOnPlateau = true;
+        }
+
+        if (!isOnPlateau) {
+            return;
+        }
+
         let turret: TurretActor;
         let anutoTurret = BattleManager.addTurret(type, position);
 

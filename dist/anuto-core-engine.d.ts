@@ -109,6 +109,10 @@ declare module Anuto {
             r: number;
             c: number;
         }[];
+        plateausCells: {
+            r: number;
+            c: number;
+        }[];
         turretId: number;
         enemyId: number;
         bulletId: number;
@@ -244,6 +248,10 @@ declare module Anuto.Types {
             c: number;
         };
         enemiesPathCells: {
+            r: number;
+            c: number;
+        }[];
+        plateausCells: {
             r: number;
             c: number;
         }[];

@@ -352,6 +352,7 @@ var Anuto;
             this._paused = false;
             this._timeStep = gameConfig.timeStep;
             this.enemiesPathCells = gameConfig.enemiesPathCells;
+            this.plateausCells = gameConfig.plateausCells;
             this.enemyData = enemyData;
             this.turretData = turretData;
             this.wavesData = wavesData;
@@ -501,6 +502,22 @@ var Anuto;
                 if (p.c === this.turrets[i].position.c && p.r === this.turrets[i].position.r) {
                     return null;
                 }
+            }
+            var isOnPlateau = false;
+            // miramos si esta en una celda en la que se puede posicionar
+            if (this.plateausCells.length !== 0) {
+                for (var i = 0; i < this.plateausCells.length; i++) {
+                    if (this.plateausCells[i].c === p.c && this.plateausCells[i].r === p.r) {
+                        isOnPlateau = true;
+                        break;
+                    }
+                }
+            }
+            else {
+                isOnPlateau = true;
+            }
+            if (!isOnPlateau) {
+                return null;
             }
             var turret = null;
             switch (type) {

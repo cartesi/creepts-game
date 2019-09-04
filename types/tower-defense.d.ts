@@ -27,4 +27,5 @@ declare interface MapObject {
     name: string;
     size: {r: number, c: number};
     path: {r: number, c: number}[];
+    plateaus: {r: number, c: number}[];
 }

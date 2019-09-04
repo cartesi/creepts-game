@@ -35,11 +35,22 @@ export class MapInfo extends Phaser.GameObjects.Container {
 
         let scalePath = .25;
 
-        let pathBack = new Phaser.GameObjects.Graphics(this.scene);
-        pathBack.setPosition(-(mapObject.size.c / 2) * GameConstants.CELLS_SIZE * scalePath, 85);
-        pathBack.fillStyle(0x999999);
-        pathBack.fillRect(0, 0, mapObject.size.c * GameConstants.CELLS_SIZE * scalePath, mapObject.size.r * GameConstants.CELLS_SIZE * scalePath);
-        this.add(pathBack);
+        if (mapObject.plateaus.length === 0) {
+            let pathBack = new Phaser.GameObjects.Graphics(this.scene);
+            pathBack.setPosition(-(mapObject.size.c / 2) * GameConstants.CELLS_SIZE * scalePath, 85);
+            pathBack.fillStyle(0x999999);
+            pathBack.fillRect(0, 0, mapObject.size.c * GameConstants.CELLS_SIZE * scalePath, mapObject.size.r * GameConstants.CELLS_SIZE * scalePath);
+            this.add(pathBack);
+        } else {
+            for (let i = 0; i < mapObject.plateaus.length; i++) {
+                let path = new Phaser.GameObjects.Graphics(this.scene);
+                path.setPosition(-(mapObject.size.c / 2) * GameConstants.CELLS_SIZE * scalePath, 85);
+                path.fillStyle(0x999999);
+                path.fillRect(GameConstants.CELLS_SIZE * scalePath * mapObject.plateaus[i].c, GameConstants.CELLS_SIZE * scalePath * mapObject.plateaus[i].r, GameConstants.CELLS_SIZE * scalePath, GameConstants.CELLS_SIZE * scalePath);
+                this.add(path);
+            }
+        }
+        
 
         for (let i = 0; i < mapObject.path.length; i++) {
 

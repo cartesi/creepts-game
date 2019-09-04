@@ -13,6 +13,7 @@ module Anuto.Types {
         lifes: number;
         boardSize: {r: number, c: number}; 
         enemiesPathCells: {r: number, c: number} [];
+        plateausCells: {r: number, c: number} [];
     };
 
     export type WaveConfig = {

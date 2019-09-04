@@ -19,6 +19,7 @@ module Anuto {
         public remainingReward: number;
         public enemies: Enemy[];
         public enemiesPathCells: {r: number, c: number} [];
+        public plateausCells: {r: number, c: number} [];
         public turretId: number;
         public enemyId: number;
         public bulletId: number;
@@ -78,6 +79,7 @@ module Anuto {
             this._timeStep = gameConfig.timeStep;
 
             this.enemiesPathCells = gameConfig.enemiesPathCells;
+            this.plateausCells = gameConfig.plateausCells;
 
             this.enemyData = enemyData;
             this.turretData = turretData;
@@ -291,6 +293,24 @@ module Anuto {
                 if (p.c === this.turrets[i].position.c && p.r === this.turrets[i].position.r) {
                     return null;
                 }
+            }
+
+            let isOnPlateau = false;
+
+            // miramos si esta en una celda en la que se puede posicionar
+            if (this.plateausCells.length !== 0) {
+                for (let i = 0; i < this.plateausCells.length; i++) {
+                    if (this.plateausCells[i].c === p.c && this.plateausCells[i].r === p.r) {
+                        isOnPlateau = true;
+                        break;
+                    }
+                }
+            } else {
+                isOnPlateau = true;
+            }
+
+            if (!isOnPlateau) {
+                return null;
             }
 
             let turret: Turret = null;
