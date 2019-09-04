@@ -24,7 +24,7 @@ module Anuto {
 
                 this.heal();
 
-                if (this.f === GameConstants.HEALER_STOP_TICKS) {
+                if (this.f >= GameConstants.HEALER_STOP_TICKS) {
                     this.f = 0;
                     this.healing = false;
                 }
@@ -34,7 +34,7 @@ module Anuto {
                 super.update();
 
                 // no cura si ya esta muy cerca de la salida
-                if (this.f === GameConstants.HEALER_HEALING_TICKS && this.l < this.engine.enemiesPathCells.length - 2) {
+                if (this.f >= GameConstants.HEALER_HEALING_TICKS && this.l < this.engine.enemiesPathCells.length - 2) {
                     this.f = 0;
                     this.healing = true;
                 }

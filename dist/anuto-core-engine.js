@@ -209,6 +209,7 @@ var Anuto;
         function Enemy(type, creationTick, engine) {
             this.id = engine.enemyId;
             engine.enemyId++;
+            this.modifiers = {};
             this.creationTick = creationTick;
             this.engine = engine;
             this.type = type;
@@ -230,7 +231,27 @@ var Anuto;
             var p = this.engine.getPathPosition(this.l);
             this.x = p.x;
             this.y = p.y;
-            this.boundingRadius = .4; // en proporcion al tamaño de las celdas
+            this.boundingRadius = .4;
+            switch (this.type) {
+                case Anuto.GameConstants.ENEMY_HEALER:
+                    this.modifiers[Anuto.GameConstants.TURRET_LASER] = "weak";
+                    this.modifiers[Anuto.GameConstants.TURRET_PROJECTILE] = "weak";
+                    break;
+                case Anuto.GameConstants.ENEMY_FLIER:
+                    this.modifiers[Anuto.GameConstants.TURRET_LASER] = "weak";
+                    this.modifiers[Anuto.GameConstants.TURRET_PROJECTILE] = "weak";
+                    break;
+                case Anuto.GameConstants.ENEMY_RUNNER:
+                    this.modifiers[Anuto.GameConstants.TURRET_LAUNCH] = "weak";
+                    this.modifiers[Anuto.GameConstants.TURRET_LASER] = "strong";
+                    break;
+                case Anuto.GameConstants.ENEMY_BLOB:
+                    this.modifiers[Anuto.GameConstants.TURRET_LAUNCH] = "weak";
+                    this.modifiers[Anuto.GameConstants.TURRET_PROJECTILE] = "strong";
+                    break;
+                default:
+                    break;
+            }
         }
         Enemy.prototype.destroy = function () {
             // de momento nada
@@ -290,7 +311,32 @@ var Anuto;
             if (this.life <= 0) {
                 return;
             }
-            this.life -= damage;
+            var modifier = 1;
+            if (bullet) {
+                if (this.modifiers[Anuto.GameConstants.TURRET_PROJECTILE] === "weak") {
+                    modifier = Anuto.GameConstants.WEAK_AGAINST_DAMAGE_MODIFIER;
+                }
+                else if (this.modifiers[Anuto.GameConstants.TURRET_PROJECTILE] === "strong") {
+                    modifier = Anuto.GameConstants.STRONG_AGAINST_DAMAGE_MODIFIER;
+                }
+            }
+            else if (mortar || mine) {
+                if (this.modifiers[Anuto.GameConstants.TURRET_LAUNCH] === "weak") {
+                    modifier = Anuto.GameConstants.WEAK_AGAINST_DAMAGE_MODIFIER;
+                }
+                else if (this.modifiers[Anuto.GameConstants.TURRET_LAUNCH] === "strong") {
+                    modifier = Anuto.GameConstants.STRONG_AGAINST_DAMAGE_MODIFIER;
+                }
+            }
+            else if (laserTurret) {
+                if (this.modifiers[Anuto.GameConstants.TURRET_LASER] === "weak") {
+                    modifier = Anuto.GameConstants.WEAK_AGAINST_DAMAGE_MODIFIER;
+                }
+                else if (this.modifiers[Anuto.GameConstants.TURRET_LASER] === "strong") {
+                    modifier = Anuto.GameConstants.STRONG_AGAINST_DAMAGE_MODIFIER;
+                }
+            }
+            this.life -= Anuto.MathUtils.fixNumber(damage * modifier);
             if (bullet && bullet.turret) {
                 // console.log("BULLET " + bullet.turret.id + ": " + Math.round(damage) + " " + GameVars.ticksCounter);
                 bullet.turret.inflicted += Math.round(damage);
@@ -318,7 +364,10 @@ var Anuto;
             this.glueDuration = duration;
         };
         Enemy.prototype.restoreHealth = function () {
-            this.life = this.maxLife;
+            this.life += Anuto.MathUtils.fixNumber(this.maxLife / 20);
+            if (this.life > this.maxLife) {
+                this.life = this.maxLife;
+            }
         };
         Enemy.prototype.getNextPosition = function (deltaTicks) {
             var speed = this.speed;
@@ -359,6 +408,7 @@ var Anuto;
             this._score = 0;
             this._gameOver = false;
             this._round = 0;
+            this._bonus = 0;
             this._creditsEarned = 0;
             this.enemyHealthModifier = 1;
             this.enemyRewardModifier = 1;
@@ -889,6 +939,7 @@ var Anuto;
             }
             this._credits += this._bonus;
             this._creditsEarned += this._bonus;
+            this._bonus = 0;
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.NO_ENEMIES_ON_STAGE));
         };
         Engine.prototype.getTurretById = function (id) {
@@ -912,6 +963,13 @@ var Anuto;
         Object.defineProperty(Engine.prototype, "creditsEarned", {
             get: function () {
                 return this._creditsEarned;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Engine.prototype, "bonus", {
+            get: function () {
+                return this._bonus;
             },
             enumerable: true,
             configurable: true
@@ -1005,8 +1063,8 @@ var Anuto;
             GameConstants.STRATEGY_SHOOT_STRONGEST
         ];
         // caracteristicas de los enemigos
-        GameConstants.HEALER_HEALING_TICKS = 100;
-        GameConstants.HEALER_STOP_TICKS = 30;
+        GameConstants.HEALER_HEALING_TICKS = 200;
+        GameConstants.HEALER_STOP_TICKS = 5;
         GameConstants.HEALER_HEALING_RADIUS = 2;
         GameConstants.DIFFICULTY_MODIFIER = 8e-4;
         GameConstants.DIFFICULTY_EXPONENT = 1.9;
@@ -1017,6 +1075,8 @@ var Anuto;
         GameConstants.MIN_REWARD_MODIFIER = 1;
         GameConstants.EARLY_BONUS_MODIFIER = 3;
         GameConstants.EARLY_BONUS_EXPONENT = 0.6;
+        GameConstants.WEAK_AGAINST_DAMAGE_MODIFIER = 3.0;
+        GameConstants.STRONG_AGAINST_DAMAGE_MODIFIER = 0.33;
         return GameConstants;
     }());
     Anuto.GameConstants = GameConstants;
@@ -1036,7 +1096,7 @@ var Anuto;
             this.f++;
             if (this.healing) {
                 this.heal();
-                if (this.f === Anuto.GameConstants.HEALER_STOP_TICKS) {
+                if (this.f >= Anuto.GameConstants.HEALER_STOP_TICKS) {
                     this.f = 0;
                     this.healing = false;
                 }
@@ -1044,7 +1104,7 @@ var Anuto;
             else {
                 _super.prototype.update.call(this);
                 // no cura si ya esta muy cerca de la salida
-                if (this.f === Anuto.GameConstants.HEALER_HEALING_TICKS && this.l < this.engine.enemiesPathCells.length - 2) {
+                if (this.f >= Anuto.GameConstants.HEALER_HEALING_TICKS && this.l < this.engine.enemiesPathCells.length - 2) {
                     this.f = 0;
                     this.healing = true;
                 }

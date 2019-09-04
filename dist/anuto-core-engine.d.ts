@@ -75,6 +75,9 @@ declare module Anuto {
         glueTime: number;
         hasBeenTeleported: boolean;
         teleporting: boolean;
+        modifiers: {
+            [key: string]: string;
+        };
         protected enemyData: any;
         protected t: number;
         protected engine: Engine;
@@ -189,6 +192,7 @@ declare module Anuto {
         private getTurretById;
         readonly credits: number;
         readonly creditsEarned: number;
+        readonly bonus: number;
         readonly ticksCounter: number;
         readonly score: number;
         readonly gameOver: boolean;
@@ -218,8 +222,8 @@ declare module Anuto {
         static readonly STRATEGY_SHOOT_WEAKEST = "weakest";
         static readonly STRATEGY_SHOOT_STRONGEST = "strongest";
         static readonly STRATEGIES_ARRAY: string[];
-        static readonly HEALER_HEALING_TICKS = 100;
-        static readonly HEALER_STOP_TICKS = 30;
+        static readonly HEALER_HEALING_TICKS = 200;
+        static readonly HEALER_STOP_TICKS = 5;
         static readonly HEALER_HEALING_RADIUS = 2;
         static readonly DIFFICULTY_MODIFIER = 0.0008;
         static readonly DIFFICULTY_EXPONENT = 1.9;
@@ -230,6 +234,8 @@ declare module Anuto {
         static readonly MIN_REWARD_MODIFIER = 1;
         static readonly EARLY_BONUS_MODIFIER = 3;
         static readonly EARLY_BONUS_EXPONENT = 0.6;
+        static readonly WEAK_AGAINST_DAMAGE_MODIFIER = 3;
+        static readonly STRONG_AGAINST_DAMAGE_MODIFIER = 0.33;
     }
 }
 declare module Anuto.Types {

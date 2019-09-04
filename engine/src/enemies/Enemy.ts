@@ -21,6 +21,8 @@ module Anuto {
         public glueTime: number;
         public hasBeenTeleported: boolean;
         public teleporting: boolean;
+
+        public modifiers: {[key: string]: string};
         
         protected enemyData: any;
         protected t: number;
@@ -30,6 +32,8 @@ module Anuto {
             
             this.id = engine.enemyId;
             engine.enemyId ++;
+
+            this.modifiers = {};
 
             this.creationTick = creationTick;
             this.engine = engine;
@@ -59,7 +63,28 @@ module Anuto {
             this.x = p.x;
             this.y = p.y; 
 
-            this.boundingRadius = .4; // en proporcion al tamaño de las celdas
+            this.boundingRadius = .4;
+
+            switch (this.type) {
+                case GameConstants.ENEMY_HEALER:
+                    this.modifiers[GameConstants.TURRET_LASER] = "weak";
+                    this.modifiers[GameConstants.TURRET_PROJECTILE] = "weak";
+                    break;
+                case GameConstants.ENEMY_FLIER:
+                    this.modifiers[GameConstants.TURRET_LASER] = "weak";
+                    this.modifiers[GameConstants.TURRET_PROJECTILE] = "weak";
+                    break;
+                case GameConstants.ENEMY_RUNNER:
+                    this.modifiers[GameConstants.TURRET_LAUNCH] = "weak";
+                    this.modifiers[GameConstants.TURRET_LASER] = "strong";
+                    break;
+                case GameConstants.ENEMY_BLOB:
+                    this.modifiers[GameConstants.TURRET_LAUNCH] = "weak";
+                    this.modifiers[GameConstants.TURRET_PROJECTILE] = "strong";
+                    break;
+                default:
+                    break;
+            }
         }
 
         public destroy(): void {
@@ -145,8 +170,30 @@ module Anuto {
             if (this.life <= 0) {
                 return;
             }
+
+            let modifier = 1;
+
+            if (bullet) {
+                if (this.modifiers[GameConstants.TURRET_PROJECTILE] === "weak") {
+                    modifier = GameConstants.WEAK_AGAINST_DAMAGE_MODIFIER;
+                } else if (this.modifiers[GameConstants.TURRET_PROJECTILE] === "strong") {
+                    modifier = GameConstants.STRONG_AGAINST_DAMAGE_MODIFIER;
+                }
+            } else if (mortar || mine) {
+                if (this.modifiers[GameConstants.TURRET_LAUNCH] === "weak") {
+                    modifier = GameConstants.WEAK_AGAINST_DAMAGE_MODIFIER;
+                } else if (this.modifiers[GameConstants.TURRET_LAUNCH] === "strong") {
+                    modifier = GameConstants.STRONG_AGAINST_DAMAGE_MODIFIER;
+                }
+            } else if (laserTurret) {
+                if (this.modifiers[GameConstants.TURRET_LASER] === "weak") {
+                    modifier = GameConstants.WEAK_AGAINST_DAMAGE_MODIFIER;
+                } else if (this.modifiers[GameConstants.TURRET_LASER] === "strong") {
+                    modifier = GameConstants.STRONG_AGAINST_DAMAGE_MODIFIER;
+                }
+            }
             
-            this.life -= damage;
+            this.life -= MathUtils.fixNumber(damage * modifier);
 
             if (bullet && bullet.turret) {
                 // console.log("BULLET " + bullet.turret.id + ": " + Math.round(damage) + " " + GameVars.ticksCounter);
@@ -177,7 +224,11 @@ module Anuto {
 
         public restoreHealth(): void {
 
-            this.life = this.maxLife;
+            this.life += MathUtils.fixNumber(this.maxLife / 20);
+
+            if (this.life > this.maxLife) {
+                this.life = this.maxLife;
+            }
         }
 
         public getNextPosition(deltaTicks: number): {x: number, y: number} {

@@ -35,8 +35,8 @@ module Anuto {
                                                 ];
 
         // caracteristicas de los enemigos
-        public static readonly HEALER_HEALING_TICKS = 100;
-        public static readonly HEALER_STOP_TICKS = 30;
+        public static readonly HEALER_HEALING_TICKS = 200;
+        public static readonly HEALER_STOP_TICKS = 5;
         public static readonly HEALER_HEALING_RADIUS = 2;
 
         public static readonly DIFFICULTY_MODIFIER = 8e-4;
@@ -48,5 +48,8 @@ module Anuto {
         public static readonly MIN_REWARD_MODIFIER = 1;
         public static readonly EARLY_BONUS_MODIFIER = 3;
         public static readonly EARLY_BONUS_EXPONENT = 0.6;
+
+        public static readonly WEAK_AGAINST_DAMAGE_MODIFIER = 3.0;
+        public static readonly STRONG_AGAINST_DAMAGE_MODIFIER = 0.33;
     }
 }

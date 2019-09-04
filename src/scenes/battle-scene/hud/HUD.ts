@@ -7,6 +7,7 @@ export class HUD extends Phaser.GameObjects.Container {
     private ticksLabel: Phaser.GameObjects.Text;
 
     private creditsLabel: Phaser.GameObjects.Text;
+    private bonusLabel: Phaser.GameObjects.Text;
     private lifesLabel: Phaser.GameObjects.Text;
     private roundLabel: Phaser.GameObjects.Text;
 
@@ -37,12 +38,15 @@ export class HUD extends Phaser.GameObjects.Container {
         this.creditsLabel = new Phaser.GameObjects.Text(this.scene, 35, 5, GameVars.formatNumber(BattleManager.anutoEngine.credits), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff"});
         this.add(this.creditsLabel);
 
-        let lifesIcon = new Phaser.GameObjects.Image(this.scene, GameConstants.GAME_WIDTH / 2 - 2, 8, "texture_atlas_1", "lives_icon");
+        this.bonusLabel = new Phaser.GameObjects.Text(this.scene, 200, 5, "BONUS: " + GameVars.formatNumber(BattleManager.anutoEngine.bonus), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff"});
+        this.add(this.bonusLabel);
+
+        let lifesIcon = new Phaser.GameObjects.Image(this.scene, GameConstants.GAME_WIDTH / 2 + 180, 8, "texture_atlas_1", "lives_icon");
         lifesIcon.setOrigin(1, 0);
         lifesIcon.setScale(.9);
         this.add(lifesIcon);
 
-        this.lifesLabel = new Phaser.GameObjects.Text(this.scene, GameConstants.GAME_WIDTH / 2 + 2, 5, BattleManager.anutoEngine.lifes.toString(), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff"});
+        this.lifesLabel = new Phaser.GameObjects.Text(this.scene, GameConstants.GAME_WIDTH / 2 + 184, 5, BattleManager.anutoEngine.lifes.toString(), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff"});
         this.add(this.lifesLabel);
 
         this.roundLabel = new Phaser.GameObjects.Text(this.scene, GameConstants.GAME_WIDTH - 5, 5, "Round " + GameVars.formatNumber(BattleManager.anutoEngine.round), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#ffffff"});
@@ -66,6 +70,7 @@ export class HUD extends Phaser.GameObjects.Container {
     public update(time: number, delta: number): void {
 
         this.creditsLabel.text = GameVars.formatNumber(BattleManager.anutoEngine.credits);
+        this.bonusLabel.text = "BONUS: " + GameVars.formatNumber(BattleManager.anutoEngine.bonus);
 
         if (this.ticksLabel && !BattleManager.anutoEngine.gameOver) {
             this.ticksLabel.text = "ticks: " + BattleManager.anutoEngine.ticksCounter;

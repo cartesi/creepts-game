@@ -317,6 +317,7 @@ export class BattleManager {
     private static onWaveOver(): void {
     
         BattleScene.currentInstance.gui.activeNextWave();
+        BattleScene.currentInstance.updateTurretButtons();
     }
 
     private static onGameOver(): void {

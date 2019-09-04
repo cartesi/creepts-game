@@ -88,6 +88,7 @@ module Anuto {
             this._score = 0;
             this._gameOver = false;
             this._round = 0;
+            this._bonus = 0;
 
             this._creditsEarned = 0;
             this.enemyHealthModifier = 1;
@@ -159,6 +160,7 @@ module Anuto {
 
             if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
                 this.waveActivated = false;
+                
 
                 this.ageTurrets();
 
@@ -484,8 +486,6 @@ module Anuto {
         }
 
         public onEnemyKilled(enemy: Enemy): void {
-
-            
 
             this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_KILLED, [enemy]));
 
@@ -853,6 +853,7 @@ module Anuto {
 
             this._credits += this._bonus;
             this._creditsEarned += this._bonus;
+            this._bonus = 0;
 
             this.eventDispatcher.dispatchEvent(new Event(Event.NO_ENEMIES_ON_STAGE));
         }
@@ -880,6 +881,11 @@ module Anuto {
         public get creditsEarned(): number {
             
             return this._creditsEarned;
+        }
+
+        public get bonus(): number {
+            
+            return this._bonus;
         }
 
         public get ticksCounter(): number {

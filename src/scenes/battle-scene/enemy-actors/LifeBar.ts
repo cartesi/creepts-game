@@ -26,17 +26,17 @@ export class LifeBar extends Phaser.GameObjects.Container {
 
     public updateValue(life: number): void {
 
-        if ((life / this.totalLife) > this.bar.scaleX) {
+        // if ((life / this.totalLife) > this.bar.scaleX) {
 
-            this.scene.tweens.add({
-                targets: this.bar,
-                alpha: 0,
-                ease: Phaser.Math.Easing.Linear.Linear,
-                duration: GameVars.timeStepFactor === 4 ? 20 : 60,
-                yoyo: true,
-                repeat: 3
-            });
-        }
+        //     this.scene.tweens.add({
+        //         targets: this.bar,
+        //         alpha: 0,
+        //         ease: Phaser.Math.Easing.Linear.Linear,
+        //         duration: GameVars.timeStepFactor === 4 ? 20 : 60,
+        //         yoyo: true,
+        //         repeat: 3
+        //     });
+        // }
         
         this.bar.scaleX = life / this.totalLife;
     }
