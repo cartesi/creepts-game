@@ -13,7 +13,7 @@
     "dependencies": {
         "@types/howler": "^2.1.1",
         "howler": "^2.1.2",
-        "phaser": "3.18.1"
+        "phaser": "3.19.0"
     },
     "scripts": {
         "dev": "webpack --mode development && webpack-dev-server --mode development",
