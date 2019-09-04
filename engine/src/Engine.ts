@@ -159,9 +159,9 @@ module Anuto {
             }
 
             if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
+                
                 this.waveActivated = false;
                 
-
                 this.ageTurrets();
 
                 if (this._lifes > 0) {
@@ -171,15 +171,13 @@ module Anuto {
                 } 
             }
 
-            if (this.waveActivated) {
-                this.removeProjectilesAndAccountDamage();
+            this.removeProjectilesAndAccountDamage();
 
-                this.teleport();
+            this.teleport();
 
-                this.checkCollisions();
-                this.spawnEnemies();
-            }
-
+            this.checkCollisions();
+            this.spawnEnemies();
+            
             this.enemies.forEach(function (enemy) {
                 enemy.update();
             }, this); 
