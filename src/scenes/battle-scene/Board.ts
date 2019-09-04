@@ -135,8 +135,6 @@ export class Board extends Phaser.GameObjects.Container {
             cellName += "11";
         } else if (boarderCells[2] === 0 && boarderCells[6] === 0) {
             cellName += "12";
-        } else if (boarderCells[1] === 0 && boarderCells[3] === 0 && boarderCells[5] === 0 && boarderCells[7] === 0) {
-            cellName += "17";
         } else if (boarderCells[6] === 0) {
             if (boarderCells[1] === 0 && boarderCells[3] === 0) {
                 cellName += "45";
@@ -178,6 +176,9 @@ export class Board extends Phaser.GameObjects.Container {
             } else {
                 cellName += "16";
             }
+            
+        } else if (boarderCells[1] === 0 && boarderCells[3] === 0 && boarderCells[5] === 0 && boarderCells[7] === 0) {
+            cellName += "17";
         } else if (boarderCells[3] === 0 && boarderCells[5] === 0 && boarderCells[7] === 0) {
             cellName += "18";
         } else if (boarderCells[5] === 0 && boarderCells[1] === 0 && boarderCells[7] === 0) {

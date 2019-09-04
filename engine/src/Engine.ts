@@ -216,12 +216,14 @@ module Anuto {
             }
 
             let length = Object.keys(this.wavesData).length;
+            let waveData = this.wavesData["wave_" + (this._round % length + 1)];
             
-            let initialWaveEnemies = this.wavesData["wave_" + (this._round % length + 1)].enemies.slice(0);
-            this.waveReward = this.wavesData["wave_" + (this._round % length + 1)].waveReward;
+            let initialWaveEnemies = waveData.enemies.slice(0);
+            this.waveReward = waveData.waveReward;
             this.waveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
 
-            const extraWaves = Math.floor(this._round / length) * 2;
+            const extend = Math.floor(this._round / length);
+            const extraWaves = Math.min(extend * waveData.extend, waveData.maxExtend);
 
             this._round++;
 

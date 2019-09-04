@@ -450,10 +450,12 @@ var Anuto;
                 return false;
             }
             var length = Object.keys(this.wavesData).length;
-            var initialWaveEnemies = this.wavesData["wave_" + (this._round % length + 1)].enemies.slice(0);
-            this.waveReward = this.wavesData["wave_" + (this._round % length + 1)].waveReward;
+            var waveData = this.wavesData["wave_" + (this._round % length + 1)];
+            var initialWaveEnemies = waveData.enemies.slice(0);
+            this.waveReward = waveData.waveReward;
             this.waveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
-            var extraWaves = Math.floor(this._round / length) * 2;
+            var extend = Math.floor(this._round / length);
+            var extraWaves = Math.min(extend * waveData.extend, waveData.maxExtend);
             this._round++;
             for (var i = 0; i < extraWaves; i++) {
                 var nextWaveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
