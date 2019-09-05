@@ -24,15 +24,15 @@ export class ProjectileTurretActor extends TurretActor {
 
         switch (this.anutoTurret.grade) {
  
-             case 2:
-                 this.base.setFrame("base_1_2");
-                 this.canon.setFrame("canon_1_2_1");
-                 break;
-             case 3: 
-                 this.base.setFrame("base_1_3");
-                 this.canon.setFrame("canon_1_3_1");
-                 break;
-             default:
+            case 2:
+                this.base.setFrame("base_1_2");
+                this.canon.setFrame("canon_1_2_1");
+                break;
+            case 3: 
+                this.base.setFrame("base_1_3");
+                this.canon.setFrame("canon_1_3_1");
+                break;
+            default:
         }
     }
 
@@ -43,11 +43,20 @@ export class ProjectileTurretActor extends TurretActor {
 
         this.scene.tweens.add({
             targets: this.canon,
-            x: this.canon.x - 5 * Math.sin(this.canon.rotation),
-            y: this.canon.y + 5 * Math.cos(this.canon.rotation),
+            x: - 5 * Math.sin(this.canon.rotation),
+            y: 5 * Math.cos(this.canon.rotation),
             ease: Phaser.Math.Easing.Cubic.Out,
-            duration: GameVars.timeStepFactor === 1 ? 80 : 20,
-            yoyo: true
+            duration: GameVars.timeStepFactor === 1 ? 40 : 10,
+            onComplete: () => {
+                this.scene.tweens.add({
+                    targets: this.canon,
+                    x: 0,
+                    y: 0,
+                    ease: Phaser.Math.Easing.Cubic.Out,
+                    duration: GameVars.timeStepFactor === 1 ? 40 : 10
+                });
+            },
+            onCompleteScope: this
         });
     }
 }
