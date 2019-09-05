@@ -11,14 +11,17 @@ module Anuto {
         public turret: ProjectileTurret;
         public outOfStageBoundaries: boolean;
 
+        private engine: Engine;
         private vx: number;
         private vy: number;
 
         // bullet speed in cells / tick
         constructor (p: {r: number, c: number}, angle: number, assignedEnemy: Enemy, damage: number, canonShoot: string, turret: ProjectileTurret, engine: Engine) {
             
-            this.id = engine.bulletId;
-            engine.bulletId ++;
+            this.engine = engine;
+
+            this.id = this.engine.bulletId;
+            this.engine.bulletId ++;
 
             this.x = p.c + .5;
             this.y = p.r + .5;
@@ -44,10 +47,10 @@ module Anuto {
             this.x = MathUtils.fixNumber(this.x + this.vx);
             this.y = MathUtils.fixNumber(this.y + this.vy);
 
-            // TODO: MIRAR SI SE HA SALIDO DEL STAGE
-            // EN ESTE CASO MARCARLA PARA SER ELIMINADA
-
-            // this.outOfStageBoundaries = true;
+            // ¿se salio de los limites del tablero?
+            if (this.x < 0 || this.x > this.engine.boardSize.c || this.y < 0 || this.y >  this.engine.boardSize.r) {
+                this.outOfStageBoundaries = true;
+            }
         }
 
         public getPositionNextTick(): {x: number, y: number} {

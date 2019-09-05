@@ -125,6 +125,10 @@ declare module Anuto {
         waveDefaultHealth: number;
         enemyHealthModifier: number;
         enemyRewardModifier: number;
+        boardSize: {
+            r: number;
+            c: number;
+        };
         private runningInClientSide;
         private _credits;
         private _creditsEarned;
@@ -296,6 +300,7 @@ declare module Anuto {
         static readonly GLUE_SHOT = "glue shot";
         static readonly GLUE_CONSUMED = "glue consumed";
         static readonly ENEMIES_TELEPORTED = "enemies teleported";
+        static readonly REMOVE_BULLET = "remove bullet";
         private type;
         private params;
         constructor(type: string, params?: any);
@@ -322,6 +327,8 @@ declare module Anuto {
         damage: number;
         canonShoot: string;
         turret: ProjectileTurret;
+        outOfStageBoundaries: boolean;
+        private engine;
         private vx;
         private vy;
         constructor(p: {

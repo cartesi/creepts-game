@@ -451,9 +451,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         if (enemyActor) {
             enemyActor.teleport(anutoGlueTurret);
             AudioManager.playSound("t3_teleport");
-        }
-
-        
+        } 
     }
 
     public removeBullet(anutoBullet: Anuto.Bullet): void {

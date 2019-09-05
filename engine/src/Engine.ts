@@ -7,8 +7,6 @@ module Anuto {
 
         public waveActivated: boolean;
         public turrets: Turret[];
-
-        // variables que antes estaban en GameVars
         public enemySpawningDeltaTicks: number;
         public lastWaveTick: number;
         public enemyData: any;
@@ -26,10 +24,10 @@ module Anuto {
         public mortarId: number;
         public glueId: number;
         public mineId: number;
-
         public waveDefaultHealth: number;
         public enemyHealthModifier: number;
         public enemyRewardModifier: number;
+        public boardSize: {r: number, c: number};
 
         private runningInClientSide: boolean;
         private _credits: number;
@@ -73,6 +71,7 @@ module Anuto {
  
             this.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
             this.runningInClientSide = gameConfig.runningInClientSide;
+            this.boardSize = gameConfig.boardSize;
             this._credits = gameConfig.credits;
             this._lifes = gameConfig.lifes;
             this._paused = false;
@@ -582,27 +581,40 @@ module Anuto {
             for (let i = 0; i < this.bullets.length; i ++) {
                 
                 const bullet = this.bullets[i];
-                const enemy = this.bullets[i].assignedEnemy;
 
-                if (enemy !== null) {
-                    if (enemy.life === 0) {
-                        this.bulletsColliding.push(bullet);
-                    } else {
-                        const bp1 = {x: bullet.x, y: bullet.y};
-                        const bp2 = bullet.getPositionNextTick();
-                        const enemyPosition = {x: enemy.x, y: enemy.y};
-    
-                        const enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
-    
-                        if (enemyHit) {
-                            this.bulletsColliding.push(bullet);
-                        }
-                    } 
+                if (bullet.outOfStageBoundaries) {
+
+                    this.bulletsColliding.push(bullet);
+
                 } else {
 
-                    // TODO: esto es debido a que el enemigo ha sido teletransportado
-                    // mirar si colisiona contra otro enemigo y en este caso reasignarle el enemigo
-                    // y meterla en el array de balas a eliminar
+                    const enemy = this.bullets[i].assignedEnemy;
+
+                    if (enemy) {
+
+                        // TODO: no usar esta comparacion
+                        // aunque el enemigo ya haya muerto mirar si colisiona 
+                        // en el lugar donde se ha quedado
+                        if (enemy.life === 0) {
+                            this.bulletsColliding.push(bullet);
+                        } else {
+                            const bp1 = {x: bullet.x, y: bullet.y};
+                            const bp2 = bullet.getPositionNextTick();
+                            const enemyPosition = {x: enemy.x, y: enemy.y};
+        
+                            const enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
+        
+                            if (enemyHit) {
+                                this.bulletsColliding.push(bullet);
+                            }
+                        } 
+
+                    } else {
+
+                        // TODO: esto es debido a que el enemigo ha sido teletransportado
+                        // mirar si colisiona contra otro enemigo y en este caso reasignarselo
+                        // y meterla en el array de balas a eliminar
+                    }
                 }
             } 
 
@@ -694,10 +706,8 @@ module Anuto {
 
                 // para aquella bala cuyo enemigo haya sido teletransportado mirar si colisiona con el resto de enemigos
                 // que hay en el escenario, en caso contrario dejar que salga de la escena
-
-                if (enemy === null || enemy.life === 0) {
-                    // ya esta muerto o el enemigo ha sido teletransportado
-                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[], bullet]));
+                if (bullet.outOfStageBoundaries  || enemy.life === 0) {
+                    this.eventDispatcher.dispatchEvent(new Event(Event.REMOVE_BULLET, [bullet]));
                 } else {
                     this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[enemy], bullet]));
                     enemy.hit(bullet.damage, bullet);
@@ -713,20 +723,20 @@ module Anuto {
             // las balas de pegamento
             for (let i = 0; i < this.glueBulletsColliding.length; i ++) {
 
-                const bullet = this.glueBulletsColliding[i];
-                const enemy = bullet.assignedEnemy;
+                const glueBullet = this.glueBulletsColliding[i];
+                const enemy = glueBullet.assignedEnemy;
 
                 if (enemy === null || enemy.life === 0) {
                     // ya esta muerto o el enemigo ha sido teletransportado
-                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_GLUE_HIT, [[], bullet]));
+                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_GLUE_HIT, [[], glueBullet]));
                 } else {
-                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_GLUE_HIT, [[enemy], bullet]));
-                    enemy.glueHit(bullet.intensity, bullet.durationTicks, bullet);
+                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_GLUE_HIT, [[enemy], glueBullet]));
+                    enemy.glueHit(glueBullet.intensity, glueBullet.durationTicks, glueBullet);
                 }
 
-                const index = this.glueBullets.indexOf(bullet);
+                const index = this.glueBullets.indexOf(glueBullet);
                 this.glueBullets.splice(index, 1);
-                bullet.destroy();
+                glueBullet.destroy();
             }
 
             this.glueBulletsColliding.length = 0;
