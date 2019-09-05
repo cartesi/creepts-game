@@ -1,8 +1,7 @@
-import { GameManager } from './../../GameManager';
-import { BattleManager } from './BattleManager';
-import { Button } from "../../utils/Utils";
+import { GameManager } from "./../../GameManager";
+import { BattleManager } from "./BattleManager";
 import { GameConstants } from "../../GameConstants";
-import { GameVars } from '../../GameVars';
+import { GameVars } from "../../GameVars";
 
 export class GameOverLayer extends Phaser.GameObjects.Container {
 
