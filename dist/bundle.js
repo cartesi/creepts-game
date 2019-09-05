@@ -3368,11 +3368,11 @@ var AudioManager = /** @class */ (function () {
         AudioManager.sound.mute(GameVars_1.GameVars.gameData.muted);
     };
     AudioManager.playSound = function (key, loop, volume) {
-        loop = loop || false;
-        volume = volume || 1;
-        var id = AudioManager.sound.play(key);
-        AudioManager.sound.loop(loop, id);
-        AudioManager.sound.volume(volume, id);
+        // loop = loop || false;
+        // volume = volume || 1;
+        // let id = AudioManager.sound.play(key);
+        // AudioManager.sound.loop(loop, id);
+        // AudioManager.sound.volume(volume, id);
     };
     return AudioManager;
 }());
@@ -3444,7 +3444,7 @@ var GameConstants = /** @class */ (function () {
     // el tick del engine en milisegundos
     GameConstants.TIME_STEP = 100;
     GameConstants.ENEMY_SPAWNING_DELTA_TICKS = 10;
-    GameConstants.INITIAL_CREDITS = 500;
+    GameConstants.INITIAL_CREDITS = 500e2;
     GameConstants.INITIAL_LIFES = 20;
     GameConstants.CELLS_SIZE = 60;
     // LOGS TYPES
@@ -3884,6 +3884,7 @@ var BattleManager = /** @class */ (function () {
         BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.GLUE_BULLET_SHOT, BattleManager.onGlueBulletShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_HIT, BattleManager.onEnemyHit, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.REMOVE_BULLET, BattleManager.removeBullet, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_GLUE_HIT, BattleManager.onEnemyGlueHit, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_KILLED, BattleManager.onEnemyKilled, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.LASER_SHOT, BattleManager.onLaserBeamShot, BattleManager);
@@ -4026,6 +4027,10 @@ var BattleManager = /** @class */ (function () {
         if (anutoMine) {
             BoardContainer_1.BoardContainer.currentInstance.detonateMine(anutoMine);
         }
+    };
+    BattleManager.removeBullet = function (anutoBullet) {
+        console.log(anutoBullet);
+        BoardContainer_1.BoardContainer.currentInstance.removeBullet(anutoBullet);
     };
     BattleManager.onEnemyGlueHit = function (anutoEnemies, anutoGlueBullet) {
         for (var i = 0; i < anutoEnemies.length; i++) {

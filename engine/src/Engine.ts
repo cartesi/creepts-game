@@ -473,13 +473,13 @@ module Anuto {
             
             this._lifes -= 1;
 
-            this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_REACHED_EXIT, [enemy]));
-
             this._bonus = Math.round(this.waveReward + Math.round(GameConstants.EARLY_BONUS_MODIFIER * Math.pow(Math.max(0, this.remainingReward), GameConstants.EARLY_BONUS_EXPONENT)));
 
             if (this.enemies.length === 0 && this.allEnemiesSpawned) {
                 this.onNoEnemiesOnStage();
             }
+
+            this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_REACHED_EXIT, [enemy]));
         }
 
         public onEnemyKilled(enemy: Enemy): void {
@@ -592,23 +592,17 @@ module Anuto {
 
                     if (enemy) {
 
-                        // TODO: no usar esta comparacion
-                        // aunque el enemigo ya haya muerto mirar si colisiona 
-                        // en el lugar donde se ha quedado
-                        if (enemy.life === 0) {
+                        // no importa si el enemigo ya ha muerto la bala se marca cuando alcanza la posicion que el enemigo muerto tuvo
+                        const bp1 = {x: bullet.x, y: bullet.y};
+                        const bp2 = bullet.getPositionNextTick();
+                        const enemyPosition = {x: enemy.x, y: enemy.y};
+    
+                        const enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
+    
+                        if (enemyHit) {
                             this.bulletsColliding.push(bullet);
-                        } else {
-                            const bp1 = {x: bullet.x, y: bullet.y};
-                            const bp2 = bullet.getPositionNextTick();
-                            const enemyPosition = {x: enemy.x, y: enemy.y};
-        
-                            const enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
-        
-                            if (enemyHit) {
-                                this.bulletsColliding.push(bullet);
-                            }
-                        } 
-
+                        }
+                        
                     } else {
 
                         // TODO: esto es debido a que el enemigo ha sido teletransportado
@@ -695,18 +689,8 @@ module Anuto {
                 const bullet = this.bulletsColliding[i];
                 const enemy = bullet.assignedEnemy;
 
-                // TODO: IDEA
-                // SI EL ENEMIGO YA ESTA MUERTO HACER QUE LA BALA DESAPAREZCA JUSTO DONDE HA MUERTO EL ENEMIGO
-                // SE FUERZA LA POSICION DE LA BALA A LA DEL ENEMIGO QUE YA HA MUERTO
-                // Y SE DESTRUYE LA BALA EN 1 FRAME O 2 DEPENDIENDO DE DONDE SE ENCUENTRE
-                // EL SUAVIZADO DEL ACTOR YA HARA QUE QUEDE BIEN
-
-                // USAR NUEVO EVENTO al que se le pasa como argumento si ha salido de los limites del escenario
-                // Event.REMOVE_BULLET;
-
-                // para aquella bala cuyo enemigo haya sido teletransportado mirar si colisiona con el resto de enemigos
-                // que hay en el escenario, en caso contrario dejar que salga de la escena
-                if (bullet.outOfStageBoundaries  || enemy.life === 0) {
+                // si el enemigo ya ha muerto o ha salido del tablero
+                if (enemy.life === 0 || bullet.outOfStageBoundaries) {
                     this.eventDispatcher.dispatchEvent(new Event(Event.REMOVE_BULLET, [bullet]));
                 } else {
                     this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[enemy], bullet]));
@@ -868,14 +852,6 @@ module Anuto {
         private onNoEnemiesOnStage(): void {
 
             this.noEnemiesOnStage = true;
-
-            // nos cargamos de golpe todas las balas si las hubieren
-            for (let i = 0; i < this.bullets.length; i ++) {
-                const bullet = this.bullets[i];
-                bullet.assignedEnemy = null;
-                this.bulletsColliding.push(bullet);
-            }       
-
             this._credits += this._bonus;
             this._creditsEarned += this._bonus;
             this._bonus = 0;

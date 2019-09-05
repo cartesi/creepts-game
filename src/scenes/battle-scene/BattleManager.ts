@@ -284,7 +284,7 @@ export class BattleManager {
 
     private static removeBullet(anutoBullet?: Anuto.Bullet) {
 
-        console.log(anutoBullet);
+        // console.log(anutoBullet);
         BoardContainer.currentInstance.removeBullet(anutoBullet);
     }
 

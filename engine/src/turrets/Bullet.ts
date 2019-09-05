@@ -27,6 +27,7 @@ module Anuto {
             this.y = p.r + .5;
             
             this.assignedEnemy = assignedEnemy;
+
             this.outOfStageBoundaries = false;
 
             this.damage = damage;
