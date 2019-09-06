@@ -4029,7 +4029,7 @@ var BattleManager = /** @class */ (function () {
         }
     };
     BattleManager.removeBullet = function (anutoBullet) {
-        console.log(anutoBullet);
+        // console.log(anutoBullet);
         BoardContainer_1.BoardContainer.currentInstance.removeBullet(anutoBullet);
     };
     BattleManager.onEnemyGlueHit = function (anutoEnemies, anutoGlueBullet) {

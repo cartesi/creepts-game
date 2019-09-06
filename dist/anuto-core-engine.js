@@ -231,7 +231,7 @@ var Anuto;
             var p = this.engine.getPathPosition(this.l);
             this.x = p.x;
             this.y = p.y;
-            this.boundingRadius = .4;
+            this.boundingRadius = .525;
             switch (this.type) {
                 case Anuto.GameConstants.ENEMY_HEALER:
                     this.modifiers[Anuto.GameConstants.TURRET_LASER] = "weak";
@@ -651,21 +651,6 @@ var Anuto;
         };
         Engine.prototype.flagEnemyToTeleport = function (enemy, glueTurret) {
             this.teleportedEnemies.push({ enemy: enemy, glueTurret: glueTurret });
-            // ¿hay balas que tenian asignadas a este enemigo?
-            for (var i = 0; i < this.bullets.length; i++) {
-                var bullet = this.bullets[i];
-                if (bullet.assignedEnemy.id === enemy.id && this.bulletsColliding.indexOf(bullet) === -1) {
-                    bullet.assignedEnemy = null;
-                    this.bulletsColliding.push(bullet);
-                }
-            }
-            for (var i = 0; i < this.glueBullets.length; i++) {
-                var bullet = this.glueBullets[i];
-                if (bullet.assignedEnemy.id === enemy.id && this.glueBulletsColliding.indexOf(bullet) === -1) {
-                    bullet.assignedEnemy = null;
-                    this.glueBulletsColliding.push(bullet);
-                }
-            }
         };
         Engine.prototype.onEnemyReachedExit = function (enemy) {
             var i = this.enemies.indexOf(enemy);
@@ -745,27 +730,42 @@ var Anuto;
             this.eventDispatcher.removeEventListener(type, listenerFunction);
         };
         Engine.prototype.checkCollisions = function () {
+            // las balas
             for (var i = 0; i < this.bullets.length; i++) {
                 var bullet = this.bullets[i];
                 if (bullet.outOfStageBoundaries) {
                     this.bulletsColliding.push(bullet);
                 }
                 else {
-                    var enemy = this.bullets[i].assignedEnemy;
+                    var enemy = bullet.assignedEnemy;
+                    var bp1 = { x: bullet.x, y: bullet.y };
+                    var bp2 = bullet.getPositionNextTick();
+                    var enemyPosition = void 0;
+                    var enemyHit = void 0;
+                    // no importa si el enemigo ya ha muerto la bala se marca cuando alcanza la posicion que el enemigo muerto tuvo
                     if (enemy) {
-                        // no importa si el enemigo ya ha muerto la bala se marca cuando alcanza la posicion que el enemigo muerto tuvo
-                        var bp1 = { x: bullet.x, y: bullet.y };
-                        var bp2 = bullet.getPositionNextTick();
-                        var enemyPosition = { x: enemy.x, y: enemy.y };
-                        var enemyHit = Anuto.MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
+                        enemyPosition = { x: enemy.x, y: enemy.y };
+                        var boundingRadius = enemy.life > 0 ? enemy.boundingRadius : 1.25 * enemy.boundingRadius;
+                        enemyHit = Anuto.MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, boundingRadius);
                         if (enemyHit) {
                             this.bulletsColliding.push(bullet);
                         }
                     }
                     else {
-                        // TODO: esto es debido a que el enemigo ha sido teletransportado
+                        // es una bala que tenia asiganada un enemigo que ha sido teletransportada
                         // mirar si colisiona contra otro enemigo y en este caso reasignarselo
                         // y meterla en el array de balas a eliminar
+                        for (var j = 0; j < this.enemies.length; j++) {
+                            enemy = this.enemies[j];
+                            enemyPosition = { x: enemy.x, y: enemy.y };
+                            enemyHit = Anuto.MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, 1.25 * enemy.boundingRadius);
+                            if (enemyHit) {
+                                bullet.assignedEnemy = enemy;
+                                this.bulletsColliding.push(bullet);
+                                console.log("enemigo reasignado");
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -823,7 +823,11 @@ var Anuto;
                 var bullet = this.bulletsColliding[i];
                 var enemy = bullet.assignedEnemy;
                 // si el enemigo ya ha muerto o ha salido del tablero
-                if (enemy.life === 0 || bullet.outOfStageBoundaries) {
+                if (bullet.outOfStageBoundaries || enemy.life === 0) {
+                    // TODO: BORRAR ESTO
+                    if (bullet.outOfStageBoundaries) {
+                        console.log("OUT OF BOUNDARIES:", bullet.assignedEnemy);
+                    }
                     this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.REMOVE_BULLET, [bullet]));
                 }
                 else {
@@ -912,6 +916,20 @@ var Anuto;
                 var enemy = this.teleportedEnemies[i].enemy;
                 enemy.teleport(this.teleportedEnemies[i].glueTurret.teleportDistance);
                 teleportedEnemiesData.push({ enemy: enemy, glueTurret: this.teleportedEnemies[i].glueTurret });
+                // ¿hay balas que tenian asignadas este enemigo?
+                for (var i_1 = 0; i_1 < this.bullets.length; i_1++) {
+                    var bullet = this.bullets[i_1];
+                    if (bullet.assignedEnemy && bullet.assignedEnemy.id === enemy.id) {
+                        bullet.assignedEnemy = null;
+                    }
+                }
+                for (var i_2 = 0; i_2 < this.glueBullets.length; i_2++) {
+                    var glueBullet = this.glueBullets[i_2];
+                    if (glueBullet.assignedEnemy && glueBullet.assignedEnemy.id === enemy.id && this.glueBulletsColliding.indexOf(glueBullet) === -1) {
+                        glueBullet.assignedEnemy = null;
+                        this.glueBulletsColliding.push(glueBullet);
+                    }
+                }
             }
             this.teleportedEnemies.length = 0;
             if (teleportedEnemiesData.length > 0) {
@@ -1035,7 +1053,7 @@ var Anuto;
         function GameConstants() {
         }
         GameConstants.RELOAD_BASE_TICKS = 10;
-        GameConstants.BULLET_SPEED = .65; // in cells / tick
+        GameConstants.BULLET_SPEED = .825; // in cells / tick
         GameConstants.MORTAR_SPEED = .1;
         // los nombres de los enemigos
         GameConstants.ENEMY_SOLDIER = "soldier";
@@ -1790,6 +1808,8 @@ var Anuto;
                     break;
                 default:
             }
+            // TODO: BOORAR ESTO
+            this.damage *= .5;
             _super.prototype.calculateTurretParameters.call(this);
         };
         ProjectileTurret.prototype.shoot = function () {
