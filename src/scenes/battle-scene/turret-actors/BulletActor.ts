@@ -48,11 +48,11 @@ export class BulletActor extends Phaser.GameObjects.Image {
         let canonY = 0;
 
         if (this.anutoBullet.canonShoot === "left") {
-            canonX = Math.cos(this.rotation) * 10;
-            canonY = Math.sin(this.rotation) * 10;
+            canonX = Math.cos(this.rotation) * 7.5;
+            canonY = Math.sin(this.rotation) * 7.5;
         } else if (this.anutoBullet.canonShoot === "right") {
-            canonX = Math.cos(this.rotation) * -10;
-            canonY = Math.sin(this.rotation) * -10;
+            canonX = Math.cos(this.rotation) * -7.5;
+            canonY = Math.sin(this.rotation) * -7.5;
         }
 
         this.x = this.realX + canonX;

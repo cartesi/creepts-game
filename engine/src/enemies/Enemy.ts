@@ -63,7 +63,7 @@ module Anuto {
             this.x = p.x;
             this.y = p.y; 
 
-            this.boundingRadius = .5;
+            this.boundingRadius = this.type === GameConstants.ENEMY_RUNNER ? .5 : .475;
 
             switch (this.type) {
                 case GameConstants.ENEMY_HEALER:
