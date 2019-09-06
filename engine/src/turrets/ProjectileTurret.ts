@@ -75,9 +75,6 @@ module Anuto {
                 default:
             }
 
-            // TODO: BOORAR ESTO
-            this.damage *=  .5;
-
             super.calculateTurretParameters();
         }
     

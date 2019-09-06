@@ -231,7 +231,7 @@ var Anuto;
             var p = this.engine.getPathPosition(this.l);
             this.x = p.x;
             this.y = p.y;
-            this.boundingRadius = .525;
+            this.boundingRadius = .5;
             switch (this.type) {
                 case Anuto.GameConstants.ENEMY_HEALER:
                     this.modifiers[Anuto.GameConstants.TURRET_LASER] = "weak";
@@ -824,10 +824,6 @@ var Anuto;
                 var enemy = bullet.assignedEnemy;
                 // si el enemigo ya ha muerto o ha salido del tablero
                 if (bullet.outOfStageBoundaries || enemy.life === 0) {
-                    // TODO: BORRAR ESTO
-                    if (bullet.outOfStageBoundaries) {
-                        console.log("OUT OF BOUNDARIES:", bullet.assignedEnemy);
-                    }
                     this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.REMOVE_BULLET, [bullet]));
                 }
                 else {
@@ -1053,7 +1049,7 @@ var Anuto;
         function GameConstants() {
         }
         GameConstants.RELOAD_BASE_TICKS = 10;
-        GameConstants.BULLET_SPEED = .825; // in cells / tick
+        GameConstants.BULLET_SPEED = .85; // in cells / tick
         GameConstants.MORTAR_SPEED = .1;
         // los nombres de los enemigos
         GameConstants.ENEMY_SOLDIER = "soldier";
@@ -1808,8 +1804,6 @@ var Anuto;
                     break;
                 default:
             }
-            // TODO: BOORAR ESTO
-            this.damage *= .5;
             _super.prototype.calculateTurretParameters.call(this);
         };
         ProjectileTurret.prototype.shoot = function () {

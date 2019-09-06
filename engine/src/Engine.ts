@@ -691,11 +691,6 @@ module Anuto {
 
                 // si el enemigo ya ha muerto o ha salido del tablero
                 if (bullet.outOfStageBoundaries || enemy.life === 0) {
-
-                    // TODO: BORRAR ESTO
-                    if  (bullet.outOfStageBoundaries) {
-                        console.log("OUT OF BOUNDARIES:", bullet.assignedEnemy);
-                    }
                     this.eventDispatcher.dispatchEvent(new Event(Event.REMOVE_BULLET, [bullet]));
                 } else {
                     this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[enemy], bullet]));
