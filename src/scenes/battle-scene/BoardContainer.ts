@@ -30,6 +30,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
     public static currentInstance: BoardContainer;
 
+    private map: MapObject;
     private board: Board;
     private deadEnemyActors: EnemyActor[];
     private enemyActors: EnemyActor[];
@@ -54,9 +55,10 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
     private gluePools: GluePool[];
 
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Phaser.Scene, map: MapObject) {
 
         super(scene);
+        this.map = map;
 
         BoardContainer.currentInstance = this;
 
@@ -78,7 +80,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.gluePools = [];
         this.glueCircles = [];
 
-        this.board = new Board(this.scene);
+        this.board = new Board(this.scene, map);
         this.add(this.board);
 
         if (GameConstants.SHOW_DEBUG_GEOMETRY) {
@@ -207,7 +209,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
     public addTurret(type: string, position: {r: number, c: number}): void {
 
-        if ( position.r < 0 || position.c < 0 || position.r >= GameVars.currentMapData.size.r || position.c >= GameVars.currentMapData.size.c) {
+        if ( position.r < 0 || position.c < 0 || position.r >= this.map.size.r || position.c >= this.map.size.c) {
             return;
         }
 

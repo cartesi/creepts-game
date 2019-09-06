@@ -2,16 +2,30 @@ import Phaser from "phaser";
 import * as React from "react";
 
 import { Game } from "../Game";
-import { GameManager } from "../GameManager";
 import { GameConstants } from "../GameConstants";
 import { BootScene } from "../scenes/BootScene";
 import { PreloadScene } from "../scenes/PreloadScene";
 import { BattleScene } from "../scenes/battle-scene/BattleScene";
 import { MapsScene } from "../scenes/maps-scene/MapsScene";
+import { GameManager } from "../GameManager";
+import { string } from "prop-types";
 
-export interface IGameProps {}
+export interface IGameProps { map: string }
 
 export default class IGame extends React.Component<IGameProps, any> {
+
+    private game: Phaser.Game;
+
+    private maps = {
+        "original": 0,
+        "waiting-line": 1,
+        "turn-round": 2,
+        "hurry": 3,
+        "civyshk_yard": 4,
+        "civyshk_2y": 5,
+        "civyshk_line5": 6,
+        "civyshk_labyrinth": 7,
+    }
 
     constructor(props: IGameProps) {
         super(props);
@@ -20,7 +34,7 @@ export default class IGame extends React.Component<IGameProps, any> {
         }
     }
 
-    componentDidMount() {
+    createGame() {
         const gameConfig = {
 
             version: GameConstants.VERSION,
@@ -33,23 +47,23 @@ export default class IGame extends React.Component<IGameProps, any> {
                 mode: Phaser.Scale.FIT
             },
     
-            scene:  [
-                        BootScene, 
-                        PreloadScene, 
-                        BattleScene,
-                        MapsScene
-                    ]
+            scene: null
         };
         
         // If compilation error here, compare Phaser definitions file of working copy (phaser.d.ts, line 48040 on 27-05-2019)
         // Also make sure to delete all *.ts files in node_modules/trailz folder
-        let game = new Game(gameConfig);
-        
-        // XXX: trying to initialize game with different map
-        // XXX: do not work
-        // GameManager.mapSelected(2);
+        this.game = new Game(gameConfig);
 
+        this.game.scene.add(BootScene.name, BootScene, true, { mapIndex: this.maps[this.props.map] || 0 });
+        this.game.scene.add(PreloadScene.name, PreloadScene);
+        this.game.scene.add(BattleScene.name, BattleScene);
+        this.game.scene.add(MapsScene.name, MapsScene);
+        
         this.updateDimensions();
+    }
+
+    componentDidMount() {
+        this.createGame();
         window.addEventListener("resize", this.updateDimensions.bind(this));
     }
 
@@ -63,8 +77,10 @@ export default class IGame extends React.Component<IGameProps, any> {
         this.setState({ height: window.innerHeight });
     }
 
-    shouldComponentUpdate() {
-        return true;
+    componentDidUpdate(prevProps: IGameProps, prevState: any, snapshot: any) {
+        if (this.props.map !== prevProps.map) {
+            GameManager.mapSelected(this.maps[this.props.map]);
+        }
     }
 
     public render() {

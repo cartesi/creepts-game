@@ -6,22 +6,22 @@ export class Board extends Phaser.GameObjects.Container {
     public pathContainer: Phaser.GameObjects.Container;
     public boardMatrix: number[][];
 
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Phaser.Scene, map: MapObject) {
 
         super(scene);
 
-        this.x = - GameConstants.CELLS_SIZE * GameVars.currentMapData.size.c / 2;
-        this.y = - GameConstants.CELLS_SIZE * GameVars.currentMapData.size.r / 2;
+        this.x = - GameConstants.CELLS_SIZE * map.size.c / 2;
+        this.y = - GameConstants.CELLS_SIZE * map.size.r / 2;
 
         this.pathContainer = new Phaser.GameObjects.Container(this.scene);
         this.add(this.pathContainer);
 
-        this.boardMatrix = new Array(GameVars.currentMapData.size.r);
+        this.boardMatrix = new Array(map.size.r);
         for (let i = 0; i < this.boardMatrix.length; i++) {
             if (GameVars.plateausCells.length === 0) {
-                this.boardMatrix[i] = new Array(GameVars.currentMapData.size.c).fill(2);
+                this.boardMatrix[i] = new Array(map.size.c).fill(2);
             } else {
-                this.boardMatrix[i] = new Array(GameVars.currentMapData.size.c).fill(0);
+                this.boardMatrix[i] = new Array(map.size.c).fill(0);
             }  
         }
 
@@ -31,7 +31,7 @@ export class Board extends Phaser.GameObjects.Container {
 
         for (let i = 0; i < GameVars.enemiesPathCells.length; i++) {
 
-            if (GameVars.enemiesPathCells[i].c < 0 || GameVars.enemiesPathCells[i].r < 0 || GameVars.enemiesPathCells[i].c >= GameVars.currentMapData.size.c || GameVars.enemiesPathCells[i].r >= GameVars.currentMapData.size.r) {
+            if (GameVars.enemiesPathCells[i].c < 0 || GameVars.enemiesPathCells[i].r < 0 || GameVars.enemiesPathCells[i].c >= map.size.c || GameVars.enemiesPathCells[i].r >= map.size.r) {
                 continue;
             }
 
