@@ -181,10 +181,11 @@ module Anuto {
             if (this.waveActivated) {
                 this.removeProjectilesAndAccountDamage();
 
-            this.teleport();
+                this.teleport();
 
-            this.checkCollisions();
-            this.spawnEnemies();
+                this.checkCollisions();
+                this.spawnEnemies();
+            }
             
             this.enemies.forEach(function (enemy) {
                 enemy.update();
@@ -227,8 +228,6 @@ module Anuto {
 
             this.noEnemiesOnStage = false;
             this.allEnemiesSpawned = false;
-            console.log("NO ENEMIES FALSE");
-            console.log("ALL ENEMIES SPAWNED FALSE");
 
             let length = Object.keys(this.wavesData).length;
             let waveData = this.wavesData["wave_" + (this._round % length + 1)];
@@ -634,7 +633,6 @@ module Anuto {
                             if (enemyHit) {
                                 bullet.assignedEnemy = enemy;
                                 this.bulletsColliding.push(bullet);
-                                console.log("enemigo reasignado");
                                 break;
                             }
                         }
@@ -892,7 +890,6 @@ module Anuto {
                 this.enemiesSpawned++;
                 if (this.enemiesSpawned === this.waveEnemiesLength) {
                     this.allEnemiesSpawned = true;
-                    console.log("ALL ENEMIES SPAWNED TRUE");
                     this.enemiesSpawned = 0;
                     this.waveEnemiesLength = 0;
                 }

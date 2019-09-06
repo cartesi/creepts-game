@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    };
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -473,7 +473,6 @@ var Anuto;
                     return;
                 }
             }
-<<<<<<< HEAD
             if (this.ticksCounter - this.lastWaveTick >= (Anuto.GameConstants.INITIAL_TICKS_WAVE * this.enemySpawningDeltaTicks) && !this.canLaunchNextWave) {
                 this.canLaunchNextWave = true;
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ACTIVE_NEXT_WAVE));
@@ -484,12 +483,6 @@ var Anuto;
                 this.checkCollisions();
                 this.spawnEnemies();
             }
-=======
-            this.removeProjectilesAndAccountDamage();
-            this.teleport();
-            this.checkCollisions();
-            this.spawnEnemies();
->>>>>>> issue_20_bullets_glitch
             this.enemies.forEach(function (enemy) {
                 enemy.update();
             }, this);
@@ -520,8 +513,6 @@ var Anuto;
             this.canLaunchNextWave = false;
             this.noEnemiesOnStage = false;
             this.allEnemiesSpawned = false;
-            console.log("NO ENEMIES FALSE");
-            console.log("ALL ENEMIES SPAWNED FALSE");
             var length = Object.keys(this.wavesData).length;
             var waveData = this.wavesData["wave_" + (this._round % length + 1)];
             var initialWaveEnemies = waveData.enemies.slice(0);
@@ -798,7 +789,6 @@ var Anuto;
                             if (enemyHit) {
                                 bullet.assignedEnemy = enemy;
                                 this.bulletsColliding.push(bullet);
-                                console.log("enemigo reasignado");
                                 break;
                             }
                         }
@@ -979,7 +969,6 @@ var Anuto;
                 this.enemiesSpawned++;
                 if (this.enemiesSpawned === this.waveEnemiesLength) {
                     this.allEnemiesSpawned = true;
-                    console.log("ALL ENEMIES SPAWNED TRUE");
                     this.enemiesSpawned = 0;
                     this.waveEnemiesLength = 0;
                 }
@@ -990,16 +979,12 @@ var Anuto;
         };
         Engine.prototype.onNoEnemiesOnStage = function () {
             this.noEnemiesOnStage = true;
-<<<<<<< HEAD
-            console.log("NO ENEMIES TRUE");
             // nos cargamos de golpe todas las balas si las hubieren
             for (var i = 0; i < this.bullets.length; i++) {
                 var bullet = this.bullets[i];
                 bullet.assignedEnemy = null;
                 this.bulletsColliding.push(bullet);
             }
-=======
->>>>>>> issue_20_bullets_glitch
             this._credits += this._bonus;
             this._creditsEarned += this._bonus;
             this._bonus = 0;
@@ -1671,7 +1656,6 @@ var Anuto;
                 // encontrar la posicion del enemigo dentro de estos ticks
                 var impactPosition = enemy.getNextPosition(ticksToImpact);
                 if (!impactPosition) {
-                    console.log("AAA");
                     this.readyToShoot = true;
                     return;
                 }

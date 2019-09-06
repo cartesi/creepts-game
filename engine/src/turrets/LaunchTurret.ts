@@ -131,7 +131,6 @@ module Anuto {
                 const impactPosition = enemy.getNextPosition(ticksToImpact);
 
                 if (!impactPosition) {
-                    console.log("AAA");
                     this.readyToShoot = true;
                     return;
                 }
