@@ -5,9 +5,7 @@ import mapsData from "../assets/config/maps.json";
 
 export class GameManager {
 
-    public static init(): void {  
-
-        localStorage.clear();
+    public static init(): void {
 
         GameVars.mapsData = mapsData;
 

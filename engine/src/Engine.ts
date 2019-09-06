@@ -61,6 +61,7 @@ module Anuto {
         private waveEnemiesLength: number;
         private enemiesSpawned: number;
         private allEnemiesSpawned: boolean;
+        private canLaunchNextWave: boolean;
 
         constructor (gameConfig: Types.GameConfig, enemyData: any, turretData: any, wavesData: any) {
 
@@ -106,8 +107,15 @@ module Anuto {
             this.turrets = [];
             this.mines = [];
             this.minesImpacting = [];
+            this.waveEnemies = [];
+
+            this.canLaunchNextWave = true;
 
             this.initWaveVars();
+            this.noEnemiesOnStage = false;
+            this.allEnemiesSpawned = false;
+            this.enemiesSpawned = 0;
+            this.waveEnemiesLength = 0;
         }
 
         public initWaveVars(): void {
@@ -126,10 +134,6 @@ module Anuto {
             this.mortarsImpacting = [];
             this.consumedGlues = [];
             this.teleportedEnemies = [];
-
-            this.noEnemiesOnStage = false;
-            this.allEnemiesSpawned = false;
-            this.enemiesSpawned = 0;
         }
 
         public update(): void {
@@ -160,8 +164,6 @@ module Anuto {
 
             if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
                 this.waveActivated = false;
-                
-
                 this.ageTurrets();
 
                 if (this._lifes > 0) {
@@ -169,6 +171,11 @@ module Anuto {
                 } else {
                     return;
                 } 
+            }
+
+            if (this.ticksCounter - this.lastWaveTick >= (GameConstants.INITIAL_TICKS_WAVE * this.enemySpawningDeltaTicks) && !this.canLaunchNextWave) {
+                this.canLaunchNextWave = true;
+                this.eventDispatcher.dispatchEvent(new Event(Event.ACTIVE_NEXT_WAVE));
             }
 
             if (this.waveActivated) {
@@ -213,16 +220,23 @@ module Anuto {
 
         public newWave(): boolean {
 
-            if (this.waveActivated) {
+            if (!this.canLaunchNextWave) {
                 return false;
             }
+
+            this.canLaunchNextWave = false;
+
+            this.noEnemiesOnStage = false;
+            this.allEnemiesSpawned = false;
+            console.log("NO ENEMIES FALSE");
+            console.log("ALL ENEMIES SPAWNED FALSE");
 
             let length = Object.keys(this.wavesData).length;
             let waveData = this.wavesData["wave_" + (this._round % length + 1)];
             
             let initialWaveEnemies = waveData.enemies.slice(0);
-            this.waveReward = waveData.waveReward;
-            this.waveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
+
+            let newWaveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
 
             const extend = Math.floor(this._round / length);
             const extraWaves = Math.min(extend * waveData.extend, waveData.maxExtend);
@@ -232,23 +246,33 @@ module Anuto {
             for (let i = 0; i < extraWaves; i++) {
 
                 let nextWaveEnemies = JSON.parse(JSON.stringify(initialWaveEnemies));
-                let lastTickValue = this.waveEnemies[this.waveEnemies.length - 1].t;
+                let lastTickValue = newWaveEnemies[newWaveEnemies.length - 1].t;
 
                 for (let j = 0; j < nextWaveEnemies.length; j++) {
                     nextWaveEnemies[j].t += (lastTickValue + 2);
                 }
 
-                this.waveEnemies = this.waveEnemies.concat(nextWaveEnemies);
+                newWaveEnemies = newWaveEnemies.concat(nextWaveEnemies);
             }
+
+            for (let i = 0; i < newWaveEnemies.length; i++) {
+                newWaveEnemies[i].t = newWaveEnemies[i].t * this.enemySpawningDeltaTicks + this._ticksCounter + 1;
+            }
+
+            this.waveEnemies = this.waveEnemies.concat(newWaveEnemies);
+            this.waveEnemies = MathUtils.mergeSort(this.waveEnemies, function(e1: any , e2: any): boolean { return e1.t - e2.t < 0; });
 
             this.lastWaveTick = this._ticksCounter;
 
+            if (this.waveActivated) {
+                this.waveReward += waveData.waveReward;
+            } else {
+                this.waveReward = waveData.waveReward;
+            }
+
             this.waveActivated = true;
-           
-            this.initWaveVars();
 
-            this.waveEnemiesLength = this.waveEnemies.length;
-
+            this.waveEnemiesLength += newWaveEnemies.length;
             this.remainingReward = 0;
 
             this.waveDefaultHealth = 0;
@@ -546,6 +570,10 @@ module Anuto {
 
             const i = Math.floor(l);
 
+            if (!this.enemiesPathCells[i]) {
+                return null;
+            }
+
             if (i === this.enemiesPathCells.length - 1) {
 
                 x = this.enemiesPathCells[this.enemiesPathCells.length - 1].c;
@@ -826,23 +854,29 @@ module Anuto {
 
         private spawnEnemies(): void {
 
-            const enemy = this.enemiesSpawner.getEnemy();
+            let enemy = this.enemiesSpawner.getEnemy();
 
-            if (enemy) {
+            while (enemy) {
 
                 this.enemiesSpawned++;
                 if (this.enemiesSpawned === this.waveEnemiesLength) {
                     this.allEnemiesSpawned = true;
+                    console.log("ALL ENEMIES SPAWNED TRUE");
+                    this.enemiesSpawned = 0;
+                    this.waveEnemiesLength = 0;
                 }
 
                 this.enemies.push(enemy);
                 this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_SPAWNED, [enemy, this.enemiesPathCells[0]]));
+
+                enemy = this.enemiesSpawner.getEnemy();
             }
         }
 
         private onNoEnemiesOnStage(): void {
 
             this.noEnemiesOnStage = true;
+            console.log("NO ENEMIES TRUE");
 
             // nos cargamos de golpe todas las balas si las hubieren
             for (let i = 0; i < this.bullets.length; i ++) {

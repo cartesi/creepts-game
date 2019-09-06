@@ -130,6 +130,12 @@ module Anuto {
                 // encontrar la posicion del enemigo dentro de estos ticks
                 const impactPosition = enemy.getNextPosition(ticksToImpact);
 
+                if (!impactPosition) {
+                    console.log("AAA");
+                    this.readyToShoot = true;
+                    return;
+                }
+
                 if (this.grade === 1) {
                     // le damos una cierta desviacion para que no explote directamente justo encima del enemigo
                     const deviation_x = MathUtils.fixNumber(this.deviationRadius * Math.cos(this.deviationAngle * Math.PI / 180));

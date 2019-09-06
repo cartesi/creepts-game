@@ -79,6 +79,7 @@ export class BattleManager {
         BattleManager.anutoEngine.addEventListener(Anuto.Event.NO_ENEMIES_ON_STAGE, BattleManager.onNoEnemiesOnStage, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.WAVE_OVER, BattleManager.onWaveOver, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.GAME_OVER, BattleManager.onGameOver, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ACTIVE_NEXT_WAVE, BattleManager.activeNextWave, BattleManager);
     }
 
     public static update(time: number, delta: number): void {
@@ -315,9 +316,13 @@ export class BattleManager {
     }
 
     private static onWaveOver(): void {
-    
-        BattleScene.currentInstance.gui.activeNextWave();
+       
         BattleScene.currentInstance.updateTurretButtons();
+    }
+
+    private static activeNextWave(): void {
+        
+        BattleScene.currentInstance.gui.activeNextWave();
     }
 
     private static onGameOver(): void {

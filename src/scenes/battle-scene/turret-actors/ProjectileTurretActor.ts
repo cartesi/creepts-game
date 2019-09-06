@@ -48,6 +48,10 @@ export class ProjectileTurretActor extends TurretActor {
             ease: Phaser.Math.Easing.Cubic.Out,
             duration: GameVars.timeStepFactor === 1 ? 40 : 10,
             onComplete: () => {
+                if (!this.scene) {
+                    return;
+                }
+                
                 this.scene.tweens.add({
                     targets: this.canon,
                     x: 0,

@@ -243,7 +243,11 @@ module Anuto {
 
             const p = this.engine.getPathPosition(l);
 
-            return{x: p.x, y: p.y};
+            if (!p) {
+                return null;
+            }
+
+            return {x: p.x, y: p.y};
         }
     }
 }

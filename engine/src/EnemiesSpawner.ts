@@ -13,13 +13,13 @@ module Anuto {
 
             let enemy: Enemy = null;
 
-            let partialTicks = this.engine.ticksCounter - this.engine.lastWaveTick;
+            // let partialTicks = this.engine.ticksCounter - this.engine.lastWaveTick;
             
-            if (partialTicks % this.engine.enemySpawningDeltaTicks === 0 && this.engine.waveEnemies.length > 0) {
+            if (this.engine.waveEnemies.length > 0) {
 
-                const nextEnemyData = this.engine.waveEnemies[0];
+                let nextEnemyData = this.engine.waveEnemies[0];
                 
-                if (nextEnemyData.t === partialTicks / this.engine.enemySpawningDeltaTicks) {
+                if (nextEnemyData.t === this.engine.ticksCounter) {
 
                     switch (nextEnemyData.type) {
 
@@ -50,7 +50,6 @@ module Anuto {
                     this.engine.waveEnemies.shift();
                 }
             }
-
             return enemy;
         }
     }

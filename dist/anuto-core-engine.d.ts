@@ -154,6 +154,7 @@ declare module Anuto {
         private waveEnemiesLength;
         private enemiesSpawned;
         private allEnemiesSpawned;
+        private canLaunchNextWave;
         constructor(gameConfig: Types.GameConfig, enemyData: any, turretData: any, wavesData: any);
         initWaveVars(): void;
         update(): void;
@@ -207,6 +208,7 @@ declare module Anuto {
         static readonly RELOAD_BASE_TICKS = 10;
         static readonly BULLET_SPEED = 0.5;
         static readonly MORTAR_SPEED = 0.1;
+        static readonly INITIAL_TICKS_WAVE = 4;
         static readonly ENEMY_SOLDIER = "soldier";
         static readonly ENEMY_RUNNER = "runner";
         static readonly ENEMY_HEALER = "healer";
@@ -285,6 +287,7 @@ declare module Anuto {
         static readonly ENEMY_HIT = "enemy hit by bullet";
         static readonly ENEMY_GLUE_HIT = "enemy hit by glue bullet";
         static readonly ENEMY_REACHED_EXIT = "enemy reached exit";
+        static readonly ACTIVE_NEXT_WAVE = "active next wave";
         static readonly WAVE_OVER = "wave over";
         static readonly GAME_OVER = "game over";
         static readonly NO_ENEMIES_ON_STAGE = "no enemies on stage";
