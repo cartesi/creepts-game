@@ -21,11 +21,11 @@ export class AudioManager {
 
     public static playSound(key: string, loop?: boolean, volume?: number): void {
 
-        loop = loop || false;
-        volume = volume || 1;
+        // loop = loop || false;
+        // volume = volume || 1;
 
-        let id = AudioManager.sound.play(key);
-        AudioManager.sound.loop(loop, id);
-        AudioManager.sound.volume(volume, id);
+        // let id = AudioManager.sound.play(key);
+        // AudioManager.sound.loop(loop, id);
+        // AudioManager.sound.volume(volume, id);
     }
 }

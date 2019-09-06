@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -231,7 +231,7 @@ var Anuto;
             var p = this.engine.getPathPosition(this.l);
             this.x = p.x;
             this.y = p.y;
-            this.boundingRadius = .4;
+            this.boundingRadius = .5;
             switch (this.type) {
                 case Anuto.GameConstants.ENEMY_HEALER:
                     this.modifiers[Anuto.GameConstants.TURRET_LASER] = "weak";
@@ -399,6 +399,7 @@ var Anuto;
             this.mineId = 0;
             this.enemySpawningDeltaTicks = gameConfig.enemySpawningDeltaTicks;
             this.runningInClientSide = gameConfig.runningInClientSide;
+            this.boardSize = gameConfig.boardSize;
             this._credits = gameConfig.credits;
             this._lifes = gameConfig.lifes;
             this._paused = false;
@@ -472,6 +473,7 @@ var Anuto;
                     return;
                 }
             }
+<<<<<<< HEAD
             if (this.ticksCounter - this.lastWaveTick >= (Anuto.GameConstants.INITIAL_TICKS_WAVE * this.enemySpawningDeltaTicks) && !this.canLaunchNextWave) {
                 this.canLaunchNextWave = true;
                 this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ACTIVE_NEXT_WAVE));
@@ -482,6 +484,12 @@ var Anuto;
                 this.checkCollisions();
                 this.spawnEnemies();
             }
+=======
+            this.removeProjectilesAndAccountDamage();
+            this.teleport();
+            this.checkCollisions();
+            this.spawnEnemies();
+>>>>>>> issue_20_bullets_glitch
             this.enemies.forEach(function (enemy) {
                 enemy.update();
             }, this);
@@ -676,21 +684,6 @@ var Anuto;
         };
         Engine.prototype.flagEnemyToTeleport = function (enemy, glueTurret) {
             this.teleportedEnemies.push({ enemy: enemy, glueTurret: glueTurret });
-            // ¿hay balas que tenian asignadas a este enemigo?
-            for (var i = 0; i < this.bullets.length; i++) {
-                var bullet = this.bullets[i];
-                if (bullet.assignedEnemy.id === enemy.id && this.bulletsColliding.indexOf(bullet) === -1) {
-                    bullet.assignedEnemy = null;
-                    this.bulletsColliding.push(bullet);
-                }
-            }
-            for (var i = 0; i < this.glueBullets.length; i++) {
-                var bullet = this.glueBullets[i];
-                if (bullet.assignedEnemy.id === enemy.id && this.glueBulletsColliding.indexOf(bullet) === -1) {
-                    bullet.assignedEnemy = null;
-                    this.glueBulletsColliding.push(bullet);
-                }
-            }
         };
         Engine.prototype.onEnemyReachedExit = function (enemy) {
             var i = this.enemies.indexOf(enemy);
@@ -701,11 +694,11 @@ var Anuto;
             this.remainingReward -= enemy.value;
             enemy.destroy();
             this._lifes -= 1;
-            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_REACHED_EXIT, [enemy]));
             this._bonus = Math.round(this.waveReward + Math.round(Anuto.GameConstants.EARLY_BONUS_MODIFIER * Math.pow(Math.max(0, this.remainingReward), Anuto.GameConstants.EARLY_BONUS_EXPONENT)));
             if (this.enemies.length === 0 && this.allEnemiesSpawned) {
                 this.onNoEnemiesOnStage();
             }
+            this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_REACHED_EXIT, [enemy]));
         };
         Engine.prototype.onEnemyKilled = function (enemy) {
             this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_KILLED, [enemy]));
@@ -773,20 +766,41 @@ var Anuto;
             this.eventDispatcher.removeEventListener(type, listenerFunction);
         };
         Engine.prototype.checkCollisions = function () {
+            // las balas
             for (var i = 0; i < this.bullets.length; i++) {
                 var bullet = this.bullets[i];
-                var enemy = this.bullets[i].assignedEnemy;
-                if (enemy) {
-                    if (enemy.life === 0) {
-                        this.bulletsColliding.push(bullet);
-                    }
-                    else {
-                        var bp1 = { x: bullet.x, y: bullet.y };
-                        var bp2 = bullet.getPositionNextTick();
-                        var enemyPosition = { x: enemy.x, y: enemy.y };
-                        var enemyHit = Anuto.MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
+                if (bullet.outOfStageBoundaries) {
+                    this.bulletsColliding.push(bullet);
+                }
+                else {
+                    var enemy = bullet.assignedEnemy;
+                    var bp1 = { x: bullet.x, y: bullet.y };
+                    var bp2 = bullet.getPositionNextTick();
+                    var enemyPosition = void 0;
+                    var enemyHit = void 0;
+                    // no importa si el enemigo ya ha muerto la bala se marca cuando alcanza la posicion que el enemigo muerto tuvo
+                    if (enemy) {
+                        enemyPosition = { x: enemy.x, y: enemy.y };
+                        var boundingRadius = enemy.life > 0 ? enemy.boundingRadius : 1.25 * enemy.boundingRadius;
+                        enemyHit = Anuto.MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, boundingRadius);
                         if (enemyHit) {
                             this.bulletsColliding.push(bullet);
+                        }
+                    }
+                    else {
+                        // es una bala que tenia asiganada un enemigo que ha sido teletransportada
+                        // mirar si colisiona contra otro enemigo y en este caso reasignarselo
+                        // y meterla en el array de balas a eliminar
+                        for (var j = 0; j < this.enemies.length; j++) {
+                            enemy = this.enemies[j];
+                            enemyPosition = { x: enemy.x, y: enemy.y };
+                            enemyHit = Anuto.MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, 1.25 * enemy.boundingRadius);
+                            if (enemyHit) {
+                                bullet.assignedEnemy = enemy;
+                                this.bulletsColliding.push(bullet);
+                                console.log("enemigo reasignado");
+                                break;
+                            }
                         }
                     }
                 }
@@ -844,9 +858,9 @@ var Anuto;
             for (var i = 0; i < this.bulletsColliding.length; i++) {
                 var bullet = this.bulletsColliding[i];
                 var enemy = bullet.assignedEnemy;
-                if (enemy === null || enemy.life <= 0) {
-                    // ya esta muerto o el enemigo ha sido teletransportado
-                    this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_HIT, [[], bullet]));
+                // si el enemigo ya ha muerto o ha salido del tablero
+                if (bullet.outOfStageBoundaries || enemy.life === 0) {
+                    this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.REMOVE_BULLET, [bullet]));
                 }
                 else {
                     this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_HIT, [[enemy], bullet]));
@@ -859,19 +873,19 @@ var Anuto;
             this.bulletsColliding.length = 0;
             // las balas de pegamento
             for (var i = 0; i < this.glueBulletsColliding.length; i++) {
-                var bullet = this.glueBulletsColliding[i];
-                var enemy = bullet.assignedEnemy;
+                var glueBullet = this.glueBulletsColliding[i];
+                var enemy = glueBullet.assignedEnemy;
                 if (enemy === null || enemy.life === 0) {
                     // ya esta muerto o el enemigo ha sido teletransportado
-                    this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_GLUE_HIT, [[], bullet]));
+                    this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_GLUE_HIT, [[], glueBullet]));
                 }
                 else {
-                    this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_GLUE_HIT, [[enemy], bullet]));
-                    enemy.glueHit(bullet.intensity, bullet.durationTicks, bullet);
+                    this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.ENEMY_GLUE_HIT, [[enemy], glueBullet]));
+                    enemy.glueHit(glueBullet.intensity, glueBullet.durationTicks, glueBullet);
                 }
-                var index = this.glueBullets.indexOf(bullet);
+                var index = this.glueBullets.indexOf(glueBullet);
                 this.glueBullets.splice(index, 1);
-                bullet.destroy();
+                glueBullet.destroy();
             }
             this.glueBulletsColliding.length = 0;
             // los morteros
@@ -934,6 +948,20 @@ var Anuto;
                 var enemy = this.teleportedEnemies[i].enemy;
                 enemy.teleport(this.teleportedEnemies[i].glueTurret.teleportDistance);
                 teleportedEnemiesData.push({ enemy: enemy, glueTurret: this.teleportedEnemies[i].glueTurret });
+                // ¿hay balas que tenian asignadas este enemigo?
+                for (var i_1 = 0; i_1 < this.bullets.length; i_1++) {
+                    var bullet = this.bullets[i_1];
+                    if (bullet.assignedEnemy && bullet.assignedEnemy.id === enemy.id) {
+                        bullet.assignedEnemy = null;
+                    }
+                }
+                for (var i_2 = 0; i_2 < this.glueBullets.length; i_2++) {
+                    var glueBullet = this.glueBullets[i_2];
+                    if (glueBullet.assignedEnemy && glueBullet.assignedEnemy.id === enemy.id && this.glueBulletsColliding.indexOf(glueBullet) === -1) {
+                        glueBullet.assignedEnemy = null;
+                        this.glueBulletsColliding.push(glueBullet);
+                    }
+                }
             }
             this.teleportedEnemies.length = 0;
             if (teleportedEnemiesData.length > 0) {
@@ -962,6 +990,7 @@ var Anuto;
         };
         Engine.prototype.onNoEnemiesOnStage = function () {
             this.noEnemiesOnStage = true;
+<<<<<<< HEAD
             console.log("NO ENEMIES TRUE");
             // nos cargamos de golpe todas las balas si las hubieren
             for (var i = 0; i < this.bullets.length; i++) {
@@ -969,6 +998,8 @@ var Anuto;
                 bullet.assignedEnemy = null;
                 this.bulletsColliding.push(bullet);
             }
+=======
+>>>>>>> issue_20_bullets_glitch
             this._credits += this._bonus;
             this._creditsEarned += this._bonus;
             this._bonus = 0;
@@ -1068,7 +1099,7 @@ var Anuto;
         function GameConstants() {
         }
         GameConstants.RELOAD_BASE_TICKS = 10;
-        GameConstants.BULLET_SPEED = .5; // in cells / tick
+        GameConstants.BULLET_SPEED = .85; // in cells / tick
         GameConstants.MORTAR_SPEED = .1;
         GameConstants.INITIAL_TICKS_WAVE = 4;
         // los nombres de los enemigos
@@ -1193,6 +1224,7 @@ var Anuto;
         Event.GLUE_SHOT = "glue shot";
         Event.GLUE_CONSUMED = "glue consumed";
         Event.ENEMIES_TELEPORTED = "enemies teleported";
+        Event.REMOVE_BULLET = "remove bullet";
         return Event;
     }());
     Anuto.Event = Event;
@@ -1241,11 +1273,13 @@ var Anuto;
     var Bullet = /** @class */ (function () {
         // bullet speed in cells / tick
         function Bullet(p, angle, assignedEnemy, damage, canonShoot, turret, engine) {
-            this.id = engine.bulletId;
-            engine.bulletId++;
+            this.engine = engine;
+            this.id = this.engine.bulletId;
+            this.engine.bulletId++;
             this.x = p.c + .5;
             this.y = p.r + .5;
             this.assignedEnemy = assignedEnemy;
+            this.outOfStageBoundaries = false;
             this.damage = damage;
             this.canonShoot = canonShoot;
             this.turret = turret;
@@ -1258,6 +1292,10 @@ var Anuto;
         Bullet.prototype.update = function () {
             this.x = Anuto.MathUtils.fixNumber(this.x + this.vx);
             this.y = Anuto.MathUtils.fixNumber(this.y + this.vy);
+            // ¿se salio de los limites del tablero?
+            if (this.x < 0 || this.x > this.engine.boardSize.c || this.y < 0 || this.y > this.engine.boardSize.r) {
+                this.outOfStageBoundaries = true;
+            }
         };
         Bullet.prototype.getPositionNextTick = function () {
             return { x: Anuto.MathUtils.fixNumber(this.x + this.vx), y: Anuto.MathUtils.fixNumber(this.y + this.vy) };
