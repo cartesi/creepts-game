@@ -1,7 +1,5 @@
-import { BattleManager } from './BattleManager';
-import { Button } from "../../utils/Utils";
-import { GameConstants } from "../../GameConstants";
-import { GameVars } from '../../GameVars';
+import { BattleManager } from "./BattleManager";
+import { GameVars } from "../../GameVars";
 
 export class TurretMenu extends Phaser.GameObjects.Container {
 

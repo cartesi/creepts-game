@@ -1,10 +1,6 @@
-import { AudioManager } from './../../AudioManager';
-import { GameManager } from './../../GameManager';
-import { BattleManager } from './BattleManager';
-import { Button } from "../../utils/Utils";
-import { GameConstants } from "../../GameConstants";
-import { GameVars } from '../../GameVars';
-import { ClientHttp2Session } from 'http2';
+import { AudioManager } from "./../../AudioManager";
+import { GameManager } from "./../../GameManager";
+import { GameVars } from "../../GameVars";
 
 export class PauseMenu extends Phaser.GameObjects.Container {
 
@@ -15,9 +11,10 @@ export class PauseMenu extends Phaser.GameObjects.Container {
     private soundText: Phaser.GameObjects.Text;
 
     constructor(scene: Phaser.Scene) {
+        
         super(scene);
 
-        this.y = -200;
+        this.y = -150 * GameVars.scaleY;
 
         const bck = new Phaser.GameObjects.Graphics(this.scene);
         bck.fillStyle(0x000000);
