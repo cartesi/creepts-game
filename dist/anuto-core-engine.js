@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -231,7 +231,7 @@ var Anuto;
             var p = this.engine.getPathPosition(this.l);
             this.x = p.x;
             this.y = p.y;
-            this.boundingRadius = .5;
+            this.boundingRadius = this.type === Anuto.GameConstants.ENEMY_RUNNER ? .5 : .475;
             switch (this.type) {
                 case Anuto.GameConstants.ENEMY_HEALER:
                     this.modifiers[Anuto.GameConstants.TURRET_LASER] = "weak";
@@ -852,6 +852,9 @@ var Anuto;
                 var enemy = bullet.assignedEnemy;
                 // si el enemigo ya ha muerto o ha salido del tablero
                 if (bullet.outOfStageBoundaries || enemy.life === 0) {
+                    if (bullet.outOfStageBoundaries) {
+                        console.log(bullet.assignedEnemy);
+                    }
                     this.eventDispatcher.dispatchEvent(new Anuto.Event(Anuto.Event.REMOVE_BULLET, [bullet]));
                 }
                 else {
@@ -981,12 +984,6 @@ var Anuto;
         };
         Engine.prototype.onNoEnemiesOnStage = function () {
             this.noEnemiesOnStage = true;
-            // nos cargamos de golpe todas las balas si las hubieren
-            for (var i = 0; i < this.bullets.length; i++) {
-                var bullet = this.bullets[i];
-                bullet.assignedEnemy = null;
-                this.bulletsColliding.push(bullet);
-            }
             this._credits += this._bonus;
             this._creditsEarned += this._bonus;
             this._bonus = 0;
@@ -1280,7 +1277,7 @@ var Anuto;
             this.x = Anuto.MathUtils.fixNumber(this.x + this.vx);
             this.y = Anuto.MathUtils.fixNumber(this.y + this.vy);
             // ¿se salio de los limites del tablero?
-            if (this.x < 0 || this.x > this.engine.boardSize.c || this.y < 0 || this.y > this.engine.boardSize.r) {
+            if (this.x < -1 || this.x > this.engine.boardSize.c + 1 || this.y < -1 || this.y > this.engine.boardSize.r + 1) {
                 this.outOfStageBoundaries = true;
             }
         };

@@ -1,6 +1,5 @@
 import { AudioManager } from './../../../AudioManager';
 import { TurretActor } from "./TurretActor";
-import { GameConstants } from "../../../GameConstants";
 import { GameVars } from '../../../GameVars';
 
 export class ProjectileTurretActor extends TurretActor {

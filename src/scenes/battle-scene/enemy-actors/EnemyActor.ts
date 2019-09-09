@@ -106,11 +106,11 @@ export class EnemyActor extends Phaser.GameObjects.Container {
 
         this.scene.tweens.add({
             targets: this,
-            scaleX: 1.15,
-            scaleY: 1.15,
+            scaleX: 1.25,
+            scaleY: 1.25,
             alpha: 0,
             ease: Phaser.Math.Easing.Cubic.In,
-            duration: 500,
+            duration: 600,
             onComplete: function(): void {
                 this.destroy();
             },

@@ -181,6 +181,7 @@ module Anuto {
             }
 
             if (this.waveActivated) {
+
                 this.removeProjectilesAndAccountDamage();
             }
 
@@ -911,13 +912,6 @@ module Anuto {
         private onNoEnemiesOnStage(): void {
 
             this.noEnemiesOnStage = true;
-
-            // nos cargamos de golpe todas las balas si las hubieren
-            for (let i = 0; i < this.bullets.length; i ++) {
-                const bullet = this.bullets[i];
-                bullet.assignedEnemy = null;
-                this.bulletsColliding.push(bullet);
-            }       
 
             this._credits += this._bonus;
             this._creditsEarned += this._bonus;
