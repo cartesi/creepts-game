@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -86,16 +86,9 @@ var Anuto;
         Turret.prototype.update = function () {
             this.enemiesWithinRange = this.getEnemiesWithinRange();
             if (this.readyToShoot) {
-                // si es la de las minas no necesita tener a enemigos en rango
-                if (this.type === Anuto.GameConstants.TURRET_LAUNCH && this.grade === 2) {
+                if (this.enemiesWithinRange.length > 0) {
                     this.readyToShoot = false;
                     this.shoot();
-                }
-                else {
-                    if (this.enemiesWithinRange.length > 0) {
-                        this.readyToShoot = false;
-                        this.shoot();
-                    }
                 }
             }
             else {
@@ -153,7 +146,7 @@ var Anuto;
                     }
                 }
             }
-            if (enemiesAndSquaredDistances.length > 1 && (this.type === Anuto.GameConstants.TURRET_PROJECTILE || this.type === Anuto.GameConstants.TURRET_LASER)) {
+            if (enemiesAndSquaredDistances.length > 1 && (this.type === Anuto.GameConstants.TURRET_PROJECTILE || this.type === Anuto.GameConstants.TURRET_LASER || (this.type === Anuto.GameConstants.TURRET_LAUNCH && this.grade !== 2))) {
                 // ordenar a los enemigos dentro del radio de acción según la estrategia de disparo
                 switch (this.shootingStrategy) {
                     case Anuto.GameConstants.STRATEGY_SHOOT_LAST:
@@ -1574,8 +1567,28 @@ var Anuto;
             _this.minesCounter = 0;
             _this.deviationAngle = 0;
             _this.deviationRadius = 0;
+            _this.projectileSpeed = Anuto.GameConstants.MORTAR_SPEED;
             return _this;
         }
+        LaunchTurret.prototype.update = function () {
+            // cuando tiene grado 2 no hace falta calcular los enemigos que tenga en el radio de accion
+            if (this.grade === 2) {
+                if (this.readyToShoot) {
+                    this.readyToShoot = false;
+                    this.shoot();
+                }
+                else {
+                    this.f++;
+                    if (this.f >= this.reloadTicks) {
+                        this.readyToShoot = true;
+                        this.f = 0;
+                    }
+                }
+            }
+            else {
+                _super.prototype.update.call(this);
+            }
+        };
         LaunchTurret.prototype.calculateTurretParameters = function () {
             switch (this.grade) {
                 case 1:
@@ -1600,6 +1613,8 @@ var Anuto;
                     this.reload = Math.round((-.05 * this.level + 3.05) * 100) / 100;
                     this.range = Math.round((.1 * this.level + 2.9) * 100) / 100;
                     this.priceImprovement = Math.round((39 / 2) * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + (665 / 2) * this.level + 596);
+                    this.projectileSpeed = 5 * Anuto.GameConstants.MORTAR_SPEED;
+                    console.log("parametros recalculados");
                     break;
                 default:
             }
@@ -1646,9 +1661,8 @@ var Anuto;
                     enemy = this.enemiesWithinRange[0];
                 }
                 var d = Anuto.MathUtils.fixNumber(Math.sqrt((this.x - enemy.x) * (this.x - enemy.x) + (this.y - enemy.y) * (this.y - enemy.y)));
-                var speed = this.grade === 3 ? Anuto.GameConstants.MORTAR_SPEED * 5 : Anuto.GameConstants.MORTAR_SPEED;
                 // cuantos ticks va a tardar el mortero en llegar?
-                var ticksToImpact = Math.floor(Anuto.MathUtils.fixNumber(d / speed));
+                var ticksToImpact = Math.floor(Anuto.MathUtils.fixNumber(d / this.projectileSpeed));
                 // encontrar la posicion del enemigo dentro de estos ticks
                 var impactPosition = enemy.getNextPosition(ticksToImpact);
                 if (!impactPosition) {
@@ -1668,8 +1682,7 @@ var Anuto;
                 d = Anuto.MathUtils.fixNumber(Math.sqrt((this.x - impactPosition.x) * (this.x - impactPosition.x) + (this.y - impactPosition.y) * (this.y - impactPosition.y)));
                 if (d < this.range) {
                     // recalculamos los ticks en los que va a impactar ya que estos determinan cuando se hace estallar al mortero
-                    var speed_1 = this.grade === 3 ? Anuto.GameConstants.MORTAR_SPEED * 5 : Anuto.GameConstants.MORTAR_SPEED;
-                    ticksToImpact = Math.floor(Anuto.MathUtils.fixNumber(d / speed_1));
+                    ticksToImpact = Math.floor(Anuto.MathUtils.fixNumber(d / this.projectileSpeed));
                     var dx = impactPosition.x - this.x;
                     var dy = impactPosition.y - this.y;
                     this.shootAngle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
@@ -1797,6 +1810,7 @@ var Anuto;
                     _this.canonShoot = "left";
                 default:
             }
+            _this.projectileSpeed = Anuto.GameConstants.BULLET_SPEED;
             _this.calculateTurretParameters();
             return _this;
         }
@@ -1854,13 +1868,12 @@ var Anuto;
             }
             var d = Anuto.MathUtils.fixNumber(Math.sqrt((this.x - enemy.x) * (this.x - enemy.x) + (this.y - enemy.y) * (this.y - enemy.y)));
             // cuantos ticks va a tardar la bala en llegar?
-            var ticksToImpact = Math.floor(Anuto.MathUtils.fixNumber(d / Anuto.GameConstants.BULLET_SPEED));
+            var ticksToImpact = Math.floor(Anuto.MathUtils.fixNumber(d / this.projectileSpeed));
             // encontrar la posicion del enemigo dentro de estos ticks
             var impactPosition = enemy.getNextPosition(ticksToImpact);
             // la posicion de impacto sigue estando dentro del radio de accion?
             var dx = impactPosition.x - this.x;
             var dy = impactPosition.y - this.y;
-            var impactSquareDistance = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
             switch (this.grade) {
                 case 2:
                 case 3:
@@ -1872,15 +1885,9 @@ var Anuto;
                     }
                 default:
             }
-            if (this.range * this.range > impactSquareDistance) {
-                this.shootAngle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
-                var bullet = new Anuto.Bullet({ c: this.position.c, r: this.position.r }, this.shootAngle, enemy, this.damage, this.canonShoot, this, this.engine);
-                this.engine.addBullet(bullet, this);
-            }
-            else {
-                // no se dispara y se vuelve a estar disponible para disparar
-                this.readyToShoot = true;
-            }
+            this.shootAngle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
+            var bullet = new Anuto.Bullet({ c: this.position.c, r: this.position.r }, this.shootAngle, enemy, this.damage, this.canonShoot, this, this.engine);
+            this.engine.addBullet(bullet, this);
         };
         return ProjectileTurret;
     }(Anuto.Turret));

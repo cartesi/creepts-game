@@ -20,11 +20,39 @@ module Anuto {
             this.minesCounter = 0;
             this.deviationAngle = 0;
             this.deviationRadius = 0;
+
+            this.projectileSpeed = GameConstants.MORTAR_SPEED;
+        }
+
+        public update(): void {
+
+            // cuando tiene grado 2 no hace falta calcular los enemigos que tenga en el radio de accion
+            if (this.grade === 2) {
+
+                if (this.readyToShoot) {
+
+                    this.readyToShoot = false;   
+                    this.shoot();
+            
+                } else {
+    
+                    this.f ++;
+    
+                    if (this.f >= this.reloadTicks) {
+                        this.readyToShoot = true;
+                        this.f = 0;
+                    }
+                }
+
+            } else {
+
+                super.update();
+            }
         }
 
         protected calculateTurretParameters(): void {
 
-            switch (this.grade) {
+            switch (this.grade) { 
 
                 case 1:
 
@@ -56,6 +84,9 @@ module Anuto {
                     this.range =  Math.round((.1 * this.level + 2.9) * 100) / 100;
                     this.priceImprovement =  Math.round( (39 / 2) * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + (665 / 2) * this.level + 596);
             
+                    this.projectileSpeed = 5 * GameConstants.MORTAR_SPEED;
+
+                    console.log("parametros recalculados");
                     break;
 
                 default:
@@ -122,10 +153,8 @@ module Anuto {
             
                 let d = MathUtils.fixNumber(Math.sqrt((this.x - enemy.x) * (this.x - enemy.x) + (this.y - enemy.y) * (this.y - enemy.y)));
 
-                let speed = this.grade === 3 ? GameConstants.MORTAR_SPEED * 5 : GameConstants.MORTAR_SPEED;
-
                 // cuantos ticks va a tardar el mortero en llegar?
-                let ticksToImpact = Math.floor(MathUtils.fixNumber(d / speed));
+                let ticksToImpact = Math.floor(MathUtils.fixNumber(d / this.projectileSpeed));
 
                 // encontrar la posicion del enemigo dentro de estos ticks
                 const impactPosition = enemy.getNextPosition(ticksToImpact);
@@ -153,9 +182,7 @@ module Anuto {
                 if (d < this.range){
 
                     // recalculamos los ticks en los que va a impactar ya que estos determinan cuando se hace estallar al mortero
-                    let speed = this.grade === 3 ? GameConstants.MORTAR_SPEED * 5 : GameConstants.MORTAR_SPEED;
-
-                    ticksToImpact = Math.floor(MathUtils.fixNumber(d / speed));
+                    ticksToImpact = Math.floor(MathUtils.fixNumber(d / this.projectileSpeed));
 
                     const dx = impactPosition.x - this.x;
                     const dy = impactPosition.y - this.y;

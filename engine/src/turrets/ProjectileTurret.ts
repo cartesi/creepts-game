@@ -18,6 +18,8 @@ module Anuto {
                 default:
             }
 
+            this.projectileSpeed = GameConstants.BULLET_SPEED;
+
             this.calculateTurretParameters();
         }
 
@@ -93,7 +95,7 @@ module Anuto {
             const d = MathUtils.fixNumber(Math.sqrt((this.x - enemy.x) * (this.x - enemy.x) +  (this.y - enemy.y) * (this.y - enemy.y)));
 
             // cuantos ticks va a tardar la bala en llegar?
-            const ticksToImpact = Math.floor(MathUtils.fixNumber(d / GameConstants.BULLET_SPEED));
+            const ticksToImpact = Math.floor(MathUtils.fixNumber(d / this.projectileSpeed));
 
             // encontrar la posicion del enemigo dentro de estos ticks
             const impactPosition = enemy.getNextPosition(ticksToImpact);
@@ -101,8 +103,6 @@ module Anuto {
             // la posicion de impacto sigue estando dentro del radio de accion?
             const dx = impactPosition.x - this.x;
             const dy = impactPosition.y - this.y;
-
-            const impactSquareDistance = MathUtils.fixNumber(dx * dx + dy * dy);
 
             switch (this.grade) {
 
@@ -116,17 +116,10 @@ module Anuto {
                 default:
             }
 
-            if (this.range * this.range > impactSquareDistance) {
+            this.shootAngle = MathUtils.fixNumber(Math.atan2(dy, dx));
+            const bullet = new Bullet({c: this.position.c, r: this.position.r}, this.shootAngle, enemy, this.damage, this.canonShoot, this, this.engine);
 
-                this.shootAngle = MathUtils.fixNumber(Math.atan2(dy, dx));
-                const bullet = new Bullet({c: this.position.c, r: this.position.r}, this.shootAngle, enemy, this.damage, this.canonShoot, this, this.engine);
-
-                this.engine.addBullet(bullet, this);
-
-            } else {
-                // no se dispara y se vuelve a estar disponible para disparar
-                this.readyToShoot = true;
-            }
+            this.engine.addBullet(bullet, this);
         }
     }
 }

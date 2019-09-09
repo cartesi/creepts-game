@@ -37,6 +37,7 @@ declare module Anuto {
         protected f: number;
         protected reloadTicks: number;
         protected readyToShoot: boolean;
+        protected projectileSpeed: number;
         protected engine: Engine;
         constructor(type: string, p: {
             r: number;
@@ -424,6 +425,7 @@ declare module Anuto {
             r: number;
             c: number;
         }, engine: any);
+        update(): void;
         protected calculateTurretParameters(): void;
         protected getPathCellsInRange(): {
             r: number;

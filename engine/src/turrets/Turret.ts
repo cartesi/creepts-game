@@ -31,6 +31,7 @@ module Anuto {
         protected f: number;
         protected reloadTicks: number;
         protected readyToShoot: boolean;
+        protected projectileSpeed: number;
         protected engine: Engine;
         
         constructor (type: string, p: {r: number, c: number}, engine: Engine) {
@@ -73,15 +74,9 @@ module Anuto {
 
             if (this.readyToShoot) {
 
-                // si es la de las minas no necesita tener a enemigos en rango
-                if (this.type === GameConstants.TURRET_LAUNCH && this.grade === 2) {
+                if (this.enemiesWithinRange.length > 0) {
                     this.readyToShoot = false;   
                     this.shoot();
-                } else {
-                    if (this.enemiesWithinRange.length > 0) {
-                        this.readyToShoot = false;   
-                        this.shoot();
-                    }
                 }
             
             } else {
@@ -168,8 +163,8 @@ module Anuto {
                 }
             }
 
-            if (enemiesAndSquaredDistances.length > 1 && (this.type === GameConstants.TURRET_PROJECTILE || this.type === GameConstants.TURRET_LASER)) {
-                
+            if (enemiesAndSquaredDistances.length > 1 && (this.type === GameConstants.TURRET_PROJECTILE || this.type === GameConstants.TURRET_LASER  || (this.type === GameConstants.TURRET_LAUNCH && this.grade !== 2))) {
+        
                 // ordenar a los enemigos dentro del radio de acción según la estrategia de disparo
                 switch (this.shootingStrategy) {
                     case GameConstants.STRATEGY_SHOOT_LAST:
