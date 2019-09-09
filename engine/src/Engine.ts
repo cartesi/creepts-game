@@ -268,13 +268,7 @@ module Anuto {
             this.waveEnemies = MathUtils.mergeSort(this.waveEnemies, function(e1: any , e2: any): boolean { return e1.t - e2.t < 0; });
 
             this.lastWaveTick = this._ticksCounter;
-
-            // if (this.waveActivated) {
-            //     this.waveReward += waveData.waveReward;
-            // } else {
-            //     this.waveReward = waveData.waveReward;
-            // }
-
+            
             this.waveReward = waveData.waveReward;
 
             this.waveActivated = true;
