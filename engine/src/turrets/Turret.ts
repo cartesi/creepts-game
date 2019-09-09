@@ -152,8 +152,24 @@ module Anuto {
 
                 if (enemy.life > 0 && enemy.l < this.engine.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
 
-                    const dx = this.x - enemy.x;
-                    const dy = this.y - enemy.y;
+                    let dx: number;
+                    let dy: number;
+
+                    // el laser y el pegamento son instantaneos
+                    if (this.type === GameConstants.TURRET_LASER || this.type === GameConstants.TURRET_GLUE) {
+
+                        dx = this.x - enemy.x;
+                        dy = this.y - enemy.y;
+
+                    } else {
+
+                        // donde estaran los enemigos cuando les impacten los proyectiles teniendo en cuenta la velocidad de estos?
+                        const deltaTicks = Math.round(this.range / this.projectileSpeed * .75);
+                        const enemyPosition = enemy.getNextPosition(deltaTicks);
+
+                        dx = this.x - enemyPosition.x;
+                        dy = this.y - enemyPosition.y;
+                    }
 
                     const squaredDist = MathUtils.fixNumber(dx * dx + dy * dy);    
 

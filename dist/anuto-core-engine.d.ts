@@ -419,8 +419,6 @@ declare module Anuto {
         explosionRange: number;
         numMines: number;
         private minesCounter;
-        private deviationRadius;
-        private deviationAngle;
         constructor(p: {
             r: number;
             c: number;

@@ -92,15 +92,13 @@ module Anuto {
                 enemy = this.enemiesWithinRange[0];
             }
         
-            const d = MathUtils.fixNumber(Math.sqrt((this.x - enemy.x) * (this.x - enemy.x) +  (this.y - enemy.y) * (this.y - enemy.y)));
+            const d = MathUtils.fixNumber(Math.sqrt((this.x - enemy.x) * (this.x - enemy.x) + (this.y - enemy.y) * (this.y - enemy.y)));
 
             // cuantos ticks va a tardar la bala en llegar?
             const ticksToImpact = Math.floor(MathUtils.fixNumber(d / this.projectileSpeed));
 
-            // encontrar la posicion del enemigo dentro de estos ticks
             const impactPosition = enemy.getNextPosition(ticksToImpact);
 
-            // la posicion de impacto sigue estando dentro del radio de accion?
             const dx = impactPosition.x - this.x;
             const dy = impactPosition.y - this.y;
 

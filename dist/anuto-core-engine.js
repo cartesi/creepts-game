@@ -138,8 +138,20 @@ var Anuto;
             for (var i = 0; i < this.engine.enemies.length; i++) {
                 var enemy = this.engine.enemies[i];
                 if (enemy.life > 0 && enemy.l < this.engine.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
-                    var dx = this.x - enemy.x;
-                    var dy = this.y - enemy.y;
+                    var dx = void 0;
+                    var dy = void 0;
+                    // el laser y el pegamento son instantaneos
+                    if (this.type === Anuto.GameConstants.TURRET_LASER || this.type === Anuto.GameConstants.TURRET_GLUE) {
+                        dx = this.x - enemy.x;
+                        dy = this.y - enemy.y;
+                    }
+                    else {
+                        // donde estaran los enemigos cuando les impacten los proyectiles teniendo en cuenta la velocidad de estos?
+                        var deltaTicks = Math.round(this.range / this.projectileSpeed * .75);
+                        var enemyPosition = enemy.getNextPosition(deltaTicks);
+                        dx = this.x - enemyPosition.x;
+                        dy = this.y - enemyPosition.y;
+                    }
                     var squaredDist = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
                     if (squaredRange >= squaredDist) {
                         enemiesAndSquaredDistances.push({ enemy: enemy, squareDist: squaredDist });
@@ -1565,8 +1577,6 @@ var Anuto;
             _this.calculateTurretParameters();
             _this.numMines = 0;
             _this.minesCounter = 0;
-            _this.deviationAngle = 0;
-            _this.deviationRadius = 0;
             _this.projectileSpeed = Anuto.GameConstants.MORTAR_SPEED;
             return _this;
         }
@@ -1614,7 +1624,6 @@ var Anuto;
                     this.range = Math.round((.1 * this.level + 2.9) * 100) / 100;
                     this.priceImprovement = Math.round((39 / 2) * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + (665 / 2) * this.level + 596);
                     this.projectileSpeed = 5 * Anuto.GameConstants.MORTAR_SPEED;
-                    console.log("parametros recalculados");
                     break;
                 default:
             }
@@ -1660,39 +1669,15 @@ var Anuto;
                 else {
                     enemy = this.enemiesWithinRange[0];
                 }
-                var d = Anuto.MathUtils.fixNumber(Math.sqrt((this.x - enemy.x) * (this.x - enemy.x) + (this.y - enemy.y) * (this.y - enemy.y)));
-                // cuantos ticks va a tardar el mortero en llegar?
-                var ticksToImpact = Math.floor(Anuto.MathUtils.fixNumber(d / this.projectileSpeed));
-                // encontrar la posicion del enemigo dentro de estos ticks
+                var ticksToImpact = Math.round(this.range / this.projectileSpeed) * .75;
                 var impactPosition = enemy.getNextPosition(ticksToImpact);
-                if (!impactPosition) {
-                    this.readyToShoot = true;
-                    return;
-                }
-                if (this.grade === 1) {
-                    // le damos una cierta desviacion para que no explote directamente justo encima del enemigo
-                    var deviation_x = Anuto.MathUtils.fixNumber(this.deviationRadius * Math.cos(this.deviationAngle * Math.PI / 180));
-                    var deviation_y = Anuto.MathUtils.fixNumber(this.deviationRadius * Math.sin(this.deviationAngle * Math.PI / 180));
-                    impactPosition.x += deviation_x;
-                    impactPosition.y += deviation_y;
-                    this.deviationRadius = this.deviationRadius === .75 ? 0 : this.deviationRadius + .25;
-                    this.deviationAngle = this.deviationAngle === 315 ? 0 : this.deviationAngle + 45;
-                }
-                // el impacto se producirá dentro del alcance de la torreta?
-                d = Anuto.MathUtils.fixNumber(Math.sqrt((this.x - impactPosition.x) * (this.x - impactPosition.x) + (this.y - impactPosition.y) * (this.y - impactPosition.y)));
-                if (d < this.range) {
-                    // recalculamos los ticks en los que va a impactar ya que estos determinan cuando se hace estallar al mortero
-                    ticksToImpact = Math.floor(Anuto.MathUtils.fixNumber(d / this.projectileSpeed));
-                    var dx = impactPosition.x - this.x;
-                    var dy = impactPosition.y - this.y;
-                    this.shootAngle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
-                    var mortar = new Anuto.Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage, this.grade, this, this.engine);
-                    this.engine.addMortar(mortar, this);
-                }
-                else {
-                    // no se lanza el mortero y se vuelve a estar disponible para disparar
-                    this.readyToShoot = true;
-                }
+                var d = Anuto.MathUtils.fixNumber(Math.sqrt((this.x - impactPosition.x) * (this.x - impactPosition.x) + (this.y - impactPosition.y) * (this.y - impactPosition.y)));
+                ticksToImpact = Math.floor(Anuto.MathUtils.fixNumber(d / this.projectileSpeed));
+                var dx = impactPosition.x - this.x;
+                var dy = impactPosition.y - this.y;
+                this.shootAngle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
+                var mortar = new Anuto.Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage, this.grade, this, this.engine);
+                this.engine.addMortar(mortar, this);
             }
         };
         return LaunchTurret;
@@ -1869,9 +1854,7 @@ var Anuto;
             var d = Anuto.MathUtils.fixNumber(Math.sqrt((this.x - enemy.x) * (this.x - enemy.x) + (this.y - enemy.y) * (this.y - enemy.y)));
             // cuantos ticks va a tardar la bala en llegar?
             var ticksToImpact = Math.floor(Anuto.MathUtils.fixNumber(d / this.projectileSpeed));
-            // encontrar la posicion del enemigo dentro de estos ticks
             var impactPosition = enemy.getNextPosition(ticksToImpact);
-            // la posicion de impacto sigue estando dentro del radio de accion?
             var dx = impactPosition.x - this.x;
             var dy = impactPosition.y - this.y;
             switch (this.grade) {
