@@ -115,6 +115,8 @@ module Anuto {
             this.allEnemiesSpawned = false;
             this.enemiesSpawned = 0;
             this.waveEnemiesLength = 0;
+
+            this.remainingReward = 0;
         }
 
         public initWaveVars(): void {
@@ -180,12 +182,13 @@ module Anuto {
 
             if (this.waveActivated) {
                 this.removeProjectilesAndAccountDamage();
+            }
 
                 this.teleport();
 
                 this.checkCollisions();
                 this.spawnEnemies();
-            }
+            
             
             this.enemies.forEach(function (enemy) {
                 enemy.update();
@@ -223,6 +226,9 @@ module Anuto {
             if (!this.canLaunchNextWave) {
                 return false;
             }
+
+            this._credits += this._bonus;
+            this._creditsEarned += this._bonus;
 
             this.canLaunchNextWave = false;
 
@@ -262,16 +268,17 @@ module Anuto {
 
             this.lastWaveTick = this._ticksCounter;
 
-            if (this.waveActivated) {
-                this.waveReward += waveData.waveReward;
-            } else {
-                this.waveReward = waveData.waveReward;
-            }
+            // if (this.waveActivated) {
+            //     this.waveReward += waveData.waveReward;
+            // } else {
+            //     this.waveReward = waveData.waveReward;
+            // }
+
+            this.waveReward = waveData.waveReward;
 
             this.waveActivated = true;
 
             this.waveEnemiesLength += newWaveEnemies.length;
-            this.remainingReward = 0;
 
             this.waveDefaultHealth = 0;
             for (let i = 0; i < this.waveEnemies.length; i++) {

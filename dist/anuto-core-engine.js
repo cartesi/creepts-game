@@ -432,6 +432,7 @@ var Anuto;
             this.allEnemiesSpawned = false;
             this.enemiesSpawned = 0;
             this.waveEnemiesLength = 0;
+            this.remainingReward = 0;
         }
         Engine.prototype.initWaveVars = function () {
             this.t = Date.now();
@@ -479,10 +480,10 @@ var Anuto;
             }
             if (this.waveActivated) {
                 this.removeProjectilesAndAccountDamage();
-                this.teleport();
-                this.checkCollisions();
-                this.spawnEnemies();
             }
+            this.teleport();
+            this.checkCollisions();
+            this.spawnEnemies();
             this.enemies.forEach(function (enemy) {
                 enemy.update();
             }, this);
@@ -510,6 +511,8 @@ var Anuto;
             if (!this.canLaunchNextWave) {
                 return false;
             }
+            this._credits += this._bonus;
+            this._creditsEarned += this._bonus;
             this.canLaunchNextWave = false;
             this.noEnemiesOnStage = false;
             this.allEnemiesSpawned = false;
@@ -534,15 +537,14 @@ var Anuto;
             this.waveEnemies = this.waveEnemies.concat(newWaveEnemies);
             this.waveEnemies = Anuto.MathUtils.mergeSort(this.waveEnemies, function (e1, e2) { return e1.t - e2.t < 0; });
             this.lastWaveTick = this._ticksCounter;
-            if (this.waveActivated) {
-                this.waveReward += waveData.waveReward;
-            }
-            else {
-                this.waveReward = waveData.waveReward;
-            }
+            // if (this.waveActivated) {
+            //     this.waveReward += waveData.waveReward;
+            // } else {
+            //     this.waveReward = waveData.waveReward;
+            // }
+            this.waveReward = waveData.waveReward;
             this.waveActivated = true;
             this.waveEnemiesLength += newWaveEnemies.length;
-            this.remainingReward = 0;
             this.waveDefaultHealth = 0;
             for (var i = 0; i < this.waveEnemies.length; i++) {
                 this.waveDefaultHealth += this.enemyData[this.waveEnemies[i].type].life;
