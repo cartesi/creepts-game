@@ -8,9 +8,10 @@ import { PreloadScene } from "../scenes/PreloadScene";
 import { BattleScene } from "../scenes/battle-scene/BattleScene";
 import { MapsScene } from "../scenes/maps-scene/MapsScene";
 import { GameManager } from "../GameManager";
-import { string } from "prop-types";
+import { RouteComponentProps } from "react-router";
 
-export interface IGameProps { map: string }
+type TParams = { map: string };
+export interface IGameProps extends RouteComponentProps<TParams> { }
 
 export default class IGame extends React.Component<IGameProps, any> {
 
@@ -46,19 +47,23 @@ export default class IGame extends React.Component<IGameProps, any> {
             scale: {
                 mode: Phaser.Scale.FIT
             },
-    
+
             scene: null
         };
-        
+
         // If compilation error here, compare Phaser definitions file of working copy (phaser.d.ts, line 48040 on 27-05-2019)
         // Also make sure to delete all *.ts files in node_modules/trailz folder
         this.game = new Game(gameConfig);
 
-        this.game.scene.add(BootScene.name, BootScene, true, { mapIndex: this.maps[this.props.map] || 0 });
+        // XXX: react-router makes this a little more tedious...
+        // const map = this.props.map;
+        const map = this.props.match.params.map;
+
+        this.game.scene.add(BootScene.name, BootScene, true, { mapIndex: this.maps[map] || 0 });
         this.game.scene.add(PreloadScene.name, PreloadScene);
         this.game.scene.add(BattleScene.name, BattleScene);
         this.game.scene.add(MapsScene.name, MapsScene);
-        
+
         this.updateDimensions();
     }
 
@@ -78,12 +83,17 @@ export default class IGame extends React.Component<IGameProps, any> {
     }
 
     componentDidUpdate(prevProps: IGameProps, prevState: any, snapshot: any) {
-        if (this.props.map !== prevProps.map) {
-            GameManager.mapSelected(this.maps[this.props.map]);
+        // const map = this.props.map;
+        // const prevMap = prevProps.map;
+        const map = this.props.match.params.map;
+        const prevMap = prevProps.match.params.map;
+
+        if (map !== prevMap) {
+            GameManager.mapSelected(this.maps[map]);
         }
     }
 
     public render() {
-        return <div id="phaser-game" style={{height: `${this.state.height}px`}} />
+        return <div id="phaser-game" style={{ height: `${this.state.height}px` }} />
     }
 }

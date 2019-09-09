@@ -10,6 +10,7 @@
         "@types/node": "^12.7.4",
         "@types/react": "^16.9.2",
         "@types/react-dom": "^16.9.0",
+        "@types/react-router": "^5.0.3",
         "webpack": "4.35.3",
         "webpack-cli": "3.3.5",
         "webpack-dev-server": "3.7.2"
@@ -19,7 +20,8 @@
         "howler": "^2.1.2",
         "phaser": "3.19.0",
         "react": "^16.9.0",
-        "react-dom": "^16.9.0"
+        "react-dom": "^16.9.0",
+        "react-router-dom": "^5.0.1"
     },
     "scripts": {
         "dev": "webpack --mode development && webpack-dev-server --mode development",
