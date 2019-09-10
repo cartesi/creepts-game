@@ -6,10 +6,7 @@ module Anuto {
         public numMines: number;
 
         private minesCounter: number;
-        // se va desviando del objetivo de una manera ciclica
-        private  deviationRadius: number; // puede ser 0, .25. .5 ó .75   1 de cada 4 veces disparara al enemigo en el centro
-        private  deviationAngle: number; // se va incrementando de 45 en 45 grados
-
+      
         constructor (p: {r: number, c: number}, engine) {
             
             super(GameConstants.TURRET_LAUNCH, p, engine);
@@ -18,13 +15,39 @@ module Anuto {
 
             this.numMines = 0;
             this.minesCounter = 0;
-            this.deviationAngle = 0;
-            this.deviationRadius = 0;
+          
+            this.projectileSpeed = GameConstants.MORTAR_SPEED;
+        }
+
+        public update(): void {
+
+            // cuando tiene grado 2 no hace falta calcular los enemigos que tenga en el radio de accion
+            if (this.grade === 2) {
+
+                if (this.readyToShoot) {
+
+                    this.readyToShoot = false;   
+                    this.shoot();
+            
+                } else {
+    
+                    this.f ++;
+    
+                    if (this.f >= this.reloadTicks) {
+                        this.readyToShoot = true;
+                        this.f = 0;
+                    }
+                }
+
+            } else {
+
+                super.update();
+            }
         }
 
         protected calculateTurretParameters(): void {
 
-            switch (this.grade) {
+            switch (this.grade) { 
 
                 case 1:
 
@@ -56,6 +79,8 @@ module Anuto {
                     this.range =  Math.round((.1 * this.level + 2.9) * 100) / 100;
                     this.priceImprovement =  Math.round( (39 / 2) * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + (665 / 2) * this.level + 596);
             
+                    this.projectileSpeed = 5 * GameConstants.MORTAR_SPEED;
+
                     break;
 
                 default:
@@ -119,57 +144,22 @@ module Anuto {
                 } else {
                     enemy = this.enemiesWithinRange[0];
                 }
-            
-                let d = MathUtils.fixNumber(Math.sqrt((this.x - enemy.x) * (this.x - enemy.x) + (this.y - enemy.y) * (this.y - enemy.y)));
 
-                let speed = this.grade === 3 ? GameConstants.MORTAR_SPEED * 5 : GameConstants.MORTAR_SPEED;
+                let ticksToImpact = Math.round(this.range / this.projectileSpeed) * .75;
 
-                // cuantos ticks va a tardar el mortero en llegar?
-                let ticksToImpact = Math.floor(MathUtils.fixNumber(d / speed));
-
-                // encontrar la posicion del enemigo dentro de estos ticks
                 const impactPosition = enemy.getNextPosition(ticksToImpact);
-
-                if (!impactPosition) {
-                    this.readyToShoot = true;
-                    return;
-                }
-
-                if (this.grade === 1) {
-                    // le damos una cierta desviacion para que no explote directamente justo encima del enemigo
-                    const deviation_x = MathUtils.fixNumber(this.deviationRadius * Math.cos(this.deviationAngle * Math.PI / 180));
-                    const deviation_y = MathUtils.fixNumber(this.deviationRadius * Math.sin(this.deviationAngle * Math.PI / 180));
-
-                    impactPosition.x += deviation_x;
-                    impactPosition.y += deviation_y;
-
-                    this.deviationRadius = this.deviationRadius === .75 ? 0 : this.deviationRadius + .25;
-                    this.deviationAngle = this.deviationAngle === 315 ? 0 : this.deviationAngle + 45;
-                }
-
-                // el impacto se producirá dentro del alcance de la torreta?
-                d = MathUtils.fixNumber(Math.sqrt((this.x - impactPosition.x) * (this.x - impactPosition.x) + (this.y - impactPosition.y) * (this.y - impactPosition.y)));
+            
+                let d = MathUtils.fixNumber(Math.sqrt((this.x - impactPosition.x) * (this.x - impactPosition.x) + (this.y - impactPosition.y) * (this.y - impactPosition.y)));
                 
-                if (d < this.range){
+                ticksToImpact = Math.floor(MathUtils.fixNumber(d / this.projectileSpeed));
 
-                    // recalculamos los ticks en los que va a impactar ya que estos determinan cuando se hace estallar al mortero
-                    let speed = this.grade === 3 ? GameConstants.MORTAR_SPEED * 5 : GameConstants.MORTAR_SPEED;
-
-                    ticksToImpact = Math.floor(MathUtils.fixNumber(d / speed));
-
-                    const dx = impactPosition.x - this.x;
-                    const dy = impactPosition.y - this.y;
-        
-                    this.shootAngle =  MathUtils.fixNumber(Math.atan2(dy, dx));
-                    const mortar = new Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage, this.grade, this, this.engine);
-        
-                    this.engine.addMortar(mortar, this);
-
-                } else {
-
-                    // no se lanza el mortero y se vuelve a estar disponible para disparar
-                    this.readyToShoot = true;
-                }
+                const dx = impactPosition.x - this.x;
+                const dy = impactPosition.y - this.y;
+    
+                this.shootAngle =  MathUtils.fixNumber(Math.atan2(dy, dx));
+                const mortar = new Mortar(this.position, this.shootAngle, ticksToImpact, this.explosionRange, this.damage, this.grade, this, this.engine);
+    
+                this.engine.addMortar(mortar, this);
             }
         }
     }

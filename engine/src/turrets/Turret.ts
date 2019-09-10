@@ -31,6 +31,7 @@ module Anuto {
         protected f: number;
         protected reloadTicks: number;
         protected readyToShoot: boolean;
+        protected projectileSpeed: number;
         protected engine: Engine;
         
         constructor (type: string, p: {r: number, c: number}, engine: Engine) {
@@ -73,15 +74,9 @@ module Anuto {
 
             if (this.readyToShoot) {
 
-                // si es la de las minas no necesita tener a enemigos en rango
-                if (this.type === GameConstants.TURRET_LAUNCH && this.grade === 2) {
+                if (this.enemiesWithinRange.length > 0) {
                     this.readyToShoot = false;   
                     this.shoot();
-                } else {
-                    if (this.enemiesWithinRange.length > 0) {
-                        this.readyToShoot = false;   
-                        this.shoot();
-                    }
                 }
             
             } else {
@@ -157,8 +152,24 @@ module Anuto {
 
                 if (enemy.life > 0 && enemy.l < this.engine.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
 
-                    const dx = this.x - enemy.x;
-                    const dy = this.y - enemy.y;
+                    let dx: number;
+                    let dy: number;
+
+                    // el laser y el pegamento son instantaneos
+                    if (this.type === GameConstants.TURRET_LASER || this.type === GameConstants.TURRET_GLUE) {
+
+                        dx = this.x - enemy.x;
+                        dy = this.y - enemy.y;
+
+                    } else {
+
+                        // donde estaran los enemigos cuando les impacten los proyectiles teniendo en cuenta la velocidad de estos?
+                        const deltaTicks = Math.round(this.range / this.projectileSpeed * .75);
+                        const enemyPosition = enemy.getNextPosition(deltaTicks);
+
+                        dx = this.x - enemyPosition.x;
+                        dy = this.y - enemyPosition.y;
+                    }
 
                     const squaredDist = MathUtils.fixNumber(dx * dx + dy * dy);    
 
@@ -168,8 +179,8 @@ module Anuto {
                 }
             }
 
-            if (enemiesAndSquaredDistances.length > 1 && (this.type === GameConstants.TURRET_PROJECTILE || this.type === GameConstants.TURRET_LASER)) {
-                
+            if (enemiesAndSquaredDistances.length > 1 && (this.type === GameConstants.TURRET_PROJECTILE || this.type === GameConstants.TURRET_LASER  || (this.type === GameConstants.TURRET_LAUNCH && this.grade !== 2))) {
+        
                 // ordenar a los enemigos dentro del radio de acción según la estrategia de disparo
                 switch (this.shootingStrategy) {
                     case GameConstants.STRATEGY_SHOOT_LAST:
