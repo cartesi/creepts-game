@@ -985,5 +985,3 @@ module Anuto {
         }
     }
 }
-
-module.exports = Anuto;

@@ -1077,7 +1077,6 @@ var Anuto;
     }());
     Anuto.Engine = Engine;
 })(Anuto || (Anuto = {}));
-module.exports = Anuto;
 var Anuto;
 (function (Anuto) {
     var GameConstants = /** @class */ (function () {
@@ -1990,4 +1989,5 @@ var Anuto;
     }());
     Anuto.MathUtils = MathUtils;
 })(Anuto || (Anuto = {}));
+module.exports = Anuto;
 //# sourceMappingURL=anuto-core-engine.js.map
