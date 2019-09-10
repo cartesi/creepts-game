@@ -144,7 +144,7 @@ module Anuto {
         protected getEnemiesWithinRange(): Enemy [] {
 
             let enemiesAndSquaredDistances: {enemy: Enemy, squareDist: number} [] = [];
-            let squaredRange = MathUtils.fixNumber(this.range * this.range);
+            const squaredRange = MathUtils.fixNumber(this.range * this.range);
             
             for (let i = 0; i < this.engine.enemies.length; i ++) {
 
@@ -165,14 +165,14 @@ module Anuto {
 
                         // donde estaran los enemigos cuando les impacten los proyectiles teniendo en cuenta la velocidad de estos?
                         const deltaTicks = Math.round(this.range / this.projectileSpeed * .75);
-                        const enemyPosition = enemy.getNextPosition(deltaTicks);
+                        const enemyNextPosition = enemy.getNextPosition(deltaTicks);
 
-                        if (!enemyPosition) {
+                        if (!enemyNextPosition) {
                             continue;
                         }
 
-                        dx = this.x - enemyPosition.x;
-                        dy = this.y - enemyPosition.y;
+                        dx = this.x - enemyNextPosition.x;
+                        dy = this.y - enemyNextPosition.y;
                     }
 
                     const squaredDist = MathUtils.fixNumber(dx * dx + dy * dy);    

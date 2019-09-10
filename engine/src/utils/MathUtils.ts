@@ -125,6 +125,7 @@ module Anuto {
                     result.push(list2[index2]);
                     index2++;
                 }
+                
                 if (index1 === list1.length || index2 === list2.length) {
                     break;
                 }
@@ -133,6 +134,7 @@ module Anuto {
             if (index1 < list1.length) {
                 return result.concat(list1.slice(index1));
             }
+
             if (index2 < list2.length) {
                 return result.concat(list2.slice(index2));
             }
