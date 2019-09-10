@@ -167,6 +167,10 @@ module Anuto {
                         const deltaTicks = Math.round(this.range / this.projectileSpeed * .75);
                         const enemyPosition = enemy.getNextPosition(deltaTicks);
 
+                        if (!enemyPosition) {
+                            continue;
+                        }
+
                         dx = this.x - enemyPosition.x;
                         dy = this.y - enemyPosition.y;
                     }

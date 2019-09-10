@@ -149,6 +149,9 @@ var Anuto;
                         // donde estaran los enemigos cuando les impacten los proyectiles teniendo en cuenta la velocidad de estos?
                         var deltaTicks = Math.round(this.range / this.projectileSpeed * .75);
                         var enemyPosition = enemy.getNextPosition(deltaTicks);
+                        if (!enemyPosition) {
+                            continue;
+                        }
                         dx = this.x - enemyPosition.x;
                         dy = this.y - enemyPosition.y;
                     }
@@ -542,11 +545,6 @@ var Anuto;
             this.waveEnemies = this.waveEnemies.concat(newWaveEnemies);
             this.waveEnemies = Anuto.MathUtils.mergeSort(this.waveEnemies, function (e1, e2) { return e1.t - e2.t < 0; });
             this.lastWaveTick = this._ticksCounter;
-            // if (this.waveActivated) {
-            //     this.waveReward += waveData.waveReward;
-            // } else {
-            //     this.waveReward = waveData.waveReward;
-            // }
             this.waveReward = waveData.waveReward;
             this.waveActivated = true;
             this.waveEnemiesLength += newWaveEnemies.length;
