@@ -64,6 +64,8 @@ declare module Anuto {
         speed: number;
         x: number;
         y: number;
+        prevX: number;
+        prevY: number;
         creationTick: number;
         value: number;
         boundingRadius: number;

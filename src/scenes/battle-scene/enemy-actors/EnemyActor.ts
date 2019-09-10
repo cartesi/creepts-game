@@ -1,7 +1,6 @@
 import { GameConstants } from "../../../GameConstants";
 import { GameVars } from "../../../GameVars";
 import { LifeBar } from "./LifeBar";
-import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from "constants";
 
 export class EnemyActor extends Phaser.GameObjects.Container {
 
@@ -20,7 +19,7 @@ export class EnemyActor extends Phaser.GameObjects.Container {
         this.id = this.anutoEnemy.id;
         this.type = this.anutoEnemy.type;
         this.alpha = 0;
-
+       
         this.lifeBar = new LifeBar(this.scene, this.anutoEnemy.life);
         this.lifeBar.y = -32;
         this.lifeBar.x -= LifeBar.WIDTH / 2;
@@ -31,6 +30,10 @@ export class EnemyActor extends Phaser.GameObjects.Container {
     }
 
     public update(time: number, delta: number): void {
+
+        if (this.anutoEnemy.life === 0) {
+            return;
+        }
 
         if (this.anutoEnemy.teleporting) {
             this.scaleX = .175;
@@ -103,6 +106,22 @@ export class EnemyActor extends Phaser.GameObjects.Container {
     public die(): void {
 
         this.lifeBar.visible = false;
+
+        // a veces la bala impacta contra un enemigo q ya esta muerto
+        // y que ya no se mueve. por esto hacemos q el enemigo
+        // al desaparecer continue moviendose
+        let f = this.type === Anuto.GameConstants.ENEMY_FLIER || this.type === Anuto.GameConstants.ENEMY_RUNNER ? 3 : 1.5;
+
+        const dx = f * (this.anutoEnemy.x - this.anutoEnemy.prevX) * GameConstants.CELLS_SIZE;
+        const dy = f * (this.anutoEnemy.y - this.anutoEnemy.prevY) * GameConstants.CELLS_SIZE;
+
+        this.scene.tweens.add({
+            targets: this,
+            x: this.x + dx,
+            y: this.y + dy,
+            ease: Phaser.Math.Easing.Cubic.Out,
+            duration: 600
+        });
 
         this.scene.tweens.add({
             targets: this,

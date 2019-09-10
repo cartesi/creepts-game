@@ -612,7 +612,7 @@ module Anuto {
                         
                         enemyPosition = {x: enemy.x, y: enemy.y};
 
-                        let boundingRadius = enemy.life > 0 ? enemy.boundingRadius : 1.25 * enemy.boundingRadius;
+                        let boundingRadius = enemy.life > 0 ? enemy.boundingRadius : 1.65 * enemy.boundingRadius;
     
                         enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, boundingRadius);
     

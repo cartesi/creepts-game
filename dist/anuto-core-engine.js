@@ -239,6 +239,8 @@ var Anuto;
             var p = this.engine.getPathPosition(this.l);
             this.x = p.x;
             this.y = p.y;
+            this.prevX = this.x;
+            this.prevY = this.y;
             this.boundingRadius = this.type === Anuto.GameConstants.ENEMY_RUNNER ? .5 : .475;
             switch (this.type) {
                 case Anuto.GameConstants.ENEMY_HEALER:
@@ -288,6 +290,8 @@ var Anuto;
                 }
             }
             this.l = Anuto.MathUtils.fixNumber(this.l + speed);
+            this.prevX = this.x;
+            this.prevY = this.y;
             if (this.l >= this.engine.enemiesPathCells.length - 1) {
                 this.x = this.engine.enemiesPathCells[this.engine.enemiesPathCells.length - 1].c;
                 this.y = this.engine.enemiesPathCells[this.engine.enemiesPathCells.length - 1].r;
@@ -777,7 +781,7 @@ var Anuto;
                     // no importa si el enemigo ya ha muerto la bala se marca cuando alcanza la posicion que el enemigo muerto tuvo
                     if (enemy) {
                         enemyPosition = { x: enemy.x, y: enemy.y };
-                        var boundingRadius = enemy.life > 0 ? enemy.boundingRadius : 1.25 * enemy.boundingRadius;
+                        var boundingRadius = enemy.life > 0 ? enemy.boundingRadius : 1.65 * enemy.boundingRadius;
                         enemyHit = Anuto.MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, boundingRadius);
                         if (enemyHit) {
                             this.bulletsColliding.push(bullet);
@@ -1989,5 +1993,8 @@ var Anuto;
     }());
     Anuto.MathUtils = MathUtils;
 })(Anuto || (Anuto = {}));
+<<<<<<< Updated upstream
 module.exports = Anuto;
+=======
+>>>>>>> Stashed changes
 //# sourceMappingURL=anuto-core-engine.js.map

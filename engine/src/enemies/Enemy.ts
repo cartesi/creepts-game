@@ -9,6 +9,8 @@ module Anuto {
         public speed: number;
         public x: number;
         public y: number;
+        public prevX: number;
+        public prevY: number;
         public creationTick: number;
         public value: number;
         public boundingRadius: number;
@@ -62,6 +64,8 @@ module Anuto {
 
             this.x = p.x;
             this.y = p.y; 
+            this.prevX = this.x;
+            this.prevY = this.y;
 
             this.boundingRadius = this.type === GameConstants.ENEMY_RUNNER ? .5 : .475;
 
@@ -124,6 +128,9 @@ module Anuto {
             }
            
             this.l = MathUtils.fixNumber(this.l + speed);
+
+            this.prevX = this.x;
+            this.prevY = this.y;
 
             if (this.l >= this.engine.enemiesPathCells.length - 1) {
 
