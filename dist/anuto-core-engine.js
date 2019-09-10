@@ -1993,8 +1993,10 @@ var Anuto;
     }());
     Anuto.MathUtils = MathUtils;
 })(Anuto || (Anuto = {}));
-<<<<<<< Updated upstream
-module.exports = Anuto;
-=======
->>>>>>> Stashed changes
+try {
+    module.exports = Anuto;
+}
+catch (error) {
+    // 
+}
 //# sourceMappingURL=anuto-core-engine.js.map

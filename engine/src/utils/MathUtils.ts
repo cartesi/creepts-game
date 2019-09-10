@@ -144,4 +144,10 @@ module Anuto {
     }
 }
 
-module.exports = Anuto;
+try {
+    module.exports = Anuto;
+} catch (error) {
+    // 
+}
+
+
