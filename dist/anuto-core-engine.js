@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    };
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -148,12 +148,12 @@ var Anuto;
                     else {
                         // donde estaran los enemigos cuando les impacten los proyectiles teniendo en cuenta la velocidad de estos?
                         var deltaTicks = Math.round(this.range / this.projectileSpeed * .75);
-                        var enemyPosition = enemy.getNextPosition(deltaTicks);
-                        if (!enemyPosition) {
+                        var enemyNextPosition = enemy.getNextPosition(deltaTicks);
+                        if (!enemyNextPosition) {
                             continue;
                         }
-                        dx = this.x - enemyPosition.x;
-                        dy = this.y - enemyPosition.y;
+                        dx = this.x - enemyNextPosition.x;
+                        dy = this.y - enemyNextPosition.y;
                     }
                     var squaredDist = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
                     if (squaredRange >= squaredDist) {
@@ -1077,6 +1077,7 @@ var Anuto;
     }());
     Anuto.Engine = Engine;
 })(Anuto || (Anuto = {}));
+module.exports = Anuto;
 var Anuto;
 (function (Anuto) {
     var GameConstants = /** @class */ (function () {
@@ -1989,6 +1990,4 @@ var Anuto;
     }());
     Anuto.MathUtils = MathUtils;
 })(Anuto || (Anuto = {}));
-
-module.exports = Anuto;
 //# sourceMappingURL=anuto-core-engine.js.map
