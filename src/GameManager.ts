@@ -5,7 +5,7 @@ import mapsData from "../assets/config/maps.json";
 
 export class GameManager {
 
-    public static init(data: any): void {
+    public static init(): void {
 
         GameVars.mapsData = mapsData;
 
@@ -29,10 +29,10 @@ export class GameManager {
             }
         }
 
-        GameManager.readGameData(data);
+        GameManager.readGameData();
     }
 
-    public static readGameData(data: any): void {
+    public static readGameData(): void {
 
         GameManager.getGameStorageData(
             GameConstants.SAVED_GAME_DATA_KEY,
@@ -48,7 +48,7 @@ export class GameManager {
                     };
                 }
 
-                GameManager.startGame(data);
+                GameManager.startGame();
             }
         );
     }
@@ -58,24 +58,25 @@ export class GameManager {
         GameVars.currentScene = scene;
     }
 
-    public static onGameAssetsLoaded(data: any): void {
+    public static onGameAssetsLoaded(): void {
 
         AudioManager.init();
 
-        GameManager.enterBattleScene(data.mapIndex || 0);
+        GameManager.enterBattleScene();
     }
 
     public static mapSelected(index: number): void {
 
+        GameVars.currentMapData = GameVars.mapsData[index];
         GameVars.gameData.currentMapIndex = index;
         GameManager.writeGameData();
 
-        GameManager.enterBattleScene(index);
+        GameManager.enterBattleScene();
     }
 
-    public static enterBattleScene(mapIndex: number): void {
+    public static enterBattleScene(): void {
 
-        GameVars.currentScene.scene.start("BattleScene", { mapIndex });
+        GameVars.currentScene.scene.start("BattleScene");
     }
 
     public static enterMapScene(): void {
@@ -85,7 +86,7 @@ export class GameManager {
 
     public static reset(): void {
 
-        GameManager.enterBattleScene(0);
+        GameManager.enterBattleScene();
     }
 
     public static writeGameData(): void {
@@ -112,7 +113,7 @@ export class GameManager {
         }
     }
 
-    private static startGame(data: any): void {
+    private static startGame(): void {
 
         if (GameVars.gameData.scores.length === 0) {
             for (let i = 0; i < GameVars.mapsData.length; i++) {
@@ -120,7 +121,10 @@ export class GameManager {
             }
         }
 
-        GameVars.currentScene.scene.start("PreloadScene", data);
+        GameVars.gameData.currentMapIndex = GameVars.gameData.currentMapIndex;
+        GameVars.currentMapData = GameVars.mapsData[GameVars.gameData.currentMapIndex];
+
+        GameVars.currentScene.scene.start("PreloadScene");
     }
 
     private static getGameStorageData(key: string, successCb: Function): void {

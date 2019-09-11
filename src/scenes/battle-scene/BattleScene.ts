@@ -18,21 +18,21 @@ export class BattleScene extends Phaser.Scene {
         BattleScene.currentInstance = this;
     }
 
-    public create(data: any): void {
+    public create(): void {
+
         GameVars.currentScene = this;
 
         this.cameras.main.setBackgroundColor(0xCCCCCC);
 
-        const map: MapObject = GameVars.mapsData[data.mapIndex];
-        BattleManager.init(map);
+        BattleManager.init();
 
-        this.boardContainer = new BoardContainer(this, map);
+        this.boardContainer = new BoardContainer(this);
         this.add.existing(this.boardContainer);
         
         this.hud = new HUD(this);
         this.add.existing(this.hud);
 
-        this.gui = new GUI(this, map);
+        this.gui = new GUI(this);
         this.add.existing(this.gui);
 
         // this.boardContainer.addInitialTowers();

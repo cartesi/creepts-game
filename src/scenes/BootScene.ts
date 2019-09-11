@@ -10,7 +10,7 @@ export class BootScene extends Phaser.Scene {
         super("BootScene");
     }
 
-    public create(data: any): void {
+    public create(): void {
 
         this.add.text(-100, -100, "abcdefg", { fontFamily: "Rubik-Light", fontSize: 28, color: "#A6F834" });
         this.add.text(-100, -100, "abcdefg", { fontFamily: "Rubik-Regular", fontSize: 28, color: "#A6F834" });
@@ -20,6 +20,6 @@ export class BootScene extends Phaser.Scene {
 
         this.scene.setVisible(false);
 
-        GameManager.init(data);
+        GameManager.init();
     }
 }

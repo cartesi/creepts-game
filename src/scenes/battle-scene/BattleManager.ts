@@ -11,17 +11,17 @@ export class BattleManager {
 
     public static anutoEngine: Anuto.Engine;
 
-    public static init(mapData: MapObject): void {  
+    public static init(): void {  
 
-        GameVars.enemiesPathCells = mapData.path;
-        GameVars.plateausCells = mapData.plateaus;
+        GameVars.enemiesPathCells = GameVars.currentMapData.path;
+        GameVars.plateausCells = GameVars.currentMapData.plateaus;
 
         const aspectRatio = window.innerHeight / window.innerWidth;
 
         if (aspectRatio > 1.5) {
-            if (mapData.size.c > 11) {
+            if (GameVars.currentMapData.size.c > 11) {
                 GameVars.scaleCorrectionFactor = 1;
-            } else if (mapData.size.c > 10) {
+            } else if (GameVars.currentMapData.size.c > 10) {
                 GameVars.scaleCorrectionFactor = 1.1;
             } else {
                 GameVars.scaleCorrectionFactor = 1.2;
@@ -34,7 +34,7 @@ export class BattleManager {
             enemySpawningDeltaTicks: GameConstants.ENEMY_SPAWNING_DELTA_TICKS,
             credits: GameConstants.INITIAL_CREDITS,
             lifes: GameConstants.INITIAL_LIFES,
-            boardSize: mapData.size,
+            boardSize: GameVars.currentMapData.size,
             enemiesPathCells : GameVars.enemiesPathCells,
             plateausCells: GameVars.plateausCells
         };
@@ -338,7 +338,6 @@ export class BattleManager {
 
     private static onGameOver(): void {
 
-        // TODO: fix this global variable
         if (BattleManager.anutoEngine.score > GameVars.gameData.scores[GameVars.gameData.currentMapIndex]) {
             GameVars.gameData.scores[GameVars.gameData.currentMapIndex] = BattleManager.anutoEngine.score;
         }

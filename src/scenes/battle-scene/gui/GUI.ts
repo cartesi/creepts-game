@@ -13,12 +13,10 @@ export class GUI extends Phaser.GameObjects.Container {
 
     private buyTurrets: BuyTurrets;
     private turretSelected: TurretSelected;
-    public map: MapObject;
 
-    constructor(scene: Phaser.Scene, map: MapObject) {
+    constructor(scene: Phaser.Scene) {
 
         super(scene);
-        this.map = map;
 
         this.buyTurrets = new BuyTurrets(this.scene);
         this.add(this.buyTurrets);

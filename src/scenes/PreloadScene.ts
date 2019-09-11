@@ -23,9 +23,9 @@ export class PreloadScene extends Phaser.Scene {
         this.loadAssets();
     }
 
-    public create(data: any): void {
+    public create(): void {
 
-        this.loadHowl(data);
+        this.loadHowl();
     }
     
     private composeScene(): void {
@@ -55,7 +55,7 @@ export class PreloadScene extends Phaser.Scene {
         }
     }
 
-    private loadHowl(data: any): void {
+    private loadHowl(): void {
 
         let json = this.cache.json.get("audiosprite");
         json = JSON.parse(JSON.stringify(json).replace("urls", "src"));
@@ -65,7 +65,7 @@ export class PreloadScene extends Phaser.Scene {
         AudioManager.sound.on("load", function() {
             GameManager.setCurrentScene(PreloadScene.currentInstance);
             PreloadScene.currentInstance.scene.setVisible(false);
-            GameManager.onGameAssetsLoaded(data);
+            GameManager.onGameAssetsLoaded();
         });
     }
 }

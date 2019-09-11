@@ -9,6 +9,7 @@ export class GameVars {
     public static turretsData: any;
     public static wavesData: any;
     public static mapsData: MapObject[];
+    public static currentMapData: MapObject;
     public static currentWave: number;
     public static timeStepFactor: number;
     public static enemiesPathCells: {r: number, c: number} [];
