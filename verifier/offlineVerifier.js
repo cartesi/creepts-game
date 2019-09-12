@@ -1,13 +1,13 @@
 var Anuto = require("anuto-core-engine");
 
 // LOGS TYPES
-var TYPE_NEXT_WAVE = "type next wave";
-var TYPE_ADD_TURRET = "type add turret";
-var TYPE_SELL_TURRET = "type sell turret";
-var TYPE_UPGRADE_TURRET = "type upgrade turret";
-var TYPE_LEVEL_UP_TURRET = "type level up turret";
-var TYPE_CHANGE_STRATEGY_TURRET = "type change strategy turret";
-var TYPE_CHANGE_FIXED_TARGET_TURRET = "type change fixed target turret";
+var TYPE_NEXT_WAVE = "next wave";
+var TYPE_ADD_TURRET = "add turret";
+var TYPE_SELL_TURRET = "sell turret";
+var TYPE_UPGRADE_TURRET = "upgrade turret";
+var TYPE_LEVEL_UP_TURRET = "level up turret";
+var TYPE_CHANGE_STRATEGY_TURRET = "change strategy turret";
+var TYPE_CHANGE_FIXED_TARGET_TURRET = "change fixed target turret";
 
 var file1 = readFile(scriptArgs[1]);
 var file2 = readFile(scriptArgs[2]);
@@ -18,6 +18,11 @@ var level = JSON.parse(file2.replace(/\r?\n/g, ""));
 level.gameConfig.runningInClientSide = false;
 
 var anutoEngine = new Anuto.Engine(level.gameConfig, level.enemiesData, level.turretsData, level.wavesData);
+
+if (level.engineVersion !== anutoEngine.version) {
+    var msg = "Version mismatch\nLogs: " + level.engineVersion + "\nEngine: " + anutoEngine.version;
+    throw new Error(msg);
+}
 
 while(!anutoEngine.gameOver) {
 
@@ -30,7 +35,7 @@ while(!anutoEngine.gameOver) {
                 anutoEngine.newWave();
                 break;
             case TYPE_ADD_TURRET:
-                anutoEngine.addTurret(action.typeTurret, action.position);
+                anutoEngine.addTurret(action.turretType, action.position);
                 break;
             case TYPE_SELL_TURRET:
                 anutoEngine.sellTurret(action.id);

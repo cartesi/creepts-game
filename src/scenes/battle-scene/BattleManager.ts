@@ -47,18 +47,19 @@ export class BattleManager {
             actions: []
         };
 
-        GameVars.levelObject = {
-            gameConfig: gameConfig,
-            enemiesData: GameVars.enemiesData,
-            turretsData: GameVars.turretsData,
-            wavesData: GameVars.wavesData
-        };
-
         GameVars.timeStepFactor = 1;
         GameVars.currentWave = 1;
         GameVars.paused = false;
 
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData, GameVars.wavesData);
+
+        GameVars.levelObject = {
+            engineVersion: BattleManager.anutoEngine.version,
+            gameConfig: gameConfig,
+            enemiesData: GameVars.enemiesData,
+            turretsData: GameVars.turretsData,
+            wavesData: GameVars.wavesData
+        };
         
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
@@ -131,7 +132,7 @@ export class BattleManager {
         let turret = BattleManager.anutoEngine.addTurret(type, position);
 
         if (turret) {
-            let action = {type: GameConstants.TYPE_ADD_TURRET, tick: BattleManager.anutoEngine.ticksCounter, typeTurret: turret.type, position: position};
+            let action = {type: GameConstants.TYPE_ADD_TURRET, tick: BattleManager.anutoEngine.ticksCounter, turretType: turret.type, position: position};
             BattleManager.addAction(action);
         }
 

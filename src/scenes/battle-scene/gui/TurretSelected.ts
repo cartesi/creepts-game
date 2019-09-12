@@ -9,7 +9,7 @@ export class TurretSelected extends Phaser.GameObjects.Container {
 
     private gui: GUI;
 
-    private typeTurret: string;
+    private turretType: string;
     private offY: number;
     private prevWorldY: number;
 
@@ -29,7 +29,7 @@ export class TurretSelected extends Phaser.GameObjects.Container {
         let base_name;
         let canon_name;
 
-        this.typeTurret = type;
+        this.turretType = type;
         this.gui = gui;
 
         let range = GameConstants.CELLS_SIZE;
@@ -107,7 +107,7 @@ export class TurretSelected extends Phaser.GameObjects.Container {
         let c = Math.floor(posX / GameConstants.CELLS_SIZE);
         let r = Math.floor(posY / GameConstants.CELLS_SIZE);
 
-        BattleManager.addTurretToScene(this.typeTurret, {r: r, c: c});
+        BattleManager.addTurretToScene(this.turretType, {r: r, c: c});
         
         this.scene.input.removeAllListeners();
         this.gui.removeTurret();

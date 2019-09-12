@@ -30,6 +30,7 @@ module Anuto {
         public boardSize: {r: number, c: number};
 
         private runningInClientSide: boolean;
+        private _version: string;
         private _credits: number;
         private _creditsEarned: number;
         private _score: number;
@@ -62,6 +63,8 @@ module Anuto {
         private canLaunchNextWave: boolean;
 
         constructor (gameConfig: Types.GameConfig, enemyData: any, turretData: any, wavesData: any) {
+
+            this._version = GameConstants.VERSION;
 
             this.turretId = 0;
             this.enemyId = 0;
@@ -164,7 +167,6 @@ module Anuto {
             }
 
             if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
-                
                 this.waveActivated = false;
                 this.ageTurrets();
 
@@ -979,9 +981,24 @@ module Anuto {
             this._timeStep = value;
         }
 
+        public get paused(): boolean {
+
+            return this._paused;
+        }
+
         public set paused(value: boolean) {
 
             this._paused = value;
+        }
+
+        public get version(): string {
+
+            return this._version;
+        }
+
+        public set version(value: string) {
+
+            this._version = value;
         }
     }
 }

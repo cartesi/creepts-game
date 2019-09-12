@@ -3368,11 +3368,11 @@ var AudioManager = /** @class */ (function () {
         AudioManager.sound.mute(GameVars_1.GameVars.gameData.muted);
     };
     AudioManager.playSound = function (key, loop, volume) {
-        // loop = loop || false;
-        // volume = volume || 1;
-        // let id = AudioManager.sound.play(key);
-        // AudioManager.sound.loop(loop, id);
-        // AudioManager.sound.volume(volume, id);
+        loop = loop || false;
+        volume = volume || 1;
+        var id = AudioManager.sound.play(key);
+        AudioManager.sound.loop(loop, id);
+        AudioManager.sound.volume(volume, id);
     };
     return AudioManager;
 }());
@@ -3404,11 +3404,23 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var AudioManager_1 = __webpack_require__(/*! ./AudioManager */ "./src/AudioManager.ts");
+var GameVars_1 = __webpack_require__(/*! ./GameVars */ "./src/GameVars.ts");
 var Game = /** @class */ (function (_super) {
     __extends(Game, _super);
     function Game(config) {
         var _this = _super.call(this, config) || this;
         Game.currentInstance = _this;
+        _this.onBlur = function () {
+            if (AudioManager_1.AudioManager.sound) {
+                AudioManager_1.AudioManager.sound.mute(true);
+            }
+        };
+        _this.onFocus = function () {
+            if (AudioManager_1.AudioManager.sound) {
+                AudioManager_1.AudioManager.sound.mute(GameVars_1.GameVars.gameData.muted);
+            }
+        };
         return _this;
     }
     return Game;
@@ -3868,16 +3880,17 @@ var BattleManager = /** @class */ (function () {
         GameVars_1.GameVars.logsObject = {
             actions: []
         };
+        GameVars_1.GameVars.timeStepFactor = 1;
+        GameVars_1.GameVars.currentWave = 1;
+        GameVars_1.GameVars.paused = false;
+        BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars_1.GameVars.enemiesData, GameVars_1.GameVars.turretsData, GameVars_1.GameVars.wavesData);
         GameVars_1.GameVars.levelObject = {
+            engineVersion: BattleManager.anutoEngine.version,
             gameConfig: gameConfig,
             enemiesData: GameVars_1.GameVars.enemiesData,
             turretsData: GameVars_1.GameVars.turretsData,
             wavesData: GameVars_1.GameVars.wavesData
         };
-        GameVars_1.GameVars.timeStepFactor = 1;
-        GameVars_1.GameVars.currentWave = 1;
-        GameVars_1.GameVars.paused = false;
-        BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars_1.GameVars.enemiesData, GameVars_1.GameVars.turretsData, GameVars_1.GameVars.wavesData);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
@@ -3928,7 +3941,7 @@ var BattleManager = /** @class */ (function () {
     BattleManager.addTurret = function (type, position) {
         var turret = BattleManager.anutoEngine.addTurret(type, position);
         if (turret) {
-            var action = { type: GameConstants_1.GameConstants.TYPE_ADD_TURRET, tick: BattleManager.anutoEngine.ticksCounter, typeTurret: turret.type, position: position };
+            var action = { type: GameConstants_1.GameConstants.TYPE_ADD_TURRET, tick: BattleManager.anutoEngine.ticksCounter, turretType: turret.type, position: position };
             BattleManager.addAction(action);
         }
         return turret;
@@ -6208,7 +6221,7 @@ var TurretButton = /** @class */ (function (_super) {
     function TurretButton(scene, type, index) {
         var _this = _super.call(this, scene) || this;
         _this.x = index * 80;
-        _this.typeTurret = type;
+        _this.turretType = type;
         _this.setScale(.8);
         var base_name;
         var canon_name;
@@ -6245,16 +6258,16 @@ var TurretButton = /** @class */ (function (_super) {
         var creditIcon = new Phaser.GameObjects.Image(_this.scene, -30, 42, "texture_atlas_1", "coin_icon");
         creditIcon.setTint(0x000000);
         _this.add(creditIcon);
-        var text = new Phaser.GameObjects.Text(_this.scene, 12, 42, BattleManager_1.BattleManager.anutoEngine.turretData[_this.typeTurret].price, { fontFamily: "Rubik-Light", fontSize: "30px", color: "#000000" });
+        var text = new Phaser.GameObjects.Text(_this.scene, 12, 42, BattleManager_1.BattleManager.anutoEngine.turretData[_this.turretType].price, { fontFamily: "Rubik-Light", fontSize: "30px", color: "#000000" });
         text.setOrigin(.5);
         _this.add(text);
-        if (_this.typeTurret === Anuto.GameConstants.TURRET_GLUE) {
+        if (_this.turretType === Anuto.GameConstants.TURRET_GLUE) {
             text.x = 15;
         }
         return _this;
     }
     TurretButton.prototype.updateTurret = function () {
-        if (BattleManager_1.BattleManager.anutoEngine.turretData[this.typeTurret].price > BattleManager_1.BattleManager.anutoEngine.credits) {
+        if (BattleManager_1.BattleManager.anutoEngine.turretData[this.turretType].price > BattleManager_1.BattleManager.anutoEngine.credits) {
             this.alpha = .5;
         }
         else {
@@ -6265,7 +6278,7 @@ var TurretButton = /** @class */ (function (_super) {
         if (this.alpha !== 1 || GameVars_1.GameVars.paused || BattleManager_1.BattleManager.anutoEngine.gameOver) {
             return;
         }
-        BattleManager_1.BattleManager.createTurret(this.typeTurret);
+        BattleManager_1.BattleManager.createTurret(this.turretType);
     };
     return TurretButton;
 }(Phaser.GameObjects.Container));
@@ -6313,7 +6326,7 @@ var TurretSelected = /** @class */ (function (_super) {
         }
         var base_name;
         var canon_name;
-        _this.typeTurret = type;
+        _this.turretType = type;
         _this.gui = gui;
         var range = GameConstants_1.GameConstants.CELLS_SIZE;
         switch (type) {
@@ -6375,7 +6388,7 @@ var TurretSelected = /** @class */ (function (_super) {
         var posY = ((pointer.y + this.offY) - GameConstants_1.GameConstants.GAME_HEIGHT / 2 - GameConstants_1.GameConstants.CELLS_SIZE) / (GameVars_1.GameVars.scaleCorrectionFactor * GameVars_1.GameVars.scaleY) + ((GameVars_1.GameVars.currentMapData.size.r * GameConstants_1.GameConstants.CELLS_SIZE) / 2);
         var c = Math.floor(posX / GameConstants_1.GameConstants.CELLS_SIZE);
         var r = Math.floor(posY / GameConstants_1.GameConstants.CELLS_SIZE);
-        BattleManager_1.BattleManager.addTurretToScene(this.typeTurret, { r: r, c: c });
+        BattleManager_1.BattleManager.addTurretToScene(this.turretType, { r: r, c: c });
         this.scene.input.removeAllListeners();
         this.gui.removeTurret();
     };

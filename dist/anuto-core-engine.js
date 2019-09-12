@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    };
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -403,6 +403,7 @@ var Anuto;
 (function (Anuto) {
     var Engine = /** @class */ (function () {
         function Engine(gameConfig, enemyData, turretData, wavesData) {
+            this._version = Anuto.GameConstants.VERSION;
             this.turretId = 0;
             this.enemyId = 0;
             this.bulletId = 0;
@@ -1071,8 +1072,21 @@ var Anuto;
             configurable: true
         });
         Object.defineProperty(Engine.prototype, "paused", {
+            get: function () {
+                return this._paused;
+            },
             set: function (value) {
                 this._paused = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Engine.prototype, "version", {
+            get: function () {
+                return this._version;
+            },
+            set: function (value) {
+                this._version = value;
             },
             enumerable: true,
             configurable: true
@@ -1086,6 +1100,8 @@ var Anuto;
     var GameConstants = /** @class */ (function () {
         function GameConstants() {
         }
+        // version: 0.month.day.hour
+        GameConstants.VERSION = "v0.11.12.15";
         GameConstants.RELOAD_BASE_TICKS = 10;
         GameConstants.BULLET_SPEED = .85; // in cells / tick
         GameConstants.MORTAR_SPEED = .1;

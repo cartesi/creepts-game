@@ -6,14 +6,14 @@ export class TurretButton extends Phaser.GameObjects.Container {
     private base: Phaser.GameObjects.Image;
     private canon: Phaser.GameObjects.Image;
 
-    private typeTurret: string;
+    private turretType: string;
 
     constructor(scene: Phaser.Scene, type: string, index: number) {
 
         super(scene);
 
         this.x = index * 80;
-        this.typeTurret = type;
+        this.turretType = type;
 
         this.setScale(.8);
 
@@ -59,18 +59,18 @@ export class TurretButton extends Phaser.GameObjects.Container {
         creditIcon.setTint(0x000000);
         this.add(creditIcon);
 
-        let text = new Phaser.GameObjects.Text(this.scene, 12, 42, BattleManager.anutoEngine.turretData[this.typeTurret].price, {fontFamily: "Rubik-Light", fontSize: "30px", color: "#000000"});
+        let text = new Phaser.GameObjects.Text(this.scene, 12, 42, BattleManager.anutoEngine.turretData[this.turretType].price, {fontFamily: "Rubik-Light", fontSize: "30px", color: "#000000"});
         text.setOrigin(.5);
         this.add(text);
 
-        if (this.typeTurret === Anuto.GameConstants.TURRET_GLUE) {
+        if (this.turretType === Anuto.GameConstants.TURRET_GLUE) {
             text.x = 15;
         }
     }
 
     public updateTurret(): void {
 
-        if (BattleManager.anutoEngine.turretData[this.typeTurret].price > BattleManager.anutoEngine.credits) {
+        if (BattleManager.anutoEngine.turretData[this.turretType].price > BattleManager.anutoEngine.credits) {
             this.alpha = .5;
         } else {
             this.alpha = 1;
@@ -83,6 +83,6 @@ export class TurretButton extends Phaser.GameObjects.Container {
             return;
         }
 
-        BattleManager.createTurret(this.typeTurret);
+        BattleManager.createTurret(this.turretType);
     }
 }

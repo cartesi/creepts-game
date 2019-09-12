@@ -133,6 +133,7 @@ declare module Anuto {
             c: number;
         };
         private runningInClientSide;
+        private _version;
         private _credits;
         private _creditsEarned;
         private _score;
@@ -208,10 +209,12 @@ declare module Anuto {
         readonly round: number;
         timeStep: number;
         paused: boolean;
+        version: string;
     }
 }
 declare module Anuto {
     class GameConstants {
+        static readonly VERSION = "v0.11.12.15";
         static readonly RELOAD_BASE_TICKS = 10;
         static readonly BULLET_SPEED = 0.85;
         static readonly MORTAR_SPEED = 0.1;

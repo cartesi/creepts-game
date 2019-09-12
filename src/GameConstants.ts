@@ -20,14 +20,14 @@ export class GameConstants {
     public static readonly CELLS_SIZE = 60;
 
     // LOGS TYPES
-    public static readonly TYPE_ADD_TURRET = "type add turret";
-    public static readonly TYPE_SELL_TURRET = "type sell turret";
-    public static readonly TYPE_UPGRADE_TURRET = "type upgrade turret";
-    public static readonly TYPE_LEVEL_UP_TURRET = "type level up turret";
-    public static readonly TYPE_CHANGE_STRATEGY_TURRET = "type change strategy turret";
-    public static readonly TYPE_CHANGE_FIXED_TARGET_TURRET = "type change fixed target turret";
+    public static readonly TYPE_ADD_TURRET = "add turret";
+    public static readonly TYPE_SELL_TURRET = "sell turret";
+    public static readonly TYPE_UPGRADE_TURRET = "upgrade turret";
+    public static readonly TYPE_LEVEL_UP_TURRET = "level up turret";
+    public static readonly TYPE_CHANGE_STRATEGY_TURRET = "change strategy turret";
+    public static readonly TYPE_CHANGE_FIXED_TARGET_TURRET = "change fixed target turret";
 
-    public static readonly TYPE_NEXT_WAVE = "type next wave";
+    public static readonly TYPE_NEXT_WAVE = "next wave";
 
     public static readonly SAVED_GAME_DATA_KEY = "anuto-data";
 }

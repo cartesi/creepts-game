@@ -9,6 +9,7 @@ declare interface LogsObject {
 }
 
 declare interface LevelObject {
+    engineVersion: string;
     gameConfig: Anuto.Types.GameConfig;
     enemiesData: any;
     turretsData: any;
