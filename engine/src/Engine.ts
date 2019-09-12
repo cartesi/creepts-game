@@ -187,12 +187,12 @@ module Anuto {
                 this.removeProjectilesAndAccountDamage();
             }
 
-                this.teleport();
+            this.teleport();
 
-                this.checkCollisions();
-                this.spawnEnemies();
+            this.checkCollisions();
+            this.spawnEnemies();
             
-            
+
             this.enemies.forEach(function (enemy) {
                 enemy.update();
             }, this); 
@@ -892,6 +892,7 @@ module Anuto {
             while (enemy) {
 
                 this.enemiesSpawned++;
+
                 if (this.enemiesSpawned === this.waveEnemiesLength) {
                     this.allEnemiesSpawned = true;
                     this.enemiesSpawned = 0;

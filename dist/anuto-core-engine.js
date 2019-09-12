@@ -19,7 +19,6 @@ var Anuto;
         }
         EnemiesSpawner.prototype.getEnemy = function () {
             var enemy = null;
-            // let partialTicks = this.engine.ticksCounter - this.engine.lastWaveTick;
             if (this.engine.waveEnemies.length > 0) {
                 var nextEnemyData = this.engine.waveEnemies[0];
                 if (nextEnemyData.t === this.engine.ticksCounter) {
@@ -41,7 +40,7 @@ var Anuto;
                             break;
                         default:
                     }
-                    // cada ronda que pasa los enemigos tienen mas vida
+                    // cada ronda que pasa los enemigos tienen mas vida y mas valor
                     enemy.life = Math.round(enemy.life * this.engine.enemyHealthModifier);
                     enemy.maxLife = enemy.life;
                     enemy.value = Math.round(enemy.value * this.engine.enemyRewardModifier);
@@ -137,6 +136,9 @@ var Anuto;
             var squaredRange = Anuto.MathUtils.fixNumber(this.range * this.range);
             for (var i = 0; i < this.engine.enemies.length; i++) {
                 var enemy = this.engine.enemies[i];
+                if (this.type === Anuto.GameConstants.TURRET_GLUE && this.grade === 3 && enemy.hasBeenTeleported) {
+                    continue;
+                }
                 if (enemy.life > 0 && enemy.l < this.engine.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
                     var dx = this.x - enemy.x;
                     var dy = this.y - enemy.y;
@@ -146,7 +148,7 @@ var Anuto;
                     }
                 }
             }
-            if (enemiesAndSquaredDistances.length > 1 && (this.type === Anuto.GameConstants.TURRET_PROJECTILE || this.type === Anuto.GameConstants.TURRET_LASER || (this.type === Anuto.GameConstants.TURRET_LAUNCH && this.grade !== 2))) {
+            if (enemiesAndSquaredDistances.length > 1) {
                 // ordenar a los enemigos dentro del radio de acción según la estrategia de disparo
                 switch (this.shootingStrategy) {
                     case Anuto.GameConstants.STRATEGY_SHOOT_LAST:
@@ -1360,6 +1362,25 @@ var Anuto;
             _this.calculateTurretParameters();
             return _this;
         }
+        GlueTurret.prototype.update = function () {
+            // cuando tiene grado 1 no hace falta calcular los enemigos que tenga en el radio de accion
+            if (this.grade === 1) {
+                if (this.readyToShoot) {
+                    this.readyToShoot = false;
+                    this.shoot();
+                }
+                else {
+                    this.f++;
+                    if (this.f >= this.reloadTicks) {
+                        this.readyToShoot = true;
+                        this.f = 0;
+                    }
+                }
+            }
+            else {
+                _super.prototype.update.call(this);
+            }
+        };
         // mirar en el ANUTO y generar las formulas que correspondan
         GlueTurret.prototype.calculateTurretParameters = function () {
             switch (this.grade) {
@@ -1431,12 +1452,7 @@ var Anuto;
                     else {
                         enemy = this.enemiesWithinRange[0];
                     }
-                    if (enemy.life > 0 && !enemy.hasBeenTeleported) {
-                        this.engine.flagEnemyToTeleport(enemy, this);
-                    }
-                    else {
-                        this.readyToShoot = true;
-                    }
+                    this.engine.flagEnemyToTeleport(enemy, this);
                     break;
                 default:
             }

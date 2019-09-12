@@ -17,6 +17,32 @@ module Anuto {
             this.calculateTurretParameters();
         }
 
+        public update(): void {
+
+            // cuando tiene grado 1 no hace falta calcular los enemigos que tenga en el radio de accion
+            if (this.grade === 1) {
+
+                if (this.readyToShoot) {
+
+                    this.readyToShoot = false;   
+                    this.shoot();
+            
+                } else {
+    
+                    this.f ++;
+    
+                    if (this.f >= this.reloadTicks) {
+                        this.readyToShoot = true;
+                        this.f = 0;
+                    }
+                }
+
+            } else {
+
+                super.update();
+            }
+        }
+
         // mirar en el ANUTO y generar las formulas que correspondan
         protected calculateTurretParameters(): void {
     
@@ -68,10 +94,13 @@ module Anuto {
             let enemy: Enemy;
 
             switch (this.grade) {
+
                 case 1:
+
                     const glue = new Glue(this.position, this.intensity, this.durationTicks, this.range, this.engine);
                     this.engine.addGlue(glue, this);
                     break;
+
                 case 2:
 
                     if (this.fixedTarget) {
@@ -105,7 +134,9 @@ module Anuto {
                         // no se dispara y se vuelve a estar disponible para disparar
                         this.readyToShoot = true;
                     }
+
                     break;
+
                 case 3:
 
                     if (this.fixedTarget) {
@@ -113,14 +144,11 @@ module Anuto {
                     } else {
                         enemy = this.enemiesWithinRange[0];
                     }
-                    
-                    if (enemy.life > 0 && !enemy.hasBeenTeleported) { 
-                        this.engine.flagEnemyToTeleport(enemy, this);
-                    } else {
-                        this.readyToShoot = true;
-                    }
-
+                     
+                    this.engine.flagEnemyToTeleport(enemy, this);
+                
                     break;
+                    
                 default:
             }
         }

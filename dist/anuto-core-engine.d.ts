@@ -403,6 +403,7 @@ declare module Anuto {
             r: number;
             c: number;
         }, engine: Engine);
+        update(): void;
         protected calculateTurretParameters(): void;
         protected shoot(): void;
     }

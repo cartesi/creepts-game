@@ -150,6 +150,10 @@ module Anuto {
 
                 const enemy = this.engine.enemies[i];
 
+                if (this.type === GameConstants.TURRET_GLUE && this.grade === 3 && enemy.hasBeenTeleported) {
+                    continue;
+                }
+
                 if (enemy.life > 0 && enemy.l < this.engine.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
 
                     const dx = this.x - enemy.x;
@@ -163,17 +167,20 @@ module Anuto {
                 }
             }
 
-            if (enemiesAndSquaredDistances.length > 1 && (this.type === GameConstants.TURRET_PROJECTILE || this.type === GameConstants.TURRET_LASER  || (this.type === GameConstants.TURRET_LAUNCH && this.grade !== 2))) {
+            if (enemiesAndSquaredDistances.length > 1 ) {
         
                 // ordenar a los enemigos dentro del radio de acción según la estrategia de disparo
                 switch (this.shootingStrategy) {
+
                     case GameConstants.STRATEGY_SHOOT_LAST:
                         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.enemy.l - e2.enemy.l) < 0);
                         break;
+
                     case GameConstants.STRATEGY_SHOOT_CLOSEST:
                        
                         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.squareDist - e2.squareDist) < 0);
                         break;
+
                     case GameConstants.STRATEGY_SHOOT_WEAKEST:
             
                         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): boolean {
@@ -192,7 +199,7 @@ module Anuto {
                         break;
 
                     case GameConstants.STRATEGY_SHOOT_STRONGEST:
-  
+
                         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): boolean {
                             
                             let ret: boolean;
@@ -207,9 +214,12 @@ module Anuto {
                         });
                         
                         break;
+
                     case GameConstants.STRATEGY_SHOOT_FIRST:
+
                         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.enemy.l - e2.enemy.l) > 0);
                         break;
+
                     default:
                 }
             }
