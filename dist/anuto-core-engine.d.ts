@@ -73,9 +73,8 @@ declare module Anuto {
         affectedByGlue: boolean;
         glueIntensity: number;
         affectedByGlueBullet: boolean;
-        glueIntensityBullet: number;
-        glueDuration: number;
-        glueTime: number;
+        glueBulletIntensity: number;
+        glueBulletDurationTicks: number;
         hasBeenTeleported: boolean;
         teleporting: boolean;
         modifiers: {
@@ -84,13 +83,14 @@ declare module Anuto {
         protected enemyData: any;
         protected t: number;
         protected engine: Engine;
+        protected glueTicksCounter: number;
         constructor(type: string, creationTick: number, engine: Engine);
         destroy(): void;
         update(): void;
         teleport(teleportDistance: number): void;
+        hitByGlueBullet(glueBulletIntensity: number, glueBulletsDurationTicks: number): void;
         glue(glueIntensity: number): void;
         hit(damage: number, bullet?: Bullet, mortar?: Mortar, mine?: Mine, laserTurret?: LaserTurret): void;
-        glueHit(intensity: number, duration: number, bullet: GlueBullet): void;
         restoreHealth(): void;
         getNextPosition(deltaTicks: number): {
             x: number;
@@ -217,7 +217,7 @@ declare module Anuto {
         static readonly VERSION = "v0.11.12.15";
         static readonly RELOAD_BASE_TICKS = 10;
         static readonly BULLET_SPEED = 0.85;
-        static readonly MORTAR_SPEED = 0.15;
+        static readonly MORTAR_SPEED = 0.45;
         static readonly INITIAL_TICKS_WAVE = 4;
         static readonly ENEMY_SOLDIER = "soldier";
         static readonly ENEMY_RUNNER = "runner";
@@ -414,7 +414,6 @@ declare module Anuto {
             r: number;
             c: number;
         }, engine: Engine);
-        update(): void;
         protected calculateTurretParameters(): void;
         protected getEnemiesWithinLine(enemy: Enemy): Enemy[];
         protected shoot(): void;
@@ -496,7 +495,6 @@ declare module Anuto {
             r: number;
             c: number;
         }, engine: Engine);
-        update(): void;
         protected calculateTurretParameters(): void;
         protected shoot(): void;
     }

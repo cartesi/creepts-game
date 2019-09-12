@@ -72,6 +72,18 @@ module Anuto {
 
             this.enemiesWithinRange = this.getEnemiesWithinRange();
 
+            if (this.fixedTarget) {
+                if (this.enemiesWithinRange.length > 0) {
+                    if (this.enemiesWithinRange.indexOf(this.followedEnemy) === -1) {
+                        this.followedEnemy = this.enemiesWithinRange[0];
+                    }   
+                } else {
+                    this.followedEnemy = null;
+                }
+            } else {
+                this.followedEnemy = this.enemiesWithinRange[0];
+            }
+
             if (this.readyToShoot) {
 
                 if (this.enemiesWithinRange.length > 0) {
@@ -150,8 +162,10 @@ module Anuto {
 
                 const enemy = this.engine.enemies[i];
 
-                if (this.type === GameConstants.TURRET_GLUE && this.grade === 3 && enemy.hasBeenTeleported) {
-                    continue;
+                if (this.type === GameConstants.TURRET_GLUE) {
+                    if ((this.grade === 2 && enemy.affectedByGlueBullet) || this.grade === 3 && enemy.hasBeenTeleported) {
+                        continue;
+                    }
                 }
 
                 if (enemy.life > 0 && enemy.l < this.engine.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
