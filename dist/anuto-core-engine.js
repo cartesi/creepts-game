@@ -155,7 +155,16 @@ var Anuto;
                         enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e1.enemy.l - e2.enemy.l) < 0; });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_CLOSEST:
-                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) { return (e1.squareDist - e2.squareDist) < 0; });
+                        enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) {
+                            var ret;
+                            if (e1.squareDist === e2.squareDist) {
+                                ret = (e1.enemy.l - e2.enemy.l) > 0;
+                            }
+                            else {
+                                ret = (e1.squareDist - e2.squareDist) < 0;
+                            }
+                            return ret;
+                        });
                         break;
                     case Anuto.GameConstants.STRATEGY_SHOOT_WEAKEST:
                         enemiesAndSquaredDistances = Anuto.MathUtils.mergeSort(enemiesAndSquaredDistances, function (e1, e2) {

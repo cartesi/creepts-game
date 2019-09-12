@@ -178,7 +178,19 @@ module Anuto {
 
                     case GameConstants.STRATEGY_SHOOT_CLOSEST:
                        
-                        enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.squareDist - e2.squareDist) < 0);
+                        enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): boolean {
+                            
+                            let ret: boolean;
+
+                            if (e1.squareDist === e2.squareDist) {
+                                ret = (e1.enemy.l - e2.enemy.l) > 0;
+                            } else {
+                                ret = (e1.squareDist - e2.squareDist) < 0;
+                            }
+
+                            return ret;
+                        });
+
                         break;
 
                     case GameConstants.STRATEGY_SHOOT_WEAKEST:
