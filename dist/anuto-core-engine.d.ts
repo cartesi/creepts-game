@@ -217,7 +217,7 @@ declare module Anuto {
         static readonly VERSION = "v0.11.12.15";
         static readonly RELOAD_BASE_TICKS = 10;
         static readonly BULLET_SPEED = 0.85;
-        static readonly MORTAR_SPEED = 0.1;
+        static readonly MORTAR_SPEED = 0.125;
         static readonly INITIAL_TICKS_WAVE = 4;
         static readonly ENEMY_SOLDIER = "soldier";
         static readonly ENEMY_RUNNER = "runner";

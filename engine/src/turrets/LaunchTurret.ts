@@ -145,13 +145,23 @@ module Anuto {
                     enemy = this.enemiesWithinRange[0];
                 }
 
-                let ticksToImpact = Math.round(this.range / this.projectileSpeed) * .75;
+                let ticksToImpact: number;
+                let impactPosition: {x: number, y: number};
+                let d = this.range;
 
-                const impactPosition = enemy.getNextPosition(ticksToImpact);
-            
-                let d = MathUtils.fixNumber(Math.sqrt((this.x - impactPosition.x) * (this.x - impactPosition.x) + (this.y - impactPosition.y) * (this.y - impactPosition.y)));
-                
-                ticksToImpact = Math.floor(MathUtils.fixNumber(d / this.projectileSpeed));
+                let iterations: number;
+
+                if (enemy.type === GameConstants.ENEMY_RUNNER || enemy.type === GameConstants. ENEMY_FLIER) {
+                    iterations = 3;
+                } else {
+                    iterations = 2;
+                }
+
+                for (let i = 0; i < iterations; i ++) {
+                    ticksToImpact = Math.round(d / this.projectileSpeed);
+                    impactPosition = enemy.getNextPosition(ticksToImpact);
+                    d = MathUtils.fixNumber(Math.sqrt((this.x - impactPosition.x) * (this.x - impactPosition.x) + (this.y - impactPosition.y) * (this.y - impactPosition.y)));
+                }
 
                 const dx = impactPosition.x - this.x;
                 const dy = impactPosition.y - this.y;

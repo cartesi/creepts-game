@@ -5,12 +5,12 @@
             "extend": 2,
             "maxExtend": 8,
             "enemies": [
-                {"type": "soldier",     "t": 0},
-                {"type": "soldier",     "t": 1},
+                {"type": "runner",     "t": 0},
+                {"type": "runner",     "t": 1},
                 {"type": "soldier",     "t": 2},
                 {"type": "soldier",     "t": 3},
-                {"type": "soldier",     "t": 4},
-                {"type": "soldier",     "t": 5}
+                {"type": "runner",     "t": 4},
+                {"type": "runner",     "t": 5}
             ]
         },
         "wave_2" : {

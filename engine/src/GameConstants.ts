@@ -7,7 +7,7 @@ module Anuto {
 
         public static readonly RELOAD_BASE_TICKS = 10;
         public static readonly BULLET_SPEED = .85; // in cells / tick
-        public static readonly MORTAR_SPEED = .1;
+        public static readonly MORTAR_SPEED = .125;
         public static readonly INITIAL_TICKS_WAVE = 4;
 
         // los nombres de los enemigos

@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -138,23 +138,8 @@ var Anuto;
             for (var i = 0; i < this.engine.enemies.length; i++) {
                 var enemy = this.engine.enemies[i];
                 if (enemy.life > 0 && enemy.l < this.engine.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
-                    var dx = void 0;
-                    var dy = void 0;
-                    // el laser y el pegamento son instantaneos
-                    if (this.type === Anuto.GameConstants.TURRET_LASER || this.type === Anuto.GameConstants.TURRET_GLUE) {
-                        dx = this.x - enemy.x;
-                        dy = this.y - enemy.y;
-                    }
-                    else {
-                        // donde estaran los enemigos cuando les impacten los proyectiles teniendo en cuenta la velocidad de estos?
-                        var deltaTicks = Math.round(this.range / this.projectileSpeed * .75);
-                        var enemyNextPosition = enemy.getNextPosition(deltaTicks);
-                        if (!enemyNextPosition) {
-                            continue;
-                        }
-                        dx = this.x - enemyNextPosition.x;
-                        dy = this.y - enemyNextPosition.y;
-                    }
+                    var dx = this.x - enemy.x;
+                    var dy = this.y - enemy.y;
                     var squaredDist = Anuto.MathUtils.fixNumber(dx * dx + dy * dy);
                     if (squaredRange >= squaredDist) {
                         enemiesAndSquaredDistances.push({ enemy: enemy, squareDist: squaredDist });
@@ -1104,7 +1089,7 @@ var Anuto;
         GameConstants.VERSION = "v0.11.12.15";
         GameConstants.RELOAD_BASE_TICKS = 10;
         GameConstants.BULLET_SPEED = .85; // in cells / tick
-        GameConstants.MORTAR_SPEED = .1;
+        GameConstants.MORTAR_SPEED = .125;
         GameConstants.INITIAL_TICKS_WAVE = 4;
         // los nombres de los enemigos
         GameConstants.ENEMY_SOLDIER = "soldier";
@@ -1687,10 +1672,22 @@ var Anuto;
                 else {
                     enemy = this.enemiesWithinRange[0];
                 }
-                var ticksToImpact = Math.round(this.range / this.projectileSpeed) * .75;
-                var impactPosition = enemy.getNextPosition(ticksToImpact);
-                var d = Anuto.MathUtils.fixNumber(Math.sqrt((this.x - impactPosition.x) * (this.x - impactPosition.x) + (this.y - impactPosition.y) * (this.y - impactPosition.y)));
-                ticksToImpact = Math.floor(Anuto.MathUtils.fixNumber(d / this.projectileSpeed));
+                var ticksToImpact = void 0;
+                var impactPosition = void 0;
+                var d = this.range;
+                var iterations = void 0;
+                if (enemy.type === Anuto.GameConstants.ENEMY_RUNNER || enemy.type === Anuto.GameConstants.ENEMY_FLIER) {
+                    iterations = 3;
+                }
+                else {
+                    iterations = 2;
+                }
+                for (var i = 0; i < iterations; i++) {
+                    ticksToImpact = Math.round(d / this.projectileSpeed);
+                    impactPosition = enemy.getNextPosition(ticksToImpact);
+                    d = Anuto.MathUtils.fixNumber(Math.sqrt((this.x - impactPosition.x) * (this.x - impactPosition.x) + (this.y - impactPosition.y) * (this.y - impactPosition.y)));
+                    console.log("ticksToImpact " + (i + 1) + ":", ticksToImpact);
+                }
                 var dx = impactPosition.x - this.x;
                 var dy = impactPosition.y - this.y;
                 this.shootAngle = Anuto.MathUtils.fixNumber(Math.atan2(dy, dx));
