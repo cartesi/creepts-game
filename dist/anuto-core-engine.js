@@ -1089,7 +1089,7 @@ var Anuto;
         GameConstants.VERSION = "v0.11.12.15";
         GameConstants.RELOAD_BASE_TICKS = 10;
         GameConstants.BULLET_SPEED = .85; // in cells / tick
-        GameConstants.MORTAR_SPEED = .125;
+        GameConstants.MORTAR_SPEED = .15;
         GameConstants.INITIAL_TICKS_WAVE = 4;
         // los nombres de los enemigos
         GameConstants.ENEMY_SOLDIER = "soldier";
@@ -1686,7 +1686,6 @@ var Anuto;
                     ticksToImpact = Math.round(d / this.projectileSpeed);
                     impactPosition = enemy.getNextPosition(ticksToImpact);
                     d = Anuto.MathUtils.fixNumber(Math.sqrt((this.x - impactPosition.x) * (this.x - impactPosition.x) + (this.y - impactPosition.y) * (this.y - impactPosition.y)));
-                    console.log("ticksToImpact " + (i + 1) + ":", ticksToImpact);
                 }
                 var dx = impactPosition.x - this.x;
                 var dy = impactPosition.y - this.y;
