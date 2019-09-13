@@ -1,15 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Card, Image } from "semantic-ui-react";
+import { MapThumbnail } from "./MapThumbnail";
 
 export default ({ tournament }) => {
     return (
         <Card key={tournament.id} raised fluid>
             <Card.Content>
-                <Image
-                    floated="right"
-                    size="mini"
-                    src="https://place-hold.it/60x80" />
+                <MapThumbnail map={tournament.name} width={50} height={60} />
                 <Card.Header>{tournament.name}</Card.Header>
                 <Card.Meta>12 players</Card.Meta>
                 <Card.Description>My Highscore: 21,242,919</Card.Description>
