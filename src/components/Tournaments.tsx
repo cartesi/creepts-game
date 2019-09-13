@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Container, Card, List } from "semantic-ui-react";
+import { Link } from "react-router-dom";
+import { Breadcrumb, List, BreadcrumbSection, BreadcrumbDivider } from "semantic-ui-react";
 import TournamentCard from "./TournamentCard";
 
 interface IState { }
@@ -26,13 +27,18 @@ export default class Tournaments extends Component<IProps, IState> {
             deadline: "2019-09-10T21:54:58Z"
         }));
         return (
-            <Container>
+            <div style={{ padding: "10px"}}>
+                <Breadcrumb>
+                    <BreadcrumbSection link><Link to="/">Home</Link></BreadcrumbSection>
+                    <BreadcrumbDivider />
+                    <BreadcrumbSection active>Play</BreadcrumbSection>
+                </Breadcrumb>
                 <List>
                     {Array.from(tournaments, (tournament, index) => 
                         <TournamentCard key={index} tournament={tournament} />
                     )}
                 </List>
-            </Container>
+            </div>
         );
     }
 }

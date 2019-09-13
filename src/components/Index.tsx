@@ -8,7 +8,7 @@ interface IProps { }
 export default class Index extends Component<IProps, IState> {
     render() {
         return (
-            <div style={{ width: "320px" }}>
+            <div>
                 <Image src="https://place-hold.it/320x320" />
                 <Menu vertical fluid>
                     <Menu.Item name='play' as={Link} to={`/tournaments?phase=commit&me=true`}>Play</Menu.Item>
