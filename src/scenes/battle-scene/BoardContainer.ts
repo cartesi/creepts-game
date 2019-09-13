@@ -336,7 +336,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         const launchTurretActor = <LaunchTurretActor> this.getTurretActorByID(anutoLaunchTurret.id);
         launchTurretActor.shootMortar();
 
-        const mortar = new MortarActor(this.scene, anutoMortar, launchTurretActor);
+        const mortar = new MortarActor(this.scene, anutoMortar);
         this.actorsContainer.add(mortar);
 
         this.mortarActors.push(mortar);

@@ -9,18 +9,16 @@ export class MortarActor extends Phaser.GameObjects.Container {
 
     public anutoMortar: Anuto.Mortar;
 
-    private launchTurretActor: LaunchTurretActor;
     private mortarImage: Phaser.GameObjects.Image;
     private detonated: boolean;
     private initialPosition: {x: number, y: number};
     private deltaAngle: number;
     
-    constructor(scene: Phaser.Scene, anutoMortar: Anuto.Mortar, launchTurretActor: LaunchTurretActor) {
+    constructor(scene: Phaser.Scene, anutoMortar: Anuto.Mortar) {
 
         super(scene);
 
         this.anutoMortar = anutoMortar;
-        this.launchTurretActor = launchTurretActor;
         this.detonated = false;
 
         this.x = this.anutoMortar.x * GameConstants.CELLS_SIZE;
@@ -85,9 +83,11 @@ export class MortarActor extends Phaser.GameObjects.Container {
 
         if (this.anutoMortar.grade === 3) {
             this.rotation = Math.atan2(offY, offX) + Math.PI / 2;
-        }
+        } 
 
-        this.mortarImage.angle += this.deltaAngle;
+        if (this.anutoMortar.grade === 1) {
+            this.mortarImage.angle += this.deltaAngle;
+        }
     }
 
     public detonate(): void {

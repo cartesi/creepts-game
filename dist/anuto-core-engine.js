@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -1647,7 +1647,7 @@ var Anuto;
                     this.reload = Math.round((-.05 * this.level + 3.05) * 100) / 100;
                     this.range = Math.round((.1 * this.level + 2.9) * 100) / 100;
                     this.priceImprovement = Math.round((39 / 2) * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + (665 / 2) * this.level + 596);
-                    this.projectileSpeed = 5 * Anuto.GameConstants.MORTAR_SPEED;
+                    this.projectileSpeed = 2 * Anuto.GameConstants.MORTAR_SPEED;
                     break;
                 default:
             }
@@ -1668,7 +1668,6 @@ var Anuto;
             return cells;
         };
         LaunchTurret.prototype.shoot = function () {
-            _super.prototype.shoot.call(this);
             if (this.grade === 2) {
                 var cells = this.getPathCellsInRange();
                 if (cells.length > 0 && this.numMines < this.level + 3) {
@@ -1704,7 +1703,7 @@ var Anuto;
                     iterations = 2;
                 }
                 for (var i = 0; i < iterations; i++) {
-                    ticksToImpact = Math.round(d / this.projectileSpeed);
+                    ticksToImpact = Math.floor(d / this.projectileSpeed);
                     impactPosition = enemy.getNextPosition(ticksToImpact);
                     d = Anuto.MathUtils.fixNumber(Math.sqrt((this.x - impactPosition.x) * (this.x - impactPosition.x) + (this.y - impactPosition.y) * (this.y - impactPosition.y)));
                 }
@@ -1786,9 +1785,8 @@ var Anuto;
             this.engine = engine;
             this.detonate = false;
             this.f = 0;
-            var speed = this.grade === 3 ? Anuto.GameConstants.MORTAR_SPEED * 5 : Anuto.GameConstants.MORTAR_SPEED;
-            this.vx = Anuto.MathUtils.fixNumber(speed * Math.cos(angle));
-            this.vy = Anuto.MathUtils.fixNumber(speed * Math.sin(angle));
+            this.vx = Anuto.MathUtils.fixNumber(this.turret.projectileSpeed * Math.cos(angle));
+            this.vy = Anuto.MathUtils.fixNumber(this.turret.projectileSpeed * Math.sin(angle));
         }
         Mortar.prototype.destroy = function () {
             //

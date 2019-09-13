@@ -34,10 +34,10 @@ declare module Anuto {
         enemiesWithinRange: Enemy[];
         followedEnemy: Enemy;
         shootAngle: number;
+        projectileSpeed: number;
         protected f: number;
         protected reloadTicks: number;
         protected readyToShoot: boolean;
-        protected projectileSpeed: number;
         protected engine: Engine;
         constructor(type: string, p: {
             r: number;
