@@ -12,8 +12,6 @@ export interface IGameProps { visible: boolean }
 
 export default class Game extends React.Component<IGameProps, any> {
 
-    private game: Phaser.Game;
-
     constructor(props: IGameProps) {
         super(props);
         this.state = {
@@ -59,7 +57,7 @@ export default class Game extends React.Component<IGameProps, any> {
 
         // If compilation error here, compare Phaser definitions file of working copy (phaser.d.ts, line 48040 on 27-05-2019)
         // Also make sure to delete all *.ts files in node_modules/trailz folder
-        this.game = new PhaserGame(gameConfig);
+        new PhaserGame(gameConfig);
 
         this.updateDimensions();
     }

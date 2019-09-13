@@ -33,7 +33,9 @@ export default class App extends Component<IProps, IState> {
             <Router>
                 <Route path="/" exact component={Index} />
                 <Route path="/tournaments" exact component={Tournaments} />
-                <Route path="/tournaments/:id" exact render={routeProps => <Tournament {...routeProps} onLoad={this.play.bind(this)} onUnload={this.menu.bind(this)} />}/>
+                <Route path="/tournaments/:id" exact render={routeProps =>
+                    <Tournament {...routeProps} onLoad={this.play.bind(this)} onUnload={this.menu.bind(this)} />}
+                />
                 <Game visible={this.state.gameOn} />
             </Router>
         );

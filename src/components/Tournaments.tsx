@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Container, Card, List } from "semantic-ui-react";
+import TournamentCard from "./TournamentCard";
 
 interface IState { }
 interface IProps { filter: string }
@@ -25,13 +26,13 @@ export default class Tournaments extends Component<IProps, IState> {
             deadline: "2019-09-10T21:54:58Z"
         }));
         return (
-            <div>
-                <ul>
-                    {Array.from(tournaments, (t, index) => 
-                        <li key={index}><Link to={`/tournaments/${t.id}`}>{t.name}</Link></li>
+            <Container>
+                <List>
+                    {Array.from(tournaments, (tournament, index) => 
+                        <TournamentCard key={index} tournament={tournament} />
                     )}
-                </ul>
-            </div>
+                </List>
+            </Container>
         );
     }
 }
