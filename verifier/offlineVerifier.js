@@ -30,8 +30,6 @@ while(!anutoEngine.gameOver) {
 
         var action = logs.actions.shift();
 
-        console.log(action.type, anutoEngine.ticksCounter);
-
         switch(action.type) {
             case TYPE_NEXT_WAVE:
                 anutoEngine.newWave();
