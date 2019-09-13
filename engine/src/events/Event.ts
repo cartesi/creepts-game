@@ -20,6 +20,7 @@ module Anuto {
         public static readonly GLUE_CONSUMED = "glue consumed";
         public static readonly ENEMIES_TELEPORTED = "enemies teleported";
         public static readonly REMOVE_BULLET = "remove bullet";
+        public static readonly REMOVE_GLUE_BULLET = "remove glue bullet";
 
         private type: string;
         private params: any;

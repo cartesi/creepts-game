@@ -594,11 +594,8 @@ module Anuto {
                 const bullet = this.bullets[i];
 
                 if (bullet.outOfStageBoundaries) {
-
                     this.bulletsColliding.push(bullet);
-
                 } else {
-
                     let enemy = bullet.assignedEnemy;
 
                     const bp1 = {x: bullet.x, y: bullet.y};
@@ -611,17 +608,13 @@ module Anuto {
                     if (enemy) {
                         
                         enemyPosition = {x: enemy.x, y: enemy.y};
-
                         let boundingRadius = enemy.life > 0 ? enemy.boundingRadius : 1.65 * enemy.boundingRadius;
-    
                         enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, boundingRadius);
-    
+
                         if (enemyHit) {
                             this.bulletsColliding.push(bullet);
                         }
-                        
                     } else {
-
                         // es una bala que tenia asiganada un enemigo que ha sido teletransportada
                         // mirar si colisiona contra otro enemigo y en este caso reasignarselo
                         // y meterla en el array de balas a eliminar
@@ -644,19 +637,46 @@ module Anuto {
 
             for (let i = 0; i < this.glueBullets.length; i ++) {
                 
-                const bullet = this.glueBullets[i];
-                const enemy = this.glueBullets[i].assignedEnemy;
+                const gluebullet = this.glueBullets[i];
 
-                if (enemy) {
-                    const bp1 = {x: bullet.x, y: bullet.y};
-                    const bp2 = bullet.getPositionNextTick();
-                    const enemyPosition = {x: enemy.x, y: enemy.y};
+                if (gluebullet.outOfStageBoundaries) {
+                    this.glueBulletsColliding.push(gluebullet);
+                } else {
 
-                    const enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, 1.15 * enemy.boundingRadius);
+                    let enemy = gluebullet.assignedEnemy;
 
-                    if (enemyHit) {
-                        this.glueBulletsColliding.push(bullet);
-                    } 
+                    const bp1 = {x: gluebullet.x, y: gluebullet.y};
+                    const bp2 = gluebullet.getPositionNextTick();
+
+                    let enemyPosition: {x: number, y: number};
+                    let enemyHit: boolean;
+
+                    if (enemy) {
+
+                        enemyPosition = {x: enemy.x, y: enemy.y};
+
+                        let boundingRadius = enemy.life > 0 ? enemy.boundingRadius : 1.65 * enemy.boundingRadius;
+                        enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, boundingRadius);
+
+                        if (enemyHit) {
+                            this.glueBulletsColliding.push(gluebullet);
+                        }
+                    } else {
+
+                        for (let j = 0; j < this.enemies.length; j ++) {
+
+                            enemy = this.enemies[j];
+                            enemyPosition = {x: enemy.x, y: enemy.y};
+
+                            enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, 1.25 * enemy.boundingRadius);
+    
+                            if (enemyHit) {
+                                gluebullet.assignedEnemy = enemy;
+                                this.glueBulletsColliding.push(gluebullet);
+                                break;
+                            }
+                        }
+                    }
                 }
             } 
 
@@ -719,7 +739,7 @@ module Anuto {
                 const bullet = this.bulletsColliding[i];
                 const enemy = bullet.assignedEnemy;
 
-                // si el enemigo ya ha muerto o ha salido del tablero
+                // si el enemigo ya ha muerto o la bala ha salido del tablero
                 if (bullet.outOfStageBoundaries || enemy.life === 0) {
                     this.eventDispatcher.dispatchEvent(new Event(Event.REMOVE_BULLET, [bullet]));
                 } else {
@@ -740,9 +760,9 @@ module Anuto {
                 const glueBullet = this.glueBulletsColliding[i];
                 const enemy = glueBullet.assignedEnemy;
 
-                if (enemy === null || enemy.life === 0) {
-                    // ya esta muerto o el enemigo ha sido teletransportado
-                    this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_GLUE_HIT, [[], glueBullet]));
+                // si el enemigo ya ha muerto o la bala ha salido del tablero
+                if (glueBullet.outOfStageBoundaries || enemy.life === 0) {
+                    this.eventDispatcher.dispatchEvent(new Event(Event.REMOVE_GLUE_BULLET, [glueBullet]));
                 } else {
                     this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_GLUE_HIT, [[enemy], glueBullet]));
                     enemy.hitByGlueBullet(glueBullet.intensity, glueBullet.durationTicks);
@@ -862,9 +882,8 @@ module Anuto {
 
                     const glueBullet = this.glueBullets[i];
 
-                    if (glueBullet.assignedEnemy && glueBullet.assignedEnemy.id === enemy.id && this.glueBulletsColliding.indexOf(glueBullet) === -1) {
+                    if (glueBullet.assignedEnemy && glueBullet.assignedEnemy.id === enemy.id) {
                         glueBullet.assignedEnemy = null;
-                        this.glueBulletsColliding.push(glueBullet);
                     }
                 }
             }

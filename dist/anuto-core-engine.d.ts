@@ -310,6 +310,7 @@ declare module Anuto {
         static readonly GLUE_CONSUMED = "glue consumed";
         static readonly ENEMIES_TELEPORTED = "enemies teleported";
         static readonly REMOVE_BULLET = "remove bullet";
+        static readonly REMOVE_GLUE_BULLET = "remove glue bullet";
         private type;
         private params;
         constructor(type: string, params?: any);
@@ -379,6 +380,8 @@ declare module Anuto {
         intensity: number;
         durationTicks: number;
         canonShoot: string;
+        outOfStageBoundaries: boolean;
+        private engine;
         private vx;
         private vy;
         constructor(p: {
