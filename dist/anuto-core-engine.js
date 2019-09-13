@@ -486,7 +486,7 @@ var Anuto;
                 console.log("TICKS: " + this._ticksCounter);
                 console.log("SCORE: " + this._score);
             }
-            if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
+            if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.mortars.length === 0) {
                 this.waveActivated = false;
                 this.ageTurrets();
                 if (this._lifes > 0) {
