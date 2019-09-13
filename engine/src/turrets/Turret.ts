@@ -162,10 +162,8 @@ module Anuto {
 
                 const enemy = this.engine.enemies[i];
 
-                if (this.type === GameConstants.TURRET_GLUE) {
-                    if ((this.grade === 2 && enemy.affectedByGlueBullet) || this.grade === 3 && enemy.hasBeenTeleported) {
-                        continue;
-                    }
+                if (this.type === GameConstants.TURRET_GLUE && this.grade === 3 && enemy.hasBeenTeleported) {
+                    continue;
                 }
 
                 if (enemy.life > 0 && enemy.l < this.engine.enemiesPathCells.length - 1.5 && !enemy.teleporting) {

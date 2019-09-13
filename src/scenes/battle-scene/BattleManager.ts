@@ -67,6 +67,7 @@ export class BattleManager {
         BattleManager.anutoEngine.addEventListener(Anuto.Event.GLUE_BULLET_SHOT, BattleManager.onGlueBulletShot, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_HIT, BattleManager.onEnemyHit, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.REMOVE_BULLET, BattleManager.removeBullet, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.REMOVE_GLUE_BULLET, BattleManager.removeGlueBullet, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_GLUE_HIT, BattleManager.onEnemyGlueHit, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_KILLED, BattleManager.onEnemyKilled, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.LASER_SHOT, BattleManager.onLaserBeamShot, BattleManager);
@@ -288,6 +289,11 @@ export class BattleManager {
     private static removeBullet(anutoBullet?: Anuto.Bullet) {
 
         BoardContainer.currentInstance.removeBullet(anutoBullet);
+    }
+
+    private static removeGlueBullet(anutoGlueBullet: Anuto.GlueBullet): void {
+        
+        BoardContainer.currentInstance.removeGlueBullet(anutoGlueBullet);
     }
 
     private static onEnemyGlueHit(anutoEnemies: Anuto.Enemy[], anutoGlueBullet: Anuto.GlueBullet): void {
