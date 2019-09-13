@@ -484,7 +484,7 @@ var Anuto;
                 console.log("TICKS: " + this._ticksCounter);
                 console.log("SCORE: " + this._score);
             }
-            if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.mortars.length === 0) {
+            if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
                 this.waveActivated = false;
                 this.ageTurrets();
                 if (this._lifes > 0) {
@@ -1127,7 +1127,7 @@ var Anuto;
         function GameConstants() {
         }
         // version: v0.month.day.hour
-        GameConstants.VERSION = "v0.11.13.12";
+        GameConstants.VERSION = "v0.11.13.14";
         GameConstants.RELOAD_BASE_TICKS = 10;
         GameConstants.BULLET_SPEED = .85; // in cells / tick
         GameConstants.MORTAR_SPEED = .45;
@@ -1409,25 +1409,6 @@ var Anuto;
             _this.calculateTurretParameters();
             return _this;
         }
-        GlueTurret.prototype.update = function () {
-            // cuando tiene grado 1 no hace falta calcular los enemigos que tenga en el radio de accion
-            if (this.grade === 1) {
-                if (this.readyToShoot) {
-                    this.readyToShoot = false;
-                    this.shoot();
-                }
-                else {
-                    this.f++;
-                    if (this.f >= this.reloadTicks) {
-                        this.readyToShoot = true;
-                        this.f = 0;
-                    }
-                }
-            }
-            else {
-                _super.prototype.update.call(this);
-            }
-        };
         // mirar en el ANUTO y generar las formulas que correspondan
         GlueTurret.prototype.calculateTurretParameters = function () {
             switch (this.grade) {

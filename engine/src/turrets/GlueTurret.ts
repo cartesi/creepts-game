@@ -19,32 +19,6 @@ module Anuto {
             this.calculateTurretParameters();
         }
 
-        public update(): void {
-
-            // cuando tiene grado 1 no hace falta calcular los enemigos que tenga en el radio de accion
-            if (this.grade === 1) {
-
-                if (this.readyToShoot) {
-
-                    this.readyToShoot = false;   
-                    this.shoot();
-            
-                } else {
-    
-                    this.f ++;
-    
-                    if (this.f >= this.reloadTicks) {
-                        this.readyToShoot = true;
-                        this.f = 0;
-                    }
-                }
-
-            } else {
-
-                super.update();
-            }
-        }
-
         // mirar en el ANUTO y generar las formulas que correspondan
         protected calculateTurretParameters(): void {
     

@@ -214,7 +214,7 @@ declare module Anuto {
 }
 declare module Anuto {
     class GameConstants {
-        static readonly VERSION = "v0.11.13.12";
+        static readonly VERSION = "v0.11.13.14";
         static readonly RELOAD_BASE_TICKS = 10;
         static readonly BULLET_SPEED = 0.85;
         static readonly MORTAR_SPEED = 0.45;
@@ -406,7 +406,6 @@ declare module Anuto {
             r: number;
             c: number;
         }, engine: Engine);
-        update(): void;
         protected calculateTurretParameters(): void;
         protected shoot(): void;
     }

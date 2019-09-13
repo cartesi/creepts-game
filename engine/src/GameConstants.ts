@@ -3,7 +3,7 @@ module Anuto {
     export class GameConstants {
 
         // version: v0.month.day.hour
-        public static readonly VERSION = "v0.11.13.12";
+        public static readonly VERSION = "v0.11.13.14";
 
         public static readonly RELOAD_BASE_TICKS = 10;
         public static readonly BULLET_SPEED = .85; // in cells / tick
