@@ -214,7 +214,7 @@ declare module Anuto {
 }
 declare module Anuto {
     class GameConstants {
-        static readonly VERSION = "v0.11.12.15";
+        static readonly VERSION = "v0.11.13.10";
         static readonly RELOAD_BASE_TICKS = 10;
         static readonly BULLET_SPEED = 0.85;
         static readonly MORTAR_SPEED = 0.45;
