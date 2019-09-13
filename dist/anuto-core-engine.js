@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    };
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -1127,7 +1127,7 @@ var Anuto;
         function GameConstants() {
         }
         // version: v0.month.day.hour
-        GameConstants.VERSION = "v0.11.13.10";
+        GameConstants.VERSION = "v0.11.13.12";
         GameConstants.RELOAD_BASE_TICKS = 10;
         GameConstants.BULLET_SPEED = .85; // in cells / tick
         GameConstants.MORTAR_SPEED = .45;
