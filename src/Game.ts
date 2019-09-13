@@ -1,3 +1,4 @@
+import Phaser from "phaser";
 import { AudioManager } from "./AudioManager";
 import { GameVars } from "./GameVars";
 
