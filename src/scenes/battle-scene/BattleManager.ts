@@ -110,9 +110,10 @@ export class BattleManager {
     public static newWave(): void {
 
         if (BattleManager.anutoEngine.newWave()) {
+
             BattleScene.currentInstance.hud.updateRound();
 
-            let action = {type: GameConstants.TYPE_NEXT_WAVE, tick: BattleManager.anutoEngine.ticksCounter};
+            const action = {type: GameConstants.TYPE_NEXT_WAVE, tick: BattleManager.anutoEngine.ticksCounter};
             BattleManager.addAction(action);
         }
     }

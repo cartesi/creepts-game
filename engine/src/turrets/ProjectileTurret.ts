@@ -23,23 +23,6 @@ module Anuto {
             this.calculateTurretParameters();
         }
 
-        public update(): void {
-
-            if (this.fixedTarget) {
-                if (this.enemiesWithinRange.length > 0) {
-                    if (this.enemiesWithinRange.indexOf(this.followedEnemy) === -1) {
-                        this.followedEnemy = this.enemiesWithinRange[0];
-                    }   
-                } else {
-                    this.followedEnemy = null;
-                }
-            } else {
-                this.followedEnemy = this.enemiesWithinRange[0];
-            }
-
-            super.update();
-        }
-
         // estos valores estan sacados del anuto
         protected calculateTurretParameters(): void {
 

@@ -183,15 +183,13 @@ module Anuto {
             }
 
             if (this.waveActivated) {
-
                 this.removeProjectilesAndAccountDamage();
             }
 
-                this.teleport();
+            this.teleport();
 
-                this.checkCollisions();
-                this.spawnEnemies();
-            
+            this.checkCollisions();
+            this.spawnEnemies();
             
             this.enemies.forEach(function (enemy) {
                 enemy.update();
@@ -654,7 +652,7 @@ module Anuto {
                     const bp2 = bullet.getPositionNextTick();
                     const enemyPosition = {x: enemy.x, y: enemy.y};
 
-                    const enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, enemy.boundingRadius);
+                    const enemyHit = MathUtils.isLineSegmentIntersectingCircle(bp1, bp2, enemyPosition, 1.15 * enemy.boundingRadius);
 
                     if (enemyHit) {
                         this.glueBulletsColliding.push(bullet);
@@ -747,7 +745,7 @@ module Anuto {
                     this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_GLUE_HIT, [[], glueBullet]));
                 } else {
                     this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_GLUE_HIT, [[enemy], glueBullet]));
-                    enemy.glueHit(glueBullet.intensity, glueBullet.durationTicks, glueBullet);
+                    enemy.hitByGlueBullet(glueBullet.intensity, glueBullet.durationTicks);
                 }
 
                 const index = this.glueBullets.indexOf(glueBullet);
@@ -892,6 +890,7 @@ module Anuto {
             while (enemy) {
 
                 this.enemiesSpawned++;
+
                 if (this.enemiesSpawned === this.waveEnemiesLength) {
                     this.allEnemiesSpawned = true;
                     this.enemiesSpawned = 0;

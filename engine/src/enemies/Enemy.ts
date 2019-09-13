@@ -18,9 +18,8 @@ module Anuto {
         public affectedByGlue: boolean;
         public glueIntensity: number;
         public affectedByGlueBullet: boolean;
-        public glueIntensityBullet: number;
-        public glueDuration: number;
-        public glueTime: number;
+        public glueBulletIntensity: number;
+        public glueBulletDurationTicks: number;
         public hasBeenTeleported: boolean;
         public teleporting: boolean;
 
@@ -29,6 +28,7 @@ module Anuto {
         protected enemyData: any;
         protected t: number;
         protected engine: Engine;
+        protected glueTicksCounter: number;
 
         constructor (type: string, creationTick: number, engine: Engine) {
             
@@ -51,9 +51,9 @@ module Anuto {
             this.affectedByGlue = false;
             this.glueIntensity = 0;
             this.affectedByGlueBullet = false;
-            this.glueIntensityBullet = 0;
-            this.glueDuration = 0;
-            this.glueTime = 0;
+            this.glueBulletIntensity = 0;
+            this.glueBulletDurationTicks = 0;
+            this.glueTicksCounter = 0;
             this.hasBeenTeleported = false;
             this.teleporting = false;
 
@@ -117,14 +117,13 @@ module Anuto {
 
             if (this.affectedByGlueBullet) {
 
-                speed = MathUtils.fixNumber(this.speed / this.glueIntensityBullet);
+                speed = MathUtils.fixNumber(this.speed / this.glueBulletIntensity);
 
-                if (this.glueDuration <= this.glueTime) {
+                this.glueTicksCounter++;
+
+                if (this.glueTicksCounter === this.glueBulletDurationTicks) {
                     this.affectedByGlueBullet = false;
-                    this.glueTime = 0;
-                } else {
-                    this.glueTime++;
-                }
+                } 
             }
            
             this.l = MathUtils.fixNumber(this.l + speed);
@@ -164,6 +163,14 @@ module Anuto {
 
             this.x = p.x;
             this.y = p.y;
+        }
+
+        public hitByGlueBullet(glueBulletIntensity: number, glueBulletsDurationTicks: number): void {
+            
+            this.glueTicksCounter = 0;
+            this.affectedByGlueBullet = true;
+            this.glueBulletIntensity = glueBulletIntensity;
+            this.glueBulletDurationTicks = glueBulletsDurationTicks;
         }
 
         public glue(glueIntensity: number): void{
@@ -220,13 +227,6 @@ module Anuto {
                 this.life = 0;
                 this.engine.onEnemyKilled(this);
             }
-        }
-
-        public glueHit(intensity: number, duration: number, bullet: GlueBullet): void {
-            
-            this.affectedByGlueBullet = true;
-            this.glueIntensityBullet = intensity;
-            this.glueDuration = duration;
         }
 
         public restoreHealth(): void {

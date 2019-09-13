@@ -14,7 +14,35 @@ module Anuto {
             this.maxLevel = 5;
             this.teleportDistance = 0;
 
+            this.projectileSpeed = GameConstants.BULLET_SPEED;
+
             this.calculateTurretParameters();
+        }
+
+        public update(): void {
+
+            // cuando tiene grado 1 no hace falta calcular los enemigos que tenga en el radio de accion
+            if (this.grade === 1) {
+
+                if (this.readyToShoot) {
+
+                    this.readyToShoot = false;   
+                    this.shoot();
+            
+                } else {
+    
+                    this.f ++;
+    
+                    if (this.f >= this.reloadTicks) {
+                        this.readyToShoot = true;
+                        this.f = 0;
+                    }
+                }
+
+            } else {
+
+                super.update();
+            }
         }
 
         // mirar en el ANUTO y generar las formulas que correspondan
@@ -68,10 +96,13 @@ module Anuto {
             let enemy: Enemy;
 
             switch (this.grade) {
+
                 case 1:
+
                     const glue = new Glue(this.position, this.intensity, this.durationTicks, this.range, this.engine);
                     this.engine.addGlue(glue, this);
                     break;
+
                 case 2:
 
                     if (this.fixedTarget) {
@@ -83,7 +114,7 @@ module Anuto {
                     const d = MathUtils.fixNumber(Math.sqrt((this.x - enemy.x) * (this.x - enemy.x) +  (this.y - enemy.y) * (this.y - enemy.y)));
         
                     // cuantos ticks va a tardar la bala en llegar?
-                    const ticksToImpact = Math.floor(MathUtils.fixNumber(d / GameConstants.BULLET_SPEED));
+                    const ticksToImpact = Math.floor(MathUtils.fixNumber(d / this.projectileSpeed));
         
                     // encontrar la posicion del enemigo dentro de estos ticks
                     const impactPosition = enemy.getNextPosition(ticksToImpact);
@@ -92,20 +123,13 @@ module Anuto {
                     const dx = impactPosition.x - this.x;
                     const dy = impactPosition.y - this.y;
         
-                    const impactSquareDistance = MathUtils.fixNumber(dx * dx + dy * dy);
+                    this.shootAngle = MathUtils.fixNumber(Math.atan2(dy, dx));
+                    const bullet = new GlueBullet({c: this.position.c, r: this.position.r}, this.shootAngle, enemy, this.intensity, this.durationTicks, this.engine);
+    
+                    this.engine.addGlueBullet(bullet, this);
         
-                    if (this.range * this.range > impactSquareDistance) {
-        
-                        this.shootAngle = MathUtils.fixNumber(Math.atan2(dy, dx));
-                        const bullet = new GlueBullet({c: this.position.c, r: this.position.r}, this.shootAngle, enemy, this.intensity, this.durationTicks, this.engine);
-        
-                        this.engine.addGlueBullet(bullet, this);
-        
-                    } else {
-                        // no se dispara y se vuelve a estar disponible para disparar
-                        this.readyToShoot = true;
-                    }
                     break;
+
                 case 3:
 
                     if (this.fixedTarget) {
@@ -113,14 +137,11 @@ module Anuto {
                     } else {
                         enemy = this.enemiesWithinRange[0];
                     }
-                    
-                    if (enemy.life > 0 && !enemy.hasBeenTeleported) { 
-                        this.engine.flagEnemyToTeleport(enemy, this);
-                    } else {
-                        this.readyToShoot = true;
-                    }
-
+                     
+                    this.engine.flagEnemyToTeleport(enemy, this);
+                
                     break;
+                    
                 default:
             }
         }

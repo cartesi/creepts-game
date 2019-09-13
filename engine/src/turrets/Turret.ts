@@ -72,6 +72,18 @@ module Anuto {
 
             this.enemiesWithinRange = this.getEnemiesWithinRange();
 
+            if (this.fixedTarget) {
+                if (this.enemiesWithinRange.length > 0) {
+                    if (this.enemiesWithinRange.indexOf(this.followedEnemy) === -1) {
+                        this.followedEnemy = this.enemiesWithinRange[0];
+                    }   
+                } else {
+                    this.followedEnemy = null;
+                }
+            } else {
+                this.followedEnemy = this.enemiesWithinRange[0];
+            }
+
             if (this.readyToShoot) {
 
                 if (this.enemiesWithinRange.length > 0) {
@@ -150,30 +162,16 @@ module Anuto {
 
                 const enemy = this.engine.enemies[i];
 
+                if (this.type === GameConstants.TURRET_GLUE) {
+                    if ((this.grade === 2 && enemy.affectedByGlueBullet) || this.grade === 3 && enemy.hasBeenTeleported) {
+                        continue;
+                    }
+                }
+
                 if (enemy.life > 0 && enemy.l < this.engine.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
 
-                    let dx: number;
-                    let dy: number;
-
-                    // el laser y el pegamento son instantaneos
-                    if (this.type === GameConstants.TURRET_LASER || this.type === GameConstants.TURRET_GLUE) {
-
-                        dx = this.x - enemy.x;
-                        dy = this.y - enemy.y;
-
-                    } else {
-
-                        // donde estaran los enemigos cuando les impacten los proyectiles teniendo en cuenta la velocidad de estos?
-                        const deltaTicks = Math.round(this.range / this.projectileSpeed * .75);
-                        const enemyNextPosition = enemy.getNextPosition(deltaTicks);
-
-                        if (!enemyNextPosition) {
-                            continue;
-                        }
-
-                        dx = this.x - enemyNextPosition.x;
-                        dy = this.y - enemyNextPosition.y;
-                    }
+                    const dx = this.x - enemy.x;
+                    const dy = this.y - enemy.y;
 
                     const squaredDist = MathUtils.fixNumber(dx * dx + dy * dy);    
 
@@ -183,17 +181,32 @@ module Anuto {
                 }
             }
 
-            if (enemiesAndSquaredDistances.length > 1 && (this.type === GameConstants.TURRET_PROJECTILE || this.type === GameConstants.TURRET_LASER  || (this.type === GameConstants.TURRET_LAUNCH && this.grade !== 2))) {
+            if (enemiesAndSquaredDistances.length > 1 ) {
         
                 // ordenar a los enemigos dentro del radio de acción según la estrategia de disparo
                 switch (this.shootingStrategy) {
+
                     case GameConstants.STRATEGY_SHOOT_LAST:
                         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.enemy.l - e2.enemy.l) < 0);
                         break;
+
                     case GameConstants.STRATEGY_SHOOT_CLOSEST:
                        
-                        enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.squareDist - e2.squareDist) < 0);
+                        enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): boolean {
+                            
+                            let ret: boolean;
+
+                            if (e1.squareDist === e2.squareDist) {
+                                ret = (e1.enemy.l - e2.enemy.l) > 0;
+                            } else {
+                                ret = (e1.squareDist - e2.squareDist) < 0;
+                            }
+
+                            return ret;
+                        });
+
                         break;
+
                     case GameConstants.STRATEGY_SHOOT_WEAKEST:
             
                         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): boolean {
@@ -212,7 +225,7 @@ module Anuto {
                         break;
 
                     case GameConstants.STRATEGY_SHOOT_STRONGEST:
-  
+
                         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): boolean {
                             
                             let ret: boolean;
@@ -227,9 +240,12 @@ module Anuto {
                         });
                         
                         break;
+
                     case GameConstants.STRATEGY_SHOOT_FIRST:
+
                         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.enemy.l - e2.enemy.l) > 0);
                         break;
+
                     default:
                 }
             }

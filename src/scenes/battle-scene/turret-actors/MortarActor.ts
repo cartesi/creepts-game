@@ -13,6 +13,7 @@ export class MortarActor extends Phaser.GameObjects.Container {
     private mortarImage: Phaser.GameObjects.Image;
     private detonated: boolean;
     private initialPosition: {x: number, y: number};
+    private deltaAngle: number;
     
     constructor(scene: Phaser.Scene, anutoMortar: Anuto.Mortar, launchTurretActor: LaunchTurretActor) {
 
@@ -34,6 +35,8 @@ export class MortarActor extends Phaser.GameObjects.Container {
         this.rotation = Math.random() * Math.PI;
 
         this.visible = false;
+
+        this.deltaAngle = Math.random() > .5 ? .5 : -.5;
     }
 
     public update(time: number, delta: number): void {
@@ -83,19 +86,17 @@ export class MortarActor extends Phaser.GameObjects.Container {
         if (this.anutoMortar.grade === 3) {
             this.rotation = Math.atan2(offY, offX) + Math.PI / 2;
         }
+
+        this.mortarImage.angle += this.deltaAngle;
     }
 
     public detonate(): void {
 
         this.visible = true;
-
-        AudioManager.playSound("t1_granada");
-
         this.detonated = true;
-
         this.mortarImage.visible = false;
 
-        let explosionEffect = this.scene.add.sprite(0, 0, "texture_atlas_1", "tower4_fx_01");
+        const explosionEffect = this.scene.add.sprite(0, 0, "texture_atlas_1", "tower4_fx_01");
         explosionEffect.setScale(.75);
         this.add(explosionEffect);
 
@@ -104,5 +105,7 @@ export class MortarActor extends Phaser.GameObjects.Container {
         explosionEffect.on("animationcomplete", () => {
             BoardContainer.currentInstance.removeMortar(this);
         }, this);
+
+        AudioManager.playSound("t1_granada");
     }
 }

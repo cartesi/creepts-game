@@ -133,7 +133,6 @@ export class GUI extends Phaser.GameObjects.Container {
         
         this.nextWaveButton.alpha = .5;
         BattleManager.newWave();
-        
     }
 
     private onBtnOver(btn: Phaser.GameObjects.Container): void {
