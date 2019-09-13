@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Breadcrumb, List, BreadcrumbSection, BreadcrumbDivider } from "semantic-ui-react";
+import { Breadcrumb, List } from "semantic-ui-react";
 import TournamentCard from "./TournamentCard";
 
 interface IState { }
@@ -29,9 +29,9 @@ export default class Tournaments extends Component<IProps, IState> {
         return (
             <div style={{ padding: "10px"}}>
                 <Breadcrumb>
-                    <BreadcrumbSection link><Link to="/">Home</Link></BreadcrumbSection>
-                    <BreadcrumbDivider />
-                    <BreadcrumbSection active>Play</BreadcrumbSection>
+                    <Breadcrumb.Section as={Link} to="/">Home</Breadcrumb.Section>
+                    <Breadcrumb.Divider />
+                    <Breadcrumb.Section active>Play</Breadcrumb.Section>
                 </Breadcrumb>
                 <List>
                     {Array.from(tournaments, (tournament, index) => 

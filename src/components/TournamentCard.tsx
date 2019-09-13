@@ -4,7 +4,7 @@ import { Button, Card, Image } from "semantic-ui-react";
 
 export default ({ tournament }) => {
     return (
-        <Card key={tournament.id}>
+        <Card key={tournament.id} raised fluid>
             <Card.Content>
                 <Image
                     floated="right"

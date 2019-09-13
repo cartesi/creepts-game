@@ -31,7 +31,7 @@ export default class App extends Component<IProps, IState> {
     render() {
         return (
             <Router>
-                <div style={{ width: "320px" }}>
+                <div>
                     <Route path="/" exact component={Index} />
                     <Route path="/tournaments" exact component={Tournaments} />
                     <Route path="/tournaments/:id" exact render={routeProps =>
