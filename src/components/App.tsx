@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import { Game } from "../Game";
 import Index from "./Index";
 import Tournaments from "./Tournaments";
 import Tournament from "./Tournament";
@@ -21,15 +20,9 @@ export default class App extends Component<IProps, IState> {
     }
 
     play(mapIndex: number) {
-        const selectMap = (map: number) => {
-            setTimeout(() => {
-                if (Game.currentInstance.isBooted) GameManager.mapSelected(map);
-                else selectMap(map);
-            }, 200);
-        }
-
-        selectMap(mapIndex);
-        // GameManager.mapSelected(mapIndex);
+        // XXX: depending on the opening route the game may not be ready yet
+        // XXX: we need some asynchronou way to do this
+        GameManager.mapSelected(mapIndex);
         this.setState({ gameOn: true });
     }
 

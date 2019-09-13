@@ -42,8 +42,9 @@ export class PreloadScene extends Phaser.Scene {
 
     private loadAssets(): void {
 
-        this.load.atlas("texture_atlas_1", "/assets/texture_atlas_1.png", "/assets/texture_atlas_1.json");
-        this.load.json("audiosprite", "/assets/audio/audiosprite.json");
+        this.load.setBaseURL("/");
+        this.load.atlas("texture_atlas_1", "assets/texture_atlas_1.png", "assets/texture_atlas_1.json");
+        this.load.json("audiosprite", "assets/audio/audiosprite.json");
 
         this.load.on("progress", this.updateLoadedPercentage, this);
     }
