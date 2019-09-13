@@ -30,6 +30,8 @@ while(!anutoEngine.gameOver) {
 
         var action = logs.actions.shift();
 
+        console.log(action.type, anutoEngine.ticksCounter);
+
         switch(action.type) {
             case TYPE_NEXT_WAVE:
                 anutoEngine.newWave();
@@ -53,6 +55,7 @@ while(!anutoEngine.gameOver) {
                 anutoEngine.setFixedTarget(action.id);
                 break;
             default:
+                console.log("DEFAULT");
                 break;
         }
     }
