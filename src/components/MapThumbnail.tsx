@@ -26,8 +26,8 @@ export const MapThumbnail: React.SFC<MapThumbnailProps> = (props) => {
 
     // tile builder, a svg <rect> with a fill color
     const tile = (color: string) => ({c, r}, k: number) => {
-        if (c < 0 || r < 0 || c >= map.size.c || r >= map.size.r) return <div/>;
-        return <rect x={c * cw} y={r * ch} width={cw} height={ch} fill={color} />
+        if (c < 0 || r < 0 || c >= map.size.c || r >= map.size.r) return <div key={k} />;
+        return <rect x={c * cw} y={r * ch} width={cw} height={ch} fill={color} key={k} />
     };
 
     // path and plateus as a list of <rect>
@@ -55,7 +55,7 @@ export const MapThumbnail: React.SFC<MapThumbnailProps> = (props) => {
             <rect width="100%" height="100%" fill={"#ccc"} />
             <g transform={`scale(${sx}, ${sy})`}>
                 <g transform={`translate(${dx}, ${dy})`}>
-                    <rect width="100%" height="100%" fill={map.plateaus.length > 0 ? "#ccc" : "#fff"} />
+                    <rect width="100%" height="100%" fill={map.plateaus.length > 0 ? "#ccc" : "#fff"} key="-1" />
                     {path}
                     {plateaus} 
                 </g>
