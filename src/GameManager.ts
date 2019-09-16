@@ -2,8 +2,16 @@ import { GameConstants } from "./GameConstants";
 import { GameVars } from "./GameVars";
 import { AudioManager } from "./AudioManager";
 import mapsData from "../assets/config/maps.json";
+import EventEmitter from "events";
+import TypedEmitter from "typed-emitter";
+
+interface GameManagerEvents {
+    ready: () => void
+}
 
 export class GameManager {
+
+    public static events = new EventEmitter() as TypedEmitter<GameManagerEvents>;
 
     public static init(): void {
 
