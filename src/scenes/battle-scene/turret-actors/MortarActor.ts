@@ -1,6 +1,5 @@
 import { GameConstants } from "../../../GameConstants";
 import { GameVars } from "../../../GameVars";
-import { LaunchTurretActor } from "./LaunchTurretActor";
 import { BoardContainer } from "../BoardContainer";
 import { BattleManager } from "../BattleManager";
 import { AudioManager } from "../../../AudioManager";
@@ -97,7 +96,11 @@ export class MortarActor extends Phaser.GameObjects.Container {
         this.mortarImage.visible = false;
 
         const explosionEffect = this.scene.add.sprite(0, 0, "texture_atlas_1", "tower4_fx_01");
-        explosionEffect.setScale(.75);
+        if (this.anutoMortar.turret.grade === 1) {
+            explosionEffect.setScale(.5);
+        } else if (this.anutoMortar.turret.grade === 2) {
+            explosionEffect.setScale(.75);
+        }
         this.add(explosionEffect);
 
         explosionEffect.anims.play("explosion");

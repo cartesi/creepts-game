@@ -3456,7 +3456,7 @@ var GameConstants = /** @class */ (function () {
     // el tick del engine en milisegundos
     GameConstants.TIME_STEP = 100;
     GameConstants.ENEMY_SPAWNING_DELTA_TICKS = 10;
-    GameConstants.INITIAL_CREDITS = 500e3;
+    GameConstants.INITIAL_CREDITS = 500;
     GameConstants.INITIAL_LIFES = 20;
     GameConstants.CELLS_SIZE = 60;
     // LOGS TYPES
