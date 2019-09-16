@@ -3,7 +3,7 @@ var pathToPhaser = path.join(__dirname, '/node_modules/phaser/');
 var phaser = path.join(pathToPhaser, 'dist/phaser-arcade-physics.min');
 
 module.exports = {
-	entry: './src/app.tsx',
+	entry: './src/app.ts',
 	devtool: 'source-map',
 	output: {
 		path: path.resolve(__dirname, 'dist'),
@@ -11,7 +11,7 @@ module.exports = {
 	},
 	module: {
 		rules: [
-			{ test: /\.ts(x?)$/, loader: 'ts-loader', exclude: /node_modules/ },
+			{ test: /\.ts$/, loader: 'ts-loader', exclude: '/node_modules/' },
 			{ test: /phaser\.js$/, loader: 'expose-loader?Phaser' }
 		]
 	},
@@ -20,11 +20,10 @@ module.exports = {
 		publicPath: '/dist/',
 		host: '127.0.0.1',
 		port: 8080,
-		open: true,
-		historyApiFallback: true
+		open: true
 	},
 	resolve: {
-		extensions: ['.ts', '.tsx', '.js'],
+		extensions: ['.ts', '.js'],
 		alias: {
 			phaser: phaser
 		  }
