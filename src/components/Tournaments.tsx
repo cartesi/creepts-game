@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Breadcrumb, List } from "semantic-ui-react";
-import TournamentCard from "./TournamentCard";
+import { TournamentCard } from "./TournamentCard";
+import { TournamentPhase } from "../Tournament";
 
 interface IState { }
-interface IProps { filter: string }
+interface IProps { me: boolean, phase: string }
 
 export default class Tournaments extends Component<IProps, IState> {
 
@@ -23,8 +24,10 @@ export default class Tournaments extends Component<IProps, IState> {
         const tournaments = Array.from(this.maps, (map) => ({
             id: map,
             name: map,
-            phase: "commit",
-            deadline: "2019-09-10T21:54:58Z"
+            map: map,
+            phase: TournamentPhase.commit,
+            playerCount: 45,
+            deadline: new Date("2019-10-01T21:54:58Z")
         }));
         return (
             <div style={{ padding: "10px"}}>
