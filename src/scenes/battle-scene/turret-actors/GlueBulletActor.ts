@@ -2,12 +2,12 @@ import { GameConstants } from "../../../GameConstants";
 
 export class GlueBulletActor extends Phaser.GameObjects.Container {
 
-    public anutoBullet: Anuto.GlueBullet;
+    public anutoGlueBullet: Anuto.GlueBullet;
     public initialPosition: {x: number, y: number};
 
-    protected img: Phaser.GameObjects.Sprite;
+    private img: Phaser.GameObjects.Sprite;
 
-    constructor(scene: Phaser.Scene, anutoBullet: Anuto.GlueBullet) {
+    constructor(scene: Phaser.Scene, anutoGlueBullet: Anuto.GlueBullet) {
 
         super(scene);
 
@@ -15,13 +15,12 @@ export class GlueBulletActor extends Phaser.GameObjects.Container {
         this.img.setOrigin(.5, 1);
         this.add(this.img);
 
-        this.anutoBullet = anutoBullet;
+        this.anutoGlueBullet = anutoGlueBullet;
 
-        this.setScale(.75);
         this.visible = false;
 
-        this.x = this.anutoBullet.x * GameConstants.CELLS_SIZE;
-        this.y = this.anutoBullet.y * GameConstants.CELLS_SIZE;
+        this.x = this.anutoGlueBullet.x * GameConstants.CELLS_SIZE;
+        this.y = this.anutoGlueBullet.y * GameConstants.CELLS_SIZE;
 
         this.initialPosition = {x: this.x, y: this.y};
 
@@ -38,17 +37,17 @@ export class GlueBulletActor extends Phaser.GameObjects.Container {
             smoothFactor = 1;
         }
 
-        let offX = (this.anutoBullet.x * GameConstants.CELLS_SIZE - this.x) * smoothFactor;
-        let offY = (this.anutoBullet.y * GameConstants.CELLS_SIZE - this.y) * smoothFactor;
+        const offX = (this.anutoGlueBullet.x * GameConstants.CELLS_SIZE - this.x) * smoothFactor;
+        const offY = (this.anutoGlueBullet.y * GameConstants.CELLS_SIZE - this.y) * smoothFactor;
         
         this.x += offX;
         this.y += offY;
 
-        this.rotation = Math.atan2(offY, offX) + Math.PI / 2;
+        this.rotation = Math.atan2(offY, offX) + Math.PI * .5;
 
         if (!this.visible) {
-            let distX = this.initialPosition.x - this.x;
-            let distY = this.initialPosition.y - this.y;
+            const distX = this.initialPosition.x - this.x;
+            const distY = this.initialPosition.y - this.y;
             if (Math.sqrt( distX * distX + distY * distY) > 20) {
                 this.visible = true;
             }

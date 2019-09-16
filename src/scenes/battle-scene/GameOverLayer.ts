@@ -22,18 +22,18 @@ export class GameOverLayer extends Phaser.GameObjects.Container {
         titleLines.strokeRect(-170, -320, 340, 50);
         this.add(titleLines);
 
-        let title = new Phaser.GameObjects.Text(this.scene, 0, -60, "GAME OVER", {fontFamily: "Rubik-Regular", fontSize: "35px", color: "#FFFFFF"});
+        const title = new Phaser.GameObjects.Text(this.scene, 0, -60, "GAME OVER", {fontFamily: "Rubik-Regular", fontSize: "35px", color: "#FFFFFF"});
         title.setOrigin(.5, 0);
         this.add(title);
 
-        let score = new Phaser.GameObjects.Text(this.scene, 0, 50, "SCORE: " + GameVars.formatNumber(BattleManager.anutoEngine.score), {fontFamily: "Rubik-Regular", fontSize: "65px", color: "#FFFFFF"});
+        const score = new Phaser.GameObjects.Text(this.scene, 0, 50, "SCORE: " + GameVars.formatNumber(BattleManager.anutoEngine.score), {fontFamily: "Rubik-Regular", fontSize: "65px", color: "#FFFFFF"});
         score.setOrigin(.5);
         this.add(score);
 
-        let width = 350;
-        let height = 40;
+        const width = 350;
+        const height = 40;
 
-        let restartButton = new Phaser.GameObjects.Container(this.scene);
+        const restartButton = new Phaser.GameObjects.Container(this.scene);
         restartButton.setPosition(0, 125);
         restartButton.setInteractive(new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height), Phaser.Geom.Rectangle.Contains);
         restartButton.on("pointerover", () => { this.onBtnOver(restartButton); });
