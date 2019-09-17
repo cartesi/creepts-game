@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { A } from "hookrouter";
-import { Breadcrumb, List } from "semantic-ui-react";
+import { Card, Breadcrumb, List } from "semantic-ui-react";
 import { TournamentCard } from "./TournamentCard";
-import { TournamentPhase } from "../Tournament";
+import { Tournament, TournamentPhase } from "../Tournament";
 
 interface IState { }
 interface IProps { me?: boolean, phase?: string }
@@ -21,7 +21,7 @@ export default class Tournaments extends Component<IProps, IState> {
     ];
 
     render() {
-        const tournaments = Array.from(this.maps, (map) => ({
+        const tournaments: Tournament[] = Array.from(this.maps, (map) => ({
             id: map,
             name: map,
             map: map,
@@ -29,6 +29,7 @@ export default class Tournaments extends Component<IProps, IState> {
             playerCount: 45,
             deadline: new Date("2019-10-01T21:54:58Z")
         }));
+
         return (
             <div style={{ padding: "10px"}}>
                 <Breadcrumb>
@@ -38,7 +39,11 @@ export default class Tournaments extends Component<IProps, IState> {
                 </Breadcrumb>
                 <List>
                     {Array.from(tournaments, (tournament, index) => 
-                        <TournamentCard key={index} tournament={tournament} />
+                        <TournamentCard
+                            key={index}
+                            tournament={tournament}
+                            score={{score: Math.round(Math.random() * 10e5), waves: (Math.round(Math.random() * 60))}}
+                        />
                     )}
                 </List>
             </div>

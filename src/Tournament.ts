@@ -21,7 +21,6 @@ export type Tournament = {
 }
 
 export type TournamentScore = {
-    id: string,
     score: number,
     waves: number,
     log?: LogsObject
