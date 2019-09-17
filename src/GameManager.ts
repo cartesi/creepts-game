@@ -7,6 +7,7 @@ import TypedEmitter from "typed-emitter";
 
 interface GameManagerEvents {
     ready: () => void
+    exit: () => void
 }
 
 export class GameManager {

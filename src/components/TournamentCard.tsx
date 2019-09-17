@@ -17,12 +17,13 @@ export const TournamentCard: React.SFC<TournamentCardProps> = ({ tournament, sco
                 <MapThumbnail map={tournament.map} width={50} height={60} />
                 <Card.Header>{tournament.name}</Card.Header>
                 <Card.Meta>{tournament.playerCount} {tournament.playerCount > 1 ? "players" : "player"}</Card.Meta>
-                {score ? <Card.Description>My Highscore: {score.score}</Card.Description> : null}                
-                {score ? <Card.Description>Wave: [TODO]</Card.Description> : null}
+                {score && <Card.Description>My Highscore: {score.score}</Card.Description>}
+                {score && <Card.Description>Wave: [TODO]</Card.Description>}
                 <Card.Description>Time Left: {moment(tournament.deadline).fromNow(true)}</Card.Description>
             </Card.Content>
             <Card.Content extra>
-                <Button as={Link} to={`/tournaments/${tournament.id}`} fluid>Improve!</Button>
+                {score && <Button as={Link} to={`/tournaments/${tournament.id}`} fluid>Improve!</Button>}
+                {score || <Button as={Link} to={`/tournaments/${tournament.id}`} fluid>Join</Button>}
             </Card.Content>
         </Card>
     );
