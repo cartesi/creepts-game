@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { A } from "hookrouter";
 import { Breadcrumb, List } from "semantic-ui-react";
 import { TournamentCard } from "./TournamentCard";
 import { TournamentPhase } from "../Tournament";
 
 interface IState { }
-interface IProps { me: boolean, phase: string }
+interface IProps { me?: boolean, phase?: string }
 
 export default class Tournaments extends Component<IProps, IState> {
 
@@ -32,7 +32,7 @@ export default class Tournaments extends Component<IProps, IState> {
         return (
             <div style={{ padding: "10px"}}>
                 <Breadcrumb>
-                    <Breadcrumb.Section as={Link} to="/">Home</Breadcrumb.Section>
+                    <Breadcrumb.Section as={A} href="/">Home</Breadcrumb.Section>
                     <Breadcrumb.Divider />
                     <Breadcrumb.Section active>Play</Breadcrumb.Section>
                 </Breadcrumb>

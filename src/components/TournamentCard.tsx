@@ -1,6 +1,6 @@
 import React from "react";
 import moment from "moment";
-import { Link } from "react-router-dom";
+import { A } from "hookrouter";
 import { Button, Card } from "semantic-ui-react";
 import { MapThumbnail } from "./MapThumbnail";
 import { Tournament, TournamentScore } from "../Tournament";
@@ -22,8 +22,8 @@ export const TournamentCard: React.SFC<TournamentCardProps> = ({ tournament, sco
                 <Card.Description>Time Left: {moment(tournament.deadline).fromNow(true)}</Card.Description>
             </Card.Content>
             <Card.Content extra>
-                {score && <Button as={Link} to={`/tournaments/${tournament.id}`} fluid>Improve!</Button>}
-                {score || <Button as={Link} to={`/tournaments/${tournament.id}`} fluid>Join</Button>}
+                {score && <Button as={A} href={`/tournaments/${tournament.id}`} fluid>Improve!</Button>}
+                {score || <Button as={A} href={`/tournaments/${tournament.id}`} fluid>Join</Button>}
             </Card.Content>
         </Card>
     );
