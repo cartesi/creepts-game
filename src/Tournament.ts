@@ -6,22 +6,23 @@ export enum TournamentPhase {
     end
 }
 
-export class Tournament {
-    public id: string;
-    public name: string;
-    public map: string;
-    public playerCount: number;
-    public phase: TournamentPhase;
-    public deadline: Date;
-    public totalRounds?: number;
-    public currentRound?: number;
-    public lastRound?: number;
-    public currentOpponent?: string;
-    public winner?: string;
+export type Tournament = {
+    id: string,
+    name: string,
+    map: string,
+    playerCount: number,
+    phase: TournamentPhase,
+    deadline: Date,
+    totalRounds?: number,
+    currentRound?: number,
+    lastRound?: number,
+    currentOpponent?: string,
+    winner?: string
 }
 
-export class TournamentScore {
-    public id: string;
-    public score: number;
-    public log?: LogsObject
+export type TournamentScore = {
+    id: string,
+    score: number,
+    waves: number,
+    log?: LogsObject
 }

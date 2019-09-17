@@ -18,7 +18,7 @@ export const TournamentCard: React.SFC<TournamentCardProps> = ({ tournament, sco
                 <Card.Header>{tournament.name}</Card.Header>
                 <Card.Meta>{tournament.playerCount} {tournament.playerCount > 1 ? "players" : "player"}</Card.Meta>
                 {score && <Card.Description>My Highscore: {score.score}</Card.Description>}
-                {score && <Card.Description>Wave: [TODO]</Card.Description>}
+                {score && <Card.Description>Waves: {score.waves}</Card.Description>}
                 <Card.Description>Time Left: {moment(tournament.deadline).fromNow(true)}</Card.Description>
             </Card.Content>
             <Card.Content extra>
