@@ -79,7 +79,7 @@ module Anuto {
                     this.range =  Math.round((.1 * this.level + 2.9) * 100) / 100;
                     this.priceImprovement =  Math.round( (39 / 2) * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + (665 / 2) * this.level + 596);
             
-                    this.projectileSpeed = 5 * GameConstants.MORTAR_SPEED;
+                    this.projectileSpeed = 2 * GameConstants.MORTAR_SPEED;
 
                     break;
 
@@ -112,8 +112,6 @@ module Anuto {
         }
 
         protected shoot(): void {
-
-            super.shoot();
 
             if (this.grade === 2) {
                 
@@ -158,7 +156,7 @@ module Anuto {
                 }
 
                 for (let i = 0; i < iterations; i ++) {
-                    ticksToImpact = Math.round(d / this.projectileSpeed);
+                    ticksToImpact = Math.floor(d / this.projectileSpeed);
                     impactPosition = enemy.getNextPosition(ticksToImpact);
                     d = MathUtils.fixNumber(Math.sqrt((this.x - impactPosition.x) * (this.x - impactPosition.x) + (this.y - impactPosition.y) * (this.y - impactPosition.y)));
                 }

@@ -1,6 +1,5 @@
 import { GameConstants } from "../../../GameConstants";
 import { GameVars } from "../../../GameVars";
-import { LaunchTurretActor } from "./LaunchTurretActor";
 import { BoardContainer } from "../BoardContainer";
 import { BattleManager } from "../BattleManager";
 import { AudioManager } from "../../../AudioManager";
@@ -9,18 +8,16 @@ export class MortarActor extends Phaser.GameObjects.Container {
 
     public anutoMortar: Anuto.Mortar;
 
-    private launchTurretActor: LaunchTurretActor;
     private mortarImage: Phaser.GameObjects.Image;
     private detonated: boolean;
     private initialPosition: {x: number, y: number};
     private deltaAngle: number;
     
-    constructor(scene: Phaser.Scene, anutoMortar: Anuto.Mortar, launchTurretActor: LaunchTurretActor) {
+    constructor(scene: Phaser.Scene, anutoMortar: Anuto.Mortar) {
 
         super(scene);
 
         this.anutoMortar = anutoMortar;
-        this.launchTurretActor = launchTurretActor;
         this.detonated = false;
 
         this.x = this.anutoMortar.x * GameConstants.CELLS_SIZE;
@@ -85,9 +82,11 @@ export class MortarActor extends Phaser.GameObjects.Container {
 
         if (this.anutoMortar.grade === 3) {
             this.rotation = Math.atan2(offY, offX) + Math.PI / 2;
-        }
+        } 
 
-        this.mortarImage.angle += this.deltaAngle;
+        if (this.anutoMortar.grade === 1) {
+            this.mortarImage.angle += this.deltaAngle;
+        }
     }
 
     public detonate(): void {
@@ -97,7 +96,11 @@ export class MortarActor extends Phaser.GameObjects.Container {
         this.mortarImage.visible = false;
 
         const explosionEffect = this.scene.add.sprite(0, 0, "texture_atlas_1", "tower4_fx_01");
-        explosionEffect.setScale(.75);
+        if (this.anutoMortar.turret.grade === 1) {
+            explosionEffect.setScale(.5);
+        } else if (this.anutoMortar.turret.grade === 2) {
+            explosionEffect.setScale(.75);
+        }
         this.add(explosionEffect);
 
         explosionEffect.anims.play("explosion");

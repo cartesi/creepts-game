@@ -27,11 +27,11 @@ module Anuto {
         public enemiesWithinRange: Enemy[];
         public followedEnemy: Enemy;
         public shootAngle: number;
+        public projectileSpeed: number;
         
         protected f: number;
         protected reloadTicks: number;
         protected readyToShoot: boolean;
-        protected projectileSpeed: number;
         protected engine: Engine;
         
         constructor (type: string, p: {r: number, c: number}, engine: Engine) {

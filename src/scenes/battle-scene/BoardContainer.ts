@@ -336,7 +336,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         const launchTurretActor = <LaunchTurretActor> this.getTurretActorByID(anutoLaunchTurret.id);
         launchTurretActor.shootMortar();
 
-        const mortar = new MortarActor(this.scene, anutoMortar, launchTurretActor);
+        const mortar = new MortarActor(this.scene, anutoMortar);
         this.actorsContainer.add(mortar);
 
         this.mortarActors.push(mortar);
@@ -479,7 +479,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         for (let i = 0; i < this.glueBulletActors.length; i ++) {
 
-            if (this.glueBulletActors[i].anutoBullet.id === anutoBullet.id) {
+            if (this.glueBulletActors[i].anutoGlueBullet.id === anutoBullet.id) {
                 bulletActor = this.glueBulletActors[i];
                 break;
             }
@@ -706,11 +706,8 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.scene.anims.create({ key: "enemy_healer_run", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_healer_", start: 1, end: 6, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
         this.scene.anims.create({ key: "enemy_flier_run", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_flier_", start: 1, end: 5, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
         this.scene.anims.create({ key: "enemy_blob_run", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_blob_", start: 1, end: 5, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
-
         this.scene.anims.create({ key: "enemy_healer_heal", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_healing_", start: 1, end: 6, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
-
         this.scene.anims.create({ key: "glue_bullet", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "bullet_3_1_", start: 1, end: 8, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
-
         this.scene.anims.create({ key: "explosion", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "tower4_fx_", start: 1, end: 21, zeroPad: 2, suffix: ""}), frameRate: 60, repeat: 0});
     }
 }

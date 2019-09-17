@@ -181,6 +181,86 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">texture_atlas_1/Untitled.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>63,63,125,125</rect>
+                <key>scale9Paddings</key>
+                <rect>63,63,125,125</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">texture_atlas_1/base_1_1.png</key>
+            <key type="filename">texture_atlas_1/base_1_2.png</key>
+            <key type="filename">texture_atlas_1/base_1_3.png</key>
+            <key type="filename">texture_atlas_1/base_2_1.png</key>
+            <key type="filename">texture_atlas_1/base_2_2.png</key>
+            <key type="filename">texture_atlas_1/base_3_1.png</key>
+            <key type="filename">texture_atlas_1/base_3_2.png</key>
+            <key type="filename">texture_atlas_1/base_3_3.png</key>
+            <key type="filename">texture_atlas_1/base_4_1.png</key>
+            <key type="filename">texture_atlas_1/base_4_2.png</key>
+            <key type="filename">texture_atlas_1/celda_01.png</key>
+            <key type="filename">texture_atlas_1/celda_02.png</key>
+            <key type="filename">texture_atlas_1/celda_03.png</key>
+            <key type="filename">texture_atlas_1/celda_04.png</key>
+            <key type="filename">texture_atlas_1/celda_05.png</key>
+            <key type="filename">texture_atlas_1/celda_06.png</key>
+            <key type="filename">texture_atlas_1/celda_07.png</key>
+            <key type="filename">texture_atlas_1/celda_08.png</key>
+            <key type="filename">texture_atlas_1/celda_09.png</key>
+            <key type="filename">texture_atlas_1/celda_10.png</key>
+            <key type="filename">texture_atlas_1/celda_11.png</key>
+            <key type="filename">texture_atlas_1/celda_12.png</key>
+            <key type="filename">texture_atlas_1/celda_13.png</key>
+            <key type="filename">texture_atlas_1/celda_14.png</key>
+            <key type="filename">texture_atlas_1/celda_15.png</key>
+            <key type="filename">texture_atlas_1/celda_16.png</key>
+            <key type="filename">texture_atlas_1/celda_17.png</key>
+            <key type="filename">texture_atlas_1/celda_18.png</key>
+            <key type="filename">texture_atlas_1/celda_19.png</key>
+            <key type="filename">texture_atlas_1/celda_20.png</key>
+            <key type="filename">texture_atlas_1/celda_21.png</key>
+            <key type="filename">texture_atlas_1/celda_22.png</key>
+            <key type="filename">texture_atlas_1/celda_23.png</key>
+            <key type="filename">texture_atlas_1/celda_24.png</key>
+            <key type="filename">texture_atlas_1/celda_25.png</key>
+            <key type="filename">texture_atlas_1/celda_26.png</key>
+            <key type="filename">texture_atlas_1/celda_27.png</key>
+            <key type="filename">texture_atlas_1/celda_28.png</key>
+            <key type="filename">texture_atlas_1/celda_29.png</key>
+            <key type="filename">texture_atlas_1/celda_30.png</key>
+            <key type="filename">texture_atlas_1/celda_31.png</key>
+            <key type="filename">texture_atlas_1/celda_32.png</key>
+            <key type="filename">texture_atlas_1/celda_33.png</key>
+            <key type="filename">texture_atlas_1/celda_34.png</key>
+            <key type="filename">texture_atlas_1/celda_35.png</key>
+            <key type="filename">texture_atlas_1/celda_36.png</key>
+            <key type="filename">texture_atlas_1/celda_37.png</key>
+            <key type="filename">texture_atlas_1/celda_38.png</key>
+            <key type="filename">texture_atlas_1/celda_39.png</key>
+            <key type="filename">texture_atlas_1/celda_40.png</key>
+            <key type="filename">texture_atlas_1/celda_41.png</key>
+            <key type="filename">texture_atlas_1/celda_42.png</key>
+            <key type="filename">texture_atlas_1/celda_43.png</key>
+            <key type="filename">texture_atlas_1/celda_44.png</key>
+            <key type="filename">texture_atlas_1/celda_45.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>15,15,30,30</rect>
+                <key>scale9Paddings</key>
+                <rect>15,15,30,30</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">texture_atlas_1/btn_1x_off.png</key>
             <key type="filename">texture_atlas_1/btn_1x_on.png</key>
             <key type="filename">texture_atlas_1/btn_4x_off.png</key>
@@ -227,16 +307,204 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">texture_atlas_1/bullet.png</key>
+            <key type="filename">texture_atlas_1/bullet_1_1.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>1,1,3,3</rect>
+                <rect>4,7,7,13</rect>
                 <key>scale9Paddings</key>
-                <rect>1,1,3,3</rect>
+                <rect>4,7,7,13</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">texture_atlas_1/bullet_3_1_1.png</key>
+            <key type="filename">texture_atlas_1/bullet_3_1_2.png</key>
+            <key type="filename">texture_atlas_1/bullet_3_1_3.png</key>
+            <key type="filename">texture_atlas_1/bullet_3_1_4.png</key>
+            <key type="filename">texture_atlas_1/bullet_3_1_5.png</key>
+            <key type="filename">texture_atlas_1/bullet_3_1_6.png</key>
+            <key type="filename">texture_atlas_1/bullet_3_1_7.png</key>
+            <key type="filename">texture_atlas_1/bullet_3_1_8.png</key>
+            <key type="filename">texture_atlas_1/enemy_blob_1.png</key>
+            <key type="filename">texture_atlas_1/enemy_blob_2.png</key>
+            <key type="filename">texture_atlas_1/enemy_blob_3.png</key>
+            <key type="filename">texture_atlas_1/enemy_blob_4.png</key>
+            <key type="filename">texture_atlas_1/enemy_blob_5.png</key>
+            <key type="filename">texture_atlas_1/enemy_flier_1.png</key>
+            <key type="filename">texture_atlas_1/enemy_flier_2.png</key>
+            <key type="filename">texture_atlas_1/enemy_flier_3.png</key>
+            <key type="filename">texture_atlas_1/enemy_flier_4.png</key>
+            <key type="filename">texture_atlas_1/enemy_flier_5.png</key>
+            <key type="filename">texture_atlas_1/enemy_healer_1.png</key>
+            <key type="filename">texture_atlas_1/enemy_healer_2.png</key>
+            <key type="filename">texture_atlas_1/enemy_healer_3.png</key>
+            <key type="filename">texture_atlas_1/enemy_healer_4.png</key>
+            <key type="filename">texture_atlas_1/enemy_healer_5.png</key>
+            <key type="filename">texture_atlas_1/enemy_healer_6.png</key>
+            <key type="filename">texture_atlas_1/enemy_healing_1.png</key>
+            <key type="filename">texture_atlas_1/enemy_healing_2.png</key>
+            <key type="filename">texture_atlas_1/enemy_healing_3.png</key>
+            <key type="filename">texture_atlas_1/enemy_healing_4.png</key>
+            <key type="filename">texture_atlas_1/enemy_healing_5.png</key>
+            <key type="filename">texture_atlas_1/enemy_healing_6.png</key>
+            <key type="filename">texture_atlas_1/enemy_runner_1.png</key>
+            <key type="filename">texture_atlas_1/enemy_runner_2.png</key>
+            <key type="filename">texture_atlas_1/enemy_runner_3.png</key>
+            <key type="filename">texture_atlas_1/enemy_runner_4.png</key>
+            <key type="filename">texture_atlas_1/enemy_runner_5.png</key>
+            <key type="filename">texture_atlas_1/enemy_runner_6.png</key>
+            <key type="filename">texture_atlas_1/enemy_soldier_1.png</key>
+            <key type="filename">texture_atlas_1/enemy_soldier_2.png</key>
+            <key type="filename">texture_atlas_1/enemy_soldier_3.png</key>
+            <key type="filename">texture_atlas_1/enemy_soldier_4.png</key>
+            <key type="filename">texture_atlas_1/enemy_soldier_5.png</key>
+            <key type="filename">texture_atlas_1/enemy_soldier_6.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>18,15,37,30</rect>
+                <key>scale9Paddings</key>
+                <rect>18,15,37,30</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">texture_atlas_1/bullet_4_3.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>10,6,19,13</rect>
+                <key>scale9Paddings</key>
+                <rect>10,6,19,13</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">texture_atlas_1/canon_1_1_1.png</key>
+            <key type="filename">texture_atlas_1/canon_1_1_2.png</key>
+            <key type="filename">texture_atlas_1/canon_1_2_1.png</key>
+            <key type="filename">texture_atlas_1/canon_1_2_2.png</key>
+            <key type="filename">texture_atlas_1/canon_1_3_1.png</key>
+            <key type="filename">texture_atlas_1/canon_1_3_2.png</key>
+            <key type="filename">texture_atlas_1/canon_1_3_3.png</key>
+            <key type="filename">texture_atlas_1/canon_1_3_4.png</key>
+            <key type="filename">texture_atlas_1/canon_2_1_1.png</key>
+            <key type="filename">texture_atlas_1/canon_2_1_2.png</key>
+            <key type="filename">texture_atlas_1/canon_2_2_1.png</key>
+            <key type="filename">texture_atlas_1/canon_2_2_2.png</key>
+            <key type="filename">texture_atlas_1/canon_2_3_1.png</key>
+            <key type="filename">texture_atlas_1/canon_2_3_2.png</key>
+            <key type="filename">texture_atlas_1/canon_3_2_1.png</key>
+            <key type="filename">texture_atlas_1/canon_3_2_2.png</key>
+            <key type="filename">texture_atlas_1/canon_4_1_1.png</key>
+            <key type="filename">texture_atlas_1/canon_4_1_2.png</key>
+            <key type="filename">texture_atlas_1/canon_4_1_3.png</key>
+            <key type="filename">texture_atlas_1/canon_4_1_4.png</key>
+            <key type="filename">texture_atlas_1/canon_4_2_1.png</key>
+            <key type="filename">texture_atlas_1/canon_4_2_2.png</key>
+            <key type="filename">texture_atlas_1/canon_4_2_3.png</key>
+            <key type="filename">texture_atlas_1/canon_4_2_4.png</key>
+            <key type="filename">texture_atlas_1/canon_4_3_1.png</key>
+            <key type="filename">texture_atlas_1/canon_4_3_2.png</key>
+            <key type="filename">texture_atlas_1/canon_4_3_3.png</key>
+            <key type="filename">texture_atlas_1/canon_4_3_4.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>30,30,60,60</rect>
+                <key>scale9Paddings</key>
+                <rect>30,30,60,60</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">texture_atlas_1/canon_3_1_1.png</key>
+            <key type="filename">texture_atlas_1/canon_3_1_2.png</key>
+            <key type="filename">texture_atlas_1/canon_3_3_1.png</key>
+            <key type="filename">texture_atlas_1/canon_3_3_2.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>15,30,30,60</rect>
+                <key>scale9Paddings</key>
+                <rect>15,30,30,60</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">texture_atlas_1/coin_icon.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>7,7,14,13</rect>
+                <key>scale9Paddings</key>
+                <rect>7,7,14,13</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">texture_atlas_1/enemy_icon.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>7,7,14,15</rect>
+                <key>scale9Paddings</key>
+                <rect>7,7,14,15</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">texture_atlas_1/granade.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>5,6,11,11</rect>
+                <key>scale9Paddings</key>
+                <rect>5,6,11,11</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">texture_atlas_1/lives_icon.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>7,6,13,11</rect>
+                <key>scale9Paddings</key>
+                <rect>7,6,13,11</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">texture_atlas_1/mine.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,8,15,15</rect>
+                <key>scale9Paddings</key>
+                <rect>8,8,15,15</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -253,30 +521,36 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">texture_atlas_1/tmp-laser-turret.png</key>
-            <key type="filename">texture_atlas_1/tmp-projectile-turret.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_01.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_02.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_03.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_04.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_05.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_06.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_07.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_08.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_09.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_10.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_11.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_12.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_13.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_14.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_15.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_16.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_17.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_18.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_19.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_20.png</key>
+            <key type="filename">texture_atlas_1/tower4_fx_21.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>25,25,50,50</rect>
+                <rect>84,84,167,167</rect>
                 <key>scale9Paddings</key>
-                <rect>25,25,50,50</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">texture_atlas_1/tmp-launch-turret.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>25,22,50,43</rect>
-                <key>scale9Paddings</key>
-                <rect>25,22,50,43</rect>
+                <rect>84,84,167,167</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

@@ -39,10 +39,8 @@ module Anuto {
             this.detonate = false;
             this.f = 0;
 
-            const speed = this.grade === 3 ? GameConstants.MORTAR_SPEED * 5 : GameConstants.MORTAR_SPEED;
-
-            this.vx = MathUtils.fixNumber(speed * Math.cos(angle));
-            this.vy = MathUtils.fixNumber(speed * Math.sin(angle));
+            this.vx = MathUtils.fixNumber(this.turret.projectileSpeed * Math.cos(angle));
+            this.vy = MathUtils.fixNumber(this.turret.projectileSpeed * Math.sin(angle));
         }
 
         public destroy(): void {

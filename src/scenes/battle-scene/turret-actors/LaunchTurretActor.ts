@@ -1,5 +1,4 @@
 import { TurretActor } from "./TurretActor";
-import { GameConstants } from "../../../GameConstants";
 import { GameVars } from "../../../GameVars";
 
 export class LaunchTurretActor extends TurretActor {
