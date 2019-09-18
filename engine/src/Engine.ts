@@ -66,6 +66,8 @@ module Anuto {
 
             this._version = GameConstants.VERSION;
 
+            console.log("cucutras");
+
             this.turretId = 0;
             this.enemyId = 0;
             this.bulletId = 0;
