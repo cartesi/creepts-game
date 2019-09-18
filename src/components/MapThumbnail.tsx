@@ -18,7 +18,16 @@ export const MapThumbnail: React.SFC<MapThumbnailProps> = (props) => {
     
     // get the map from the map definition file
     const mapId = mapNames.indexOf(props.map);
-    const map = maps[mapId];
+
+    // if map is undefined, we draw an empty canvas
+    const emptyMap = {
+        name: "Empty",
+        size: { r: 15, c: 10 },
+        path: [],
+        plateaus: []
+    };
+
+    const map = mapId === -1 ? emptyMap : (maps[mapId] || emptyMap);
 
     // cell width and height
     const cw = props.width / map.size.c;
