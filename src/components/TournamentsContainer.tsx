@@ -7,9 +7,9 @@ import { TournamentPhase } from "../Tournament";
 import useTournamentsService from "../services/useTournamentsService";
 
 interface IState { }
-interface IProps { me?: boolean, phase?: TournamentPhase }
+interface IProps { name: string, me?: boolean, phase?: TournamentPhase }
 
-export const TournamentsContainer: React.FC<IProps> = ({ phase, me }) => {
+export const TournamentsContainer: React.FC<IProps> = ({ name, phase, me }) => {
     const service = useTournamentsService(phase, me);
 
     return (
@@ -17,7 +17,7 @@ export const TournamentsContainer: React.FC<IProps> = ({ phase, me }) => {
             <Breadcrumb>
                 <Breadcrumb.Section as={A} href="/">Home</Breadcrumb.Section>
                 <Breadcrumb.Divider />
-                <Breadcrumb.Section active>Play</Breadcrumb.Section>
+                <Breadcrumb.Section active>{name}</Breadcrumb.Section>
             </Breadcrumb>
 
             {service.status === "loading" && <List><LoadingCard /></List> }
