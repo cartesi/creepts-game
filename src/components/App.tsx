@@ -2,13 +2,16 @@ import React from "react";
 import { useRoutes } from "hookrouter";
 
 import Index from "./Index";
-import Tournaments from "./Tournaments";
+import { TournamentsContainer } from "./TournamentsContainer";
 import Tournament from "./Tournament";
 import GameContainer from "./GameContainer";
+import { TournamentPhase } from "../Tournament";
 
 const routes = {
     "/": () => <Index />,
-    "/tournaments": () => <Tournaments />,
+    "/play": () => <TournamentsContainer me phase={TournamentPhase.commit} />,
+    "/join": () => <TournamentsContainer phase={TournamentPhase.commit} />,
+    "/my": () => <TournamentsContainer me />,
     "/tournaments/:id": ({id}) => <Tournament id={id} />
 };
 

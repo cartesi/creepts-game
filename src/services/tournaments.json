@@ -1,0 +1,109 @@
+{
+    "limit": 100,
+    "offset": 0,
+    "results": [
+        {
+            "id": "1",
+            "name": "The Original (July)",
+            "map": "original",
+            "playerCount": 114,
+            "phase": "end",
+            "currentRound": 7,
+            "totalRounds": 7,
+            "lastRound": 2,
+            "winner": "0xba4ff7070fb59d83aab639c8833bb7c39e4c1e40",
+            "deadline": "2019-07-31T00:00:00"
+        },
+        {
+            "id": "2",
+            "name": "The Original (August)",
+            "map": "original",
+            "playerCount": 240,
+            "phase": "round",
+            "currentRound": 5,
+            "totalRounds": 8,
+            "currentOpponent": "0xe7b54494ef9c1d25448a6fc8e58e47713817755b",
+            "deadline": "2019-09-25T00:00:00"
+        },
+        {
+            "id": "3",
+            "name": "I hate waiting lines (August)",
+            "map": "waiting-line",
+            "playerCount": 167,
+            "phase": "reveal",
+            "deadline": "2019-09-30T00:00:00"
+        },
+        {
+            "id": "4",
+            "name": "The Original (September)",
+            "map": "original",
+            "playerCount": 45,
+            "phase": "commit",
+            "deadline": "2019-09-30T00:00:00"
+        },
+        {
+            "id": "5",
+            "name": "The Original (Spooky Halloween 🎃)",
+            "map": "original",
+            "playerCount": 5,
+            "phase": "commit",
+            "deadline": "2019-10-31T00:00:00"
+        },
+        {
+            "id": "6",
+            "name": "I hate waiting lines",
+            "map": "waiting-line",
+            "playerCount": 16,
+            "phase": "commit",
+            "deadline": "2019-10-15T14:00:00"
+        },
+        {
+            "id": "7",
+            "name": "Turn a round",
+            "map": "turn-round",
+            "playerCount": 0,
+            "phase": "commit",
+            "deadline": "2019-10-15T14:00:00"
+        },
+        {
+            "id": "8",
+            "name": "We're in a hurry!",
+            "map": "hurry",
+            "playerCount": 0,
+            "phase": "commit",
+            "deadline": "2019-10-15T14:00:00"
+        },
+        {
+            "id": "9",
+            "name": "Civyshk Yard",
+            "map": "civyshk_yard",
+            "playerCount": 0,
+            "phase": "commit",
+            "deadline": "2019-10-15T14:00:00"
+        },
+        {
+            "id": "10",
+            "name": "Civyshk 2Y",
+            "map": "civyshk_2y",
+            "playerCount": 0,
+            "phase": "commit",
+            "deadline": "2019-10-15T14:00:00"
+        },
+        {
+            "id": "11",
+            "name": "Civyshk Line5",
+            "map": "civyshk_line5",
+            "playerCount": 0,
+            "phase": "commit",
+            "deadline": "2019-10-15T14:00:00"
+        },
+        {
+            "id": "12",
+            "name": "Civyshk Labyrinth",
+            "map": "civyshk_labyrinth",
+            "playerCount": 0,
+            "phase": "commit",
+            "deadline": "2019-10-15T14:00:00"
+        }
+    ]
+}

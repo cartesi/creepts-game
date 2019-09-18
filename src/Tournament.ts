@@ -1,9 +1,9 @@
 
 export enum TournamentPhase {
-    commit,
-    reveal,
-    round,
-    end
+    commit = "commit",
+    reveal = "reveal",
+    round = "round",
+    end = "end"
 }
 
 export type Tournament = {
