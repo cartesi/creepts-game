@@ -42,11 +42,11 @@ export const TournamentCard: React.SFC<TournamentCardProps> = ({ tournament, sco
                 <Card.Header>{tournament.name}</Card.Header>
                 <Card.Meta>{tournament.playerCount} {tournament.playerCount > 1 ? "players" : "player"}</Card.Meta>
                 <Card.Content>
-                    <p><TournamentPhaseComponent phase={tournament.phase} /></p>
+                    <TournamentPhaseComponent phase={tournament.phase} />
                     {(tournament.phase == TournamentPhase.round) &&
                         <p>Round <b>{tournament.currentRound}</b>/<b>{tournament.totalRounds}</b></p>
                     }
-                    <p><TournamentDeadline phase={tournament.phase} deadline={tournament.deadline} /></p>
+                    <TournamentDeadline phase={tournament.phase} deadline={tournament.deadline} />
                     {score && <p>My score: <b>{score.score.toLocaleString()}</b> (wave {score.waves})</p>}
                 </Card.Content>
             </Card.Content>
