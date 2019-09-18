@@ -72,9 +72,15 @@ export class LogGUI extends Phaser.GameObjects.Container {
         timeStepBck.fillRect(-30, -30, 60, 60);
         this.timeStepButton.add(timeStepBck);
 
-        this.timeStepImage = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "btn_fastforward");
+        this.timeStepImage = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1");
         this.timeStepImage.setOrigin(.5);
         this.timeStepButton.add(this.timeStepImage);
+
+        if (GameVars.timeStepFactor === 1) {
+            this.timeStepImage.setFrame("btn_normal_speed");
+        } else {
+            this.timeStepImage.setFrame("btn_fastforward");
+        }
 
         this.soundButton = new Phaser.GameObjects.Container(this.scene);
         this.soundButton.setPosition(GameConstants.GAME_WIDTH - 40, 79);
@@ -115,10 +121,10 @@ export class LogGUI extends Phaser.GameObjects.Container {
 
         if (GameVars.timeStepFactor === 1) {
             BattleManager.setTimeStepFactor(8);
-            this.timeStepImage.setFrame("btn_normal_speed");
+            this.timeStepImage.setFrame("btn_fastforward");
         } else {
             BattleManager.setTimeStepFactor(1);
-            this.timeStepImage.setFrame("btn_fastforward");
+            this.timeStepImage.setFrame("btn_normal_speed");
         }
     }
 

@@ -64,8 +64,8 @@ export class GameManager {
 
         AudioManager.init();
 
-        GameManager.enterBattleScene();
-        // GameManager.enterLogScene();
+        // GameManager.enterBattleScene();
+        GameManager.enterLogScene();
     }
 
     public static mapSelected(index: number): void {

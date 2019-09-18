@@ -61,11 +61,16 @@ export class BattleManager {
             gameConfig = GameVars.levelObject.gameConfig;
         }
 
-        GameVars.timeStepFactor = 1;
+        if (GameVars.currentScene === BattleScene.currentInstance || !GameVars.timeStepFactor) {
+            GameVars.timeStepFactor = 1;
+        }
+        
         GameVars.currentWave = 1;
         GameVars.paused = false;
 
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData, GameVars.wavesData);
+
+        BattleManager.setTimeStepFactor(GameVars.timeStepFactor);
 
         if (GameVars.currentScene === BattleScene.currentInstance) {
             GameVars.levelObject = {
