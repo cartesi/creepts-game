@@ -11,18 +11,29 @@ import { BattleManager } from "../scenes/battle-scene/BattleManager";
 import { GameManager } from "../GameManager";
 
 export interface IGameContainerProps { visible: boolean }
+interface IGameContainerState { height: number }
 
-export default class GameContainer extends React.Component<IGameContainerProps, any> {
+export default class GameContainer extends React.Component<IGameContainerProps, IGameContainerState> {
 
     constructor(props: IGameContainerProps) {
         super(props);
+        this.state = {
+            height: 0
+        }
+    }
+
+    resize = () => {
+        this.setState({ height: window.innerHeight });
     }
 
     componentDidMount() {
         this.createGame();
+        this.resize();
+        window.addEventListener('resize', this.resize);
     }
 
     componentWillUnmount() {
+        window.removeEventListener('resize', this.resize);
     }
 
     onGameOver = () => {
@@ -64,16 +75,18 @@ export default class GameContainer extends React.Component<IGameContainerProps, 
 
     public render() {
         const visibility = this.props.visible ? "visible" : "hidden";
-        return <div
-            id="phaser-game"
-            style={{
-                height: "100vh",
-                width: "100vw",
-                position: "absolute",
-                left: 0,
-                top: 0,
-                visibility
-            }} 
-        />;
+        return (
+            <div
+                id="phaser-game"
+                style={{
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    visibility,
+                    width: "100vw",
+                    height: `${this.state.height}px`
+                }}
+            />
+        );
     }
 }
