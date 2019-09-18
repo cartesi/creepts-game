@@ -2,6 +2,8 @@ import { GameConstants } from "./GameConstants";
 import { GameVars } from "./GameVars";
 import { AudioManager } from "./AudioManager";
 import mapsData from "../assets/config/maps.json";
+import defaultLevel from "../assets/level.json";
+import defaultLog from "../assets/log.json";
 
 export class GameManager {
 
@@ -63,6 +65,7 @@ export class GameManager {
         AudioManager.init();
 
         GameManager.enterBattleScene();
+        // GameManager.enterLogScene();
     }
 
     public static mapSelected(index: number): void {
@@ -77,6 +80,15 @@ export class GameManager {
     public static enterBattleScene(): void {
 
         GameVars.currentScene.scene.start("BattleScene");
+    }
+
+    public static enterLogScene(log?: LogsObject, level?: LevelObject): void {
+
+        GameVars.logsObject = log || defaultLog;
+        GameVars.initialLogsObjects = JSON.parse(JSON.stringify(GameVars.logsObject));
+        GameVars.levelObject = level || defaultLevel;
+
+        GameVars.currentScene.scene.start("LogScene");
     }
 
     public static enterMapScene(): void {

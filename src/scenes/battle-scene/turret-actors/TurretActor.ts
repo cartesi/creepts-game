@@ -1,3 +1,4 @@
+import { BattleScene } from './../BattleScene';
 import { BoardContainer } from "./../BoardContainer";
 import { GameConstants } from "../../../GameConstants";
 import { BattleManager } from "../BattleManager";
@@ -78,6 +79,10 @@ export class TurretActor extends Phaser.GameObjects.Container {
     }
 
     protected onDownTurret(): void {
+
+        if (GameVars.currentScene !== BattleScene.currentInstance) {
+            return;
+        }
 
         if (GameVars.paused || BattleManager.anutoEngine.gameOver) {
             return;
