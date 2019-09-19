@@ -15,6 +15,7 @@ export class GameVars {
     public static enemiesPathCells: {r: number, c: number} [];
     public static plateausCells: {r: number, c: number} [];
 
+    public static initialLogsObjects: LogsObject;
     public static logsObject: LogsObject;
     public static levelObject: LevelObject;
    

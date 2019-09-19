@@ -1,3 +1,4 @@
+import { LogScene } from './../log-scene/LogScene';
 import { BattleScene } from "./BattleScene";
 import { GameConstants } from "../../GameConstants";
 import { GameVars } from "../../GameVars";
@@ -13,9 +14,6 @@ export class BattleManager {
 
     public static init(): void {  
 
-        GameVars.enemiesPathCells = GameVars.currentMapData.path;
-        GameVars.plateausCells = GameVars.currentMapData.plateaus;
-
         const aspectRatio = window.innerHeight / window.innerWidth;
 
         if (aspectRatio > 1.5) {
@@ -28,38 +26,61 @@ export class BattleManager {
             }
         }
 
-        const gameConfig: Anuto.Types.GameConfig = {
-            timeStep: GameConstants.TIME_STEP,
-            runningInClientSide: true,
-            enemySpawningDeltaTicks: GameConstants.ENEMY_SPAWNING_DELTA_TICKS,
-            credits: GameConstants.INITIAL_CREDITS,
-            lifes: GameConstants.INITIAL_LIFES,
-            boardSize: GameVars.currentMapData.size,
-            enemiesPathCells : GameVars.enemiesPathCells,
-            plateausCells: GameVars.plateausCells
-        };
+        let gameConfig: Anuto.Types.GameConfig;
 
-        GameVars.enemiesData = enemiesData.enemies;
-        GameVars.turretsData = turretsData.turrets;
-        GameVars.wavesData = wavesData.waves;
+        if (GameVars.currentScene === BattleScene.currentInstance) {
+            GameVars.enemiesPathCells = GameVars.currentMapData.path;
+            GameVars.plateausCells = GameVars.currentMapData.plateaus;
 
-        GameVars.logsObject = {
-            actions: []
-        };
+            GameVars.enemiesData = enemiesData.enemies;
+            GameVars.turretsData = turretsData.turrets;
+            GameVars.wavesData = wavesData.waves;
 
-        GameVars.timeStepFactor = 1;
+            gameConfig = {
+                timeStep: GameConstants.TIME_STEP,
+                runningInClientSide: true,
+                enemySpawningDeltaTicks: GameConstants.ENEMY_SPAWNING_DELTA_TICKS,
+                credits: GameConstants.INITIAL_CREDITS,
+                lifes: GameConstants.INITIAL_LIFES,
+                boardSize: GameVars.currentMapData.size,
+                enemiesPathCells : GameVars.enemiesPathCells,
+                plateausCells: GameVars.plateausCells
+            };
+
+            GameVars.logsObject = {
+                actions: []
+            };
+        } else {
+            GameVars.enemiesPathCells = GameVars.levelObject.gameConfig.enemiesPathCells;
+            GameVars.plateausCells = GameVars.levelObject.gameConfig.plateausCells;
+
+            GameVars.enemiesData = GameVars.levelObject.enemiesData;
+            GameVars.turretsData = GameVars.levelObject.turretsData;
+            GameVars.wavesData = GameVars.levelObject.wavesData;
+
+            gameConfig = GameVars.levelObject.gameConfig;
+        }
+
+        if (GameVars.currentScene === BattleScene.currentInstance || !GameVars.timeStepFactor) {
+            GameVars.timeStepFactor = 1;
+        }
+        
         GameVars.currentWave = 1;
         GameVars.paused = false;
 
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData, GameVars.wavesData);
 
-        GameVars.levelObject = {
-            engineVersion: BattleManager.anutoEngine.version,
-            gameConfig: gameConfig,
-            enemiesData: GameVars.enemiesData,
-            turretsData: GameVars.turretsData,
-            wavesData: GameVars.wavesData
-        };
+        BattleManager.setTimeStepFactor(GameVars.timeStepFactor);
+
+        if (GameVars.currentScene === BattleScene.currentInstance) {
+            GameVars.levelObject = {
+                engineVersion: BattleManager.anutoEngine.version,
+                gameConfig: gameConfig,
+                enemiesData: GameVars.enemiesData,
+                turretsData: GameVars.turretsData,
+                wavesData: GameVars.wavesData
+            };
+        }
         
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
         BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
@@ -112,7 +133,11 @@ export class BattleManager {
 
         if (BattleManager.anutoEngine.newWave()) {
 
-            BattleScene.currentInstance.hud.updateRound();
+            if (GameVars.currentScene === BattleScene.currentInstance) {
+                BattleScene.currentInstance.hud.updateRound();
+            } else {
+                LogScene.currentInstance.hud.updateRound();
+            }
 
             const action = {type: GameConstants.TYPE_NEXT_WAVE, tick: BattleManager.anutoEngine.ticksCounter};
             BattleManager.addAction(action);
@@ -121,7 +146,9 @@ export class BattleManager {
 
     public static createTurret(type: string): void {
 
-        BattleScene.currentInstance.createTurret(type);
+        if (GameVars.currentScene === BattleScene.currentInstance) {
+            BattleScene.currentInstance.createTurret(type);
+        }
     }
 
     public static addTurretToScene(type: string, position: {r: number, c: number}): void {
@@ -141,15 +168,14 @@ export class BattleManager {
         return turret;
     }
 
-    public static sellTurret(turret: Anuto.Turret): void {
+    public static sellTurret(id: number): void {
 
-        if (BattleManager.anutoEngine.sellTurret(turret.id)) {
+        if (BattleManager.anutoEngine.sellTurret(id)) {
 
-            let action = {type: GameConstants.TYPE_SELL_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: turret.id};
+            let action = {type: GameConstants.TYPE_SELL_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
             BattleManager.addAction(action);
 
-            BoardContainer.currentInstance.removeTurret(turret);
-            BattleScene.currentInstance.updateTurretButtons();
+            BoardContainer.currentInstance.removeTurret(id);
         }
     }
 
@@ -167,7 +193,6 @@ export class BattleManager {
             BattleManager.addAction(action);
 
             BoardContainer.currentInstance.improveTurret(id);
-            BattleScene.currentInstance.updateTurretButtons();
         }
     }
 
@@ -181,7 +206,10 @@ export class BattleManager {
             BattleManager.addAction(action);
 
             BoardContainer.currentInstance.upgradeTurret(id);
-            BattleScene.currentInstance.updateTurretButtons();
+            
+            if (GameVars.currentScene === BattleScene.currentInstance) {
+                BattleScene.currentInstance.updateTurretMenu();
+            }
         }
     }
 
@@ -229,7 +257,12 @@ export class BattleManager {
     private static onEnemyReachedExit(anutoEnemy: Anuto.Enemy): void {
 
         BoardContainer.currentInstance.removeEnemy(anutoEnemy.id);
-        BattleScene.currentInstance.hud.updateLifes();
+
+        if (GameVars.currentScene === BattleScene.currentInstance) {
+            BattleScene.currentInstance.hud.updateLifes();
+        } else {
+            LogScene.currentInstance.hud.updateLifes();
+        }
     }
 
     private static onBulletShot(anutoBullet: Anuto.Bullet, anutoProjectileTurret: Anuto.ProjectileTurret): void {
@@ -328,12 +361,14 @@ export class BattleManager {
 
     private static onWaveOver(): void {
        
-        BattleScene.currentInstance.updateTurretButtons();
+        // 
     }
 
     private static activeNextWave(): void {
         
-        BattleScene.currentInstance.gui.activeNextWave();
+        if (GameVars.currentScene === BattleScene.currentInstance) {
+            BattleScene.currentInstance.gui.activeNextWave();
+        }
     }
 
     private static onGameOver(): void {
@@ -345,7 +380,7 @@ export class BattleManager {
         
         BoardContainer.currentInstance.showGameOverLayer();
 
-        if (GameConstants.DEVELOPMENT) {
+        if (GameConstants.DEVELOPMENT && GameVars.currentScene === BattleScene.currentInstance) {
             let data = JSON.stringify(GameVars.logsObject);
             let bl = new Blob([data], {
                 type: "text/html"

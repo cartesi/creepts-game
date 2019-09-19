@@ -66,14 +66,20 @@ export class TurretButton extends Phaser.GameObjects.Container {
         if (this.turretType === Anuto.GameConstants.TURRET_GLUE) {
             text.x = 15;
         }
+
+        this.scene.sys.updateList.add(this);
     }
 
-    public updateTurret(): void {
+    public preUpdate(time: number, delta: number): void {
 
         if (BattleManager.anutoEngine.turretData[this.turretType].price > BattleManager.anutoEngine.credits) {
-            this.alpha = .5;
+            if (this.alpha !== .5) {
+                this.alpha = .5;
+            }
         } else {
-            this.alpha = 1;
+            if (this.alpha !== 1) {
+                this.alpha = 1;
+            }
         }
     }
 

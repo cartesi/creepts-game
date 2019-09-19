@@ -44,11 +44,6 @@ export class BattleScene extends Phaser.Scene {
         this.hud.update(time, delta);
     }
 
-    public onWaveOver(): void {
-
-        this.hud.onWaveOver();
-    }
-
     public createTurret(type: string): void {
 
         this.gui.createTurret(type);
@@ -56,9 +51,7 @@ export class BattleScene extends Phaser.Scene {
         this.boardContainer.hideRangeCircles();
     }
 
-    public updateTurretButtons(): void {
-
-        this.gui.updateTurretButtons();
+    public updateTurretMenu(): void {
         this.boardContainer.updateTurretMenu();
     }
 }

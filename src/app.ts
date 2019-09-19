@@ -6,6 +6,7 @@ import { BootScene } from "./scenes/BootScene";
 import { PreloadScene } from "./scenes/PreloadScene";
 import { BattleScene } from "./scenes/battle-scene/BattleScene";
 import { MapsScene } from "./scenes/maps-scene/MapsScene";
+import { LogScene } from "./scenes/log-scene/LogScene";
 
 let game: Game;
 
@@ -27,7 +28,8 @@ window.onload = () => {
                     BootScene, 
                     PreloadScene, 
                     BattleScene,
-                    MapsScene
+                    MapsScene,
+                    LogScene
                 ]
     };
 

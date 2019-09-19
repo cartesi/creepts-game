@@ -76,11 +76,6 @@ export class GUI extends Phaser.GameObjects.Container {
         this.nextWaveButton.add(nextWaveText);
     }
 
-    public updateTurretButtons(): void {
-
-        this.buyTurrets.updateTurretButtons();
-    }
-
     public createTurret(type: string): void {
 
         this.turretSelected = new TurretSelected(this.scene, type, this);
