@@ -12,7 +12,17 @@
             "totalRounds": 7,
             "lastRound": 2,
             "winner": "0xba4ff7070fb59d83aab639c8833bb7c39e4c1e40",
-            "deadline": "2019-07-31T00:00:00"
+            "deadline": "2019-07-31T00:00:00",
+            "scores": {
+                "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077": {
+                    "score": 76865,
+                    "waves": 34
+                },
+                "0xba4ff7070fb59d83aab639c8833bb7c39e4c1e40": {
+                    "score": 123499,
+                    "waves": 52
+                }
+            }
         },
         {
             "id": "2",
@@ -23,7 +33,17 @@
             "currentRound": 5,
             "totalRounds": 8,
             "currentOpponent": "0xe7b54494ef9c1d25448a6fc8e58e47713817755b",
-            "deadline": "2019-09-25T00:00:00"
+            "deadline": "2019-09-02T00:00:00",
+            "scores": {
+                "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077": {
+                    "score": 76865,
+                    "waves": 34
+                },
+                "0xe7b54494ef9c1d25448a6fc8e58e47713817755b": {
+                    "score": 123499,
+                    "waves": 52
+                }
+            }
         },
         {
             "id": "3",
@@ -31,7 +51,15 @@
             "map": "waiting-line",
             "playerCount": 167,
             "phase": "reveal",
-            "deadline": "2019-09-30T00:00:00"
+            "deadline": "2019-09-30T00:00:00",
+            "scores": {
+                "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077": {
+                    "score": 76865,
+                    "waves": 34
+                },
+                "0xe7b54494ef9c1d25448a6fc8e58e47713817755b": {
+                }
+            }
         },
         {
             "id": "4",
@@ -39,7 +67,13 @@
             "map": "original",
             "playerCount": 45,
             "phase": "commit",
-            "deadline": "2019-09-30T00:00:00"
+            "deadline": "2019-09-30T00:00:00",
+            "scores": {
+                "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077": {
+                    "score": 76865,
+                    "waves": 34
+                }
+            }
         },
         {
             "id": "5",
@@ -47,7 +81,13 @@
             "map": "original",
             "playerCount": 5,
             "phase": "commit",
-            "deadline": "2019-10-31T00:00:00"
+            "deadline": "2019-10-31T00:00:00",
+            "scores": {
+                "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077": {
+                    "score": 7624,
+                    "waves": 13
+                }
+            }
         },
         {
             "id": "6",
@@ -63,7 +103,13 @@
             "map": "turn-round",
             "playerCount": 0,
             "phase": "commit",
-            "deadline": "2019-10-15T14:00:00"
+            "deadline": "2019-10-15T14:00:00",
+            "scores": {
+                "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077": {
+                    "score": 817654,
+                    "waves": 50
+                }
+            }
         },
         {
             "id": "8",
@@ -71,7 +117,13 @@
             "map": "hurry",
             "playerCount": 0,
             "phase": "commit",
-            "deadline": "2019-10-15T14:00:00"
+            "deadline": "2019-10-15T14:00:00",
+            "scores": {
+                "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077": {
+                    "score": 866568,
+                    "waves": 72
+                }
+            }
         },
         {
             "id": "9",

@@ -27,9 +27,6 @@ export const TournamentsContainer: React.FC<IProps> = ({ name, phase, me }) => {
                         <TournamentCard
                             key={index}
                             tournament={tournament}
-                            opponentScore={{score: Math.round(Math.random() * 10e5), waves: (Math.round(Math.random() * 60))}}
-                            winningScore={{score: Math.round(Math.random() * 10e5), waves: (Math.round(Math.random() * 60))}}
-                            score={{score: Math.round(Math.random() * 10e5), waves: (Math.round(Math.random() * 60))}}
                         />
                     ))}
                 </List>

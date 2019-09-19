@@ -36,7 +36,14 @@ const TournamentDeadline: React.SFC<{ phase: TournamentPhase, deadline: Date }> 
     }
 }
 
-export const TournamentCard: React.SFC<TournamentCardProps> = ({ tournament, score, opponentScore, winningScore }) => {
+export const TournamentCard: React.SFC<TournamentCardProps> = ({ tournament }) => {
+    // TODO: move this
+    const me = "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077";
+
+    const score = tournament.scores && tournament.scores[me];
+    const opponentScore = tournament.scores && tournament.currentOpponent ? tournament.scores[tournament.currentOpponent] : null;
+    const winningScore = tournament.scores && tournament.winner ? tournament.scores[tournament.winner] : null;
+
     return (
         <Card key={tournament.id} raised fluid>
             <Card.Content>
