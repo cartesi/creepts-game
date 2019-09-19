@@ -25,7 +25,6 @@ export const TournamentContainer: React.FC<IProps> = ({ id }) => {
             const { map } = tournament;
 
             // select the map of the tournament
-            console.log("Selecting map", map);
             GameManager.mapSelected(maps.indexOf(map));
 
             // exit button return no home
