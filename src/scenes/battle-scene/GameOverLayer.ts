@@ -2,6 +2,7 @@ import { GameManager } from "./../../GameManager";
 import { BattleManager } from "./BattleManager";
 import { GameConstants } from "../../GameConstants";
 import { GameVars } from "../../GameVars";
+import { BattleScene } from "./BattleScene";
 
 export class GameOverLayer extends Phaser.GameObjects.Container {
 
@@ -60,6 +61,10 @@ export class GameOverLayer extends Phaser.GameObjects.Container {
             ease: Phaser.Math.Easing.Cubic.Out,
             duration: 500
         });
+
+        if (GameVars.currentScene !== BattleScene.currentInstance) {
+            restartText.setText("EXIT");
+        }
     }
 
     private onBtnOver(btn: Phaser.GameObjects.Container): void {

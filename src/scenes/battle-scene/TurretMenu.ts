@@ -238,6 +238,25 @@ export class TurretMenu extends Phaser.GameObjects.Container {
         this.sellButton.add(this.sellText);
 
         this.checkAndUpdateInfo();
+
+        this.scene.sys.updateList.add(this);
+    }
+
+    public preUpdate(time: number, delta: number): void {
+
+        // si no hay suficientes creditos desactivar botones de level up y upgrade
+
+        if (BattleManager.anutoEngine.credits < this.anutoTurret.priceImprovement) {
+            this.levelButton.alpha = .5;
+        } else if (this.anutoTurret.level !== this.anutoTurret.maxLevel) {
+            this.levelButton.alpha = 1;
+        }
+        
+        if (BattleManager.anutoEngine.credits < this.anutoTurret.priceUpgrade) {
+            this.upgradeButton.alpha = .5;
+        } else if (this.anutoTurret.grade !== 3) {
+            this.upgradeButton.alpha = 1;
+        }
     }
 
     public checkAndUpdateInfo(): void {
@@ -297,17 +316,6 @@ export class TurretMenu extends Phaser.GameObjects.Container {
         if (this.anutoTurret.grade === 3) {
             this.upgradeButton.alpha = .5;
             this.upgradeText.setText("UPGRADE");
-        }
-
-        // si no hay suficientes creditos desactivar botones de level up y upgrade
-
-        if (BattleManager.anutoEngine.credits < this.anutoTurret.priceImprovement) {
-            this.levelButton.alpha = .5;
-        }
-
-        
-        if (BattleManager.anutoEngine.credits < this.anutoTurret.priceUpgrade) {
-            this.upgradeButton.alpha = .5;
         }
 
         // update de la informacion en texto
@@ -391,6 +399,6 @@ export class TurretMenu extends Phaser.GameObjects.Container {
     }
 
     private onClickSell(): void {
-        BattleManager.sellTurret(this.anutoTurret);
+        BattleManager.sellTurret(this.anutoTurret.id);
     }
 }

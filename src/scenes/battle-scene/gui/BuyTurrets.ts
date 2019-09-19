@@ -22,11 +22,4 @@ export class BuyTurrets extends Phaser.GameObjects.Container {
             this.turretButtons.push(turretButton);
         }
     }
-
-    public updateTurretButtons(): void {
-
-        for (let i = 0; i < 4; i++) {
-            this.turretButtons[i].updateTurret();
-        }
-    }
 }

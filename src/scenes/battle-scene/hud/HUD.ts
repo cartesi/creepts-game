@@ -99,8 +99,4 @@ export class HUD extends Phaser.GameObjects.Container {
         this.roundLabel.setText("Round " + BattleManager.anutoEngine.round);
         this.enemyIcon.x = this.roundLabel.x - this.roundLabel.width - 2;
     }
-
-    public onWaveOver(): void {
-        //
-    }
 }
