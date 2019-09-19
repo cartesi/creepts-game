@@ -63,7 +63,7 @@ export class GameOverLayer extends Phaser.GameObjects.Container {
         });
 
         if (GameVars.currentScene !== BattleScene.currentInstance) {
-            restartButton.visible = false;
+            restartText.setText("EXIT");
         }
     }
 
