@@ -8,6 +8,21 @@ export interface Tournaments {
     results: Tournament[];
 }
 
+export const useTournamentService = (id: string) => {
+    const [result, setResult] = useState<Service<Tournament>>({
+        status: "loading"
+    });
+
+    useEffect(() => {
+        fetch(`/tournaments/${id}`)
+            .then(response => response.json())
+            .then(response => setResult({ status: "loaded", payload: response }))
+            .catch(error => setResult({ status: "error", error }));
+    }, []);
+
+    return result;
+};
+
 const useTournamentsService = (phase: TournamentPhase, me: boolean) => {
     const [result, setResult] = useState<Service<Tournaments>>({
         status: "loading"
