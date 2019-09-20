@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { GameManager } from "../GameManager";
 import { navigate } from "hookrouter";
 import { Dimmer, Loader, Grid } from "semantic-ui-react";
-import { useTournamentService } from "../services/useTournamentsService";
+import { useTournamentService } from "../services/tournamentService";
 
 interface IProps { id: string }
 

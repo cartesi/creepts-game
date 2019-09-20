@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Service } from "./service";
 import { Tournament, TournamentPhase } from "../Tournament";
-import fetch from "./fetch";
+import { get } from "./http";
 import queryString from "query-string";
 
 export interface Tournaments {
@@ -14,16 +14,15 @@ export const useTournamentService = (id: string) => {
     });
 
     useEffect(() => {
-        fetch(`/tournaments/${id}`)
-            .then(response => response.json())
-            .then(response => setResult({ status: "loaded", payload: response }))
+        get<Tournament>(`/tournaments/${id}`)
+            .then(response => setResult({ status: "loaded", payload: response.parsedBody}))
             .catch(error => setResult({ status: "error", error }));
     }, []);
 
     return result;
 };
 
-const useTournamentsService = (phase: TournamentPhase, me: boolean) => {
+export const useTournamentsService = (phase: TournamentPhase, me: boolean) => {
     const [result, setResult] = useState<Service<Tournaments>>({
         status: "loading"
     });
@@ -32,13 +31,10 @@ const useTournamentsService = (phase: TournamentPhase, me: boolean) => {
     const url = `/tournaments${qs && '?' + qs}`;
 
     useEffect(() => {
-        fetch(url)
-            .then(response => response.json())
-            .then(response => setResult({ status: "loaded", payload: response }))
+        get<Tournaments>(url)
+            .then(response => setResult({ status: "loaded", payload: response.parsedBody }))
             .catch(error => setResult({ status: "error", error }));
     }, []);
 
     return result;
 };
-
-export default useTournamentsService;

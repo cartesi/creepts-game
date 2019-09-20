@@ -4,7 +4,7 @@ import { Breadcrumb, List, Message } from "semantic-ui-react";
 import { TournamentCard } from "./TournamentCard";
 import { LoadingCard } from "./LoadingCard";
 import { TournamentPhase } from "../Tournament";
-import useTournamentsService from "../services/useTournamentsService";
+import { useTournamentsService } from "../services/tournamentService";
 
 interface IState { }
 interface IProps { name: string, me?: boolean, phase?: TournamentPhase }
