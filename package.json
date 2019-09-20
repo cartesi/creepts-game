@@ -3,6 +3,12 @@
     "version": "0.0.1",
     "description": "Tower defense game for Cartesi.io based on Anuto",
     "devDependencies": {
+        "@types/hookrouter": "^2.2.1",
+        "@types/jest": "^24.0.18",
+        "@types/node": "^12.7.4",
+        "@types/react": "^16.9.2",
+        "@types/react-dom": "^16.9.0",
+        "@types/semantic-ui": "^2.2.7",
         "expose-loader": "0.7.5",
         "ts-loader": "6.0.4",
         "typescript": "3.6.2",
@@ -12,11 +18,20 @@
     },
     "dependencies": {
         "@types/howler": "^2.1.1",
+        "hookrouter": "^1.2.3",
         "howler": "^2.1.2",
-        "phaser": "3.19.0"
+        "moment": "^2.24.0",
+        "phaser": "3.19.0",
+        "query-string": "^6.8.3",
+        "react": "^16.9.0",
+        "react-dom": "^16.9.0",
+        "semantic-ui-css": "^2.4.1",
+        "semantic-ui-react": "^0.88.1",
+        "typed-emitter": "^0.1.0"
     },
     "scripts": {
-        "dev": "webpack --mode development && webpack-dev-server --mode development",
-        "build": "webpack --mode production"
+        "dev": "tsc -p engine && webpack --env.GAME_ONLY=true --mode development && webpack-dev-server --env.GAME_ONLY=true --mode development",
+        "dev:cartesi": "tsc -p engine && webpack --mode development && webpack-dev-server --mode development",
+        "build": "tsc -p engine && webpack --mode production"
     }
 }

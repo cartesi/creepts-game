@@ -1,7 +1,7 @@
 {
   "urls": [
-    "assets/audio/audiosprite.mp3",
-    "assets/audio/audiosprite.ogg"
+    "/assets/audio/audiosprite.mp3",
+    "/assets/audio/audiosprite.ogg"
   ],
   "sprite": {
     "t1_bullets": [

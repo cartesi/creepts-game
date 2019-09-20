@@ -4,8 +4,17 @@ import { AudioManager } from "./AudioManager";
 import mapsData from "../assets/config/maps.json";
 import defaultLevel from "../assets/level.json";
 import defaultLog from "../assets/log.json";
+import EventEmitter from "events";
+import TypedEmitter from "typed-emitter";
+
+interface GameManagerEvents {
+    ready: () => void
+    exit: () => void
+}
 
 export class GameManager {
+
+    public static events = new EventEmitter() as TypedEmitter<GameManagerEvents>;
 
     public static init(): void {
 
