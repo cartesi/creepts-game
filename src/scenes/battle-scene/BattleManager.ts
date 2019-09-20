@@ -67,6 +67,7 @@ export class BattleManager {
         
         GameVars.currentWave = 1;
         GameVars.paused = false;
+        GameVars.semipaused = false;
 
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData, GameVars.wavesData);
 
@@ -120,6 +121,22 @@ export class BattleManager {
     public static resume(): void {
 
         GameVars.paused = false;
+
+        if (!GameVars.semipaused) {
+            this.anutoEngine.paused = false;
+        }
+    }
+
+    public static semipause(): void {
+
+        GameVars.semipaused = true;
+
+        this.anutoEngine.paused = true;
+    }
+
+    public static semiresume(): void {
+
+        GameVars.semipaused = false;
 
         this.anutoEngine.paused = false;
     }

@@ -631,7 +631,8 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     public hidePauseMenu(): void {
 
         if (this.pauseMenu) {
-            BattleManager.resume();
+
+            BattleManager.resume();    
             this.remove(this.pauseMenu);
             this.pauseMenu = null;
         }
