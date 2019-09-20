@@ -1,8 +1,9 @@
+var webpack = require('webpack');
 var path = require('path');
 var pathToPhaser = path.join(__dirname, '/node_modules/phaser/');
 var phaser = path.join(pathToPhaser, 'dist/phaser-arcade-physics.min');
 
-module.exports = {
+module.exports = env => ({
 	entry: './src/app.tsx',
 	devtool: 'source-map',
 	output: {
@@ -23,10 +24,15 @@ module.exports = {
 		open: true,
 		historyApiFallback: true
 	},
+	plugins: [
+		new webpack.DefinePlugin({
+			__GAME_ONLY__: JSON.stringify(env && env.GAME_ONLY || false)
+		})
+	],
 	resolve: {
 		extensions: ['.ts', '.tsx', '.js'],
 		alias: {
 			phaser: phaser
 		  }
 	}
-};
+});

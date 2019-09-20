@@ -1,3 +1,4 @@
+declare var __GAME_ONLY__: boolean;
 import React from "react";
 import { useRoutes } from "hookrouter";
 
@@ -21,8 +22,8 @@ export const App = () => {
     const match = useRoutes(routes);
     return (
         <div>
-            {match}
-            <GameContainer visible={match.type === TournamentContainer} />
+            {__GAME_ONLY__ ? <div/> : match}
+            <GameContainer visible={match.type === TournamentContainer || __GAME_ONLY__} />
         </div>
     );
 }
