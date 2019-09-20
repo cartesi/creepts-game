@@ -12,6 +12,7 @@ export class GameVars {
     public static mapsData: MapObject[];
     public static currentMapData: MapObject;
     public static currentWave: number;
+    public static autoSendWave: boolean;
     public static timeStepFactor: number;
     public static enemiesPathCells: {r: number, c: number} [];
     public static plateausCells: {r: number, c: number} [];

@@ -3223,6 +3223,69 @@
 					}
 				},
 				{
+					"filename": "checkbox",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 35,
+						"h": 35
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 35,
+						"h": 35
+					},
+					"frame": {
+						"x": 1211,
+						"y": 596,
+						"w": 35,
+						"h": 35
+					}
+				},
+				{
+					"filename": "checkbox_tick",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 35,
+						"h": 35
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 35,
+						"h": 35
+					},
+					"frame": {
+						"x": 1248,
+						"y": 596,
+						"w": 35,
+						"h": 35
+					}
+				},
+				{
+					"filename": "canon_3_3_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 60,
+						"h": 120
+					},
+					"spriteSourceSize": {
+						"x": 15,
+						"y": 53,
+						"w": 31,
+						"h": 39
+					},
+					"frame": {
+						"x": 1285,
+						"y": 596,
+						"w": 31,
+						"h": 39
+					}
+				},
+				{
 					"filename": "btn_fastforward",
 					"rotated": false,
 					"trimmed": true,
@@ -3238,7 +3301,7 @@
 					},
 					"frame": {
 						"x": 1211,
-						"y": 596,
+						"y": 633,
 						"w": 35,
 						"h": 20
 					}
@@ -3259,7 +3322,7 @@
 					},
 					"frame": {
 						"x": 1248,
-						"y": 596,
+						"y": 633,
 						"w": 34,
 						"h": 61
 					}
@@ -3280,7 +3343,7 @@
 					},
 					"frame": {
 						"x": 1284,
-						"y": 596,
+						"y": 637,
 						"w": 32,
 						"h": 37
 					}
@@ -3300,31 +3363,10 @@
 						"h": 61
 					},
 					"frame": {
-						"x": 1211,
-						"y": 618,
+						"x": 1173,
+						"y": 634,
 						"w": 34,
 						"h": 61
-					}
-				},
-				{
-					"filename": "canon_3_3_1",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 60,
-						"h": 120
-					},
-					"spriteSourceSize": {
-						"x": 15,
-						"y": 53,
-						"w": 31,
-						"h": 39
-					},
-					"frame": {
-						"x": 1284,
-						"y": 635,
-						"w": 31,
-						"h": 39
 					}
 				},
 				{
@@ -3342,8 +3384,8 @@
 						"h": 61
 					},
 					"frame": {
-						"x": 1247,
-						"y": 659,
+						"x": 1209,
+						"y": 655,
 						"w": 34,
 						"h": 61
 					}
@@ -3363,8 +3405,8 @@
 						"h": 24
 					},
 					"frame": {
-						"x": 1173,
-						"y": 634,
+						"x": 1122,
+						"y": 660,
 						"w": 34,
 						"h": 24
 					}
@@ -3384,8 +3426,8 @@
 						"h": 24
 					},
 					"frame": {
-						"x": 1173,
-						"y": 634,
+						"x": 1122,
+						"y": 660,
 						"w": 34,
 						"h": 24
 					}
@@ -3405,7 +3447,7 @@
 						"h": 37
 					},
 					"frame": {
-						"x": 1283,
+						"x": 1284,
 						"y": 676,
 						"w": 33,
 						"h": 37
@@ -3426,8 +3468,8 @@
 						"h": 31
 					},
 					"frame": {
-						"x": 1283,
-						"y": 715,
+						"x": 1245,
+						"y": 696,
 						"w": 31,
 						"h": 31
 					}
@@ -3447,8 +3489,8 @@
 						"h": 30
 					},
 					"frame": {
-						"x": 1122,
-						"y": 660,
+						"x": 1278,
+						"y": 715,
 						"w": 31,
 						"h": 30
 					}
@@ -3468,8 +3510,8 @@
 						"h": 26
 					},
 					"frame": {
-						"x": 1155,
-						"y": 660,
+						"x": 1311,
+						"y": 715,
 						"w": 30,
 						"h": 26
 					}
@@ -3489,8 +3531,8 @@
 						"h": 20
 					},
 					"frame": {
-						"x": 1187,
-						"y": 681,
+						"x": 1343,
+						"y": 739,
 						"w": 30,
 						"h": 20
 					}
@@ -3501,6 +3543,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:ee533e8a137b5546a8946cc76a849639:a9d246a04635c94026c09f85ed32e765:1bd3fbbbdaf54e41cf80e3e904578de4$"
+		"smartupdate": "$TexturePacker:SmartUpdate:19c3ac802f49de8d8a1118bba70abae0:3c128b965f89766d5153e18302189065:1bd3fbbbdaf54e41cf80e3e904578de4$"
 	}
 }

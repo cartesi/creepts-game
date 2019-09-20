@@ -3562,8 +3562,8 @@ var GameManager = /** @class */ (function () {
     };
     GameManager.onGameAssetsLoaded = function () {
         AudioManager_1.AudioManager.init();
-        // GameManager.enterBattleScene();
-        GameManager.enterLogScene();
+        GameManager.enterBattleScene();
+        // GameManager.enterLogScene();
     };
     GameManager.mapSelected = function (index) {
         GameVars_1.GameVars.currentMapData = GameVars_1.GameVars.mapsData[index];
@@ -3930,6 +3930,8 @@ var BattleManager = /** @class */ (function () {
         }
         GameVars_1.GameVars.currentWave = 1;
         GameVars_1.GameVars.paused = false;
+        GameVars_1.GameVars.semipaused = false;
+        GameVars_1.GameVars.autoSendWave = true;
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars_1.GameVars.enemiesData, GameVars_1.GameVars.turretsData, GameVars_1.GameVars.wavesData);
         BattleManager.setTimeStepFactor(GameVars_1.GameVars.timeStepFactor);
         if (GameVars_1.GameVars.currentScene === BattleScene_1.BattleScene.currentInstance) {
@@ -3970,6 +3972,16 @@ var BattleManager = /** @class */ (function () {
     };
     BattleManager.resume = function () {
         GameVars_1.GameVars.paused = false;
+        if (!GameVars_1.GameVars.semipaused) {
+            this.anutoEngine.paused = false;
+        }
+    };
+    BattleManager.semipause = function () {
+        GameVars_1.GameVars.semipaused = true;
+        this.anutoEngine.paused = true;
+    };
+    BattleManager.semiresume = function () {
+        GameVars_1.GameVars.semipaused = false;
         this.anutoEngine.paused = false;
     };
     BattleManager.setTimeStepFactor = function (timeStepFactor) {
@@ -4132,7 +4144,9 @@ var BattleManager = /** @class */ (function () {
         }
     };
     BattleManager.onWaveOver = function () {
-        // 
+        if (GameVars_1.GameVars.autoSendWave) {
+            BattleScene_1.BattleScene.currentInstance.gui.onClickNextWave();
+        }
     };
     BattleManager.activeNextWave = function () {
         if (GameVars_1.GameVars.currentScene === BattleScene_1.BattleScene.currentInstance) {
@@ -5192,7 +5206,7 @@ var PauseMenu = /** @class */ (function (_super) {
         titleLines.lineStyle(2, 0xffffff);
         titleLines.strokeRect(-170, -320, 340, 50);
         _this.add(titleLines);
-        var title = new Phaser.GameObjects.Text(_this.scene, 0, -165, "PAUSE", { fontFamily: "Rubik-Regular", fontSize: "35px", color: "#FFFFFF" });
+        var title = new Phaser.GameObjects.Text(_this.scene, 0, -165, "PAUSED", { fontFamily: "Rubik-Regular", fontSize: "35px", color: "#FFFFFF" });
         title.setOrigin(.5, 0);
         _this.add(title);
         var width = 350;
@@ -6155,7 +6169,7 @@ var GUI = /** @class */ (function (_super) {
         // this.scaleX = GameVars.scaleCorrectionFactor;
         _this.scaleY = GameVars_1.GameVars.scaleY;
         _this.menuButton = new Phaser.GameObjects.Container(_this.scene);
-        _this.menuButton.setPosition(430, 79);
+        _this.menuButton.setPosition(445, 79);
         _this.menuButton.setInteractive(new Phaser.Geom.Rectangle(-55, -30, 110, 60), Phaser.Geom.Rectangle.Contains);
         _this.menuButton.on("pointerdown", function () { _this.onClickMenu(); });
         _this.menuButton.on("pointerover", function () { _this.onBtnOver(_this.menuButton); });
@@ -6169,7 +6183,7 @@ var GUI = /** @class */ (function (_super) {
         menuText.setOrigin(.5);
         _this.menuButton.add(menuText);
         _this.timeStepButton = new Phaser.GameObjects.Container(_this.scene);
-        _this.timeStepButton.setPosition(530, 79);
+        _this.timeStepButton.setPosition(545, 79);
         _this.timeStepButton.setInteractive(new Phaser.Geom.Rectangle(-30, -30, 60, 60), Phaser.Geom.Rectangle.Contains);
         _this.timeStepButton.on("pointerdown", function () { _this.onClickTimeStep(); });
         _this.timeStepButton.on("pointerover", function () { _this.onBtnOver(_this.timeStepButton); });
@@ -6182,18 +6196,31 @@ var GUI = /** @class */ (function (_super) {
         _this.timeStepText = new Phaser.GameObjects.Text(_this.scene, 0, 0, "1x", { fontFamily: "Rubik-Regular", fontSize: "28px", color: "#FFFFFF" });
         _this.timeStepText.setOrigin(.5);
         _this.timeStepButton.add(_this.timeStepText);
+        _this.pauseButton = new Phaser.GameObjects.Container(_this.scene);
+        _this.pauseButton.setPosition(620, 79);
+        _this.pauseButton.setInteractive(new Phaser.Geom.Rectangle(-30, -30, 60, 60), Phaser.Geom.Rectangle.Contains);
+        _this.pauseButton.on("pointerdown", function () { _this.onClickPause(); });
+        _this.pauseButton.on("pointerover", function () { _this.onBtnOver(_this.pauseButton); });
+        _this.pauseButton.on("pointerout", function () { _this.onBtnOut(_this.pauseButton); });
+        _this.add(_this.pauseButton);
+        var pauseBck = new Phaser.GameObjects.Graphics(_this.scene);
+        pauseBck.fillStyle(0x000000);
+        pauseBck.fillRect(-30, -30, 60, 60);
+        _this.pauseButton.add(pauseBck);
+        _this.pauseImg = new Phaser.GameObjects.Image(_this.scene, 0, 0, "texture_atlas_1", "btn_pause");
+        _this.pauseButton.add(_this.pauseImg);
         _this.nextWaveButton = new Phaser.GameObjects.Container(_this.scene);
-        _this.nextWaveButton.setPosition(665, 79);
-        _this.nextWaveButton.setInteractive(new Phaser.Geom.Rectangle(-90, -30, 180, 60), Phaser.Geom.Rectangle.Contains);
+        _this.nextWaveButton.setPosition(710, 79);
+        _this.nextWaveButton.setInteractive(new Phaser.Geom.Rectangle(-45, -30, 90, 60), Phaser.Geom.Rectangle.Contains);
         _this.nextWaveButton.on("pointerdown", function () { _this.onClickNextWave(); });
         _this.nextWaveButton.on("pointerover", function () { _this.onBtnOver(_this.nextWaveButton); });
         _this.nextWaveButton.on("pointerout", function () { _this.onBtnOut(_this.nextWaveButton); });
         _this.add(_this.nextWaveButton);
         var nextWaveBck = new Phaser.GameObjects.Graphics(_this.scene);
         nextWaveBck.fillStyle(0x000000);
-        nextWaveBck.fillRect(-90, -30, 180, 60);
+        nextWaveBck.fillRect(-45, -30, 90, 60);
         _this.nextWaveButton.add(nextWaveBck);
-        var nextWaveText = new Phaser.GameObjects.Text(_this.scene, 0, 0, "NEXT WAVE", { fontFamily: "Rubik-Regular", fontSize: "28px", color: "#FFFFFF" });
+        var nextWaveText = new Phaser.GameObjects.Text(_this.scene, 0, 0, "NEXT\nWAVE", { fontFamily: "Rubik-Regular", fontSize: "22px", color: "#FFFFFF" });
         nextWaveText.setOrigin(.5);
         _this.nextWaveButton.add(nextWaveText);
         return _this;
@@ -6208,6 +6235,13 @@ var GUI = /** @class */ (function (_super) {
     };
     GUI.prototype.activeNextWave = function () {
         this.nextWaveButton.alpha = 1;
+    };
+    GUI.prototype.onClickNextWave = function () {
+        if (this.nextWaveButton.alpha !== 1 || GameVars_1.GameVars.paused || BattleManager_1.BattleManager.anutoEngine.gameOver) {
+            return;
+        }
+        this.nextWaveButton.alpha = .5;
+        BattleManager_1.BattleManager.newWave();
     };
     GUI.prototype.onClickTimeStep = function () {
         if (this.timeStepButton.alpha !== 1 || GameVars_1.GameVars.paused) {
@@ -6232,12 +6266,18 @@ var GUI = /** @class */ (function (_super) {
         }
         BattleManager_1.BattleManager.onClickMenu();
     };
-    GUI.prototype.onClickNextWave = function () {
-        if (this.nextWaveButton.alpha !== 1 || GameVars_1.GameVars.paused || BattleManager_1.BattleManager.anutoEngine.gameOver) {
+    GUI.prototype.onClickPause = function () {
+        if (GameVars_1.GameVars.paused) {
             return;
         }
-        this.nextWaveButton.alpha = .5;
-        BattleManager_1.BattleManager.newWave();
+        if (GameVars_1.GameVars.semipaused) {
+            BattleManager_1.BattleManager.semiresume();
+            this.pauseImg.setFrame("btn_pause");
+        }
+        else {
+            BattleManager_1.BattleManager.semipause();
+            this.pauseImg.setFrame("btn_play");
+        }
     };
     GUI.prototype.onBtnOver = function (btn) {
         if (btn.alpha === 1) {
