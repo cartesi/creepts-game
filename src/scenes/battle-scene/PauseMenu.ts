@@ -30,7 +30,7 @@ export class PauseMenu extends Phaser.GameObjects.Container {
         titleLines.strokeRect(-170, -320, 340, 50);
         this.add(titleLines);
 
-        let title = new Phaser.GameObjects.Text(this.scene, 0, -165, "PAUSE", {fontFamily: "Rubik-Regular", fontSize: "35px", color: "#FFFFFF"});
+        let title = new Phaser.GameObjects.Text(this.scene, 0, -165, "PAUSED", {fontFamily: "Rubik-Regular", fontSize: "35px", color: "#FFFFFF"});
         title.setOrigin(.5, 0);
         this.add(title);
 

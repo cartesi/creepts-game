@@ -2,14 +2,17 @@ import { TurretSelected } from "./TurretSelected";
 import { BuyTurrets } from "./BuyTurrets";
 import { BattleManager } from "../BattleManager";
 import { GameVars } from "../../../GameVars";
+import { GameManager } from "../../../GameManager";
 
 export class GUI extends Phaser.GameObjects.Container {
 
     private menuButton: Phaser.GameObjects.Container;
     private timeStepButton: Phaser.GameObjects.Container;
     private nextWaveButton: Phaser.GameObjects.Container;
+    private pauseButton: Phaser.GameObjects.Container;
 
     private timeStepText: Phaser.GameObjects.Text;
+    private pauseImg: Phaser.GameObjects.Image;
 
     private buyTurrets: BuyTurrets;
     private turretSelected: TurretSelected;
@@ -25,7 +28,7 @@ export class GUI extends Phaser.GameObjects.Container {
         this.scaleY = GameVars.scaleY;
 
         this.menuButton = new Phaser.GameObjects.Container(this.scene);
-        this.menuButton.setPosition(430, 79);
+        this.menuButton.setPosition(445, 79);
         this.menuButton.setInteractive(new Phaser.Geom.Rectangle(-55, -30, 110, 60), Phaser.Geom.Rectangle.Contains);
         this.menuButton.on("pointerdown", () => { this.onClickMenu(); });
         this.menuButton.on("pointerover", () => { this.onBtnOver(this.menuButton); });
@@ -42,7 +45,7 @@ export class GUI extends Phaser.GameObjects.Container {
         this.menuButton.add(menuText);
 
         this.timeStepButton = new Phaser.GameObjects.Container(this.scene);
-        this.timeStepButton.setPosition(530, 79);
+        this.timeStepButton.setPosition(545, 79);
         this.timeStepButton.setInteractive(new Phaser.Geom.Rectangle(-30, -30, 60, 60), Phaser.Geom.Rectangle.Contains);
         this.timeStepButton.on("pointerdown", () => { this.onClickTimeStep(); });
         this.timeStepButton.on("pointerover", () => { this.onBtnOver(this.timeStepButton); });
@@ -58,9 +61,25 @@ export class GUI extends Phaser.GameObjects.Container {
         this.timeStepText.setOrigin(.5);
         this.timeStepButton.add(this.timeStepText);
 
+        this.pauseButton = new Phaser.GameObjects.Container(this.scene);
+        this.pauseButton.setPosition(620, 79);
+        this.pauseButton.setInteractive(new Phaser.Geom.Rectangle(-30, -30, 60, 60), Phaser.Geom.Rectangle.Contains);
+        this.pauseButton.on("pointerdown", () => { this.onClickPause(); });
+        this.pauseButton.on("pointerover", () => { this.onBtnOver(this.pauseButton); });
+        this.pauseButton.on("pointerout", () => { this.onBtnOut(this.pauseButton); });
+        this.add(this.pauseButton);
+
+        const pauseBck = new Phaser.GameObjects.Graphics(this.scene);
+        pauseBck.fillStyle(0x000000);
+        pauseBck.fillRect(-30, -30, 60, 60);
+        this.pauseButton.add(pauseBck);
+
+        this.pauseImg = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "btn_pause");
+        this.pauseButton.add(this.pauseImg);
+
         this.nextWaveButton = new Phaser.GameObjects.Container(this.scene);
-        this.nextWaveButton.setPosition(665, 79);
-        this.nextWaveButton.setInteractive(new Phaser.Geom.Rectangle(-90, -30, 180, 60), Phaser.Geom.Rectangle.Contains);
+        this.nextWaveButton.setPosition(710, 79);
+        this.nextWaveButton.setInteractive(new Phaser.Geom.Rectangle(-45, -30, 90, 60), Phaser.Geom.Rectangle.Contains);
         this.nextWaveButton.on("pointerdown", () => { this.onClickNextWave(); });
         this.nextWaveButton.on("pointerover", () => { this.onBtnOver(this.nextWaveButton); });
         this.nextWaveButton.on("pointerout", () => { this.onBtnOut(this.nextWaveButton); });
@@ -68,12 +87,14 @@ export class GUI extends Phaser.GameObjects.Container {
 
         const nextWaveBck = new Phaser.GameObjects.Graphics(this.scene);
         nextWaveBck.fillStyle(0x000000);
-        nextWaveBck.fillRect(-90, -30, 180, 60);
+        nextWaveBck.fillRect(-45, -30, 90, 60);
         this.nextWaveButton.add(nextWaveBck);
 
-        const nextWaveText = new Phaser.GameObjects.Text(this.scene, 0, 0, "NEXT WAVE" , {fontFamily: "Rubik-Regular", fontSize: "28px", color: "#FFFFFF"});
+        const nextWaveText = new Phaser.GameObjects.Text(this.scene, 0, 0, "NEXT\nWAVE" , {fontFamily: "Rubik-Regular", fontSize: "22px", color: "#FFFFFF"});
         nextWaveText.setOrigin(.5);
         this.nextWaveButton.add(nextWaveText);
+
+        
     }
 
     public createTurret(type: string): void {
@@ -118,6 +139,21 @@ export class GUI extends Phaser.GameObjects.Container {
         }
 
         BattleManager.onClickMenu();
+    }
+
+    private onClickPause(): void {
+
+        if (GameVars.paused) {
+            return;
+        }
+
+        if (GameVars.semipaused) {
+            BattleManager.semiresume();
+            this.pauseImg.setFrame("btn_pause");
+        } else {
+            BattleManager.semipause();
+            this.pauseImg.setFrame("btn_play");
+        }
     }
 
     private onClickNextWave(): void {
