@@ -1,5 +1,4 @@
-module Anuto.Types {
-
+export module Types {
     export type Callback = {
         func: Function;
         scope: any

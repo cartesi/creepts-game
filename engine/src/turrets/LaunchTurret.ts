@@ -1,4 +1,9 @@
-module Anuto {
+import { MathUtils } from "../utils/MathUtils";
+import { GameConstants } from "../GameConstants";
+import { Enemy } from "../enemies/Enemy";
+import { Turret } from "./Turret";
+import { Mortar } from "../turrets/Mortar";
+import { Mine } from "../turrets/Mine";
 
     export class LaunchTurret extends Turret {
 
@@ -171,4 +176,3 @@ module Anuto {
             }
         }
     }
-}

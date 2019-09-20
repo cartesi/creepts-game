@@ -1,4 +1,9 @@
-module Anuto {
+import { GameConstants } from "../GameConstants";
+import { MathUtils } from "../utils/MathUtils";
+import { Engine } from "../Engine";
+import { Enemy } from "../enemies/Enemy";
+import { Bullet } from "./Bullet";
+import { Turret } from "./Turret";
 
     export class ProjectileTurret extends Turret {
 
@@ -103,4 +108,3 @@ module Anuto {
             this.engine.addBullet(bullet, this);
         }
     }
-}

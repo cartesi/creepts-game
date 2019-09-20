@@ -4,11 +4,14 @@ const pathToPhaser = path.join(__dirname, '/node_modules/phaser/');
 const phaser = path.join(pathToPhaser, 'dist/phaser-arcade-physics.min');
 
 module.exports = env => ({
-	entry: './src/app.tsx',
+	entry: {
+		engine: './engine/src/Engine.ts',
+		app: './src/app.tsx'
+	},
 	devtool: 'source-map',
 	output: {
 		path: path.resolve(__dirname, 'dist'),
-		filename: 'bundle.js',
+		filename: '[name]-bundle.js',
 	},
 	module: {
 		rules: [

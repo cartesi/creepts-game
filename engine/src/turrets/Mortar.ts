@@ -1,4 +1,7 @@
-module Anuto {
+import { MathUtils } from "../utils/MathUtils";
+import { Engine } from "../Engine";
+import { Enemy } from "../enemies/Enemy";
+import { LaunchTurret } from "./LaunchTurret";
 
     export class Mortar {
 
@@ -78,4 +81,3 @@ module Anuto {
             return hitEnemiesData;
         }
     }
-}

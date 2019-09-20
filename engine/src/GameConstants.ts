@@ -1,4 +1,3 @@
-module Anuto {
     
     export class GameConstants {
 
@@ -56,4 +55,3 @@ module Anuto {
         public static readonly WEAK_AGAINST_DAMAGE_MODIFIER = 3.0;
         public static readonly STRONG_AGAINST_DAMAGE_MODIFIER = 0.33;
     }
-}

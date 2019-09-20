@@ -1,4 +1,10 @@
-module Anuto {
+import { MathUtils } from "../utils/MathUtils";
+import { GameConstants } from "../GameConstants";
+import { Engine } from "../Engine";
+import { Bullet } from "../turrets/Bullet";
+import { Mortar } from "../turrets/Mortar";
+import { Mine } from "../turrets/Mine";
+import { LaserTurret } from "../turrets/LaserTurret";
 
     export class Enemy {
 
@@ -257,4 +263,3 @@ module Anuto {
             return {x: p.x, y: p.y};
         }
     }
-}

@@ -10,6 +10,8 @@ import { MapsScene } from "../scenes/maps-scene/MapsScene";
 import { BattleManager } from "../scenes/battle-scene/BattleManager";
 import { GameManager } from "../GameManager";
 
+import { Event } from "../../engine/src/events/Event";
+
 export interface IGameContainerProps { visible: boolean }
 interface IGameContainerState { height: number }
 
@@ -42,7 +44,7 @@ export default class GameContainer extends React.Component<IGameContainerProps, 
 
     onReady = () => {
         // register game over event handler
-        BattleManager.anutoEngine.addEventListener(Anuto.Event.GAME_OVER, this.onGameOver, this);
+        BattleManager.anutoEngine.addEventListener(Event.GAME_OVER, this.onGameOver, this);
     }
 
     createGame() {

@@ -1,4 +1,3 @@
-module Anuto {
 
     export class MathUtils {
 
@@ -142,12 +141,3 @@ module Anuto {
             return result;
         }
     }
-}
-
-try {
-    module.exports = Anuto;
-} catch (error) {
-    // 
-}
-
-
