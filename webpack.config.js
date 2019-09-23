@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require('path');
 const pathToPhaser = path.join(__dirname, '/node_modules/phaser/');
 const phaser = path.join(pathToPhaser, 'dist/phaser-arcade-physics.min');
@@ -27,6 +28,7 @@ module.exports = env => ({
 		historyApiFallback: true
 	},
 	plugins: [
+		new CleanWebpackPlugin(),
 		new CopyWebpackPlugin([
 			{ from: 'assets/', to: 'assets/' }
 		]),
