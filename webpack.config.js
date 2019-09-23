@@ -29,7 +29,9 @@ module.exports = env => ({
 		historyApiFallback: true
 	},
 	plugins: [
-		new CleanWebpackPlugin(),
+		new CleanWebpackPlugin({
+			cleanOnceBeforeBuildPatterns: ['**/*', '!anuto-core-engine*']
+		}),
 		new CopyWebpackPlugin([
 			{ from: 'assets/', to: 'assets/' }
 		]),
