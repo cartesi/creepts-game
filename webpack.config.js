@@ -24,6 +24,7 @@ module.exports = env => ({
 		contentBase: path.resolve(__dirname, 'dist'),
 		host: '0.0.0.0',
 		port: 8080,
+		open: true,
 		compress: true,
 		historyApiFallback: true
 	},
