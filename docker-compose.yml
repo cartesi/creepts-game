@@ -1,0 +1,8 @@
+version: "3.2"
+services:
+  anuto-web:
+    image: cartesi/anuto-web
+    ports:
+      - "8080:80"
+    environment:
+      - "REACT_APP_API_URL=http://localhost:8000"
