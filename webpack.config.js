@@ -30,7 +30,7 @@ module.exports = env => ({
 	},
 	plugins: [
 		new CleanWebpackPlugin({
-			cleanOnceBeforeBuildPatterns: ['**/*', '!anuto-core-engine*']
+			cleanOnceBeforeBuildPatterns: ['**/*', '!anuto-core-engine*', '!env*']
 		}),
 		new CopyWebpackPlugin([
 			{ from: 'assets/', to: 'assets/' }
