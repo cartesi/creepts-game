@@ -7,7 +7,7 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: Build Docker image
-        run: docker -t cartesi/anuto-web build .
+        run: docker build . -t cartesi/anuto-web
 
       - name: Tag GitHub Registry
         run: docker tag cartesi/anuto-web docker.pkg.github.com/cartesi-corp/anuto/anuto-web:latest
