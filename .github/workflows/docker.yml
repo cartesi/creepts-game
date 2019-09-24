@@ -12,7 +12,10 @@ jobs:
       - name: Tag GitHub Registry
         run: docker tag cartesi/anuto-web docker.pkg.github.com/cartesi-corp/anuto/anuto-web:latest
       - name: Login to GitHub Registry
-        run: docker login docker.pkg.github.com --username cartesi-corp
+        run: docker login docker.pkg.github.com --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        env:
+          DOCKER_USERNAME: ${{ secrets.GITHUB_DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.GITHUB_DOCKER_PASSWORD }}
       - name: Push to GitHub Registry
         run: docker push docker.pkg.github.com/cartesi-corp/anuto/anuto-web:latest
 
