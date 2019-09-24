@@ -10,9 +10,9 @@ import { TournamentPhase } from "../Tournament";
 
 const routes = {
     "/": () => <Index />,
-    "/play": () => <TournamentsContainer name="Play" me phase={TournamentPhase.commit} />,
-    "/join": () => <TournamentsContainer name="Join Tournament" phase={TournamentPhase.commit} />,
-    "/my": () => <TournamentsContainer name="My Tournaments" me />,
+    "/play": () => <TournamentsContainer name="Play" me={true} phase={TournamentPhase.commit} />,
+    "/join": () => <TournamentsContainer name="Join Tournament"  me={false} phase={TournamentPhase.commit} />,
+    "/my": () => <TournamentsContainer name="My Tournaments" me={true} />,
     "/tournaments/:id": ({id}) => <TournamentContainer id={id} />
 };
 
