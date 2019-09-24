@@ -1,4 +1,4 @@
-import fetch from "./fetch";
+import fetch from "./mockedFetch";
 
 interface IHttpResponse<T> extends Response {
     parsedBody?: T;
