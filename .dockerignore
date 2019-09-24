@@ -1,5 +1,3 @@
-**/*
-!dist/
-!nginx/
-!\.env*
-!entrypoint.sh
+dist/
+node_modules/
+.vscode/

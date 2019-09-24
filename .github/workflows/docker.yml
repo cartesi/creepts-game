@@ -1,0 +1,27 @@
+name: Docker
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Build Docker image
+        run: docker -t cartesi/anuto-web build .
+
+      - name: Tag GitHub Registry
+        run: docker tag cartesi/anuto-web docker.pkg.github.com/cartesi-corp/anuto/anuto-web:latest
+      - name: Login to GitHub Registry
+        run: docker login docker.pkg.github.com --username cartesi-corp
+      - name: Push to GitHub Registry
+        run: docker push docker.pkg.github.com/cartesi-corp/anuto/anuto-web:latest
+
+      - name: Tag AWS ECR
+        run: docker tag cartesi/anuto-web 510455014572.dkr.ecr.us-east-1.amazonaws.com/anuto-web:latest
+      - name: Login to AWS ECR
+        run: $(aws ecr get-login --no-include-email --region us-east-1)
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Push to AWS ECR
+        run: docker push 510455014572.dkr.ecr.us-east-1.amazonaws.com/anuto-web:latest
