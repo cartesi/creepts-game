@@ -34,7 +34,7 @@ export const TournamentsContainer: React.FC<IProps> = ({ name, phase, me }) => {
             {service.status === "error" && (
                 <Message negative>
                     <Message.Header>Error</Message.Header>
-                    <p>{service.error}</p>
+                    <p>{service.error.message}</p>
                 </Message>
             )}
         </div>
