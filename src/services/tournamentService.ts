@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Service } from "./service";
 import { Tournament, TournamentPhase } from "../Tournament";
 import { get } from "./http";
+import { apiUrl } from './config';
 import queryString from "query-string";
 
 export interface Tournaments {
@@ -14,7 +15,7 @@ export const useTournamentService = (id: string) => {
     });
 
     useEffect(() => {
-        get<Tournament>(`/tournaments/${id}`)
+        get<Tournament>(`${apiUrl}/tournaments/${id}`)
             .then(response => setResult({ status: "loaded", payload: response.parsedBody}))
             .catch(error => setResult({ status: "error", error }));
     }, []);
@@ -28,7 +29,7 @@ export const useTournamentsService = (phase: TournamentPhase, me: boolean) => {
     });
 
     const qs = queryString.stringify({ phase, me });
-    const url = `/tournaments${qs && '?' + qs}`;
+    const url = `${apiUrl}/tournaments${qs && '?' + qs}`;
 
     useEffect(() => {
         get<Tournaments>(url)
