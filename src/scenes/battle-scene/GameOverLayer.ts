@@ -3,57 +3,54 @@ import { BattleManager } from "./BattleManager";
 import { GameConstants } from "../../GameConstants";
 import { GameVars } from "../../GameVars";
 import { BattleScene } from "./BattleScene";
+import { MenuButton } from "./gui/MenuButton";
+import { MenuTitle } from "./gui/MenuTitle";
 
 export class GameOverLayer extends Phaser.GameObjects.Container {
 
     constructor(scene: Phaser.Scene) {
         super(scene);
 
-        const bck = new Phaser.GameObjects.Graphics(this.scene);
-        bck.fillStyle(0x000000);
-        bck.fillRect(-GameConstants.GAME_WIDTH / 2, -100, GameConstants.GAME_WIDTH, 275);
-        bck.alpha = .75;
-        this.add(bck);
+        // upper and lower margin for the dialog, and gap between elements
+        const margin = 20;
+        const gap = 10;
 
-        const titleLines = new Phaser.GameObjects.Graphics(this.scene);
-        titleLines.setPosition(0, 255);
-        titleLines.lineStyle(4, 0xffffff);
-        titleLines.strokeRect(-180, -330, 360, 70);
-        titleLines.lineStyle(2, 0xffffff);
-        titleLines.strokeRect(-170, -320, 340, 50);
-        this.add(titleLines);
+        // this is a box for the content, vertically centered
+        // XXX: it's not really vertically centered, because we don't calculate the total height at this point
+        const box = new Phaser.GameObjects.Container(this.scene);
+        box.setPosition(0, -GameConstants.GAME_HEIGHT / 4);
 
-        const title = new Phaser.GameObjects.Text(this.scene, 0, -60, "GAME OVER", {fontFamily: "Rubik-Regular", fontSize: "35px", color: "#FFFFFF"});
-        title.setOrigin(.5, 0);
-        this.add(title);
+        // this is a black background with transparency
+        const background = new Phaser.GameObjects.Graphics(this.scene);
+        box.add(background);
 
-        const score = new Phaser.GameObjects.Text(this.scene, 0, 50, "SCORE: " + GameVars.formatNumber(BattleManager.anutoEngine.score), {fontFamily: "Rubik-Regular", fontSize: "65px", color: "#FFFFFF"});
+        // vertical position, increment on each new element, start with a margin
+        let y = 0 + margin;
+
+        // screen title
+        const title = new MenuTitle(this.scene, "GAME OVER");
+        title.setPosition(0, y + (title.height / 2));
+        box.add(title);
+        y += title.height + gap;
+
+        // score
+        const scoreHeight = 80;
+        const score = new Phaser.GameObjects.Text(this.scene, 0, y + (scoreHeight / 2), "SCORE: " + GameVars.formatNumber(BattleManager.anutoEngine.score), {fontFamily: "Rubik-Regular", fontSize: "65px", color: "#FFFFFF"});
         score.setOrigin(.5);
-        this.add(score);
+        box.add(score);
+        y += scoreHeight + gap + gap;
 
-        const width = 350;
-        const height = 40;
+        // restart button
+        const restartButton = new MenuButton(this.scene, "RESTART", () => GameManager.reset());
+        restartButton.setPosition(0, y + (restartButton.height / 2));
+        box.add(restartButton);
+        y += restartButton.height + gap;
 
-        const restartButton = new Phaser.GameObjects.Container(this.scene);
-        restartButton.setPosition(0, 125);
-        restartButton.setInteractive(new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height), Phaser.Geom.Rectangle.Contains);
-        restartButton.on("pointerover", () => { this.onBtnOver(restartButton); });
-        restartButton.on("pointerout", () => { this.onBtnOut(restartButton); });
-        restartButton.on("pointerdown", () => { this.onClickRestart(); });
-        this.add(restartButton);
-
-        const restartBck = new Phaser.GameObjects.Graphics(this.scene);
-        restartBck.fillStyle(0xFFFFFF);
-        restartBck.fillRect(-width / 2, -height / 2, width, height);
-        restartBck.lineStyle(2, 0xFFFFFF);
-        restartBck.strokeRect(-width / 2 - 5, -height / 2 - 5, width + 10, height + 10);
-        restartButton.add(restartBck);
-
-        const restartText = new Phaser.GameObjects.Text(this.scene, 0, 0, "RESTART", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
-        restartText.setOrigin(.5);
-        restartButton.add(restartText);
-
-        this.alpha = 0;
+        // exit button, just emit an exit event
+        const exitButton = new MenuButton(this.scene, "EXIT", () => GameManager.events.emit("exit") );
+        exitButton.setPosition(0, y + (exitButton.height / 2));
+        box.add(exitButton);
+        y += exitButton.height + margin;
 
         this.scene.tweens.add({
             targets: this,
@@ -62,27 +59,20 @@ export class GameOverLayer extends Phaser.GameObjects.Container {
             duration: 500
         });
 
+        // TODO: reevaluate this
         if (GameVars.currentScene !== BattleScene.currentInstance) {
-            restartText.setText("EXIT");
+            restartButton.setLabel("EXIT");
         }
+
+        // set the size with final y
+        box.setSize(GameConstants.GAME_WIDTH, y);
+
+        // draw black background with the final y height
+        background.fillStyle(0x000000);
+        background.fillRect(-GameConstants.GAME_WIDTH / 2, 0, GameConstants.GAME_WIDTH, y);
+        background.alpha = .75;
+
+        this.add(box);
     }
 
-    private onBtnOver(btn: Phaser.GameObjects.Container): void {
-
-        if (btn.alpha === 1) {
-            btn.setScale(1.025);
-        }
-    }
-
-    private onBtnOut(btn: Phaser.GameObjects.Container): void {
-        
-        if (btn.alpha === 1) {
-            btn.setScale(1);
-        }
-    }
-
-    private onClickRestart(): void {
-
-        GameManager.reset();
-    }
 }

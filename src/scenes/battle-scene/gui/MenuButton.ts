@@ -2,13 +2,17 @@ import Phaser from "phaser";
 
 export class MenuButton extends Phaser.GameObjects.Container {
 
+    public static readonly HEIGHT = 50;
+    public static readonly WIDTH = 360;
+
     private text: Phaser.GameObjects.Text;
 
-    constructor(scene: Phaser.Scene, width: number, height: number, label: string, onClick: (button: MenuButton) => void) {
+    constructor(scene: Phaser.Scene, label: string, onClick: (button: MenuButton) => void) {
         super(scene);
+        this.setSize(MenuButton.WIDTH, MenuButton.HEIGHT);
 
         // behaviour
-        this.setInteractive(new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height), Phaser.Geom.Rectangle.Contains);
+        this.setInteractive(new Phaser.Geom.Rectangle(0, 0, MenuButton.WIDTH, MenuButton.HEIGHT), Phaser.Geom.Rectangle.Contains);
         this.on("pointerover", () => { 
             if (this.alpha === 1) {
                 this.setScale(1.025);
@@ -21,12 +25,12 @@ export class MenuButton extends Phaser.GameObjects.Container {
          });
         this.on("pointerdown", () => { onClick(this); });
 
-        // background
+        const margin = 5;
         const background = new Phaser.GameObjects.Graphics(this.scene);
         background.fillStyle(0xFFFFFF);
-        background.fillRect(-width / 2, -height / 2, width, height);
+        background.fillRect(-MenuButton.WIDTH / 2 + margin, -MenuButton.HEIGHT / 2 + margin, MenuButton.WIDTH - (margin * 2), MenuButton.HEIGHT - (margin * 2));
         background.lineStyle(2, 0xFFFFFF);
-        background.strokeRect(-width / 2 - 5, -height / 2 - 5, width + 10, height + 10);
+        background.strokeRect(-MenuButton.WIDTH / 2, -MenuButton.HEIGHT / 2, MenuButton.WIDTH, MenuButton.HEIGHT);
         this.add(background);
 
         // text
