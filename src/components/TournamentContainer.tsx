@@ -45,7 +45,7 @@ export const TournamentContainer: React.FC<IProps> = ({ id }) => {
     const gameOverHandler = (level: LevelObject, log: LogsObject, score: number, waves: number) => {
         putScore(id, { score, waves, log })
             .then(response => {
-                setSubmitError(response.ok ? null : response.statusText);
+                setSubmitError(response.ok || response.status == 409 ? null : response.statusText);
             })
             .catch(error => {
                 setSubmitError(error.message);
