@@ -7,8 +7,6 @@ import { BootScene } from "../scenes/BootScene";
 import { PreloadScene } from "../scenes/PreloadScene";
 import { BattleScene } from "../scenes/battle-scene/BattleScene";
 import { MapsScene } from "../scenes/maps-scene/MapsScene";
-import { BattleManager } from "../scenes/battle-scene/BattleManager";
-import { GameManager } from "../GameManager";
 
 export interface IGameContainerProps { visible: boolean }
 interface IGameContainerState { height: number }
@@ -36,15 +34,6 @@ export default class GameContainer extends React.Component<IGameContainerProps, 
         window.removeEventListener('resize', this.resize);
     }
 
-    onGameOver = () => {
-        console.log("Game Over");
-    }
-
-    onReady = () => {
-        // register game over event handler
-        BattleManager.anutoEngine.addEventListener(Anuto.Event.GAME_OVER, this.onGameOver, this);
-    }
-
     createGame() {
         const gameConfig = {
 
@@ -69,7 +58,6 @@ export default class GameContainer extends React.Component<IGameContainerProps, 
 
         // If compilation error here, compare Phaser definitions file of working copy (phaser.d.ts, line 48040 on 27-05-2019)
         // Also make sure to delete all *.ts files in node_modules/trailz folder
-        GameManager.events.on("ready", this.onReady);
         new Game(gameConfig);
     }
 

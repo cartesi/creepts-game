@@ -3,6 +3,9 @@ interface IHttpResponse<T> extends Response {
     parsedBody?: T;
 }
 
+const defaultHeaders = new Headers();
+defaultHeaders.append('Content-Type', 'application/json');
+
 export const http = <T>(request: RequestInfo): Promise<IHttpResponse<T>> => {
     return new Promise((resolve, reject) => {
         let response: IHttpResponse<T>;
@@ -35,7 +38,7 @@ export const get = async <T>(
 export const post = async<T>(
     path: string,
     body: any,
-    args: RequestInit = { method: "post", body: JSON.stringify(body)}
+    args: RequestInit = { method: "post", body: JSON.stringify(body), headers: defaultHeaders}
     ): Promise<IHttpResponse<T>> => {
     return await http<T>(new Request(path, args));
 }
@@ -43,7 +46,7 @@ export const post = async<T>(
 export const put = async<T>(
     path: string,
     body: any,
-    args: RequestInit = { method: "put", body: JSON.stringify(body)}
+    args: RequestInit = { method: "put", body: JSON.stringify(body), headers: defaultHeaders}
     ): Promise<IHttpResponse<T>> => {
     return await http<T>(new Request(path, args));
 }

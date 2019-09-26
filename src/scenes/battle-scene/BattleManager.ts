@@ -408,6 +408,13 @@ export class BattleManager {
         
         BoardContainer.currentInstance.showGameOverLayer();
 
+        GameManager.events.emit(
+            "gameOver",
+            GameVars.levelObject,
+            GameVars.logsObject,
+            BattleManager.anutoEngine.score,
+            BattleManager.anutoEngine.round);
+
         if (GameConstants.DEVELOPMENT && GameVars.currentScene === BattleScene.currentInstance) {
             let data = JSON.stringify(GameVars.logsObject);
             let bl = new Blob([data], {
