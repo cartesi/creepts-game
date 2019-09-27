@@ -51,7 +51,6 @@ export default class GameContainer extends React.Component<IGameContainerProps, 
 
             scene: [
                 BootScene,
-                LogScene,
                 PreloadScene,
                 LogScene,
                 BattleScene,
