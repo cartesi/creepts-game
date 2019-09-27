@@ -47,16 +47,17 @@ export const Replay: React.FC<ReplayProps> = ({ tournamentId, id }) => {
 
     useEffect(() => {
         if (service.status == "loaded") {
-            // TODO: get map name from tournament
-            const mapName = "original";
+            // get map name from tournament
+            const map = service.payload[0].map;
 
             // build level object from map
-            const level = levelForMap(mapName);
+            const level = levelForMap(map);
 
-            console.log(service.payload.log, level);
+            // log from server
+            const log = service.payload[1].log;
 
             // open game log replay screen
-            GameManager.enterLogScene(service.payload.log, level);
+            GameManager.enterLogScene(log, level);
         }
 
     }, [service.status]);

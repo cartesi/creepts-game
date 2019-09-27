@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Service } from "./service";
 import { get, put } from "./http";
 import { apiUrl } from "./config";
-import { TournamentScore } from "../Tournament";
+import { getTournament } from "./tournamentService";
+import { Tournament, TournamentScore } from "../Tournament";
 
 export const putScore = (tournamentId: string, payload: TournamentScore) => {
     return put<TournamentScore>(`${apiUrl}/tournaments/${tournamentId}/scores/my`, payload);
@@ -27,13 +28,18 @@ export const useScoreSubmitService = (tournamentId: string, payload: TournamentS
 };
 
 export const useScoreService = (tournamentId: string, id: string) => {
-    const [result, setResult] = useState<Service<TournamentScore>>({
+    const [result, setResult] = useState<Service<[Tournament, TournamentScore]>>({
         status: "loading"
     });
 
     useEffect(() => {
-        getScore(tournamentId, id)
-            .then(response => setResult({ status: "loaded", payload: response.parsedBody}))
+        getTournament(tournamentId)
+            .then(response => {
+                const tournament = response.parsedBody;
+                getScore(tournamentId, id)
+                    .then(response => setResult({ status: "loaded", payload: [tournament, response.parsedBody]}))
+                    .catch(error => setResult({ status: "error", error }));
+            })
             .catch(error => setResult({ status: "error", error }));
     }, []);
 
