@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { GameManager } from "../GameManager";
 import { navigate } from "hookrouter";
-import { Dimmer, Loader, Grid, Message, Button } from "semantic-ui-react";
+import { Loading } from "./Loading";
+import { FullScreenMessage } from "./FullScreenMessage";
 import { useTournamentService } from "../services/tournamentService";
 import { putScore } from "../services/scoreService";
 
@@ -70,28 +71,14 @@ export const TournamentContainer: React.FC<IProps> = ({ id }) => {
         // mapLoaded controls the visibility of a loading screen on top of the game
         // which goes aways once the map changes
         <div>
-            {!mapLoaded && 
-            <div style={{ backgroundColor: "white", height: "100vh", width: "100vw", position: "absolute", zIndex: 1 }}>
-                <Grid verticalAlign="middle">
-                    <Dimmer active>
-                        <Loader size='massive'>Loading</Loader>
-                    </Dimmer>
-                </Grid>
-            </div>
-            }
+            {!mapLoaded && <Loading />}
 
             {submitError &&
-            <div style={{ height: "100vh", width: "100vw", position: "absolute", zIndex: 1 }}>
-                <Grid verticalAlign="middle">
-                    <Dimmer active>
-                        <Message negative>
-                            <Message.Header>Error submitting score</Message.Header>
-                            <p>{submitError}</p>
-                            <Button negative fluid onClick={ () => navigate('/') }>Exit</Button>
-                        </Message>
-                    </Dimmer>
-                </Grid>
-            </div>
+                <FullScreenMessage
+                    title="Error submitting score"
+                    message={submitError}
+                    buttonTitle="Exit"                
+                    onClick={() => navigate('/')} />
             }
         </div>
     );

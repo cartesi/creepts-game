@@ -1,23 +1,10 @@
 import React from "react";
 import maps from "../../assets/config/maps.json";
+import { getMapByName } from "./Map";
 
 export interface MapThumbnailProps { map: string, width: number, height: number };
 
 export const MapThumbnail: React.SFC<MapThumbnailProps> = (props) => {
-
-    const mapNames = [
-        "original",
-        "waiting-line",
-        "turn-round",
-        "hurry",
-        "civyshk_yard",
-        "civyshk_2y",
-        "civyshk_line5",
-        "civyshk_labyrinth"
-    ];
-    
-    // get the map from the map definition file
-    const mapId = mapNames.indexOf(props.map);
 
     // if map is undefined, we draw an empty canvas
     const emptyMap = {
@@ -27,7 +14,7 @@ export const MapThumbnail: React.SFC<MapThumbnailProps> = (props) => {
         plateaus: []
     };
 
-    const map = mapId === -1 ? emptyMap : (maps[mapId] || emptyMap);
+    const map = getMapByName(props.map) || emptyMap;
 
     // cell width and height
     const cw = props.width / map.size.c;

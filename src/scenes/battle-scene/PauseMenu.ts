@@ -15,8 +15,6 @@ export class PauseMenu extends Phaser.GameObjects.Container {
         const titleGap = 40;
         const gap = 10;
 
-        // this.y = -150 * GameVars.scaleY;
-
         const buttons: MenuButton[] = [
             // restart
             new MenuButton(this.scene, "RESTART", () => GameManager.reset()),
