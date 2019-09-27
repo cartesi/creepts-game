@@ -59,9 +59,8 @@ export class GameOverLayer extends Phaser.GameObjects.Container {
             duration: 500
         });
 
-        // TODO: reevaluate this
         if (GameVars.currentScene !== BattleScene.currentInstance) {
-            restartButton.setLabel("EXIT");
+            restartButton.setEnabled(false);
         }
 
         // set the size with final y

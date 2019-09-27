@@ -7,6 +7,7 @@ import { BootScene } from "../scenes/BootScene";
 import { PreloadScene } from "../scenes/PreloadScene";
 import { BattleScene } from "../scenes/battle-scene/BattleScene";
 import { MapsScene } from "../scenes/maps-scene/MapsScene";
+import { LogScene } from "../scenes/log-scene/LogScene";
 
 export interface IGameContainerProps { visible: boolean }
 interface IGameContainerState { height: number }
@@ -51,6 +52,7 @@ export default class GameContainer extends React.Component<IGameContainerProps, 
             scene: [
                 BootScene,
                 PreloadScene,
+                LogScene,
                 BattleScene,
                 MapsScene
             ]

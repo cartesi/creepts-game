@@ -62,7 +62,13 @@ export const Replay: React.FC<ReplayProps> = ({ tournamentId, id }) => {
 
     }, [service.status]);
 
-    service.status
+    // register gameOver and exit event handlers on mount, and removes them on unmount
+    useEffect(() => {
+        const exitHandler = () => navigate('/');    
+        GameManager.events.on("exit", exitHandler);
+        return () => GameManager.events.removeListener("exit", exitHandler);
+    }, []);
+    
     return (
         <div>
             {service.status == "loading" && <Loading />}
