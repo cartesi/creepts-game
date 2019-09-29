@@ -4,7 +4,7 @@ import { Breadcrumb, List, Message } from "semantic-ui-react";
 import { TournamentCard } from "./TournamentCard";
 import { LoadingCard } from "./LoadingCard";
 import { TournamentPhase } from "../Tournament";
-import useTournamentsService from "../services/useTournamentsService";
+import { useTournamentsService } from "../services/tournamentService";
 
 interface IState { }
 interface IProps { name: string, me?: boolean, phase?: TournamentPhase }
@@ -34,7 +34,7 @@ export const TournamentsContainer: React.FC<IProps> = ({ name, phase, me }) => {
             {service.status === "error" && (
                 <Message negative>
                     <Message.Header>Error</Message.Header>
-                    <p>{service.error}</p>
+                    <p>{service.error.message}</p>
                 </Message>
             )}
         </div>

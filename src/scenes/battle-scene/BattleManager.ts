@@ -83,6 +83,7 @@ export class BattleManager {
         GameVars.currentWave = 1;
         GameVars.paused = false;
         GameVars.semipaused = false;
+        GameVars.autoSendWave = false;
 
         BattleManager.anutoEngine = new Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData, GameVars.wavesData);
 
@@ -216,6 +217,11 @@ export class BattleManager {
     public static onClickMenu(): void {
 
         BoardContainer.currentInstance.showPauseMenu();
+    }
+
+    public static setAutoSendWave(value: boolean): void {
+
+        GameVars.autoSendWave = value;
     }
 
     public static improveTurret(id: number): void {
@@ -395,7 +401,10 @@ export class BattleManager {
 
     private static onWaveOver(): void {
        
-        // 
+        if (GameVars.autoSendWave) {
+            BattleScene.currentInstance.gui.onClickNextWave();
+        }
+        
     }
 
     private static activeNextWave(): void {
@@ -413,6 +422,13 @@ export class BattleManager {
         GameManager.writeGameData();
         
         BoardContainer.currentInstance.showGameOverLayer();
+
+        GameManager.events.emit(
+            "gameOver",
+            GameVars.levelObject,
+            GameVars.logsObject,
+            BattleManager.anutoEngine.score,
+            BattleManager.anutoEngine.round);
 
         if (GameConstants.DEVELOPMENT && GameVars.currentScene === BattleScene.currentInstance) {
             let data = JSON.stringify(GameVars.logsObject);

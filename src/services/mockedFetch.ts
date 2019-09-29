@@ -49,7 +49,8 @@ const tournamentsHandler = (url: string) => {
     });
 }
 
-export default (url: string) => {
+export default (request: RequestInfo) => {
+    const url = (request as Request).url;
     const routes: [RegExp, (...args: string[]) => Promise<Response>][] = [
         [ /\/tournaments\/(.+)/, tournamentHandler ],
         [ /\/tournaments(.*)/, tournamentsHandler ],

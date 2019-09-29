@@ -1,0 +1,25 @@
+name: Docker
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build Docker Image
+        run: docker build . -t 510455014572.dkr.ecr.us-east-1.amazonaws.com/anuto-web:develop-${GITHUB_SHA:0:8}
+      - name: Login to AWS ECR
+        run: $(aws ecr get-login --no-include-email --region us-east-1)
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Push to AWS ECR
+        run: docker push 510455014572.dkr.ecr.us-east-1.amazonaws.com/anuto-web:develop-${GITHUB_SHA:0:8}
+#      - name: Update staging environment
+#        run: aws cloudformation deploy --stack-name staging --template-file ${TEMPLATE_PATH} --parameter-overrides ParameterKey=AnutoWebImageTag,ParameterValue=develop-${GITHUB_SHA:0:8}
+#        env:
+#          TEMPLATE_PATH: https://cf-templates-1tsksmh05a2pc-us-east-1.s3.amazonaws.com/node.yaml
+#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

@@ -3,13 +3,17 @@
     "version": "0.0.1",
     "description": "Tower defense game for Cartesi.io based on Anuto",
     "devDependencies": {
+        "@beam-australia/react-env": "^2.1.2",
         "@types/hookrouter": "^2.2.1",
         "@types/jest": "^24.0.18",
         "@types/node": "^12.7.4",
         "@types/react": "^16.9.2",
         "@types/react-dom": "^16.9.0",
         "@types/semantic-ui": "^2.2.7",
+        "clean-webpack-plugin": "^3.0.0",
+        "copy-webpack-plugin": "^5.0.4",
         "expose-loader": "0.7.5",
+        "html-webpack-plugin": "^3.2.0",
         "ts-loader": "6.0.4",
         "typescript": "3.6.2",
         "webpack": "4.35.3",
@@ -30,8 +34,8 @@
         "typed-emitter": "^0.1.0"
     },
     "scripts": {
-        "dev": "webpack --env.GAME_ONLY=true --mode development && webpack-dev-server --env.GAME_ONLY=true --mode development",
-        "dev:cartesi": "webpack --mode development && webpack-dev-server --mode development",
-        "build": "webpack --mode production"
+        "dev": "tsc -p engine && react-env --env .env --dest ./dist && webpack --env.GAME_ONLY=true --mode development && webpack-dev-server --env.GAME_ONLY=true --mode development",
+        "dev:cartesi": "tsc -p engine && react-env --env .env --dest ./dist && webpack --mode development && webpack-dev-server --mode development",
+        "build": "tsc -p engine && react-env --env .env --dest ./dist && webpack --mode production"
     }
 }

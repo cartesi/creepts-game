@@ -8,11 +8,13 @@ export class GUI extends Phaser.GameObjects.Container {
 
     private menuButton: Phaser.GameObjects.Container;
     private timeStepButton: Phaser.GameObjects.Container;
-    private nextWaveButton: Phaser.GameObjects.Container;
     private pauseButton: Phaser.GameObjects.Container;
+    private nextWaveButton: Phaser.GameObjects.Container;
+    private autoButton: Phaser.GameObjects.Container;
 
     private timeStepText: Phaser.GameObjects.Text;
     private pauseImg: Phaser.GameObjects.Image;
+    private autoImage: Phaser.GameObjects.Image;
 
     private buyTurrets: BuyTurrets;
     private turretSelected: TurretSelected;
@@ -28,8 +30,8 @@ export class GUI extends Phaser.GameObjects.Container {
         this.scaleY = GameVars.scaleY;
 
         this.menuButton = new Phaser.GameObjects.Container(this.scene);
-        this.menuButton.setPosition(445, 79);
-        this.menuButton.setInteractive(new Phaser.Geom.Rectangle(-55, -30, 110, 60), Phaser.Geom.Rectangle.Contains);
+        this.menuButton.setPosition(400, 79);
+        this.menuButton.setInteractive(new Phaser.Geom.Rectangle(-50, -30, 100, 60), Phaser.Geom.Rectangle.Contains);
         this.menuButton.on("pointerdown", () => { this.onClickMenu(); });
         this.menuButton.on("pointerover", () => { this.onBtnOver(this.menuButton); });
         this.menuButton.on("pointerout", () => { this.onBtnOut(this.menuButton); });
@@ -37,7 +39,7 @@ export class GUI extends Phaser.GameObjects.Container {
 
         const menuBck = new Phaser.GameObjects.Graphics(this.scene);
         menuBck.fillStyle(0x000000);
-        menuBck.fillRect(-55, -30, 110, 60);
+        menuBck.fillRect(-50, -30, 100, 60);
         this.menuButton.add(menuBck);
 
         const menuText = new Phaser.GameObjects.Text(this.scene, 0, 0, "MENU" , {fontFamily: "Rubik-Regular", fontSize: "28px", color: "#FFFFFF"});
@@ -45,7 +47,7 @@ export class GUI extends Phaser.GameObjects.Container {
         this.menuButton.add(menuText);
 
         this.timeStepButton = new Phaser.GameObjects.Container(this.scene);
-        this.timeStepButton.setPosition(545, 79);
+        this.timeStepButton.setPosition(490, 79);
         this.timeStepButton.setInteractive(new Phaser.Geom.Rectangle(-30, -30, 60, 60), Phaser.Geom.Rectangle.Contains);
         this.timeStepButton.on("pointerdown", () => { this.onClickTimeStep(); });
         this.timeStepButton.on("pointerover", () => { this.onBtnOver(this.timeStepButton); });
@@ -62,7 +64,7 @@ export class GUI extends Phaser.GameObjects.Container {
         this.timeStepButton.add(this.timeStepText);
 
         this.pauseButton = new Phaser.GameObjects.Container(this.scene);
-        this.pauseButton.setPosition(620, 79);
+        this.pauseButton.setPosition(560, 79);
         this.pauseButton.setInteractive(new Phaser.Geom.Rectangle(-30, -30, 60, 60), Phaser.Geom.Rectangle.Contains);
         this.pauseButton.on("pointerdown", () => { this.onClickPause(); });
         this.pauseButton.on("pointerover", () => { this.onBtnOver(this.pauseButton); });
@@ -78,7 +80,7 @@ export class GUI extends Phaser.GameObjects.Container {
         this.pauseButton.add(this.pauseImg);
 
         this.nextWaveButton = new Phaser.GameObjects.Container(this.scene);
-        this.nextWaveButton.setPosition(710, 79);
+        this.nextWaveButton.setPosition(645, 79);
         this.nextWaveButton.setInteractive(new Phaser.Geom.Rectangle(-45, -30, 90, 60), Phaser.Geom.Rectangle.Contains);
         this.nextWaveButton.on("pointerdown", () => { this.onClickNextWave(); });
         this.nextWaveButton.on("pointerover", () => { this.onBtnOver(this.nextWaveButton); });
@@ -90,11 +92,30 @@ export class GUI extends Phaser.GameObjects.Container {
         nextWaveBck.fillRect(-45, -30, 90, 60);
         this.nextWaveButton.add(nextWaveBck);
 
-        const nextWaveText = new Phaser.GameObjects.Text(this.scene, 0, 0, "NEXT\nWAVE" , {fontFamily: "Rubik-Regular", fontSize: "22px", color: "#FFFFFF"});
+        const nextWaveText = new Phaser.GameObjects.Text(this.scene, 0, 0, "NEXT\nWAVE" , {fontFamily: "Rubik-Regular", fontSize: "22px", color: "#FFFFFF", align: "center"});
         nextWaveText.setOrigin(.5);
         this.nextWaveButton.add(nextWaveText);
 
-        
+        this.autoButton = new Phaser.GameObjects.Container(this.scene);
+        this.autoButton.setPosition(730, 79);
+        this.add(this.autoButton);
+
+        this.autoImage = new Phaser.GameObjects.Image(this.scene, 0, 10, "texture_atlas_1");
+        this.autoImage.setInteractive(new Phaser.Geom.Rectangle(-30, -30, 60, 60), Phaser.Geom.Rectangle.Contains);
+        this.autoImage.on("pointerdown", () => { this.onClickAuto(); });
+        this.autoImage.on("pointerover", () => { this.onBtnOver(this.autoImage); });
+        this.autoImage.on("pointerout", () => { this.onBtnOut(this.autoImage); });
+        this.autoButton.add(this.autoImage);
+
+        const autoText = new Phaser.GameObjects.Text(this.scene, 0, -20, "AUTO" , {fontFamily: "Rubik-Regular", fontSize: "20px", color: "#000000", align: "center"});
+        autoText.setOrigin(.5);
+        this.autoButton.add(autoText);
+
+        if (GameVars.autoSendWave) {
+            this.autoImage.setFrame("checkbox_tick");
+        } else {
+            this.autoImage.setFrame("checkbox");
+        }
     }
 
     public createTurret(type: string): void {
@@ -112,6 +133,16 @@ export class GUI extends Phaser.GameObjects.Container {
     public activeNextWave(): void {
 
         this.nextWaveButton.alpha = 1;
+    }
+
+    public onClickNextWave(): void {
+
+        if (this.nextWaveButton.alpha !== 1 || GameVars.paused || BattleManager.anutoEngine.gameOver) {
+            return;
+        }
+        
+        this.nextWaveButton.alpha = .5;
+        BattleManager.newWave();
     }
 
     private onClickTimeStep(): void {
@@ -156,24 +187,25 @@ export class GUI extends Phaser.GameObjects.Container {
         }
     }
 
-    private onClickNextWave(): void {
+    private onClickAuto(): void {
 
-        if (this.nextWaveButton.alpha !== 1 || GameVars.paused || BattleManager.anutoEngine.gameOver) {
-            return;
+        if (GameVars.autoSendWave) {
+            this.autoImage.setFrame("checkbox");
+            BattleManager.setAutoSendWave(false);
+        } else {
+            this.autoImage.setFrame("checkbox_tick");
+            BattleManager.setAutoSendWave(true);
         }
-        
-        this.nextWaveButton.alpha = .5;
-        BattleManager.newWave();
     }
 
-    private onBtnOver(btn: Phaser.GameObjects.Container): void {
+    private onBtnOver(btn: any): void {
 
         if (btn.alpha === 1) {
             btn.setScale(1.025);
         }
     }
 
-    private onBtnOut(btn: Phaser.GameObjects.Container): void {
+    private onBtnOut(btn: any): void {
         
         if (btn.alpha === 1) {
             btn.setScale(1);

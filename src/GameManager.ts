@@ -10,6 +10,7 @@ import TypedEmitter from "typed-emitter";
 interface GameManagerEvents {
     ready: () => void
     exit: () => void
+    gameOver: (level: LevelObject, log: LogsObject, score: number, waves: number) => void
 }
 
 export class GameManager {

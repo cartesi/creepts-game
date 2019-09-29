@@ -1,7 +1,9 @@
 import { AudioManager } from "./../../AudioManager";
 import { GameManager } from "./../../GameManager";
+import { GameConstants } from "../../GameConstants";
 import { GameVars } from "../../GameVars";
 import { MenuButton } from "./gui/MenuButton";
+import { MenuTitle } from "./gui/MenuTitle";
 
 export class PauseMenu extends Phaser.GameObjects.Container {
 
@@ -9,63 +11,63 @@ export class PauseMenu extends Phaser.GameObjects.Container {
         
         super(scene);
 
-        const width = 350;
-        const height = 40;
-        const padding = 25;
-
-        this.y = -150 * GameVars.scaleY;
+        const margin = 20;
+        const titleGap = 40;
+        const gap = 10;
 
         const buttons: MenuButton[] = [
             // restart
-            new MenuButton(this.scene, width, height, "RESTART", () => {
-                GameManager.reset();
-            }),
+            new MenuButton(this.scene, "RESTART", () => GameManager.reset()),
 
             // sound on/off
-            new MenuButton(this.scene, width, height, GameVars.gameData.muted ? "SOUND ON" : "SOUND OFF", (button: MenuButton) => {
+            new MenuButton(this.scene, GameVars.gameData.muted ? "SOUND ON" : "SOUND OFF", (button: MenuButton) => {
                 AudioManager.toggleAudioState();
                 button.setLabel(GameVars.gameData.muted ? "SOUND ON" : "SOUND OFF");
             }),
 
-            /* XXX: hiding change map menu
             // change map
-            new MenuButton(this.scene, width, height, "CHANGE MAP", () => {
-                GameManager.enterMapScene();
-            }),
-            */
+            //vXXX: hiding change map menu
+            // new MenuButton(this.scene, width, height, "CHANGE MAP", () => GameManager.enterMapScene()),
 
             // exitButton
-            new MenuButton(this.scene, width, height, "EXIT", () => {
-                GameManager.events.emit("exit");
-            })
+            new MenuButton(this.scene, "EXIT", () => GameManager.events.emit("exit"))
         ];
 
+        // this is a box for the content, vertically centered
+        // XXX: it's not really vertically centered, because we don't calculate the total height at this point
+        const box = new Phaser.GameObjects.Container(this.scene);
+        box.setPosition(0, -GameConstants.GAME_HEIGHT / 4);
+
         const background = new Phaser.GameObjects.Graphics(this.scene);
-        background.fillStyle(0x000000);
-        const bH = ((buttons.length + 3) * padding) + (buttons.length * height) + 70;
-        background.fillRect(-200, -200, 400, bH);
-        background.alpha = .75;
-        this.add(background);
+        box.add(background);
 
-        const titleLines = new Phaser.GameObjects.Graphics(this.scene);
-        titleLines.setPosition(0, 150);
-        titleLines.lineStyle(4, 0xffffff);
-        titleLines.strokeRect(-180, -330, 360, 70);
-        titleLines.lineStyle(2, 0xffffff);
-        titleLines.strokeRect(-170, -320, 340, 50);
-        this.add(titleLines);
+        // vertical position, start with top margin
+        let y = 0 + margin;
 
-        let title = new Phaser.GameObjects.Text(this.scene, 0, -165, "PAUSED", {fontFamily: "Rubik-Regular", fontSize: "35px", color: "#FFFFFF"});
-        title.setOrigin(.5, 0);
-        this.add(title);
+        // title of dialog
+        const title = new MenuTitle(this.scene, "PAUSED");
+        title.setPosition(0, y + (title.height / 2));
+        box.add(title);
+        y += title.height + titleGap;
 
-        let offY = -35;
-
+        // add each button
         buttons.forEach((button) => {
-            button.setPosition(0, offY);
-            this.add(button);
-            offY += (height + padding);
+            button.setPosition(0, y + (button.height / 2));
+            box.add(button);
+            y += button.height + gap;
         });
+        // remove the extra gap of last button
+        y -= gap;
+
+        // add the bottom margin
+        y += margin;
+
+        // draw background using final y
+        background.fillStyle(0x000000);
+        background.fillRect(-200, 0, 400, y);
+        background.alpha = .75;
+
+        this.add(box);
     }
 
 }
