@@ -3,7 +3,7 @@ module Anuto {
     export class GameConstants {
 
         // version: v0.month.day.hour
-        public static readonly VERSION = "v0.11.13.14";
+        public static readonly VERSION = "v0.9.30.11";
 
         public static readonly RELOAD_BASE_TICKS = 10;
         public static readonly BULLET_SPEED = .85; // in cells / tick
@@ -55,5 +55,20 @@ module Anuto {
 
         public static readonly WEAK_AGAINST_DAMAGE_MODIFIER = 3.0;
         public static readonly STRONG_AGAINST_DAMAGE_MODIFIER = 0.33;
+
+        // error types
+        public static readonly ERROR_ACTION_VALUE = "Missing or wrong action value.";
+
+        public static readonly ERROR_TURRET = "Turret not exist.";
+        public static readonly ERROR_CREDITS = "Not enough credits.";
+
+        public static readonly ERROR_NEXT_WAVE = "Have to wait 40 ticks between launch waves.";
+
+        public static readonly ERROR_ADD_TURRET_POSITION = "Invalid position for add turret.";
+        public static readonly ERROR_ADD_TURRET_NAME = "Wrong turret type name.";
+
+        public static readonly ERROR_UPGRADE = "Can’t upgrade turret with max grade.";
+
+        public static readonly ERROR_LEVEL_UP = "Can’t level up turret with max level.";
     }
 }
