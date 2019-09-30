@@ -1,9 +1,7 @@
 import { MathUtils } from "../utils/MathUtils";
 import { GameConstants } from "../GameConstants";
-import { Enemy } from "../enemies/Enemy";
-import { Turret } from "./Turret";
-import { Mortar } from "../turrets/Mortar";
-import { Mine } from "../turrets/Mine";
+import { Enemy } from "../enemies";
+import { Mine, Mortar, Turret } from "../turrets";
 
     export class LaunchTurret extends Turret {
 

@@ -1,4 +1,4 @@
-var Anuto = require("anuto-core-engine");
+import * as Anuto from "../engine/src";
 
 // LOGS TYPES
 var TYPE_NEXT_WAVE = "next wave";

@@ -7,25 +7,11 @@ import { GameManager } from "../../GameManager";
 import enemiesData from "../../../assets/config/enemies.json";
 import turretsData from "../../../assets/config/turrets.json";
 import wavesData from "../../../assets/config/waves.json";
-
-import { Engine } from "../../../engine/src/Engine";
-import { Enemy } from "../../../engine/src/enemies/Enemy";
-import { Event } from "../../../engine/src/events/Event";
-import { Types } from "../../../engine/src/Types";
-import { Turret } from "../../../engine/src/turrets/Turret";
-import { Bullet } from "../../../engine/src/turrets/Bullet";
-import { ProjectileTurret } from "../../../engine/src/turrets/ProjectileTurret";
-import { GlueBullet } from "../../../engine/src/turrets/GlueBullet";
-import { LaserTurret } from "../../../engine/src/turrets/LaserTurret";
-import { LaunchTurret } from "../../../engine/src/turrets/LaunchTurret";
-import { Mortar } from "../../../engine/src/turrets/Mortar";
-import { Glue } from "../../../engine/src/turrets/Glue";
-import { GlueTurret } from "../../../engine/src/turrets/GlueTurret";
-import { Mine } from "../../../engine/src/turrets/Mine";
+import * as Anuto from "../../../engine/src";
 
 export class BattleManager {
 
-    public static anutoEngine: Engine;
+    public static anutoEngine: Anuto.Engine;
 
     public static init(): void {  
 
@@ -41,7 +27,7 @@ export class BattleManager {
             }
         }
 
-        let gameConfig: Types.GameConfig;
+        let gameConfig: Anuto.Types.GameConfig;
 
         if (GameVars.currentScene === BattleScene.currentInstance) {
             GameVars.enemiesPathCells = GameVars.currentMapData.path;
@@ -85,7 +71,7 @@ export class BattleManager {
         GameVars.semipaused = false;
         GameVars.autoSendWave = false;
 
-        BattleManager.anutoEngine = new Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData, GameVars.wavesData);
+        BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData, GameVars.wavesData);
 
         BattleManager.setTimeStepFactor(GameVars.timeStepFactor);
 
@@ -99,25 +85,25 @@ export class BattleManager {
             };
         }
         
-        BattleManager.anutoEngine.addEventListener(Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.GLUE_BULLET_SHOT, BattleManager.onGlueBulletShot, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.ENEMY_HIT, BattleManager.onEnemyHit, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.REMOVE_BULLET, BattleManager.removeBullet, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.REMOVE_GLUE_BULLET, BattleManager.removeGlueBullet, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.ENEMY_GLUE_HIT, BattleManager.onEnemyGlueHit, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.ENEMY_KILLED, BattleManager.onEnemyKilled, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.LASER_SHOT, BattleManager.onLaserBeamShot, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.MORTAR_SHOT, BattleManager.onMortarShot, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.GLUE_SHOT, BattleManager.onGlueShot, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.MINE_SHOT, BattleManager.onMineShot, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.GLUE_CONSUMED, BattleManager.onGlueConsumed, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.ENEMIES_TELEPORTED, BattleManager.onEnemiesTeleported, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.NO_ENEMIES_ON_STAGE, BattleManager.onNoEnemiesOnStage, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.WAVE_OVER, BattleManager.onWaveOver, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.GAME_OVER, BattleManager.onGameOver, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Event.ACTIVE_NEXT_WAVE, BattleManager.activeNextWave, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.GLUE_BULLET_SHOT, BattleManager.onGlueBulletShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_HIT, BattleManager.onEnemyHit, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.REMOVE_BULLET, BattleManager.removeBullet, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.REMOVE_GLUE_BULLET, BattleManager.removeGlueBullet, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_GLUE_HIT, BattleManager.onEnemyGlueHit, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMY_KILLED, BattleManager.onEnemyKilled, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.LASER_SHOT, BattleManager.onLaserBeamShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.MORTAR_SHOT, BattleManager.onMortarShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.GLUE_SHOT, BattleManager.onGlueShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.MINE_SHOT, BattleManager.onMineShot, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.GLUE_CONSUMED, BattleManager.onGlueConsumed, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ENEMIES_TELEPORTED, BattleManager.onEnemiesTeleported, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.NO_ENEMIES_ON_STAGE, BattleManager.onNoEnemiesOnStage, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.WAVE_OVER, BattleManager.onWaveOver, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.GAME_OVER, BattleManager.onGameOver, BattleManager);
+        BattleManager.anutoEngine.addEventListener(Anuto.Event.ACTIVE_NEXT_WAVE, BattleManager.activeNextWave, BattleManager);
         
         GameManager.events.emit("ready");
     }
@@ -191,7 +177,7 @@ export class BattleManager {
         BoardContainer.currentInstance.addTurret(type, position);
     }
 
-    public static addTurret(type: string, position: {r: number, c: number}): Turret {
+    public static addTurret(type: string, position: {r: number, c: number}): Anuto.Turret {
 
         let turret = BattleManager.anutoEngine.addTurret(type, position);
 
@@ -279,7 +265,7 @@ export class BattleManager {
         BoardContainer.currentInstance.hideRangeCircles();
     }
 
-    public static showTurretMenu(anutoTurret: Turret): void {
+    public static showTurretMenu(anutoTurret: Anuto.Turret): void {
 
         BoardContainer.currentInstance.showTurretMenu(anutoTurret);
     }
@@ -289,12 +275,12 @@ export class BattleManager {
         GameVars.logsObject.actions.push(action);
     }
 
-    private static onEnemySpawned(anutoEnemy: Enemy, p: {r: number, c: number} ): void {
+    private static onEnemySpawned(anutoEnemy: Anuto.Enemy, p: {r: number, c: number} ): void {
         
         BoardContainer.currentInstance.addEnemy(anutoEnemy, p);
     }
 
-    private static onEnemyReachedExit(anutoEnemy: Enemy): void {
+    private static onEnemyReachedExit(anutoEnemy: Anuto.Enemy): void {
 
         BoardContainer.currentInstance.removeEnemy(anutoEnemy.id);
 
@@ -304,43 +290,43 @@ export class BattleManager {
             LogScene.currentInstance.hud.updateLifes();
         }
     }
-    
-    private static onBulletShot(anutoBullet: Bullet, anutoProjectileTurret: ProjectileTurret): void {
+
+    private static onBulletShot(anutoBullet: Anuto.Bullet, anutoProjectileTurret: Anuto.ProjectileTurret): void {
 
         BoardContainer.currentInstance.addBullet(anutoBullet, anutoProjectileTurret);
     }
 
-    private static onGlueBulletShot(anutoBullet: GlueBullet, anutoGlueTurret: GlueTurret): void {
+    private static onGlueBulletShot(anutoBullet: Anuto.GlueBullet, anutoGlueTurret: Anuto.GlueTurret): void {
 
         BoardContainer.currentInstance.addGlueBullet(anutoBullet, anutoGlueTurret);
     }
 
-    private static onLaserBeamShot(anutoLaserTurret: LaserTurret, anutoEnemies: Enemy[]): void {
+    private static onLaserBeamShot(anutoLaserTurret: Anuto.LaserTurret, anutoEnemies: Anuto.Enemy[]): void {
 
         BoardContainer.currentInstance.addLaserBeam(anutoLaserTurret, anutoEnemies);
     }
 
-    private static onMortarShot(anutoMortar: Mortar, anutoLaunchTurret: LaunchTurret): void {
+    private static onMortarShot(anutoMortar: Anuto.Mortar, anutoLaunchTurret: Anuto.LaunchTurret): void {
 
         BoardContainer.currentInstance.addMortar(anutoMortar, anutoLaunchTurret);
     }
 
-    private static onGlueShot(anutoGlue: Glue, anutoGlueTurret: GlueTurret): void {
+    private static onGlueShot(anutoGlue: Anuto.Glue, anutoGlueTurret: Anuto.GlueTurret): void {
 
         BoardContainer.currentInstance.addGlue(anutoGlue, anutoGlueTurret);
     }
 
-    private static onMineShot(anutoMine: Mine, anutoLaunchMine: LaunchTurret): void {
+    private static onMineShot(anutoMine: Anuto.Mine, anutoLaunchMine: Anuto.LaunchTurret): void {
 
         BoardContainer.currentInstance.addMine(anutoMine, anutoLaunchMine);
     }
 
-    private static onGlueConsumed(anutoGlue: Glue): void {
+    private static onGlueConsumed(anutoGlue: Anuto.Glue): void {
 
         BoardContainer.currentInstance.onGlueConsumed(anutoGlue);
     }
 
-    private static onEnemyHit(anutoEnemies: Enemy[], anutoBullet?: Bullet, anutoMortar?: Mortar, anutoMine?: Mine): void {
+    private static onEnemyHit(anutoEnemies: Anuto.Enemy[], anutoBullet?: Anuto.Bullet, anutoMortar?: Anuto.Mortar, anutoMine?: Anuto.Mine): void {
 
         for (let i = 0; i < anutoEnemies.length; i ++) {
             BoardContainer.currentInstance.onEnemyHit(anutoEnemies[i]);
@@ -359,17 +345,17 @@ export class BattleManager {
         }
     }
 
-    private static removeBullet(anutoBullet?: Bullet) {
+    private static removeBullet(anutoBullet?: Anuto.Bullet) {
 
         BoardContainer.currentInstance.removeBullet(anutoBullet);
     }
 
-    private static removeGlueBullet(anutoGlueBullet: GlueBullet): void {
+    private static removeGlueBullet(anutoGlueBullet: Anuto.GlueBullet): void {
         
         BoardContainer.currentInstance.removeGlueBullet(anutoGlueBullet);
     }
 
-    private static onEnemyGlueHit(anutoEnemies: Enemy[], anutoGlueBullet: GlueBullet): void {
+    private static onEnemyGlueHit(anutoEnemies: Anuto.Enemy[], anutoGlueBullet: Anuto.GlueBullet): void {
 
         for (let i = 0; i < anutoEnemies.length; i ++) {
             BoardContainer.currentInstance.onEnemyGlueHit(anutoEnemies[i]);
@@ -380,14 +366,14 @@ export class BattleManager {
         } 
     }
 
-    private static onEnemiesTeleported(teleportedEnemiesData: {enemy: Enemy, glueTurret: GlueTurret} []): void {
+    private static onEnemiesTeleported(teleportedEnemiesData: {enemy: Anuto.Enemy, glueTurret: Anuto.GlueTurret} []): void {
 
         for (let i = 0; i < teleportedEnemiesData.length; i++) {
             BoardContainer.currentInstance.teleportEnemy(teleportedEnemiesData[i].enemy, teleportedEnemiesData[i].glueTurret);
         }
     }
 
-    private static onEnemyKilled(anutoEnemy: Enemy): void {
+    private static onEnemyKilled(anutoEnemy: Anuto.Enemy): void {
 
         BoardContainer.currentInstance.onEnemyKilled(anutoEnemy);
     }

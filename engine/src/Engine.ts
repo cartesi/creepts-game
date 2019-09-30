@@ -1,19 +1,9 @@
 import { GameConstants } from "./GameConstants";
 import { MathUtils } from "./utils/MathUtils";
-import { Turret } from "./turrets/Turret";
-import { Enemy } from "./enemies/Enemy";
-import { Bullet } from "./turrets/Bullet";
-import { Glue } from "./turrets/Glue";
-import { GlueBullet } from "./turrets/GlueBullet";
-import { GlueTurret } from "./turrets/GlueTurret";
-import { ProjectileTurret } from "./turrets/ProjectileTurret";
-import { LaserTurret } from "./turrets/LaserTurret";
-import { LaunchTurret } from "./turrets/LaunchTurret";
-import { Mine } from "./turrets/Mine";
-import { Mortar } from "./turrets/Mortar";
+import { Enemy } from "./enemies";
+import { Bullet, Glue, GlueBullet, GlueTurret, LaserTurret, LaunchTurret, Mine, Mortar, ProjectileTurret, Turret } from "./turrets";
 import { EnemiesSpawner } from "./EnemiesSpawner"
-import { Event } from "./events/Event";
-import { EventDispatcher } from "./events/EventDispatcher";
+import { Event, EventDispatcher } from "./events";
 import { Types } from "./Types";
 
     export class Engine {

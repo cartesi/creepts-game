@@ -1,3 +1,5 @@
+import { GameData, LevelObject, LogsObject, MapObject } from "../types/tower-defense";
+
 export class GameVars {
 
     public static scaleY: number;

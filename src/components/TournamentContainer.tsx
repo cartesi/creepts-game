@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { LevelObject, LogsObject } from "../../types/tower-defense";
 import { GameManager } from "../GameManager";
 import { navigate } from "hookrouter";
 import { Loading } from "./Loading";

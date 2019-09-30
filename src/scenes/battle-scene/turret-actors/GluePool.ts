@@ -2,6 +2,7 @@ import { GameConstants } from "../../../GameConstants";
 import { GlueTurretActor } from "./GlueTurretActor";
 import { GameVars } from "../../../GameVars";
 import { AudioManager } from "../../../AudioManager";
+import * as Anuto from "../../../../engine/src";
 
 export class GluePool extends Phaser.GameObjects.Container {
 

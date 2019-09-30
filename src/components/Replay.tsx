@@ -4,7 +4,8 @@ import { FullScreenMessage } from "./FullScreenMessage";
 import { useScoreService } from "../services/scoreService";
 import { navigate } from "hookrouter";
 import { GameManager } from "../GameManager";
-
+import * as Anuto from "../../engine/src";
+import { LevelObject } from "../../types/tower-defense";
 import { GameConstants } from "../GameConstants";
 import enemiesData from "../../assets/config/enemies.json";
 import turretsData from "../../assets/config/turrets.json";

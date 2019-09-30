@@ -3,6 +3,7 @@ import { GameVars } from "../../../GameVars";
 import { BoardContainer } from "../BoardContainer";
 import { BattleManager } from "../BattleManager";
 import { AudioManager } from "../../../AudioManager";
+import * as Anuto from "../../../../engine/src";
 
 export class MortarActor extends Phaser.GameObjects.Container {
 

@@ -1,5 +1,6 @@
 import { BattleManager } from "./../BattleManager";
 import { GameVars } from "../../../GameVars";
+import * as Anuto from "../../../../engine/src";
 
 export class TurretButton extends Phaser.GameObjects.Container {
 

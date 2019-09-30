@@ -6,6 +6,7 @@ import defaultLevel from "../assets/level.json";
 import defaultLog from "../assets/log.json";
 import EventEmitter from "events";
 import TypedEmitter from "typed-emitter";
+import { LevelObject, LogsObject } from "../types/tower-defense";
 
 interface GameManagerEvents {
     ready: () => void

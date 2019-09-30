@@ -1,5 +1,5 @@
 import { EnemyActor } from "./EnemyActor";
-import { GameConstants } from "../../../GameConstants";
+import * as Anuto from "../../../../engine/src";
 
 export class RunnerEnemyActor extends EnemyActor {
 

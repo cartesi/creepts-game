@@ -1,10 +1,7 @@
 import { MathUtils } from "../utils/MathUtils";
 import { GameConstants } from "../GameConstants";
 import { Engine } from "../Engine";
-import { Bullet } from "../turrets/Bullet";
-import { Mortar } from "../turrets/Mortar";
-import { Mine } from "../turrets/Mine";
-import { LaserTurret } from "../turrets/LaserTurret";
+import { Bullet, LaserTurret, Mine, Mortar } from "../turrets";
 
     export class Enemy {
 

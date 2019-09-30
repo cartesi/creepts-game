@@ -1,3 +1,5 @@
+import * as Anuto from "../engine/src";
+
 declare interface GameData {
     muted: boolean;
     scores: number[];
