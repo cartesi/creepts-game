@@ -115,31 +115,21 @@ export class BattleManager {
     public static pause(): void {
 
         GameVars.paused = true;
-
-        this.anutoEngine.paused = true;
     }
 
     public static resume(): void {
 
         GameVars.paused = false;
-
-        if (!GameVars.semipaused) {
-            this.anutoEngine.paused = false;
-        }
     }
 
     public static semipause(): void {
 
         GameVars.semipaused = true;
-
-        this.anutoEngine.paused = true;
     }
 
     public static semiresume(): void {
 
         GameVars.semipaused = false;
-
-        this.anutoEngine.paused = false;
     }
 
     public static setTimeStepFactor(timeStepFactor: number): void {

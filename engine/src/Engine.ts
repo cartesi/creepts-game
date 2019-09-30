@@ -35,7 +35,6 @@ module Anuto {
         private _creditsEarned: number;
         private _score: number;
         private _lifes: number;
-        private _paused: boolean;
         private _timeStep: number;
         private _gameOver: boolean;
         private _round: number;
@@ -78,7 +77,6 @@ module Anuto {
             this.boardSize = gameConfig.boardSize;
             this._credits = gameConfig.credits;
             this._lifes = gameConfig.lifes;
-            this._paused = false;
             this._timeStep = gameConfig.timeStep;
 
             this.enemiesPathCells = gameConfig.enemiesPathCells;
@@ -153,7 +151,7 @@ module Anuto {
                 this.t = t;
             }
 
-            if (this._paused || !this.waveActivated) {
+            if (!this.waveActivated) {
                 return;
             }
 
@@ -997,16 +995,6 @@ module Anuto {
         public set timeStep(value: number) {
 
             this._timeStep = value;
-        }
-
-        public get paused(): boolean {
-
-            return this._paused;
-        }
-
-        public set paused(value: boolean) {
-
-            this._paused = value;
         }
 
         public get version(): string {
