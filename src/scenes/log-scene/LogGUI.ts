@@ -11,6 +11,7 @@ export class LogGUI extends Phaser.GameObjects.Container {
     private timeStepButton: Phaser.GameObjects.Container;
     private playButton: Phaser.GameObjects.Container;
     private backButton: Phaser.GameObjects.Container;
+    private exitButton: Phaser.GameObjects.Container;
     private soundButton: Phaser.GameObjects.Container;
 
     private timeStepImage: Phaser.GameObjects.Image;
@@ -82,8 +83,24 @@ export class LogGUI extends Phaser.GameObjects.Container {
             this.timeStepImage.setFrame("btn_fastforward");
         }
 
+        this.exitButton = new Phaser.GameObjects.Container(this.scene);
+        this.exitButton.setPosition(GameConstants.GAME_WIDTH - 40, 79);
+        this.exitButton.setInteractive(new Phaser.Geom.Rectangle(-30, -30, 60, 60), Phaser.Geom.Rectangle.Contains);
+        this.exitButton.on("pointerdown", () => { this.onClickExit(); });
+        this.exitButton.on("pointerover", () => { this.onBtnOver(this.exitButton); });
+        this.exitButton.on("pointerout", () => { this.onBtnOut(this.exitButton); });
+        this.add(this.exitButton);
+
+        const exitBck = new Phaser.GameObjects.Graphics(this.scene);
+        exitBck.fillStyle(0x000000);
+        exitBck.fillRect(-30, -30, 60, 60);
+        this.exitButton.add(exitBck);
+
+        const exitImage = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "btn_exit");
+        this.exitButton.add(exitImage);
+
         this.soundButton = new Phaser.GameObjects.Container(this.scene);
-        this.soundButton.setPosition(GameConstants.GAME_WIDTH - 40, 79);
+        this.soundButton.setPosition(GameConstants.GAME_WIDTH - 110, 79);
         this.soundButton.setInteractive(new Phaser.Geom.Rectangle(-30, -30, 60, 60), Phaser.Geom.Rectangle.Contains);
         this.soundButton.on("pointerdown", () => { this.onClickSound(); });
         this.soundButton.on("pointerover", () => { this.onBtnOver(this.soundButton); });
@@ -131,6 +148,11 @@ export class LogGUI extends Phaser.GameObjects.Container {
     private onClickBack(): void {
 
         GameManager.enterLogScene(GameVars.initialLogsObjects, GameVars.levelObject);
+    }
+
+    private onClickExit(): void {
+
+        GameManager.events.emit("exit");
     }
 
     private onClickSound(): void {
