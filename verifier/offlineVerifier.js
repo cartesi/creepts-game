@@ -138,10 +138,10 @@ function manageError(type, info) {
             msg += "Version mismatch. Engine Version: " + info.engineVersion + ". Logs Version: " + info.logsVersion + ".";
             break;
         case ERROR_NO_GAME_OVER:
-            msg += "All actions have been read without reaching game over.";
+            msg += "All actions have been executed without reaching game over.";
             break;
         case ERROR_TICKS:
-            msg += "Ticks have to be greater than or equal than tick of the previous action.";
+            msg += "Ticks have to be greater or equal than the tick of the previous action.";
             break;
         case ERROR_ACTION_ARRAY:
             msg += "Actions array is empty or null.";
@@ -150,28 +150,28 @@ function manageError(type, info) {
             msg += "Missing or wrong action type '" + info.name + "'.";
             break;
         case ERROR_ACTION_VALUE:
-            msg += "Missing or wrong action value.";    
+            msg += "Missing or wrong value for action.";    
             break;
         case ERROR_TURRET:
-            msg += "Turret '" + info.id + "' not exist.";
+            msg += "Turret '" + info.id + "' does not exist.";
             break;
         case ERROR_CREDITS:
             msg += "Not enough credits.";    
             break;
         case ERROR_NEXT_WAVE:
-            msg += "Have to wait 40 ticks between launch waves.";    
+            msg += "Wave launched before 40 ticks.";    
             break;
         case ERROR_ADD_TURRET_POSITION:
-            msg += "Invalid position for add turret.";    
+            msg += "Invalid position for adding turret.";    
             break;
         case ERROR_ADD_TURRET_NAME:
             msg += "Wrong turret type name '" + info.name + "'.";    
             break;
         case ERROR_UPGRADE:
-            msg += "Can’t upgrade turret '" + info.id + "' with max grade.";
+            msg += "Can’t upgrade the turret '" + info.id + "' with max grade.";
             break;
         case ERROR_LEVEL_UP:
-            msg += "Can’t level up turret '" + info.id + "' with max level.";    
+            msg += "Can’t level up the turret '" + info.id + "' with max level.";    
             break;
         default:
             break;
