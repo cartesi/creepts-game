@@ -2,27 +2,19 @@ var Anuto = require("anuto-core-engine");
 
 // ERROR TYPES
 
-var ERROR_VERSION_MISMATCH = "Error version mismatch";
-
-var ERROR_NO_GAME_OVER = "Error no game over";
-
-var ERROR_TICKS = "Error ticks";
-
-var ERROR_ACTION_ARRAY = "Error action array";
-var ERROR_ACTION_TYPE = "Error action type";
-var ERROR_ACTION_VALUE = "Error action value";
-
-var ERROR_TURRET = "Error turret";
-var ERROR_CREDITS = "Error credits";
-
-var ERROR_NEXT_WAVE = "Error next wave";
-
-var ERROR_ADD_TURRET_POSITION = "Error add turret position";
-var ERROR_ADD_TURRET_NAME = "Error add turret name";
-
-var ERROR_UPGRADE = "Error upgrade";
-
-var ERROR_LEVEL_UP = "Error level up";
+var ERROR_VERSION_MISMATCH = "E001";
+var ERROR_NO_GAME_OVER = "E002";
+var ERROR_TICKS = "E003";
+var ERROR_ACTION_ARRAY = "E004";
+var ERROR_ACTION_TYPE = "E005";
+var ERROR_ACTION_VALUE = "E006";
+var ERROR_TURRET = "E007";
+var ERROR_CREDITS = "E008";
+var ERROR_NEXT_WAVE = "E009";
+var ERROR_ADD_TURRET_POSITION = "E010";
+var ERROR_ADD_TURRET_NAME = "E011";
+var ERROR_UPGRADE = "E012";
+var ERROR_LEVEL_UP = "E013";
 
 // LOGS TYPES
 var TYPE_NEXT_WAVE = "next wave";
@@ -139,47 +131,47 @@ while(!anutoEngine.gameOver) {
 
 function manageError(type, info) {
 
-    var msg = ""; 
+    var msg = "(" + type + ") "; 
 
     switch(type) {
         case ERROR_VERSION_MISMATCH:
-            msg = "Version mismatch. Engine Version: " + info.engineVersion + ". Logs Version: " + info.logsVersion + ".";
+            msg += "Version mismatch. Engine Version: " + info.engineVersion + ". Logs Version: " + info.logsVersion + ".";
             break;
         case ERROR_NO_GAME_OVER:
-            msg = "All actions have been read without reaching game over.";
+            msg += "All actions have been read without reaching game over.";
             break;
         case ERROR_TICKS:
-            msg = "Ticks have to be greater than or equal than tick of the previous action.";
+            msg += "Ticks have to be greater than or equal than tick of the previous action.";
             break;
         case ERROR_ACTION_ARRAY:
-            msg = "Actions array is empty or null.";
+            msg += "Actions array is empty or null.";
             break;
         case ERROR_ACTION_TYPE:
-            msg = "Missing or wrong action type '" + info.name + "'.";
+            msg += "Missing or wrong action type '" + info.name + "'.";
             break;
         case ERROR_ACTION_VALUE:
-            msg = "Missing or wrong action value.";    
+            msg += "Missing or wrong action value.";    
             break;
         case ERROR_TURRET:
-            msg = "Turret '" + info.id + "' not exist.";
+            msg += "Turret '" + info.id + "' not exist.";
             break;
         case ERROR_CREDITS:
-            msg = "Not enough credits.";    
+            msg += "Not enough credits.";    
             break;
         case ERROR_NEXT_WAVE:
-            msg = "Have to wait 40 ticks between launch waves.";    
+            msg += "Have to wait 40 ticks between launch waves.";    
             break;
         case ERROR_ADD_TURRET_POSITION:
-            msg = "Invalid position for add turret.";    
+            msg += "Invalid position for add turret.";    
             break;
         case ERROR_ADD_TURRET_NAME:
-            msg = "Wrong turret type name '" + info.name + "'.";    
+            msg += "Wrong turret type name '" + info.name + "'.";    
             break;
         case ERROR_UPGRADE:
-            msg = "Can’t upgrade turret '" + info.id + "' with max grade.";
+            msg += "Can’t upgrade turret '" + info.id + "' with max grade.";
             break;
         case ERROR_LEVEL_UP:
-            msg = "Can’t level up turret '" + info.id + "' with max level.";    
+            msg += "Can’t level up turret '" + info.id + "' with max level.";    
             break;
         default:
             break;

@@ -57,26 +57,18 @@ module Anuto {
         public static readonly STRONG_AGAINST_DAMAGE_MODIFIER = 0.33;
 
         // error types
-        public static readonly ERROR_VERSION_MISMATCH = "Error version mismatch";
-
-        public static readonly ERROR_NO_GAME_OVER = "Error no game over";
-
-        public static readonly ERROR_TICKS = "Error ticks";
-
-        public static readonly ERROR_ACTION_ARRAY = "Error action array";
-        public static readonly ERROR_ACTION_TYPE = "Error action type";
-        public static readonly ERROR_ACTION_VALUE = "Error action value";
-
-        public static readonly ERROR_TURRET = "Error turret";
-        public static readonly ERROR_CREDITS = "Error credits";
-
-        public static readonly ERROR_NEXT_WAVE = "Error next wave";
-
-        public static readonly ERROR_ADD_TURRET_POSITION = "Error add turret position";
-        public static readonly ERROR_ADD_TURRET_NAME = "Error add turret name";
-
-        public static readonly ERROR_UPGRADE = "Error upgrade";
-
-        public static readonly ERROR_LEVEL_UP = "Error level up";
+        public static readonly ERROR_VERSION_MISMATCH = "E001";
+        public static readonly ERROR_NO_GAME_OVER = "E002";
+        public static readonly ERROR_TICKS = "E003";
+        public static readonly ERROR_ACTION_ARRAY = "E004";
+        public static readonly ERROR_ACTION_TYPE = "E005";
+        public static readonly ERROR_ACTION_VALUE = "E006";
+        public static readonly ERROR_TURRET = "E007";
+        public static readonly ERROR_CREDITS = "E008";
+        public static readonly ERROR_NEXT_WAVE = "E009";
+        public static readonly ERROR_ADD_TURRET_POSITION = "E010";
+        public static readonly ERROR_ADD_TURRET_NAME = "E011";
+        public static readonly ERROR_UPGRADE = "E012";
+        public static readonly ERROR_LEVEL_UP = "E013";
     }
 }
