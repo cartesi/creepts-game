@@ -57,18 +57,26 @@ module Anuto {
         public static readonly STRONG_AGAINST_DAMAGE_MODIFIER = 0.33;
 
         // error types
-        public static readonly ERROR_ACTION_VALUE = "Missing or wrong action value.";
+        public static readonly ERROR_VERSION_MISMATCH = "Error version mismatch";
 
-        public static readonly ERROR_TURRET = "Turret not exist.";
-        public static readonly ERROR_CREDITS = "Not enough credits.";
+        public static readonly ERROR_NO_GAME_OVER = "Error no game over";
 
-        public static readonly ERROR_NEXT_WAVE = "Have to wait 40 ticks between launch waves.";
+        public static readonly ERROR_TICKS = "Error ticks";
 
-        public static readonly ERROR_ADD_TURRET_POSITION = "Invalid position for add turret.";
-        public static readonly ERROR_ADD_TURRET_NAME = "Wrong turret type name.";
+        public static readonly ERROR_ACTION_ARRAY = "Error action array";
+        public static readonly ERROR_ACTION_TYPE = "Error action type";
+        public static readonly ERROR_ACTION_VALUE = "Error action value";
 
-        public static readonly ERROR_UPGRADE = "Can’t upgrade turret with max grade.";
+        public static readonly ERROR_TURRET = "Error turret";
+        public static readonly ERROR_CREDITS = "Error credits";
 
-        public static readonly ERROR_LEVEL_UP = "Can’t level up turret with max level.";
+        public static readonly ERROR_NEXT_WAVE = "Error next wave";
+
+        public static readonly ERROR_ADD_TURRET_POSITION = "Error add turret position";
+        public static readonly ERROR_ADD_TURRET_NAME = "Error add turret name";
+
+        public static readonly ERROR_UPGRADE = "Error upgrade";
+
+        public static readonly ERROR_LEVEL_UP = "Error level up";
     }
 }

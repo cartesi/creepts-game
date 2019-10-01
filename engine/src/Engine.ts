@@ -305,27 +305,27 @@ module Anuto {
             enemy.destroy();
         }
 
-        public addTurret(type: string, p: {r: number, c: number}): {turret: Turret, error?: string} {
+        public addTurret(type: string, p: {r: number, c: number}): {turret: Turret, error?: {type: string, info?: any}} {
 
             if (typeof type !== "string" || !p || typeof p.c !== "number" || typeof p.r !== "number") {
-                return {turret: null, error: GameConstants.ERROR_ACTION_VALUE};
+                return {turret: null, error: {type: GameConstants.ERROR_ACTION_VALUE}};
             }
 
             if ( p.r < 0 || p.c < 0 || p.r >= this.boardSize.r || p.c >= this.boardSize.c) {
-                return {turret: null, error: GameConstants.ERROR_ADD_TURRET_POSITION};
+                return {turret: null, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
             }
 
             // mirar si estamos poniendo la torreta encima del camino
             for (let i = 0; i < this.enemiesPathCells.length; i++) {
                 if (p.c === this.enemiesPathCells[i].c && p.r === this.enemiesPathCells[i].r) {
-                    return {turret: null, error: GameConstants.ERROR_ADD_TURRET_POSITION};
+                    return {turret: null, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
                 }
             }
 
             // mirar si ya hay una torreta
             for (let i = 0; i < this.turrets.length; i++) {
                 if (p.c === this.turrets[i].position.c && p.r === this.turrets[i].position.r) {
-                    return {turret: null, error: GameConstants.ERROR_ADD_TURRET_POSITION};
+                    return {turret: null, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
                 }
             }
 
@@ -344,7 +344,7 @@ module Anuto {
             }
 
             if (!isOnPlateau) {
-                return {turret: null, error: GameConstants.ERROR_ADD_TURRET_POSITION};
+                return {turret: null, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
             }
 
             let turret: Turret = null;
@@ -363,11 +363,11 @@ module Anuto {
                     turret = new GlueTurret(p, this);
                     break;
                 default:
-                    return {turret: null, error: GameConstants.ERROR_ADD_TURRET_NAME};
+                    return {turret: null, error: {type: GameConstants.ERROR_ADD_TURRET_NAME, info: {name: type}}};
             }
 
             if (this._credits < turret.value) {
-                return {turret: null, error: GameConstants.ERROR_CREDITS};
+                return {turret: null, error: {type: GameConstants.ERROR_CREDITS}};
             }
 
             this.turrets.push(turret);
@@ -377,16 +377,16 @@ module Anuto {
             return {turret: turret};
         }
 
-        public sellTurret(id: number): {success: boolean, error?: string} {
+        public sellTurret(id: number): {success: boolean, error?: {type: string, info?: any}} {
 
             if (typeof id !== "number") {
-                return {success: false, error: GameConstants.ERROR_ACTION_VALUE};
+                return {success: false, error: {type: GameConstants.ERROR_ACTION_VALUE}};
             }
 
             const turret = this.getTurretById(id);
 
             if (!turret) {
-                return {success: false, error: GameConstants.ERROR_TURRET};
+                return {success: false, error: {type: GameConstants.ERROR_TURRET, info: {id: id}}};
             }
 
             const i = this.turrets.indexOf(turret);
@@ -401,10 +401,10 @@ module Anuto {
             return {success: true};
         }
 
-        public setNextStrategy(id: number): {success: boolean, error?: string} {
+        public setNextStrategy(id: number): {success: boolean, error?: {type: string, info?: any}} {
 
             if (typeof id !== "number") {
-                return {success: false, error: GameConstants.ERROR_ACTION_VALUE};
+                return {success: false, error: {type: GameConstants.ERROR_ACTION_VALUE}};
             }
 
             const turret = this.getTurretById(id);
@@ -414,13 +414,13 @@ module Anuto {
                 return {success: true};
             }
 
-            return {success: false, error: GameConstants.ERROR_TURRET};
+            return {success: false, error: {type: GameConstants.ERROR_TURRET, info: {id: id}}};
         }
 
-        public setFixedTarget(id: number): {success: boolean, error?: string} {
+        public setFixedTarget(id: number): {success: boolean, error?: {type: string, info?: any}} {
 
             if (typeof id !== "number") {
-                return {success: false, error: GameConstants.ERROR_ACTION_VALUE};
+                return {success: false, error: {type: GameConstants.ERROR_ACTION_VALUE}};
             }
 
             const turret = this.getTurretById(id);
@@ -430,7 +430,7 @@ module Anuto {
                 return {success: true};
             }
 
-            return {success: false, error: GameConstants.ERROR_TURRET};
+            return {success: false, error: {type: GameConstants.ERROR_TURRET, info: {id: id}}};
         }
 
         public addBullet(bullet: Bullet, projectileTurret: ProjectileTurret): void {
@@ -537,24 +537,24 @@ module Anuto {
             }
         }
 
-        public improveTurret(id: number): {success: boolean, error?: string} {
+        public improveTurret(id: number): {success: boolean, error?: {type: string, info?: any}} {
 
             if (typeof id !== "number") {
-                return {success: false, error: GameConstants.ERROR_ACTION_VALUE};
+                return {success: false, error: {type: GameConstants.ERROR_ACTION_VALUE}};
             }
 
             const turret = this.getTurretById(id);
 
             if (!turret) {
-                return {success: false, error: GameConstants.ERROR_TURRET};
+                return {success: false, error: {type: GameConstants.ERROR_TURRET, info: {id: id}}};
             }
 
             if (turret.level >= turret.maxLevel) {
-                return {success: false, error: GameConstants.ERROR_LEVEL_UP};
+                return {success: false, error: {type: GameConstants.ERROR_LEVEL_UP, info: {id: id}}};
             }
 
             if (this._credits < turret.priceImprovement) {
-                return {success: false, error: GameConstants.ERROR_CREDITS};
+                return {success: false, error: {type: GameConstants.ERROR_CREDITS}};
             }
 
             this._credits -= turret.priceImprovement;
@@ -562,24 +562,24 @@ module Anuto {
             return {success: true};
         }
 
-        public upgradeTurret(id: number): {success: boolean, error?: string} {
+        public upgradeTurret(id: number): {success: boolean, error?: {type: string, info?: any}} {
 
             if (typeof id !== "number") {
-                return {success: false, error: GameConstants.ERROR_ACTION_VALUE};
+                return {success: false, error: {type: GameConstants.ERROR_ACTION_VALUE}};
             }
 
             const turret = this.getTurretById(id);
 
             if (!turret) {
-                return {success: false, error: GameConstants.ERROR_TURRET};
+                return {success: false, error: {type: GameConstants.ERROR_TURRET, info: {id: id}}};
             }
 
             if (turret.grade >= 3) {
-                return {success: false, error: GameConstants.ERROR_UPGRADE};
+                return {success: false, error: {type: GameConstants.ERROR_UPGRADE, info: {id: id}}};
             }
 
             if (this._credits < turret.priceUpgrade) {
-                return {success: false, error: GameConstants.ERROR_CREDITS};
+                return {success: false, error: {type: GameConstants.ERROR_CREDITS}};
             }
 
             this._credits -= turret.priceUpgrade;
