@@ -156,8 +156,8 @@ module Anuto {
                 this.eventDispatcher.dispatchEvent(new Event(Event.GAME_OVER));
                 this._gameOver = true;
 
-                console.log("TICKS: " + this._ticksCounter);
-                console.log("SCORE: " + this._score);
+                // console.log("TICKS: " + this._ticksCounter);
+                // console.log("SCORE: " + this._score);
             }
 
             if (!this.waveActivated) {
@@ -305,27 +305,27 @@ module Anuto {
             enemy.destroy();
         }
 
-        public addTurret(type: string, p: {r: number, c: number}): {turret: Turret, error?: {type: string, info?: any}} {
+        public addTurret(type: string, p: {r: number, c: number}): Types.EngineReturn {
 
             if (typeof type !== "string" || !p || typeof p.c !== "number" || typeof p.r !== "number") {
-                return {turret: null, error: {type: GameConstants.ERROR_ACTION_VALUE}};
+                return {success: false, error: {type: GameConstants.ERROR_ACTION_VALUE}};
             }
 
             if ( p.r < 0 || p.c < 0 || p.r >= this.boardSize.r || p.c >= this.boardSize.c) {
-                return {turret: null, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
+                return {success: false, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
             }
 
             // mirar si estamos poniendo la torreta encima del camino
             for (let i = 0; i < this.enemiesPathCells.length; i++) {
                 if (p.c === this.enemiesPathCells[i].c && p.r === this.enemiesPathCells[i].r) {
-                    return {turret: null, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
+                    return {success: false, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
                 }
             }
 
             // mirar si ya hay una torreta
             for (let i = 0; i < this.turrets.length; i++) {
                 if (p.c === this.turrets[i].position.c && p.r === this.turrets[i].position.r) {
-                    return {turret: null, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
+                    return {success: false, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
                 }
             }
 
@@ -344,7 +344,7 @@ module Anuto {
             }
 
             if (!isOnPlateau) {
-                return {turret: null, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
+                return {success: false, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
             }
 
             let turret: Turret = null;
@@ -363,21 +363,21 @@ module Anuto {
                     turret = new GlueTurret(p, this);
                     break;
                 default:
-                    return {turret: null, error: {type: GameConstants.ERROR_ADD_TURRET_NAME, info: {name: type}}};
+                    return {success: false, error: {type: GameConstants.ERROR_ADD_TURRET_NAME, info: {name: type}}};
             }
 
             if (this._credits < turret.value) {
-                return {turret: null, error: {type: GameConstants.ERROR_CREDITS}};
+                return {success: false, error: {type: GameConstants.ERROR_CREDITS}};
             }
 
             this.turrets.push(turret);
 
             this._credits -= turret.value;
 
-            return {turret: turret};
+            return {success: true, turret: turret};
         }
 
-        public sellTurret(id: number): {success: boolean, error?: {type: string, info?: any}} {
+        public sellTurret(id: number): Types.EngineReturn {
 
             if (typeof id !== "number") {
                 return {success: false, error: {type: GameConstants.ERROR_ACTION_VALUE}};
@@ -401,7 +401,7 @@ module Anuto {
             return {success: true};
         }
 
-        public setNextStrategy(id: number): {success: boolean, error?: {type: string, info?: any}} {
+        public setNextStrategy(id: number): Types.EngineReturn {
 
             if (typeof id !== "number") {
                 return {success: false, error: {type: GameConstants.ERROR_ACTION_VALUE}};
@@ -417,7 +417,7 @@ module Anuto {
             return {success: false, error: {type: GameConstants.ERROR_TURRET, info: {id: id}}};
         }
 
-        public setFixedTarget(id: number): {success: boolean, error?: {type: string, info?: any}} {
+        public setFixedTarget(id: number): Types.EngineReturn {
 
             if (typeof id !== "number") {
                 return {success: false, error: {type: GameConstants.ERROR_ACTION_VALUE}};
@@ -537,7 +537,7 @@ module Anuto {
             }
         }
 
-        public improveTurret(id: number): {success: boolean, error?: {type: string, info?: any}} {
+        public improveTurret(id: number): Types.EngineReturn {
 
             if (typeof id !== "number") {
                 return {success: false, error: {type: GameConstants.ERROR_ACTION_VALUE}};
@@ -562,7 +562,7 @@ module Anuto {
             return {success: true};
         }
 
-        public upgradeTurret(id: number): {success: boolean, error?: {type: string, info?: any}} {
+        public upgradeTurret(id: number): Types.EngineReturn {
 
             if (typeof id !== "number") {
                 return {success: false, error: {type: GameConstants.ERROR_ACTION_VALUE}};

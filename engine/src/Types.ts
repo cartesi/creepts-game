@@ -19,4 +19,11 @@ module Anuto.Types {
     export type WaveConfig = {
         enemies: {"type": string, "t": number} [];
     };
+
+    export type EngineReturn = {
+
+        success: boolean;
+        turret?: Turret;
+        error?: {type: string, info?: any};
+    };
 }

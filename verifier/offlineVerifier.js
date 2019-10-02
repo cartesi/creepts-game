@@ -97,7 +97,7 @@ while (!anutoEngine.gameOver) {
     while (i < logs.actions.length && logs.actions[i].tick === anutoEngine.ticksCounter) {
 
         var action = logs.actions[i];
-        var result = { }
+        var result = {};
 
         switch (action.type) {
             case TYPE_NEXT_WAVE:
@@ -145,10 +145,6 @@ while (!anutoEngine.gameOver) {
 
     if (anutoEngine.ticksCounter === prevTick) {
         anutoEngine.ticksCounter++;
-    }
-
-    if (anutoEngine.ticksCounter % 100 == 0) {
-        console.log(anutoEngine.ticksCounter);
     }
 }
 
