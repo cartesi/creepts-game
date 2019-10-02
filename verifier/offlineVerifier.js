@@ -1,63 +1,47 @@
 var Anuto = require("anuto-core-engine");
 
-// ERROR TYPES
-
-var ERROR_VERSION_MISMATCH = "E001";
-var ERROR_NO_GAME_OVER = "E002";
-var ERROR_TICKS = "E003";
-var ERROR_ACTION_ARRAY = "E004";
-var ERROR_ACTION_TYPE = "E005";
-var ERROR_ACTION_VALUE = "E006";
-var ERROR_TURRET = "E007";
-var ERROR_CREDITS = "E008";
-var ERROR_NEXT_WAVE = "E009";
-var ERROR_ADD_TURRET_POSITION = "E010";
-var ERROR_ADD_TURRET_NAME = "E011";
-var ERROR_UPGRADE = "E012";
-var ERROR_LEVEL_UP = "E013";
-
 function exitWithError(type, info) {
 
     var msg = "Unexpected error";
 
     switch(type) {
-        case ERROR_VERSION_MISMATCH:
+        case Anuto.GameConstants.ERROR_VERSION_MISMATCH:
             msg = "Version mismatch. Engine Version: " + info.engineVersion + ". Logs Version: " + info.logsVersion + ".";
             break;
-        case ERROR_NO_GAME_OVER:
+        case Anuto.GameConstants.ERROR_NO_GAME_OVER:
             msg = "All actions have been executed without reaching game over.";
             break;
-        case ERROR_TICKS:
+        case Anuto.GameConstants.ERROR_TICKS:
             msg = "Ticks have to be greater or equal than the tick of the previous action.";
             break;
-        case ERROR_ACTION_ARRAY:
+        case Anuto.GameConstants.ERROR_ACTION_ARRAY:
             msg = "Actions array is empty or null.";
             break;
-        case ERROR_ACTION_TYPE:
+        case Anuto.GameConstants.ERROR_ACTION_TYPE:
             msg = "Missing or wrong action type '" + info + "'.";
             break;
-        case ERROR_ACTION_VALUE:
+        case Anuto.GameConstants.ERROR_ACTION_VALUE:
             msg = "Missing or wrong value for action.";
             break;
-        case ERROR_TURRET:
+        case Anuto.GameConstants.ERROR_TURRET:
             msg = "Turret '" + info.id + "' does not exist.";
             break;
-        case ERROR_CREDITS:
+        case Anuto.GameConstants.ERROR_CREDITS:
             msg = "Not enough credits.";
             break;
-        case ERROR_NEXT_WAVE:
+        case Anuto.GameConstants.ERROR_NEXT_WAVE:
             msg = "Wave launched before 40 ticks.";
             break;
-        case ERROR_ADD_TURRET_POSITION:
+        case Anuto.GameConstants.ERROR_ADD_TURRET_POSITION:
             msg = "Invalid position for adding turret.";
             break;
-        case ERROR_ADD_TURRET_NAME:
+        case Anuto.GameConstants.ERROR_ADD_TURRET_NAME:
             msg = "Wrong turret type name '" + info.name + "'.";
             break;
-        case ERROR_UPGRADE:
+        case Anuto.GameConstants.ERROR_UPGRADE:
             msg = "Can't upgrade the turret '" + info.id + "' with max grade.";
             break;
-        case ERROR_LEVEL_UP:
+        case Anuto.GameConstants.ERROR_LEVEL_UP:
             msg = "Can't level up the turret '" + info.id + "' with max level.";
             break;
         default:
@@ -89,11 +73,11 @@ level.gameConfig.runningInClientSide = false;
 var anutoEngine = new Anuto.Engine(level.gameConfig, level.enemiesData, level.turretsData, level.wavesData);
 
 if (level.engineVersion !== anutoEngine.version) {
-    exitWithError(ERROR_VERSION_MISMATCH, {logsVersion: level.engineVersion, engineVersion: anutoEngine.version});
+    exitWithError(Anuto.GameConstants.ERROR_VERSION_MISMATCH, {logsVersion: level.engineVersion, engineVersion: anutoEngine.version});
 }
 
 if (!logs.actions || logs.actions.length === 0) {
-    exitWithError(ERROR_ACTION_ARRAY)
+    exitWithError(Anuto.GameConstants.ERROR_ACTION_ARRAY)
 }
 
 var i = 0;
@@ -101,12 +85,12 @@ var i = 0;
 while (!anutoEngine.gameOver) {
 
     if (!logs.actions[i] && !anutoEngine.waveActivated) {
-        exitWithError(ERROR_NO_GAME_OVER);
+        exitWithError(Anuto.GameConstants.ERROR_NO_GAME_OVER);
     }
 
     if (logs.actions[i]) {
         if ( typeof logs.actions[i].tick !== "number" || logs.actions[i].tick < anutoEngine.ticksCounter) {
-            exitWithError(ERROR_TICKS);
+            exitWithError(Anuto.GameConstants.ERROR_TICKS);
         }
     }
 
@@ -118,7 +102,7 @@ while (!anutoEngine.gameOver) {
         switch (action.type) {
             case TYPE_NEXT_WAVE:
                 if (!anutoEngine.newWave()) {
-                    result.error = { type: ERROR_NEXT_WAVE };
+                    result.error = { type: Anuto.GameConstants.ERROR_NEXT_WAVE };
                 }
                 break;
             case TYPE_ADD_TURRET:
@@ -140,7 +124,7 @@ while (!anutoEngine.gameOver) {
                 result = anutoEngine.setFixedTarget(action.id);
                 break;
             default:
-                result = { error: { type: ERROR_ACTION_TYPE, info: action.type} };
+                result = { error: { type: Anuto.GameConstants.ERROR_ACTION_TYPE, info: action.type} };
                 break;
         }
 
