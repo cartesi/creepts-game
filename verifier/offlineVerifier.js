@@ -80,72 +80,56 @@ if (!logs.actions || logs.actions.length === 0) {
     exitWithError(Anuto.GameConstants.ERROR_ACTION_ARRAY)
 }
 
-var i = 0;
+for (var i = 0; i < logs.actions.length; i++) {
 
-while (!anutoEngine.gameOver) {
+    var action = logs.actions[i];
+    var result = {};
 
-    if (!logs.actions[i] && !anutoEngine.waveActivated) {
-        exitWithError(Anuto.GameConstants.ERROR_NO_GAME_OVER);
+    if ( typeof action.tick !== "number" || action.tick < anutoEngine.ticksCounter) {
+        exitWithError(Anuto.GameConstants.ERROR_TICKS);
     }
 
-    if (logs.actions[i]) {
-        if ( typeof logs.actions[i].tick !== "number" || logs.actions[i].tick < anutoEngine.ticksCounter) {
-            exitWithError(Anuto.GameConstants.ERROR_TICKS);
-        }
+    while (anutoEngine.ticksCounter < action.tick && anutoEngine.lifes > 0) {
+        anutoEngine.update();
     }
 
-    while (i < logs.actions.length && logs.actions[i].tick === anutoEngine.ticksCounter) {
-
-        var action = logs.actions[i];
-        var result = {};
-
-        switch (action.type) {
-            case TYPE_NEXT_WAVE:
-                if (!anutoEngine.newWave()) {
-                    result.error = { type: Anuto.GameConstants.ERROR_NEXT_WAVE };
-                }
-                break;
-            case TYPE_ADD_TURRET:
-                result = anutoEngine.addTurret(action.turretType, action.position);
-                break;
-            case TYPE_SELL_TURRET:
-                result = anutoEngine.sellTurret(action.id);
-                break;
-            case TYPE_UPGRADE_TURRET:
-                result = anutoEngine.upgradeTurret(action.id);
-                break;
-            case TYPE_LEVEL_UP_TURRET:
-                result = anutoEngine.improveTurret(action.id);
-                break;
-            case TYPE_CHANGE_STRATEGY_TURRET:
-                result = anutoEngine.setNextStrategy(action.id);
-                break;
-            case TYPE_CHANGE_FIXED_TARGET_TURRET:
-                result = anutoEngine.setFixedTarget(action.id);
-                break;
-            default:
-                result = { error: { type: Anuto.GameConstants.ERROR_ACTION_TYPE, info: action.type} };
-                break;
-        }
-
-        if (result.error) {
-            exitWithError(result.error.type, result.error.info)
-        }
-
-        if (anutoEngine.lifes <= 0) {
+    switch (action.type) {
+        case TYPE_NEXT_WAVE:
+            if (!anutoEngine.newWave()) result.error = { type: Anuto.GameConstants.ERROR_NEXT_WAVE };
             break;
-        }
-
-        i = i + 1;
+        case TYPE_ADD_TURRET:
+            result = anutoEngine.addTurret(action.turretType, action.position);
+            break;
+        case TYPE_SELL_TURRET:
+            result = anutoEngine.sellTurret(action.id);
+            break;
+        case TYPE_UPGRADE_TURRET:
+            result = anutoEngine.upgradeTurret(action.id);
+            break;
+        case TYPE_LEVEL_UP_TURRET:
+            result = anutoEngine.improveTurret(action.id);
+            break;
+        case TYPE_CHANGE_STRATEGY_TURRET:
+            result = anutoEngine.setNextStrategy(action.id);
+            break;
+        case TYPE_CHANGE_FIXED_TARGET_TURRET:
+            result = anutoEngine.setFixedTarget(action.id);
+            break;
+        default:
+            result = { error: { type: Anuto.GameConstants.ERROR_ACTION_TYPE, info: action.type} };
+            break;
     }
 
-    var prevTick = anutoEngine.ticksCounter;
+    if (result.error) exitWithError(result.error.type, result.error.info);
+    if (anutoEngine.lifes <= 0) break;
+}
 
+while (anutoEngine.waveActivated && anutoEngine.lifes > 0) {
     anutoEngine.update();
+}
 
-    if (anutoEngine.ticksCounter === prevTick) {
-        anutoEngine.ticksCounter++;
-    }
+if (anutoEngine.lifes > 0) {
+    exitWithError(Anuto.GameConstants.ERROR_NO_GAME_OVER);
 }
 
 // print score and exit normally

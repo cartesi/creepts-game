@@ -216,6 +216,7 @@ module Anuto {
         public newWave(): boolean {
 
             if (!this.canLaunchNextWave) {
+                console.log("HOLA");
                 return false;
             }
 
