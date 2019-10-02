@@ -5,6 +5,7 @@ export class GameVars {
     public static gameData: GameData;
     public static currentScene: Phaser.Scene;
     public static paused: boolean;
+    public static waveOver: boolean;
     public static semipaused: boolean;
     public static enemiesData: any;
     public static turretsData: any;

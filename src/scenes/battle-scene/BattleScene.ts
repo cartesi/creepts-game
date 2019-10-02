@@ -38,7 +38,7 @@ export class BattleScene extends Phaser.Scene {
 
     public update(time: number, delta: number): void {
 
-        if (!GameVars.paused && !GameVars.semipaused) {
+        if (!GameVars.paused && !GameVars.semipaused && !GameVars.waveOver) {
             BattleManager.update(time, delta);
             this.boardContainer.update(time, delta);
         }

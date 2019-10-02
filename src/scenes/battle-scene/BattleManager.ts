@@ -68,6 +68,7 @@ export class BattleManager {
         GameVars.currentWave = 1;
         GameVars.paused = false;
         GameVars.semipaused = false;
+        GameVars.waveOver = true;
         GameVars.autoSendWave = false;
 
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData, GameVars.wavesData);
@@ -142,6 +143,8 @@ export class BattleManager {
     public static newWave(): void {
 
         if (BattleManager.anutoEngine.newWave()) {
+
+            GameVars.waveOver = false;
 
             if (GameVars.currentScene === BattleScene.currentInstance) {
                 BattleScene.currentInstance.hud.updateRound();
@@ -378,6 +381,8 @@ export class BattleManager {
        
         if (GameVars.autoSendWave) {
             BattleScene.currentInstance.gui.onClickNextWave();
+        } else {
+            GameVars.waveOver = true;
         }
         
     }

@@ -155,13 +155,6 @@ module Anuto {
 
                 this.eventDispatcher.dispatchEvent(new Event(Event.GAME_OVER));
                 this._gameOver = true;
-
-                // console.log("TICKS: " + this._ticksCounter);
-                // console.log("SCORE: " + this._score);
-            }
-
-            if (!this.waveActivated) {
-                return;
             }
 
             if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
