@@ -16,6 +16,59 @@ var ERROR_ADD_TURRET_NAME = "E011";
 var ERROR_UPGRADE = "E012";
 var ERROR_LEVEL_UP = "E013";
 
+function exitWithError(type, info) {
+
+    var msg = "Unexpected error";
+
+    switch(type) {
+        case ERROR_VERSION_MISMATCH:
+            msg = "Version mismatch. Engine Version: " + info.engineVersion + ". Logs Version: " + info.logsVersion + ".";
+            break;
+        case ERROR_NO_GAME_OVER:
+            msg = "All actions have been executed without reaching game over.";
+            break;
+        case ERROR_TICKS:
+            msg = "Ticks have to be greater or equal than the tick of the previous action.";
+            break;
+        case ERROR_ACTION_ARRAY:
+            msg = "Actions array is empty or null.";
+            break;
+        case ERROR_ACTION_TYPE:
+            msg = "Missing or wrong action type '" + info + "'.";
+            break;
+        case ERROR_ACTION_VALUE:
+            msg = "Missing or wrong value for action.";
+            break;
+        case ERROR_TURRET:
+            msg = "Turret '" + info.id + "' does not exist.";
+            break;
+        case ERROR_CREDITS:
+            msg = "Not enough credits.";
+            break;
+        case ERROR_NEXT_WAVE:
+            msg = "Wave launched before 40 ticks.";
+            break;
+        case ERROR_ADD_TURRET_POSITION:
+            msg = "Invalid position for adding turret.";
+            break;
+        case ERROR_ADD_TURRET_NAME:
+            msg = "Wrong turret type name '" + info.name + "'.";
+            break;
+        case ERROR_UPGRADE:
+            msg = "Can't upgrade the turret '" + info.id + "' with max grade.";
+            break;
+        case ERROR_LEVEL_UP:
+            msg = "Can't level up the turret '" + info.id + "' with max level.";
+            break;
+        default:
+            break;
+    }
+    // Output 0 score with error message
+    print(0 + "\t" + msg);
+    // Exit program with failure
+    throw Error(msg);
+}
+
 // LOGS TYPES
 var TYPE_NEXT_WAVE = "next wave";
 var TYPE_ADD_TURRET = "add turret";
@@ -36,88 +89,70 @@ level.gameConfig.runningInClientSide = false;
 var anutoEngine = new Anuto.Engine(level.gameConfig, level.enemiesData, level.turretsData, level.wavesData);
 
 if (level.engineVersion !== anutoEngine.version) {
-    manageError(ERROR_VERSION_MISMATCH, {logsVersion: level.engineVersion, engineVersion: anutoEngine.version});
-    anutoEngine.gameOver = true;
+    exitWithError(ERROR_VERSION_MISMATCH, {logsVersion: level.engineVersion, engineVersion: anutoEngine.version});
 }
 
 if (!logs.actions || logs.actions.length === 0) {
-    manageError(ERROR_ACTION_ARRAY)
-    anutoEngine.gameOver = true;
+    exitWithError(ERROR_ACTION_ARRAY)
 }
 
-while(!anutoEngine.gameOver) {
+var i = 0;
 
-    if (!logs.actions[0] && !anutoEngine.waveActivated) {
-        manageError(ERROR_NO_GAME_OVER);
+while (!anutoEngine.gameOver) {
+
+    if (!logs.actions[i] && !anutoEngine.waveActivated) {
+        exitWithError(ERROR_NO_GAME_OVER);
     }
 
-    if (logs.actions[0]) {
-        if ( typeof logs.actions[0].tick !== "number" || logs.actions[0].tick < anutoEngine.ticksCounter) {
-            manageError(ERROR_TICKS);
+    if (logs.actions[i]) {
+        if ( typeof logs.actions[i].tick !== "number" || logs.actions[i].tick < anutoEngine.ticksCounter) {
+            exitWithError(ERROR_TICKS);
         }
     }
 
-    while (logs.actions.length && logs.actions[0].tick === anutoEngine.ticksCounter) {
+    while (i < logs.actions.length && logs.actions[i].tick === anutoEngine.ticksCounter) {
 
-        var action = logs.actions.shift();
+        var action = logs.actions[i];
+        var result = { }
 
-        switch(action.type) {
+        switch (action.type) {
             case TYPE_NEXT_WAVE:
-
                 if (!anutoEngine.newWave()) {
-                    manageError(ERROR_NEXT_WAVE);
+                    result.error = { type: ERROR_NEXT_WAVE };
                 }
                 break;
             case TYPE_ADD_TURRET:
-
-                var data = anutoEngine.addTurret(action.turretType, action.position);
-                if (data.error) {
-                    manageError(data.error.type, data.error.info);
-                }
+                result = anutoEngine.addTurret(action.turretType, action.position);
                 break;
             case TYPE_SELL_TURRET:
-
-                var data = anutoEngine.sellTurret(action.id);
-                if (data.error) {
-                    manageError(data.error.type, data.error.info);
-                }
+                result = anutoEngine.sellTurret(action.id);
                 break;
             case TYPE_UPGRADE_TURRET:
-
-                var data = anutoEngine.upgradeTurret(action.id);
-                if (data.error) {
-                    manageError(data.error.type, data.error.info);
-                }
+                result = anutoEngine.upgradeTurret(action.id);
                 break;
             case TYPE_LEVEL_UP_TURRET:
-
-                var data = anutoEngine.improveTurret(action.id);
-                if (data.error) {
-                    manageError(data.error.type, data.error.info);
-                }
+                result = anutoEngine.improveTurret(action.id);
                 break;
             case TYPE_CHANGE_STRATEGY_TURRET:
-
-                var data = anutoEngine.setNextStrategy(action.id);
-                if (data.error) {
-                    manageError(data.error.type, data.error.info);
-                }
+                result = anutoEngine.setNextStrategy(action.id);
                 break;
             case TYPE_CHANGE_FIXED_TARGET_TURRET:
-
-                var data = anutoEngine.setFixedTarget(action.id);
-                if (data.error) {
-                    manageError(data.error.type, data.error.info);
-                }
+                result = anutoEngine.setFixedTarget(action.id);
                 break;
             default:
-                manageError(ERROR_ACTION_TYPE, {name: action.type});
+                result = { error: { type: ERROR_ACTION_TYPE, info: action.type} };
                 break;
         }
 
-        if (!anutoEngine.lifes) {
+        if (result.error) {
+            exitWithError(result.error.type, result.error.info)
+        }
+
+        if (anutoEngine.lifes <= 0) {
             break;
         }
+
+        i = i + 1;
     }
 
     var prevTick = anutoEngine.ticksCounter;
@@ -127,57 +162,11 @@ while(!anutoEngine.gameOver) {
     if (anutoEngine.ticksCounter === prevTick) {
         anutoEngine.ticksCounter++;
     }
-}
 
-function manageError(type, info) {
-
-    var msg = "(" + type + ") "; 
-
-    switch(type) {
-        case ERROR_VERSION_MISMATCH:
-            msg += "Version mismatch. Engine Version: " + info.engineVersion + ". Logs Version: " + info.logsVersion + ".";
-            break;
-        case ERROR_NO_GAME_OVER:
-            msg += "All actions have been executed without reaching game over.";
-            break;
-        case ERROR_TICKS:
-            msg += "Ticks have to be greater or equal than the tick of the previous action.";
-            break;
-        case ERROR_ACTION_ARRAY:
-            msg += "Actions array is empty or null.";
-            break;
-        case ERROR_ACTION_TYPE:
-            msg += "Missing or wrong action type '" + info.name + "'.";
-            break;
-        case ERROR_ACTION_VALUE:
-            msg += "Missing or wrong value for action.";    
-            break;
-        case ERROR_TURRET:
-            msg += "Turret '" + info.id + "' does not exist.";
-            break;
-        case ERROR_CREDITS:
-            msg += "Not enough credits.";    
-            break;
-        case ERROR_NEXT_WAVE:
-            msg += "Wave launched before 40 ticks.";    
-            break;
-        case ERROR_ADD_TURRET_POSITION:
-            msg += "Invalid position for adding turret.";    
-            break;
-        case ERROR_ADD_TURRET_NAME:
-            msg += "Wrong turret type name '" + info.name + "'.";    
-            break;
-        case ERROR_UPGRADE:
-            msg += "Can’t upgrade the turret '" + info.id + "' with max grade.";
-            break;
-        case ERROR_LEVEL_UP:
-            msg += "Can’t level up the turret '" + info.id + "' with max level.";    
-            break;
-        default:
-            break;
+    if (anutoEngine.ticksCounter % 100 == 0) {
+        console.log(anutoEngine.ticksCounter);
     }
-
-    console.error(msg);
-    anutoEngine.score = 0;
-    anutoEngine.lifes = 0;
 }
+
+// print score and exit normally
+print(anutoEngine._score + "\t")
