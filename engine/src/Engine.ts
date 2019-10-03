@@ -4,7 +4,7 @@ import { Enemy } from "./enemies";
 import { Bullet, Glue, GlueBullet, GlueTurret, LaserTurret, LaunchTurret, Mine, Mortar, ProjectileTurret, Turret } from "./turrets";
 import { EnemiesSpawner } from "./EnemiesSpawner"
 import { Event, EventDispatcher } from "./events";
-import { Types } from "./Types";
+import * as Types from "./Types";
 
     export class Engine {
 

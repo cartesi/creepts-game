@@ -1,7 +1,5 @@
 import { Turret } from "./turrets/Turret";
 
-export module Types {
-
     export type Callback = {
         func: Function;
         scope: any
@@ -28,4 +26,3 @@ export module Types {
         turret?: Turret;
         error?: {type: string, info?: any};
     };
-}
