@@ -1,4 +1,7 @@
+import { Turret } from "./turrets/Turret";
+
 export module Types {
+
     export type Callback = {
         func: Function;
         scope: any
@@ -17,5 +20,12 @@ export module Types {
 
     export type WaveConfig = {
         enemies: {"type": string, "t": number} [];
+    };
+
+    export type EngineReturn = {
+
+        success: boolean;
+        turret?: Turret;
+        error?: {type: string, info?: any};
     };
 }

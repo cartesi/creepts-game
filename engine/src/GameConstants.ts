@@ -2,7 +2,7 @@
     export class GameConstants {
 
         // version: v0.month.day.hour
-        public static readonly VERSION = "v0.11.13.14";
+        public static readonly VERSION = "v0.9.30.11";
 
         public static readonly RELOAD_BASE_TICKS = 10;
         public static readonly BULLET_SPEED = .85; // in cells / tick
@@ -54,4 +54,19 @@
 
         public static readonly WEAK_AGAINST_DAMAGE_MODIFIER = 3.0;
         public static readonly STRONG_AGAINST_DAMAGE_MODIFIER = 0.33;
+
+        // error types
+        public static readonly ERROR_VERSION_MISMATCH = "E001";
+        public static readonly ERROR_NO_GAME_OVER = "E002";
+        public static readonly ERROR_TICKS = "E003";
+        public static readonly ERROR_ACTION_ARRAY = "E004";
+        public static readonly ERROR_ACTION_TYPE = "E005";
+        public static readonly ERROR_ACTION_VALUE = "E006";
+        public static readonly ERROR_TURRET = "E007";
+        public static readonly ERROR_CREDITS = "E008";
+        public static readonly ERROR_NEXT_WAVE = "E009";
+        public static readonly ERROR_ADD_TURRET_POSITION = "E010";
+        public static readonly ERROR_ADD_TURRET_NAME = "E011";
+        public static readonly ERROR_UPGRADE = "E012";
+        public static readonly ERROR_LEVEL_UP = "E013";
     }

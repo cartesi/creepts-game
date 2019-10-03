@@ -1,1 +1,1 @@
-/Users/enrique/Documents/html5/anuto/dist/anuto-core-engine.js
+../dist/anuto-core-engine.js

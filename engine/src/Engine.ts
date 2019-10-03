@@ -38,7 +38,6 @@ import { Types } from "./Types";
         private _creditsEarned: number;
         private _score: number;
         private _lifes: number;
-        private _paused: boolean;
         private _timeStep: number;
         private _gameOver: boolean;
         private _round: number;
@@ -81,7 +80,6 @@ import { Types } from "./Types";
             this.boardSize = gameConfig.boardSize;
             this._credits = gameConfig.credits;
             this._lifes = gameConfig.lifes;
-            this._paused = false;
             this._timeStep = gameConfig.timeStep;
 
             this.enemiesPathCells = gameConfig.enemiesPathCells;
@@ -156,17 +154,10 @@ import { Types } from "./Types";
                 this.t = t;
             }
 
-            if (this._paused || !this.waveActivated) {
-                return;
-            }
-
             if (this._lifes <= 0 && !this._gameOver) {
 
                 this.eventDispatcher.dispatchEvent(new Event(Event.GAME_OVER));
                 this._gameOver = true;
-
-                console.log("TICKS: " + this._ticksCounter);
-                console.log("SCORE: " + this._score);
             }
 
             if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
@@ -175,9 +166,7 @@ import { Types } from "./Types";
 
                 if (this._lifes > 0) {
                     this.eventDispatcher.dispatchEvent(new Event(Event.WAVE_OVER));
-                } else {
-                    return;
-                } 
+                }
             }
 
             if (this.ticksCounter - this.lastWaveTick >= (GameConstants.INITIAL_TICKS_WAVE * this.enemySpawningDeltaTicks) && !this.canLaunchNextWave) {
@@ -228,6 +217,7 @@ import { Types } from "./Types";
         public newWave(): boolean {
 
             if (!this.canLaunchNextWave) {
+                console.log("HOLA");
                 return false;
             }
 
@@ -310,19 +300,27 @@ import { Types } from "./Types";
             enemy.destroy();
         }
 
-        public addTurret(type: string, p: {r: number, c: number}): Turret {
+        public addTurret(type: string, p: {r: number, c: number}): Types.EngineReturn {
+
+            if (typeof type !== "string" || !p || typeof p.c !== "number" || typeof p.r !== "number") {
+                return {success: false, error: {type: GameConstants.ERROR_ACTION_VALUE}};
+            }
+
+            if ( p.r < 0 || p.c < 0 || p.r >= this.boardSize.r || p.c >= this.boardSize.c) {
+                return {success: false, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
+            }
 
             // mirar si estamos poniendo la torreta encima del camino
             for (let i = 0; i < this.enemiesPathCells.length; i++) {
                 if (p.c === this.enemiesPathCells[i].c && p.r === this.enemiesPathCells[i].r) {
-                    return null;
+                    return {success: false, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
                 }
             }
 
             // mirar si ya hay una torreta
             for (let i = 0; i < this.turrets.length; i++) {
                 if (p.c === this.turrets[i].position.c && p.r === this.turrets[i].position.r) {
-                    return null;
+                    return {success: false, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
                 }
             }
 
@@ -341,7 +339,7 @@ import { Types } from "./Types";
             }
 
             if (!isOnPlateau) {
-                return null;
+                return {success: false, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
             }
 
             let turret: Turret = null;
@@ -360,25 +358,30 @@ import { Types } from "./Types";
                     turret = new GlueTurret(p, this);
                     break;
                 default:
+                    return {success: false, error: {type: GameConstants.ERROR_ADD_TURRET_NAME, info: {name: type}}};
             }
 
             if (this._credits < turret.value) {
-                return null;
+                return {success: false, error: {type: GameConstants.ERROR_CREDITS}};
             }
 
             this.turrets.push(turret);
 
             this._credits -= turret.value;
 
-            return turret;
+            return {success: true, turret: turret};
         }
 
-        public sellTurret(id: number): boolean {
+        public sellTurret(id: number): Types.EngineReturn {
+
+            if (typeof id !== "number") {
+                return {success: false, error: {type: GameConstants.ERROR_ACTION_VALUE}};
+            }
 
             const turret = this.getTurretById(id);
 
             if (!turret) {
-                return false;
+                return {success: false, error: {type: GameConstants.ERROR_TURRET, info: {id: id}}};
             }
 
             const i = this.turrets.indexOf(turret);
@@ -390,31 +393,39 @@ import { Types } from "./Types";
             this._credits += turret.sellValue;
             turret.destroy();
 
-            return true;
+            return {success: true};
         }
 
-        public setNextStrategy(id: number): boolean {
+        public setNextStrategy(id: number): Types.EngineReturn {
+
+            if (typeof id !== "number") {
+                return {success: false, error: {type: GameConstants.ERROR_ACTION_VALUE}};
+            }
 
             const turret = this.getTurretById(id);
 
             if (turret) {
                 turret.setNextStrategy();
-                return true;
+                return {success: true};
             }
 
-            return false;
+            return {success: false, error: {type: GameConstants.ERROR_TURRET, info: {id: id}}};
         }
 
-        public setFixedTarget(id: number): boolean {
+        public setFixedTarget(id: number): Types.EngineReturn {
+
+            if (typeof id !== "number") {
+                return {success: false, error: {type: GameConstants.ERROR_ACTION_VALUE}};
+            }
 
             const turret = this.getTurretById(id);
 
             if (turret) {
                 turret.setFixedTarget();
-                return true;
+                return {success: true};
             }
 
-            return false;
+            return {success: false, error: {type: GameConstants.ERROR_TURRET, info: {id: id}}};
         }
 
         public addBullet(bullet: Bullet, projectileTurret: ProjectileTurret): void {
@@ -475,7 +486,10 @@ import { Types } from "./Types";
                 this.enemies.splice(i, 1);
             }
 
-            this._score += enemy.value;
+            if (!this._gameOver) {
+                this._score += enemy.value;
+            }
+            
             this.remainingReward -= enemy.value;
 
             enemy.destroy();
@@ -503,8 +517,11 @@ import { Types } from "./Types";
 
             this._credits += enemy.value;
             this._creditsEarned += enemy.value;
-            this._score += enemy.value;
             this.remainingReward -= enemy.value;
+
+            if (!this._gameOver) {
+                this._score += enemy.value;
+            }
 
             enemy.destroy();
 
@@ -515,34 +532,54 @@ import { Types } from "./Types";
             }
         }
 
-        public improveTurret(id: number): boolean {
+        public improveTurret(id: number): Types.EngineReturn {
 
-            let success = false;
+            if (typeof id !== "number") {
+                return {success: false, error: {type: GameConstants.ERROR_ACTION_VALUE}};
+            }
 
             const turret = this.getTurretById(id);
 
-            if (turret && turret.level < turret.maxLevel && this._credits >= turret.priceImprovement) {
-                this._credits -= turret.priceImprovement;
-                turret.improve();
-                success = true;
+            if (!turret) {
+                return {success: false, error: {type: GameConstants.ERROR_TURRET, info: {id: id}}};
             }
 
-            return success;
+            if (turret.level >= turret.maxLevel) {
+                return {success: false, error: {type: GameConstants.ERROR_LEVEL_UP, info: {id: id}}};
+            }
+
+            if (this._credits < turret.priceImprovement) {
+                return {success: false, error: {type: GameConstants.ERROR_CREDITS}};
+            }
+
+            this._credits -= turret.priceImprovement;
+            turret.improve();
+            return {success: true};
         }
 
-        public upgradeTurret(id: number): boolean {
+        public upgradeTurret(id: number): Types.EngineReturn {
 
-            let success = false;
+            if (typeof id !== "number") {
+                return {success: false, error: {type: GameConstants.ERROR_ACTION_VALUE}};
+            }
 
             const turret = this.getTurretById(id);
 
-            if (turret && turret.grade < 3 && this._credits >= turret.priceUpgrade) {
-                this._credits -= turret.priceUpgrade;
-                turret.upgrade();
-                success = true;
+            if (!turret) {
+                return {success: false, error: {type: GameConstants.ERROR_TURRET, info: {id: id}}};
             }
 
-            return success;
+            if (turret.grade >= 3) {
+                return {success: false, error: {type: GameConstants.ERROR_UPGRADE, info: {id: id}}};
+            }
+
+            if (this._credits < turret.priceUpgrade) {
+                return {success: false, error: {type: GameConstants.ERROR_CREDITS}};
+            }
+
+            this._credits -= turret.priceUpgrade;
+            turret.upgrade();
+            return {success: true};
         }
 
         public getPathPosition(l: number): {x: number, y: number} {
@@ -972,9 +1009,19 @@ import { Types } from "./Types";
             return this._ticksCounter;
         }
 
+        public set ticksCounter(value: number) {
+
+            this._ticksCounter = value;
+        }
+
         public get score(): number {
 
             return this._score;
+        }
+
+        public set score(value: number) {
+
+            this._score = value;
         }
 
         public get gameOver(): boolean {
@@ -982,9 +1029,19 @@ import { Types } from "./Types";
             return this._gameOver;
         }
 
+        public set gameOver(value: boolean) {
+
+            this._gameOver = value;
+        }
+
         public get lifes(): number {
             
             return this._lifes;
+        }
+
+        public set lifes(value: number) {
+
+            this._lifes = value;
         }
 
         public get round(): number {
@@ -1000,16 +1057,6 @@ import { Types } from "./Types";
         public set timeStep(value: number) {
 
             this._timeStep = value;
-        }
-
-        public get paused(): boolean {
-
-            return this._paused;
-        }
-
-        public set paused(value: boolean) {
-
-            this._paused = value;
         }
 
         public get version(): string {
