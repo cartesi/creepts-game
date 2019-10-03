@@ -140,7 +140,7 @@ export class GUI extends Phaser.GameObjects.Container {
         if (this.nextWaveButton.alpha !== 1 || GameVars.paused || BattleManager.anutoEngine.gameOver) {
             return;
         }
-        
+    
         this.nextWaveButton.alpha = .5;
         BattleManager.newWave();
     }

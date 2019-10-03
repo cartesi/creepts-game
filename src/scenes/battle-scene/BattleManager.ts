@@ -68,6 +68,7 @@ export class BattleManager {
         GameVars.currentWave = 1;
         GameVars.paused = false;
         GameVars.semipaused = false;
+        GameVars.waveOver = true;
         GameVars.autoSendWave = false;
 
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData, GameVars.wavesData);
@@ -115,31 +116,21 @@ export class BattleManager {
     public static pause(): void {
 
         GameVars.paused = true;
-
-        this.anutoEngine.paused = true;
     }
 
     public static resume(): void {
 
         GameVars.paused = false;
-
-        if (!GameVars.semipaused) {
-            this.anutoEngine.paused = false;
-        }
     }
 
     public static semipause(): void {
 
         GameVars.semipaused = true;
-
-        this.anutoEngine.paused = true;
     }
 
     public static semiresume(): void {
 
         GameVars.semipaused = false;
-
-        this.anutoEngine.paused = false;
     }
 
     public static setTimeStepFactor(timeStepFactor: number): void {
@@ -152,6 +143,8 @@ export class BattleManager {
     public static newWave(): void {
 
         if (BattleManager.anutoEngine.newWave()) {
+
+            GameVars.waveOver = false;
 
             if (GameVars.currentScene === BattleScene.currentInstance) {
                 BattleScene.currentInstance.hud.updateRound();
@@ -178,19 +171,19 @@ export class BattleManager {
 
     public static addTurret(type: string, position: {r: number, c: number}): Anuto.Turret {
 
-        let turret = BattleManager.anutoEngine.addTurret(type, position);
+        let data = BattleManager.anutoEngine.addTurret(type, position);
 
-        if (turret) {
-            let action = {type: GameConstants.TYPE_ADD_TURRET, tick: BattleManager.anutoEngine.ticksCounter, turretType: turret.type, position: position};
+        if (data.turret) {
+            let action = {type: GameConstants.TYPE_ADD_TURRET, tick: BattleManager.anutoEngine.ticksCounter, turretType: data.turret.type, position: position};
             BattleManager.addAction(action);
         }
 
-        return turret;
+        return data.turret;
     }
 
     public static sellTurret(id: number): void {
 
-        if (BattleManager.anutoEngine.sellTurret(id)) {
+        if (BattleManager.anutoEngine.sellTurret(id).success) {
 
             let action = {type: GameConstants.TYPE_SELL_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
             BattleManager.addAction(action);
@@ -211,9 +204,9 @@ export class BattleManager {
 
     public static improveTurret(id: number): void {
 
-        const sucess = BattleManager.anutoEngine.improveTurret(id);
+        const success = BattleManager.anutoEngine.improveTurret(id).success;
 
-        if (sucess) {
+        if (success) {
             let action = {type: GameConstants.TYPE_LEVEL_UP_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
             BattleManager.addAction(action);
 
@@ -223,9 +216,9 @@ export class BattleManager {
 
     public static upgradeTower(id: number): void {
         
-        const sucess = BattleManager.anutoEngine.upgradeTurret(id);
+        const success = BattleManager.anutoEngine.upgradeTurret(id).success;
 
-        if (sucess) {
+        if (success) {
 
             let action = {type: GameConstants.TYPE_UPGRADE_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
             BattleManager.addAction(action);
@@ -240,7 +233,7 @@ export class BattleManager {
 
     public static setNextStrategy(id: number): void {
 
-        if (BattleManager.anutoEngine.setNextStrategy(id)) {
+        if (BattleManager.anutoEngine.setNextStrategy(id).success) {
             let action = {type: GameConstants.TYPE_CHANGE_STRATEGY_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
             BattleManager.addAction(action);
         }
@@ -248,7 +241,7 @@ export class BattleManager {
 
     public static setFixedTarget(id: number): void {
 
-        if (BattleManager.anutoEngine.setFixedTarget(id)) {
+        if (BattleManager.anutoEngine.setFixedTarget(id).success) {
             let action = {type: GameConstants.TYPE_CHANGE_FIXED_TARGET_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
             BattleManager.addAction(action);
         }
@@ -388,6 +381,8 @@ export class BattleManager {
        
         if (GameVars.autoSendWave) {
             BattleScene.currentInstance.gui.onClickNextWave();
+        } else {
+            GameVars.waveOver = true;
         }
         
     }
