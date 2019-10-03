@@ -42,6 +42,7 @@
         "build": "react-env --env .env --dest ./dist && webpack --mode production",
         "build:app": "react-env --env .env --dest ./dist && webpack --config-name app --mode production",
         "build:verifier": "webpack --config-name verifier --mode production",
-        "verifier": "webpack --config-name verifier --mode production && verifier/djs dist/verifier-bundle.js"
+        "verifier": "webpack --config-name verifier --mode production && verifier/djs dist/djs-verifier-bundle.js",
+        "verifier:node": "webpack --config-name verifier --mode production && node dist/node-verifier-bundle.js"
     }
 }

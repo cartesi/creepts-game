@@ -17,4 +17,5 @@ Both targets share the engine code, but webpack already bundles each target appr
 - `npm run build`: build production assets at `dist/`
 - `npm run build:app`: build only the `app` target at `dist/`
 - `npm run build:verifier`: build only the `verifier` target at `dist/`
-- `npm run verifier -- <log.json> <level.json>`: run the verifier against a log and level files
+- `npm run verifier -- <log.json> <level.json>`: run the verifier against a log and level files using `djs`
+- `npm run verifier:node -- <log.json> <level.json>`: run the verifier against a log and level files using `node`

@@ -74,12 +74,13 @@ module.exports = env => {
 		name: 'verifier',
 		target: 'node',
 		entry: {
-			verifier: './verifier/offlineVerifier.js'
+			djs: './verifier/djs-verifier.js',
+			node: './verifier/node-verifier.js'
 		},
 		devtool: 'source-map',
 		output: {
 			path: path.resolve(__dirname, 'dist'),
-			filename: '[name]-bundle.js'
+			filename: '[name]-verifier-bundle.js'
 		},
 		module: {
 			rules: [
@@ -94,7 +95,7 @@ module.exports = env => {
 			new BundleTracker({filename: './stats-verifier.json'}),
 			// new BundleAnalyzer(),
 			new CleanWebpackPlugin({
-				cleanOnceBeforeBuildPatterns: ['verifier-*']
+				cleanOnceBeforeBuildPatterns: ['*-verifier-*']
 			}),
 		],
 		resolve: {
