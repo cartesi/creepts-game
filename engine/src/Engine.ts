@@ -163,9 +163,7 @@ module Anuto {
 
                 if (this._lifes > 0) {
                     this.eventDispatcher.dispatchEvent(new Event(Event.WAVE_OVER));
-                } else {
-                    return;
-                } 
+                }
             }
 
             if (this.ticksCounter - this.lastWaveTick >= (GameConstants.INITIAL_TICKS_WAVE * this.enemySpawningDeltaTicks) && !this.canLaunchNextWave) {
