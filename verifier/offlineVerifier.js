@@ -48,7 +48,7 @@ function exitWithError(type, info) {
             break;
     }
     // Output 0 score with error message
-    print(0 + "\t");
+    print(0 + "\t" + msg);
     // Exit program with failure
     throw Error(msg);
 }
