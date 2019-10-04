@@ -79,13 +79,17 @@ module.exports = env => {
 		name: 'verifier',
 		target: 'node',
 		entry: {
-			djs: './verifier/djs-verifier.js',
-			node: './verifier/node-verifier.js'
+			'djs-verifier': './verifier/djs-verifier.js',
+			'node-verifier': './verifier/node-verifier.js',
+			level: './cmdline/level.ts'
 		},
 		devtool: 'source-map',
 		output: {
 			path: path.resolve(__dirname, 'dist'),
-			filename: '[name]-verifier-bundle.js'
+			filename: '[name]-bundle.js'
+		},
+		stats: {
+			warningsFilter: [/node_modules\/yargs/]
 		},
 		module: {
 			rules: [
@@ -97,11 +101,7 @@ module.exports = env => {
 			]
 		},
 		plugins: [
-			new BundleTracker({filename: './stats-verifier.json'}),
-			// new BundleAnalyzer(),
-			new CleanWebpackPlugin({
-				cleanOnceBeforeBuildPatterns: ['*-verifier-*']
-			}),
+			new BundleTracker({filename: './stats-verifier.json'})
 		],
 		resolve: {
 			extensions: ['.ts', '.js']

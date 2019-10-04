@@ -18,6 +18,7 @@
         "@types/react-dom": "^16.9.0",
         "@types/semantic-ui": "^2.2.7",
         "babel-loader": "^8.0.6",
+        "@types/yargs": "^13.0.3",
         "clean-webpack-plugin": "^3.0.0",
         "copy-webpack-plugin": "^5.0.4",
         "expose-loader": "0.7.5",
@@ -45,7 +46,8 @@
         "react-dom": "^16.9.0",
         "semantic-ui-css": "^2.4.1",
         "semantic-ui-react": "^0.88.1",
-        "typed-emitter": "^0.1.0"
+        "typed-emitter": "^0.1.0",
+        "yargs": "^15.0.2"
     },
     "scripts": {
         "dev": "webpack-dev-server --env.GAME_ONLY=true --mode development",
