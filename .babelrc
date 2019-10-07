@@ -1,0 +1,16 @@
+{
+    "env": {
+        "test": {
+            "presets": [
+                ["@babel/preset-env", { "targets": { "node": "current" } }],
+                "@babel/preset-typescript"
+            ],
+            "plugins": [
+                "@babel/proposal-class-properties",
+                "@babel/proposal-object-rest-spread",
+                "@babel/plugin-transform-modules-commonjs",
+                "@babel/plugin-proposal-export-default-from"
+            ]
+        }
+    }
+}

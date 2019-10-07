@@ -1,56 +1,36 @@
 import * as Anuto from "../engine/src";
 
-function exitWithError(type, info) {
-
-    var msg = "Unexpected error";
-
+function errorMessage(type, info) {
     switch(type) {
         case Anuto.GameConstants.ERROR_VERSION_MISMATCH:
-            msg = "Version mismatch. Engine Version: " + info.engineVersion + ". Logs Version: " + info.logsVersion + ".";
-            break;
+            return "Version mismatch. Engine Version: " + info.engineVersion + ". Logs Version: " + info.logsVersion + ".";
         case Anuto.GameConstants.ERROR_NO_GAME_OVER:
-            msg = "All actions have been executed without reaching game over.";
-            break;
+            return "All actions have been executed without reaching game over.";
         case Anuto.GameConstants.ERROR_TICKS:
-            msg = "Ticks have to be greater or equal than the tick of the previous action.";
-            break;
+            return "Ticks have to be greater or equal than the tick of the previous action.";
         case Anuto.GameConstants.ERROR_ACTION_ARRAY:
-            msg = "Actions array is empty or null.";
-            break;
+            return "Actions array is empty or null.";
         case Anuto.GameConstants.ERROR_ACTION_TYPE:
-            msg = "Missing or wrong action type '" + info + "'.";
-            break;
+            return "Missing or wrong action type '" + info + "'.";
         case Anuto.GameConstants.ERROR_ACTION_VALUE:
-            msg = "Missing or wrong value for action.";
-            break;
+            return "Missing or wrong value for action.";
         case Anuto.GameConstants.ERROR_TURRET:
-            msg = "Turret '" + info.id + "' does not exist.";
-            break;
+            return "Turret '" + info.id + "' does not exist.";
         case Anuto.GameConstants.ERROR_CREDITS:
-            msg = "Not enough credits.";
-            break;
+            return "Not enough credits.";
         case Anuto.GameConstants.ERROR_NEXT_WAVE:
-            msg = "Wave launched before 40 ticks.";
-            break;
+            return "Wave launched before 40 ticks.";
         case Anuto.GameConstants.ERROR_ADD_TURRET_POSITION:
-            msg = "Invalid position for adding turret.";
-            break;
+            return "Invalid position for adding turret.";
         case Anuto.GameConstants.ERROR_ADD_TURRET_NAME:
-            msg = "Wrong turret type name '" + info.name + "'.";
-            break;
+            return "Wrong turret type name '" + info.name + "'.";
         case Anuto.GameConstants.ERROR_UPGRADE:
-            msg = "Can't upgrade the turret '" + info.id + "' with max grade.";
-            break;
+            return "Can't upgrade the turret '" + info.id + "' with max grade.";
         case Anuto.GameConstants.ERROR_LEVEL_UP:
-            msg = "Can't level up the turret '" + info.id + "' with max level.";
-            break;
+            return "Can't level up the turret '" + info.id + "' with max level.";
         default:
-            break;
+            return "Unexpected error";
     }
-    // Output 0 score with error message
-    print(0 + "\t" + msg);
-    // Exit program with failure
-    throw Error(msg);
 }
 
 // LOGS TYPES
@@ -69,11 +49,11 @@ level.gameConfig.runningInClientSide = false;
 var anutoEngine = new Anuto.Engine(level.gameConfig, level.enemiesData, level.turretsData, level.wavesData);
 
 if (level.engineVersion !== anutoEngine.version) {
-    exitWithError(Anuto.GameConstants.ERROR_VERSION_MISMATCH, {logsVersion: level.engineVersion, engineVersion: anutoEngine.version});
+    throw new Error(errorMessage(Anuto.GameConstants.ERROR_VERSION_MISMATCH, {logsVersion: level.engineVersion, engineVersion: anutoEngine.version}));
 }
 
 if (!logs.actions || logs.actions.length === 0) {
-    exitWithError(Anuto.GameConstants.ERROR_ACTION_ARRAY)
+    throw new Error(errorMessage(Anuto.GameConstants.ERROR_ACTION_ARRAY));
 }
 
 for (var i = 0; i < logs.actions.length; i++) {
@@ -82,7 +62,7 @@ for (var i = 0; i < logs.actions.length; i++) {
     var result = {};
 
     if ( typeof action.tick !== "number" || action.tick < anutoEngine.ticksCounter) {
-        exitWithError(Anuto.GameConstants.ERROR_TICKS);
+        throw new Error(errorMessage(Anuto.GameConstants.ERROR_TICKS));
     }
 
     while (anutoEngine.ticksCounter < action.tick && anutoEngine.lifes > 0) {
@@ -116,7 +96,7 @@ for (var i = 0; i < logs.actions.length; i++) {
             break;
     }
 
-    if (result.error) exitWithError(result.error.type, result.error.info);
+    if (result.error) throw new Error(errorMessage(result.error.type, result.error.info));
     if (anutoEngine.lifes <= 0) break;
 }
 
@@ -125,10 +105,10 @@ while (anutoEngine.waveActivated && anutoEngine.lifes > 0) {
 }
 
 if (anutoEngine.lifes > 0) {
-    exitWithError(Anuto.GameConstants.ERROR_NO_GAME_OVER);
+    throw new Error(errorMessage(Anuto.GameConstants.ERROR_NO_GAME_OVER));
 }
 
 // print score and exit normally
-print(anutoEngine._score + "\t")
+return anutoEngine._score;
 
 }

@@ -7,4 +7,17 @@ const levelFile = fs.readFileSync(process.argv[3]);
 const logs = JSON.parse(logsFile);
 const level = JSON.parse(levelFile);
 
-verifier(level, logs);
+try {
+    const score = verifier(level, logs);
+    
+    // Output score
+    console.log(score + "\t");
+
+} catch (e) {
+
+    // Output score
+    console.log(0 + "\t" + e.message);
+
+    // Exit program with failure
+    throw e;
+}
