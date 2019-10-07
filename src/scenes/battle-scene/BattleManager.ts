@@ -7,6 +7,7 @@ import { GameManager } from "../../GameManager";
 import enemiesData from "../../../assets/config/enemies.json";
 import turretsData from "../../../assets/config/turrets.json";
 import wavesData from "../../../assets/config/waves.json";
+import * as Anuto from "../../../engine/src";
 
 export class BattleManager {
 

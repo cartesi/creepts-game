@@ -17,8 +17,11 @@
         "ts-loader": "6.0.4",
         "typescript": "3.6.2",
         "webpack": "4.35.3",
+        "webpack-bundle-analyzer": "^3.5.2",
+        "webpack-bundle-tracker": "^0.4.3",
         "webpack-cli": "3.3.5",
-        "webpack-dev-server": "3.7.2"
+        "webpack-dev-server": "3.7.2",
+        "webpack-merge": "^4.2.2"
     },
     "dependencies": {
         "@types/howler": "^2.1.1",
@@ -34,8 +37,12 @@
         "typed-emitter": "^0.1.0"
     },
     "scripts": {
-        "dev": "tsc -p engine && react-env --env .env --dest ./dist && webpack --env.GAME_ONLY=true --mode development && webpack-dev-server --env.GAME_ONLY=true --mode development",
-        "dev:cartesi": "tsc -p engine && react-env --env .env --dest ./dist && webpack --mode development && webpack-dev-server --mode development",
-        "build": "tsc -p engine && react-env --env .env --dest ./dist && webpack --mode production"
+        "dev": "react-env --env .env --dest ./dist && webpack --env.GAME_ONLY=true --mode development && webpack-dev-server --env.GAME_ONLY=true --mode development",
+        "dev:cartesi": "react-env --env .env --dest ./dist && webpack --mode development && webpack-dev-server --mode development",
+        "build": "react-env --env .env --dest ./dist && webpack --mode production",
+        "build:app": "react-env --env .env --dest ./dist && webpack --config-name app --mode production",
+        "build:verifier": "webpack --config-name verifier --mode production",
+        "verifier": "webpack --config-name verifier --mode production && verifier/djs dist/djs-verifier-bundle.js",
+        "verifier:node": "webpack --config-name verifier --mode production && node dist/node-verifier-bundle.js"
     }
 }

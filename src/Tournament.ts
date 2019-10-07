@@ -1,3 +1,4 @@
+import { GameData, LevelObject, LogsObject, MapObject } from "../types/tower-defense";
 
 export enum TournamentPhase {
     commit = "commit",

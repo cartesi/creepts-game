@@ -1,4 +1,4 @@
-module Anuto.Types {
+import { Turret } from "./turrets/Turret";
 
     export type Callback = {
         func: Function;
@@ -26,4 +26,3 @@ module Anuto.Types {
         turret?: Turret;
         error?: {type: string, info?: any};
     };
-}

@@ -1,4 +1,4 @@
-module Anuto {
+import { Event } from "./Event";
 
     export class EventDispatcher {
 
@@ -49,4 +49,3 @@ module Anuto {
             }
         }
     }
-}

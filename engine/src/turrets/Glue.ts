@@ -1,4 +1,4 @@
-module Anuto {
+import { Engine } from "../Engine";
 
     export class Glue {
 
@@ -42,4 +42,3 @@ module Anuto {
             }
         }
     }
-}

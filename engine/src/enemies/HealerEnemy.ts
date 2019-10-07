@@ -1,4 +1,7 @@
-module Anuto {
+import { GameConstants } from "../GameConstants";
+import { MathUtils } from "../utils/MathUtils";
+import { Engine } from "../Engine";
+import { Enemy } from "./Enemy";
 
     export class HealerEnemy extends Enemy {
 
@@ -60,4 +63,3 @@ module Anuto {
             }
         }
     }
-}

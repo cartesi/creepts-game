@@ -1,4 +1,10 @@
-module Anuto {
+import { GameConstants } from "../GameConstants";
+import { MathUtils } from "../utils/MathUtils";
+import { Engine } from "../Engine";
+import { Turret } from "./Turret";
+import { Enemy } from "../enemies/Enemy";
+import { Glue } from "./Glue";
+import { GlueBullet } from "./GlueBullet";
 
     export class GlueTurret extends Turret {
 
@@ -120,4 +126,3 @@ module Anuto {
             }
         }
     }
-}

@@ -1,4 +1,3 @@
-module Anuto {
     
     export class GameConstants {
 
@@ -71,4 +70,3 @@ module Anuto {
         public static readonly ERROR_UPGRADE = "E012";
         public static readonly ERROR_LEVEL_UP = "E013";
     }
-}

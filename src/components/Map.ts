@@ -1,4 +1,5 @@
 import mapData from "../../assets/config/maps.json";
+import { MapObject } from "../../types/tower-defense";
 
 const mapNames = [
     "original",

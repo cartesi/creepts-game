@@ -1,6 +1,7 @@
 import { TurretActor } from "./TurretActor";
 import { AudioManager } from "../../../AudioManager";
 import { GameVars } from "../../../GameVars";
+import * as Anuto from "../../../../engine/src";
 
 export class GlueTurretActor extends TurretActor {
 

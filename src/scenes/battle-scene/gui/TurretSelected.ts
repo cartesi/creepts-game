@@ -2,6 +2,8 @@ import { BattleManager } from './../BattleManager';
 import { GameConstants } from './../../../GameConstants';
 import { GUI } from './GUI';
 import { GameVars } from '../../../GameVars';
+import * as Anuto from "../../../../engine/src";
+
 export class TurretSelected extends Phaser.GameObjects.Container {
 
     private base: Phaser.GameObjects.Image;

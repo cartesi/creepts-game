@@ -1,6 +1,7 @@
 import { GameConstants } from "../../../GameConstants";
 import { GameVars } from "../../../GameVars";
 import { LifeBar } from "./LifeBar";
+import * as Anuto from "../../../../engine/src";
 
 export class EnemyActor extends Phaser.GameObjects.Container {
 

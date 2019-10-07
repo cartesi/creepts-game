@@ -8,7 +8,7 @@ COPY . .
 
 # Build using webpack
 RUN npm install
-RUN npm run build
+RUN npm run build:app
 
 
 FROM nginx:1.17-alpine

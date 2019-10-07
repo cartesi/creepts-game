@@ -1,4 +1,4 @@
-var Anuto = require("anuto-core-engine");
+import * as Anuto from "../engine/src";
 
 function exitWithError(type, info) {
 
@@ -62,11 +62,7 @@ var TYPE_LEVEL_UP_TURRET = "level up turret";
 var TYPE_CHANGE_STRATEGY_TURRET = "change strategy turret";
 var TYPE_CHANGE_FIXED_TARGET_TURRET = "change fixed target turret";
 
-var file1 = readFile(scriptArgs[1]);
-var file2 = readFile(scriptArgs[2]);
-
-var logs = JSON.parse(file1.replace(/\r?\n/g, ""));
-var level = JSON.parse(file2.replace(/\r?\n/g, ""));
+export default function (level, logs) {
 
 level.gameConfig.runningInClientSide = false;
 
@@ -134,3 +130,5 @@ if (anutoEngine.lifes > 0) {
 
 // print score and exit normally
 print(anutoEngine._score + "\t")
+
+}

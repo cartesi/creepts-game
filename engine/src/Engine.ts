@@ -1,7 +1,10 @@
-/// <reference path="./turrets/Turret.ts"/>
-/// <reference path="./enemies/Enemy.ts"/>
-
-module Anuto {
+import { GameConstants } from "./GameConstants";
+import { MathUtils } from "./utils/MathUtils";
+import { Enemy } from "./enemies";
+import { Bullet, Glue, GlueBullet, GlueTurret, LaserTurret, LaunchTurret, Mine, Mortar, ProjectileTurret, Turret } from "./turrets";
+import { EnemiesSpawner } from "./EnemiesSpawner"
+import { Event, EventDispatcher } from "./events";
+import * as Types from "./Types";
 
     export class Engine {
 
@@ -1066,4 +1069,5 @@ module Anuto {
             this._version = value;
         }
     }
-}
+
+// export GameConstants, MathUtils, Turret, Enemy, Bullet, Glue, GlueBullet, GlueTurret, ProjectileTurret, LaserTurret, LaunchTurret, Mine, Mortar, EnemiesSpawner, Event, EventDispatcher, Types;

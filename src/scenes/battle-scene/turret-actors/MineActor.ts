@@ -2,6 +2,7 @@ import { LaunchTurretActor } from './LaunchTurretActor';
 import { GameConstants } from "../../../GameConstants";
 import { GameVars } from '../../../GameVars';
 import { BoardContainer } from '../BoardContainer';
+import * as Anuto from "../../../../engine/src";
 
 export class MineActor extends Phaser.GameObjects.Container {
 

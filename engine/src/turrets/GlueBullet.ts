@@ -1,4 +1,7 @@
-module Anuto {
+import { GameConstants } from "../GameConstants";
+import { MathUtils } from "../utils/MathUtils";
+import { Enemy } from "../enemies/Enemy";
+import { Engine } from "../Engine";
 
     export class GlueBullet {
 
@@ -57,4 +60,3 @@ module Anuto {
             return {x: MathUtils.fixNumber(this.x + this.vx), y: MathUtils.fixNumber(this.y + this.vy)};
         }
     }
-}

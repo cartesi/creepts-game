@@ -1,5 +1,6 @@
 # System and IDE files
 tslint.json
+stats-*.json
 /.vscode
 
 .node_version

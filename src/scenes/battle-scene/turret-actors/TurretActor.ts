@@ -3,6 +3,7 @@ import { BoardContainer } from "./../BoardContainer";
 import { GameConstants } from "../../../GameConstants";
 import { BattleManager } from "../BattleManager";
 import { GameVars } from "../../../GameVars";
+import * as Anuto from "../../../../engine/src";
 
 export class TurretActor extends Phaser.GameObjects.Container {
 

@@ -1,4 +1,8 @@
-module Anuto {
+import { MathUtils } from "../utils/MathUtils";
+import { Enemy } from "../enemies/Enemy";
+import { Engine } from "../Engine";
+import { GameConstants } from "../GameConstants";
+import { ProjectileTurret } from "../turrets/ProjectileTurret";
 
     export class Bullet {
 
@@ -59,4 +63,3 @@ module Anuto {
             return {x: MathUtils.fixNumber(this.x + this.vx), y: MathUtils.fixNumber(this.y + this.vy)};
         }
     }
-}

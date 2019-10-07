@@ -1,4 +1,5 @@
 import { GameConstants } from "../../../GameConstants";
+import * as Anuto from "../../../../engine/src";
 
 export class GlueBulletActor extends Phaser.GameObjects.Container {
 

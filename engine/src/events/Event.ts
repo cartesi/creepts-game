@@ -1,4 +1,3 @@
-module Anuto {
 
     export class Event {
 
@@ -41,4 +40,3 @@ module Anuto {
             return this.type;
         }
     }
-}

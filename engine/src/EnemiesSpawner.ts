@@ -1,4 +1,7 @@
-module Anuto {
+import { Engine } from "./Engine";
+import { GameConstants } from "./GameConstants";
+import { Enemy } from "./enemies/Enemy";
+import { HealerEnemy } from "./enemies/HealerEnemy";
 
     export class EnemiesSpawner {
 
@@ -51,4 +54,3 @@ module Anuto {
             return enemy;
         }
     }
-}

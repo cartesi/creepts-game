@@ -1,4 +1,7 @@
-module Anuto {
+import { GameConstants } from "../GameConstants";
+import { MathUtils } from "../utils/MathUtils";
+import { Engine } from "../Engine";
+import { Enemy } from "../enemies/Enemy";
 
     export class Turret {
 
@@ -257,4 +260,3 @@ module Anuto {
             return enemies;
         }
     }
-}
