@@ -55,7 +55,8 @@ export class GameManager {
                     GameVars.gameData = JSON.parse(gameData);
                 } else {
                     GameVars.gameData = {
-                        muted: false,
+                        soundMuted: false,
+                        musicMuted: false,
                         scores: [],
                         currentMapIndex: 0
                     };

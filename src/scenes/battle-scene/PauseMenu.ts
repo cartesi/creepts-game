@@ -20,9 +20,14 @@ export class PauseMenu extends Phaser.GameObjects.Container {
             new MenuButton(this.scene, "RESTART", () => GameManager.reset()),
 
             // sound on/off
-            new MenuButton(this.scene, GameVars.gameData.muted ? "SOUND ON" : "SOUND OFF", (button: MenuButton) => {
-                AudioManager.toggleAudioState();
-                button.setLabel(GameVars.gameData.muted ? "SOUND ON" : "SOUND OFF");
+            new MenuButton(this.scene, GameVars.gameData.soundMuted ? "SOUND ON" : "SOUND OFF", (button: MenuButton) => {
+                AudioManager.toggleSoundState();
+                button.setLabel(GameVars.gameData.soundMuted ? "SOUND ON" : "SOUND OFF");
+            }),
+
+            new MenuButton(this.scene, GameVars.gameData.musicMuted ? "MUSIC ON" : "MUSIC OFF", (button: MenuButton) => {
+                AudioManager.toggleMusicState();
+                button.setLabel(GameVars.gameData.musicMuted ? "MUSIC ON" : "MUSIC OFF");
             }),
 
             // change map

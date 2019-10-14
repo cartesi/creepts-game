@@ -15,11 +15,19 @@ export class Game extends Phaser.Game {
             if (AudioManager.sound) {
                 AudioManager.sound.mute(true);
             }
+
+            if (AudioManager.music) {
+                AudioManager.music.mute(true);
+            }
         };
 
         this.onFocus = () => {
             if (AudioManager.sound) {
-                AudioManager.sound.mute(GameVars.gameData.muted);
+                AudioManager.sound.mute(GameVars.gameData.soundMuted);
+            }
+
+            if (AudioManager.music) {
+                AudioManager.music.mute(GameVars.gameData.musicMuted);
             }
         };
     }
