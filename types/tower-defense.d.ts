@@ -1,7 +1,8 @@
 import * as Anuto from "../engine/src";
 
 declare interface GameData {
-    muted: boolean;
+    soundMuted: boolean;
+    musicMuted: boolean;
     scores: number[];
     currentMapIndex: number;
 }

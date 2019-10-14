@@ -43,7 +43,8 @@ export class PreloadScene extends Phaser.Scene {
     private loadAssets(): void {
 
         this.load.atlas("texture_atlas_1", "/assets/texture_atlas_1.png", "/assets/texture_atlas_1.json");
-        this.load.json("audiosprite", "/assets/audio/audiosprite.json");
+        this.load.json("sound", "/assets/audio/sound.json");
+        this.load.json("music", "/assets/audio/music.json");
 
         this.load.on("progress", this.updateLoadedPercentage, this);
     }
@@ -57,15 +58,23 @@ export class PreloadScene extends Phaser.Scene {
 
     private loadHowl(): void {
 
-        let json = this.cache.json.get("audiosprite");
-        json = JSON.parse(JSON.stringify(json).replace("urls", "src"));
+        let musicJson = this.cache.json.get("music");
+        musicJson = JSON.parse(JSON.stringify(musicJson).replace("urls", "src"));
 
-        AudioManager.sound = new Howl(json);
+        AudioManager.music = new Howl(musicJson);
     
-        AudioManager.sound.on("load", function() {
-            GameManager.setCurrentScene(PreloadScene.currentInstance);
-            PreloadScene.currentInstance.scene.setVisible(false);
-            GameManager.onGameAssetsLoaded();
+        AudioManager.music.on("load", function() {
+
+            let soundJson = PreloadScene.currentInstance.cache.json.get("sound");
+            soundJson = JSON.parse(JSON.stringify(soundJson).replace("urls", "src"));
+
+            AudioManager.sound = new Howl(soundJson);
+
+            AudioManager.sound.on("load", function() {
+                GameManager.setCurrentScene(PreloadScene.currentInstance);
+                PreloadScene.currentInstance.scene.setVisible(false);
+                GameManager.onGameAssetsLoaded();
+            });
         });
     }
 }
