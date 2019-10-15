@@ -35,6 +35,12 @@ export class MortarActor extends Phaser.GameObjects.Container {
         this.visible = false;
 
         this.deltaAngle = Math.random() > .5 ? .5 : -.5;
+
+        if (this.anutoMortar.grade === 1) {
+            AudioManager.playSound("t1_cannon");
+        } else {
+            AudioManager.playSound("t3_missile_launcher");
+        }
     }
 
     public update(time: number, delta: number): void {
@@ -99,8 +105,10 @@ export class MortarActor extends Phaser.GameObjects.Container {
         const explosionEffect = this.scene.add.sprite(0, 0, "texture_atlas_1", "tower4_fx_01");
         if (this.anutoMortar.turret.grade === 1) {
             explosionEffect.setScale(.5);
-        } else if (this.anutoMortar.turret.grade === 2) {
+            AudioManager.playSound("t1_explosion");
+        } else if (this.anutoMortar.turret.grade === 3) {
             explosionEffect.setScale(.75);
+            AudioManager.playSound("t2_mine_explosion");
         }
         this.add(explosionEffect);
 
@@ -110,6 +118,6 @@ export class MortarActor extends Phaser.GameObjects.Container {
             BoardContainer.currentInstance.removeMortar(this);
         }, this);
 
-        AudioManager.playSound("t1_granada");
+        
     }
 }

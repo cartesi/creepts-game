@@ -3,6 +3,7 @@ import { GameConstants } from "../../../GameConstants";
 import { GameVars } from '../../../GameVars';
 import { BoardContainer } from '../BoardContainer';
 import * as Anuto from "../../../../engine/src";
+import { AudioManager } from '../../../AudioManager';
 
 export class MineActor extends Phaser.GameObjects.Container {
 
@@ -36,6 +37,8 @@ export class MineActor extends Phaser.GameObjects.Container {
             duration: GameVars.timeStepFactor === 1 ? 600 : 200,
         });
 
+        AudioManager.playSound("t2_mine_launcher");
+
     }
 
     public update(time: number, delta: number): void {
@@ -58,5 +61,7 @@ export class MineActor extends Phaser.GameObjects.Container {
         explosionEffect.on("animationcomplete", () => {
             BoardContainer.currentInstance.removeMine(this);
         }, this);
+
+        AudioManager.playSound("t2_mine_explosion");
     }
 }
