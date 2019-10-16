@@ -116,7 +116,7 @@ export class LogGUI extends Phaser.GameObjects.Container {
         this.soundImage.setOrigin(.5);
         this.soundButton.add(this.soundImage);
 
-        if (GameVars.gameData.muted) {
+        if (GameVars.gameData.soundMuted) {
             this.soundImage.setFrame("btn_sound_off");
         } else {
             this.soundImage.setFrame("btn_sound_on");
@@ -157,9 +157,9 @@ export class LogGUI extends Phaser.GameObjects.Container {
 
     private onClickSound(): void {
 
-        AudioManager.toggleAudioState();
+        AudioManager.toggleSoundState();
 
-        if (GameVars.gameData.muted) {
+        if (GameVars.gameData.soundMuted) {
             this.soundImage.setFrame("btn_sound_off");
         } else {
             this.soundImage.setFrame("btn_sound_on");

@@ -3,6 +3,7 @@ import { GUI } from "./gui/GUI";
 import { HUD } from "./hud/HUD";
 import { BattleManager } from "./BattleManager";
 import { GameVars } from "../../GameVars";
+import { AudioManager } from "../../AudioManager";
 
 export class BattleScene extends Phaser.Scene {
 
@@ -34,6 +35,8 @@ export class BattleScene extends Phaser.Scene {
 
         this.gui = new GUI(this);
         this.add.existing(this.gui);
+
+        AudioManager.playMusic("music");
     }
 
     public update(time: number, delta: number): void {

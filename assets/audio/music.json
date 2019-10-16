@@ -1,0 +1,12 @@
+{
+  "urls": [
+    "../../assets/audio/music.mp3",
+    "../../assets/audio/music.ogg"
+  ],
+  "sprite": {
+    "music": [
+      0,
+      71775.73696145124
+    ]
+  }
+}
