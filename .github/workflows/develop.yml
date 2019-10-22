@@ -23,7 +23,7 @@ jobs:
 
 
       - name: Tag GitHub Registry
-        run: docker tag 510455014572.dkr.ecr.us-east-1.amazonaws.com/anuto-web:develop-${GITHUB_SHA:0:8} docker.pkg.github.com/cartesi-corp/anuto/anuto-web:latest
+        run: docker tag 510455014572.dkr.ecr.us-east-1.amazonaws.com/anuto-web:develop-${GITHUB_SHA:0:8} docker.pkg.github.com/cartesi-corp/anuto/anuto-web:develop-${GITHUB_SHA:0:8}
 
       - name: Login to GitHub Registry
         run: docker login docker.pkg.github.com --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
@@ -32,7 +32,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.GITHUB_DOCKER_PASSWORD }}
 
       - name: Push to GitHub Registry
-        run: docker push docker.pkg.github.com/cartesi-corp/anuto/anuto-web:latest
+        run: docker push docker.pkg.github.com/cartesi-corp/anuto/anuto-web:develop-${GITHUB_SHA:0:8}
 
 #      - name: Update staging environment
 #        run: aws cloudformation deploy --stack-name staging --template-file ${TEMPLATE_PATH} --parameter-overrides ParameterKey=AnutoWebImageTag,ParameterValue=develop-${GITHUB_SHA:0:8}
