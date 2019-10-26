@@ -39,7 +39,7 @@ export default class GameContainer extends React.Component<IGameContainerProps, 
         const gameConfig = {
 
             version: GameConstants.VERSION,
-            type: Phaser.AUTO,
+            type: Phaser.CANVAS,
             backgroundColor: "#000000",
             parent: "phaser-game",
             width: GameConstants.GAME_WIDTH,
