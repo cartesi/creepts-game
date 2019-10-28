@@ -22,6 +22,16 @@
         public static readonly TURRET_LAUNCH = "launch";
         public static readonly TURRET_GLUE = "glue";
 
+        public static readonly ATTRIBUTE_DAMAGE = "damage";
+        public static readonly ATTRIBUTE_RELOAD = "reload";
+        public static readonly ATTRIBUTE_RANGE = "range";
+        public static readonly ATTRIBUTE_EXPLOSION_RANGE = "explosionRange";
+        public static readonly ATTRIBUTE_INTENSITY = "intensity";
+        public static readonly ATTRIBUTE_DURATION = "duration";
+        public static readonly ATTRIBUTE_PRICE_IMPROVEMENT = "priceImprovement";
+        public static readonly ATTRIBUTE_PRICE_UPGRADE = "priceUpgrade";
+        public static readonly ATTRIBUTE_TELEPORT_DISTANCE = "teleportDistance";
+
         // estrategia de disparo
         public static readonly STRATEGY_SHOOT_FIRST = "first";
         public static readonly STRATEGY_SHOOT_LAST = "last";

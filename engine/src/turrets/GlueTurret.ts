@@ -27,41 +27,22 @@ import { GlueBullet } from "./GlueBullet";
 
         // mirar en el ANUTO y generar las formulas que correspondan
         protected calculateTurretParameters(): void {
-    
-            switch (this.grade) {
 
-                case 1:
+            let turretDataAtributes = this.engine.turretData[this.type].attributes[this.grade - 1];
 
-                    this.intensity = Math.round((.2 * this.level + 1) * 100) / 100;
-                    this.duration = 1.5;
-                    this.reload = 2;
-                    this.range = Math.round((.1 * this.level + 1.4) * 100) / 100;
-                    this.priceImprovement = Math.floor( (1 / 6) * Math.pow(this.level, 3) + 1 * Math.pow(this.level, 2) + (95 / 6) * this.level + 83);
-                    this.priceUpgrade = 800;
+            this.reload = turretDataAtributes.reload[this.level - 1];
+            this.range = turretDataAtributes.range[this.level - 1];
+            this.priceImprovement = turretDataAtributes.priceImprovement[this.level - 1];
             
-                    break;
+            if (this.grade < 3) {
+                this.priceUpgrade = turretDataAtributes.priceUpgrade;
+            }
 
-                case 2:
-
-                    this.intensity = Math.round((.3 * this.level + .9) * 100) / 100;
-                    this.duration = 2.5;
-                    this.reload = 3;
-                    this.range = Math.round((.2 * this.level + 2.3) * 100) / 100;
-                    this.priceImprovement = Math.floor( (1 / 3) * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + (95 / 3) * this.level + 166);
-                    this.priceUpgrade = 1700;
-                
-                    break;
-
-                case 3: 
-
-                    this.teleportDistance = Math.round((5 * this.level + 10) * 100) / 100;
-                    this.reload = Math.round((-.5 * this.level + 5.5) * 100) / 100;
-                    this.range = 3.5;
-                    this.priceImprovement = Math.floor( (10 / 3) * Math.pow(this.level, 3) + 20 * Math.pow(this.level, 2) + (950 / 3) * this.level + 1660);
-            
-                    break;
-
-                default:
+            if (this.grade === 3) {
+                this.teleportDistance = turretDataAtributes.teleportDistance[this.level - 1];
+            } else {
+                this.intensity = turretDataAtributes.intensity[this.level - 1];
+                this.duration = turretDataAtributes.duration[this.level - 1];
             }
 
             this.durationTicks = Math.floor(GameConstants.RELOAD_BASE_TICKS * this.duration);
