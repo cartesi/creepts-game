@@ -52,43 +52,17 @@ import { Turret } from "../turrets/Turret";
 
         protected calculateTurretParameters(): void {
 
-            switch (this.grade) { 
+            let turretDataAtributes = this.engine.turretData[this.type].attributes[this.grade - 1];
 
-                case 1:
+            this.damage = turretDataAtributes.damage[this.level - 1];
+            this.explosionRange = turretDataAtributes.explosionRange[this.level - 1];
+            this.reload = turretDataAtributes.reload[this.level - 1];
+            this.range = turretDataAtributes.range[this.level - 1];
+            this.priceImprovement = turretDataAtributes.priceImprovement[this.level - 1];
+            this.projectileSpeed = this.grade === 3 ? 2 * GameConstants.MORTAR_SPEED : GameConstants.MORTAR_SPEED;
 
-                    this.damage = Math.round( (1 / 3) * Math.pow(this.level, 3) + 4 * Math.pow(this.level, 2) + (137 / 3) * this.level + 50);
-                    this.explosionRange = Math.round((.05 * this.level + 1.45) * 100) / 100;
-                    this.reload = Math.round((-.05 * this.level + 2.05) * 100) / 100;
-                    this.range =  Math.round((.05 * this.level + 2.45) * 100) / 100;
-                    this.priceImprovement =  Math.round( (1 / 6) * Math.pow(this.level, 3) + (3 / 2) * Math.pow(this.level, 2) + (58 / 3) * this.level + 104);
-                    this.priceUpgrade = 10000;
-            
-                    break;
-
-                case 2:
-
-                    this.damage = Math.round( (43 / 6) * Math.pow(this.level, 3) + 11 * Math.pow(this.level, 2) + (1121 / 3) * this.level + 2895);
-                    this.explosionRange = Math.round((.05 * this.level + 1.95) * 100) / 100;
-                    this.reload = Math.round((-.05 * this.level + 2.6) * 100) / 100;
-                    this.range =  2.5;
-                    this.priceImprovement =  Math.round( 8 * Math.pow(this.level, 3) + 12 * Math.pow(this.level, 2) + 208 * this.level + 522);
-                    this.priceUpgrade = 103000;
-          
-                    break;
-
-                case 3: 
-
-                    this.damage = Math.round( (50 / 3) * Math.pow(this.level, 3) + (850 / 3) * this.level + 47700);
-                    this.explosionRange = Math.round((.05 * this.level + 1.7) * 100) / 100;
-                    this.reload = Math.round((-.05 * this.level + 3.05) * 100) / 100;
-                    this.range =  Math.round((.1 * this.level + 2.9) * 100) / 100;
-                    this.priceImprovement =  Math.round( (39 / 2) * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + (665 / 2) * this.level + 596);
-            
-                    this.projectileSpeed = 2 * GameConstants.MORTAR_SPEED;
-
-                    break;
-
-                default:
+            if (this.grade < 3) {
+                this.priceUpgrade = turretDataAtributes.priceUpgrade;
             }
 
             super.calculateTurretParameters();

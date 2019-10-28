@@ -17,38 +17,15 @@ import { Turret } from "./Turret";
         // mirar en el ANUTO y generar las formulas que correspondan
         protected calculateTurretParameters(): void {
 
-            switch (this.grade) {
+            let turretDataAtributes = this.engine.turretData[this.type].attributes[this.grade - 1];
 
-                case 1:
-
-                    this.damage = Math.round( (1 / 3) * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + (95 / 3) * this.level + 196);
-                    this.reload = Math.round((-.1 * this.level + 1.6) * 100) / 100;
-                    this.range =  Math.round((.05 * this.level + 2.95) * 100) / 100;
-                    this.priceImprovement =  Math.round(1 * Math.pow(this.level, 2) + 7 * this.level + 42);
-                    this.priceUpgrade = 7000;
+            this.damage = turretDataAtributes.damage[this.level - 1];
+            this.reload = turretDataAtributes.reload[this.level - 1];
+            this.range = turretDataAtributes.range[this.level - 1];
+            this.priceImprovement = turretDataAtributes.priceImprovement[this.level - 1];
             
-                    break;
-
-                case 2:
-
-                    this.damage = Math.round( (13 / 3) * Math.pow(this.level, 3) + 6 * Math.pow(this.level, 2) + (335 / 3) * this.level + 4178);
-                    this.reload = Math.round((-.1 * this.level + 1.6) * 100) / 100;
-                    this.range =  Math.round((.05 * this.level + 2.95) * 100) / 100;
-                    this.priceImprovement =  Math.round( (37 / 6) * Math.pow(this.level, 3) + (19 / 2) * Math.pow(this.level, 2) + (481 / 3) * this.level + 404);
-                    this.priceUpgrade = 96400;
-          
-                    break;
-
-                case 3: 
-
-                    this.damage = Math.round( (50 / 3) * Math.pow(this.level, 2) - (850 / 3) * this.level + 43700);
-                    this.reload = Math.round((-.05 * this.level + 3.05) * 100) / 100;
-                    this.range =  Math.round((.05 * this.level + 3) * 100) / 100;
-                    this.priceImprovement =  Math.round( (39 / 2) * Math.pow(this.level, 3) + 2 * Math.pow(this.level, 2) + (665 / 3) * this.level + 596);
-            
-                    break;
-
-                default:
+            if (this.grade < 3) {
+                this.priceUpgrade = turretDataAtributes.priceUpgrade;
             }
 
             super.calculateTurretParameters();

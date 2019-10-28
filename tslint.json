@@ -37,7 +37,7 @@
     "no-duplicate-key": true,
     "no-duplicate-variable": true,
     "no-empty": true,
-    "no-eval": true,
+    "no-eval": false,
     "no-string-literal": false,
     "no-switch-case-fall-through": false,
     "no-trailing-whitespace": false,
