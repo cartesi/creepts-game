@@ -1,0 +1,14 @@
+.menu-container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 75vh;
+}
+
+
+@media screen and (max-aspect-ratio: 3/4) {
+    .menu-container {
+        width: 100vw;
+    };
+}
+
+

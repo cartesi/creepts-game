@@ -46,7 +46,7 @@ export default class GameContainer extends React.Component<IGameContainerProps, 
             height: GameConstants.GAME_HEIGHT,
             scale: {
                 mode: Phaser.Scale.FIT,
-                autoCenter: Phaser.Scale.CENTER_BOTH
+                autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
             },
 
             scene: [

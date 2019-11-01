@@ -8,6 +8,7 @@ import { TournamentContainer } from "./TournamentContainer";
 import { Replay } from "./Replay";
 import GameContainer from "./GameContainer";
 import { TournamentPhase } from "../Tournament";
+import '../styles/menu.css';
 
 const routes = {
     "/": () => <Index />,
@@ -19,13 +20,14 @@ const routes = {
 };
 
 export const App = () => {
-    
     // TODO: create <NotFoundPage />
     const match = useRoutes(routes);
     const gameVisible = match.type === TournamentContainer || match.type === Replay || __GAME_ONLY__;
     return (
         <div>
-            {__GAME_ONLY__ ? <div/> : match}
+            <div className={'menu-container'}>
+                {__GAME_ONLY__ ? <div/> : match}
+            </div>
             <GameContainer visible={gameVisible} />
         </div>
     );

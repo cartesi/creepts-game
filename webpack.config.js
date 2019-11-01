@@ -23,6 +23,11 @@ module.exports = env => {
 		module: {
 			rules: [
 				{
+					test: /\.css$/,
+					use: ['style-loader', 'css-loader'],
+					exclude: /node_modules/
+				},
+				{
 					test: /\.ts(x?)$/,
 					loader: 'ts-loader',
 					exclude: /node_modules/
