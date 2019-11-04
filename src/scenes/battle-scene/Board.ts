@@ -42,7 +42,7 @@ export class Board extends Phaser.GameObjects.Container {
             for (let j = 0; j < this.boardMatrix[i].length; j++) {
                 if (this.boardMatrix[i][j] === 1) {
                     let path = new Phaser.GameObjects.Graphics(this.scene);
-                    path.fillStyle(0x555555);
+                    path.fillStyle(0x000018);
                     path.fillRect(GameConstants.CELLS_SIZE * j, GameConstants.CELLS_SIZE * i, GameConstants.CELLS_SIZE, GameConstants.CELLS_SIZE);
                     this.pathContainer.add(path);
                 } else if (this.boardMatrix[i][j] === 2) {

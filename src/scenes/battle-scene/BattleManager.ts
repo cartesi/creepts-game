@@ -522,6 +522,8 @@ export class BattleManager {
                 BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_PRICE_IMPROVEMENT, 2000, 2400, "prev + (prev - pprev) + (i + 2) * 20", 5);
             }
         }
+
+        console.log(GameVars.turretsData);
     }
 
     private static setAttributes(turret: string, grade: number , attribute: string, pprev: number, prev: number, func: string, length: number): void {
