@@ -25,6 +25,7 @@ import { GlueBulletActor } from "./turret-actors/GlueBulletActor";
 import { AudioManager } from "../../AudioManager";
 import { RoundCompletedLayer } from "./RoundCompletedLayer";
 import * as Anuto from "../../../engine/src";
+import { FxEnemyTraspass } from "./FxEnemyTraspass";
 
 export class BoardContainer extends Phaser.GameObjects.Container {
 
@@ -39,7 +40,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     private mortarActors: MortarActor[];
     private mineActors: MineActor[];
 
-    private rangeCircles: Phaser.GameObjects.Graphics[];
+    private rangeCircles: Phaser.GameObjects.Image[];
     private glueCircles: Phaser.GameObjects.Graphics[];
 
     private turretMenu: TurretMenu;
@@ -577,12 +578,10 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         return enemy;
     }
 
-    public createRangeCircle(range: number, x: number, y: number): Phaser.GameObjects.Graphics {
+    public createRangeCircle(range: number, x: number, y: number, type: string): Phaser.GameObjects.Image {
 
-        let rangeCircle = new Phaser.GameObjects.Graphics(this.scene);
-        rangeCircle.setPosition(x, y);
-        rangeCircle.lineStyle(2, 0x00FF00);
-        rangeCircle.strokeCircle(0, 0, range);
+        let rangeCircle = new Phaser.GameObjects.Image(this.scene, x, y, "texture_atlas_1", "area_" + type);
+        rangeCircle.setScale((range * 2) / rangeCircle.width);
         rangeCircle.visible = false;
         this.circlesContainer.add(rangeCircle);
 

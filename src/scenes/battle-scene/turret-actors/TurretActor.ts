@@ -15,7 +15,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
     public canon: Phaser.GameObjects.Image;
     public anutoTurret: Anuto.Turret;
     
-    private rangeCircle: Phaser.GameObjects.Graphics;
+    private rangeCircle: Phaser.GameObjects.Image;
 
     constructor(scene: Phaser.Scene, type: string, position: {r: number, c: number}, turret: Anuto.Turret) {
 
@@ -34,7 +34,27 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
         this.canonLength = 40;
 
-        this.rangeCircle = BattleManager.createRangeCircle(this.anutoTurret.range * GameConstants.CELLS_SIZE, this.x, this.y);
+        let typeRange = "";
+
+        switch (type) {
+
+            case Anuto.GameConstants.TURRET_LAUNCH:
+                typeRange = "yellow";
+                break;
+            case Anuto.GameConstants.TURRET_PROJECTILE:
+                    typeRange = "green";
+                break;
+            case Anuto.GameConstants.TURRET_LASER:
+                    typeRange = "pink";
+                break;
+            case Anuto.GameConstants.TURRET_GLUE:
+                    typeRange = "blue";
+                break;
+            default:
+                break;
+        }
+
+        this.rangeCircle = BattleManager.createRangeCircle(this.anutoTurret.range * GameConstants.CELLS_SIZE, this.x, this.y, typeRange);
     }
 
     public update(time: number, delta: number): void {
@@ -69,10 +89,8 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
     public reloadRangeCircle(): void {
 
-        this.rangeCircle.clear();
-        this.rangeCircle.setPosition(this.x, this.y);
-        this.rangeCircle.lineStyle(2, 0x00FF00);
-        this.rangeCircle.strokeCircle(0, 0, this.anutoTurret.range * GameConstants.CELLS_SIZE);
+        this.rangeCircle.setScale(1);
+        this.rangeCircle.setScale((this.anutoTurret.range * GameConstants.CELLS_SIZE * 2) / this.rangeCircle.width);
     }
 
     protected shoot(): void {

@@ -26,7 +26,6 @@ export class TurretSelected extends Phaser.GameObjects.Container {
         } else {
             this.offY = -30;
         }
-        
 
         let base_name;
         let canon_name;
@@ -68,10 +67,28 @@ export class TurretSelected extends Phaser.GameObjects.Container {
             this.add(this.canon);
         }
 
-        let rangeCircle = new Phaser.GameObjects.Graphics(this.scene);
-        rangeCircle.setPosition(0, 0);
-        rangeCircle.lineStyle(2, 0x00FF00);
-        rangeCircle.strokeCircle(0, 0, range);
+        let typeRange = "";
+
+        switch (type) {
+
+            case Anuto.GameConstants.TURRET_LAUNCH:
+                typeRange = "yellow";
+                break;
+            case Anuto.GameConstants.TURRET_PROJECTILE:
+                    typeRange = "green";
+                break;
+            case Anuto.GameConstants.TURRET_LASER:
+                    typeRange = "pink";
+                break;
+            case Anuto.GameConstants.TURRET_GLUE:
+                    typeRange = "blue";
+                break;
+            default:
+                break;
+        }
+
+        let rangeCircle = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "area_" + typeRange);
+        rangeCircle.setScale((range * 2) / rangeCircle.width);
         this.add(rangeCircle);
 
         this.scene.sys.updateList.add(this);

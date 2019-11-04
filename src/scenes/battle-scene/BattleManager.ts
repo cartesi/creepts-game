@@ -250,9 +250,9 @@ export class BattleManager {
         }
     }
 
-    public static createRangeCircle(range: number, x: number, y: number): Phaser.GameObjects.Graphics {
+    public static createRangeCircle(range: number, x: number, y: number, type: string): Phaser.GameObjects.Image {
 
-        return BoardContainer.currentInstance.createRangeCircle(range, x, y);
+        return BoardContainer.currentInstance.createRangeCircle(range, x, y, type);
     }
 
     public static hideRangeCircles(): void {
@@ -278,6 +278,7 @@ export class BattleManager {
     private static onEnemyReachedExit(anutoEnemy: Anuto.Enemy): void {
 
         BoardContainer.currentInstance.removeEnemy(anutoEnemy.id);
+        BattleScene.currentInstance.showFxEnemyTraspass();
 
         if (GameVars.currentScene === BattleScene.currentInstance) {
             BattleScene.currentInstance.hud.updateLifes();
@@ -522,8 +523,6 @@ export class BattleManager {
                 BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_PRICE_IMPROVEMENT, 2000, 2400, "prev + (prev - pprev) + (i + 2) * 20", 5);
             }
         }
-
-        console.log(GameVars.turretsData);
     }
 
     private static setAttributes(turret: string, grade: number , attribute: string, pprev: number, prev: number, func: string, length: number): void {
