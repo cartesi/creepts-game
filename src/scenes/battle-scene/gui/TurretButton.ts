@@ -56,8 +56,7 @@ export class TurretButton extends Phaser.GameObjects.Container {
             this.canon.y += 6;
         }
 
-        let creditIcon = new Phaser.GameObjects.Image(this.scene, -30, 42, "texture_atlas_1", "coin_icon");
-        creditIcon.setTint(0x000000);
+        let creditIcon = new Phaser.GameObjects.Image(this.scene, -30, 42, "texture_atlas_1", "coin_icon_2");
         this.add(creditIcon);
 
         let text = new Phaser.GameObjects.Text(this.scene, 12, 42, BattleManager.anutoEngine.turretData[this.turretType].price, {fontFamily: "Rubik-Light", fontSize: "30px", color: "#000000"});

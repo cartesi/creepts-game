@@ -3391,6 +3391,27 @@
 					}
 				},
 				{
+					"filename": "coin_icon_2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 28,
+						"h": 27
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 28,
+						"h": 27
+					},
+					"frame": {
+						"x": 1605,
+						"y": 765,
+						"w": 28,
+						"h": 27
+					}
+				},
+				{
 					"filename": "lives_icon",
 					"rotated": false,
 					"trimmed": false,
@@ -3406,9 +3427,30 @@
 					},
 					"frame": {
 						"x": 1605,
-						"y": 765,
+						"y": 794,
 						"w": 26,
 						"h": 22
+					}
+				},
+				{
+					"filename": "celda_23",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 60,
+						"h": 60
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 60,
+						"h": 60
+					},
+					"frame": {
+						"x": 1633,
+						"y": 797,
+						"w": 60,
+						"h": 60
 					}
 				},
 				{
@@ -3427,30 +3469,9 @@
 					},
 					"frame": {
 						"x": 1605,
-						"y": 789,
+						"y": 818,
 						"w": 25,
 						"h": 25
-					}
-				},
-				{
-					"filename": "celda_23",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 60,
-						"h": 60
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 60,
-						"h": 60
-					},
-					"frame": {
-						"x": 1632,
-						"y": 797,
-						"w": 60,
-						"h": 60
 					}
 				},
 				{
@@ -4005,6 +4026,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:2345429792ccfc865afb721eca0cdb88:950f6e9ce395639373d97ae51079f885:1bd3fbbbdaf54e41cf80e3e904578de4$"
+		"smartupdate": "$TexturePacker:SmartUpdate:e50e9ecef36967c219e4f1e7ae34f13e:8912085301ecd2e066ccadc1df60608d:1bd3fbbbdaf54e41cf80e3e904578de4$"
 	}
 }
