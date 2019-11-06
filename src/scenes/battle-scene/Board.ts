@@ -38,6 +38,13 @@ export class Board extends Phaser.GameObjects.Container {
             this.boardMatrix[GameVars.enemiesPathCells[i].r][GameVars.enemiesPathCells[i].c] = 1;
         }
 
+        for (let i = -5; i < this.boardMatrix.length + 5; i++) {
+            for (let j = -2; j < this.boardMatrix[0].length + 2; j++) {
+                let img = new Phaser.GameObjects.Image(this.scene, GameConstants.CELLS_SIZE * j + GameConstants.CELLS_SIZE / 2, GameConstants.CELLS_SIZE * i + GameConstants.CELLS_SIZE / 2, "texture_atlas_1", "celda_void");
+                this.pathContainer.add(img);
+            }
+        }
+
         for (let i = 0; i < this.boardMatrix.length; i++) {
             for (let j = 0; j < this.boardMatrix[i].length; j++) {
                 if (this.boardMatrix[i][j] === 1) {
@@ -47,10 +54,11 @@ export class Board extends Phaser.GameObjects.Container {
                     this.pathContainer.add(path);
                 } else if (this.boardMatrix[i][j] === 2) {
                     let img = new Phaser.GameObjects.Image(this.scene, GameConstants.CELLS_SIZE * j + GameConstants.CELLS_SIZE / 2, GameConstants.CELLS_SIZE * i + GameConstants.CELLS_SIZE / 2, "texture_atlas_1", this.selectTypeCell(i, j));
-                    this.add(img);
+                    this.pathContainer.add(img);
                 }
             }
         }
+        
     }
 
     public sendActorBack(actor: any): void {

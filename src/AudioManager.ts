@@ -42,17 +42,24 @@ export class AudioManager {
         AudioManager.sound.volume(volume, id);
     }
 
-    public static playMusic(key: string, volume?: number): void {
+    public static playMusic(key: string, rate?: number): void {
 
         if (AudioManager.backgroundKeyMusic === key) {
+            AudioManager.music.rate(rate, AudioManager.backgroundIdMusic);
             return;
         }
 
-        volume = volume || 1;
+        AudioManager.backgroundKeyMusic = key;
+        rate = rate || 1;
+
+        AudioManager.music.fade(1, 0, 500, AudioManager.backgroundIdMusic);
+
+        // AudioManager.music.stop(AudioManager.backgroundIdMusic);
 
         AudioManager.backgroundIdMusic = AudioManager.music.play(key);
+        AudioManager.music.fade(0, 1, 500, AudioManager.backgroundIdMusic);
         AudioManager.music.loop(true, AudioManager.backgroundIdMusic);
-        AudioManager.music.volume(volume, AudioManager.backgroundIdMusic);
+        AudioManager.music.rate(rate, AudioManager.backgroundIdMusic);
     }
 
     public static setMusicRate(rate: number): void {

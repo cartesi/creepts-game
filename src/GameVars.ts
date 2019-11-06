@@ -7,6 +7,8 @@ export class GameVars {
     public static gameData: GameData;
     public static currentScene: Phaser.Scene;
     public static paused: boolean;
+    public static loopNumber: number;
+    public static loopRate: number;
     public static waveOver: boolean;
     public static semipaused: boolean;
     public static enemiesData: any;

@@ -8,6 +8,7 @@ import enemiesData from "../../../assets/config/enemies.json";
 import turretsData from "../../../assets/config/turrets.json";
 import wavesData from "../../../assets/config/waves.json";
 import * as Anuto from "../../../engine/src";
+import { AudioManager } from "../../AudioManager";
 
 export class BattleManager {
 
@@ -73,6 +74,8 @@ export class BattleManager {
         GameVars.semipaused = false;
         GameVars.waveOver = true;
         GameVars.autoSendWave = false;
+        GameVars.loopNumber = 1;
+        GameVars.loopRate = 1;
 
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData, GameVars.wavesData);
 
@@ -157,6 +160,17 @@ export class BattleManager {
 
             const action = {type: GameConstants.TYPE_NEXT_WAVE, tick: BattleManager.anutoEngine.ticksCounter};
             BattleManager.addAction(action);
+
+            AudioManager.playMusic("loop_" + GameVars.loopNumber, GameVars.loopRate);
+
+            if (BattleManager.anutoEngine.round % 5 === 0) {
+                if (GameVars.loopNumber < 7) {
+                    GameVars.loopNumber++;
+                } else {
+                    GameVars.loopRate = Math.min(1.2, GameVars.loopRate + .01);
+                }
+            }
+            
         }
     }
 
@@ -387,6 +401,7 @@ export class BattleManager {
             BattleScene.currentInstance.gui.onClickNextWave();
         } else {
             GameVars.waveOver = true;
+            AudioManager.playMusic("music");
         }
         
     }

@@ -363,25 +363,6 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.board.add(gluePool);
         this.board.sendActorBack(gluePool);
         this.gluePools.push(gluePool);
-
-        const glueCircle = new Phaser.GameObjects.Graphics(this.scene);
-        glueCircle.setPosition(glueTurretActor.x, glueTurretActor.y);
-        glueCircle.lineStyle(2, 0x66CCFF, 1);
-        glueCircle.strokeCircle(0, 0, anutoGlue.range * GameConstants.CELLS_SIZE);
-        glueCircle.setScale(0);
-        glueCircle.alpha = 0;
-        glueCircle.name = anutoGlue.id.toString();
-        this.glueCirclesContainer.add(glueCircle);
-        this.glueCircles.push(glueCircle);
-
-        this.scene.tweens.add({
-            targets: glueCircle,
-            scaleX: 1,
-            scaleY: 1,
-            alpha: 1,
-            ease: Phaser.Math.Easing.Cubic.Out,
-            duration: GameVars.timeStepFactor === 1 ? 600 : 200,
-        });
     }
 
     public onGlueConsumed(anutoGlue: Anuto.Glue): void {
@@ -394,19 +375,6 @@ export class BoardContainer extends Phaser.GameObjects.Container {
                 glue = this.gluePools[i];
                 this.gluePools.splice(i, 1);
                 glue.destroy();
-
-                let glueCircle = this.glueCircles[i];
-                this.glueCircles.splice(i, 1);
-                this.scene.tweens.add({
-                    targets: glueCircle,
-                    alpha: 0,
-                    ease: Phaser.Math.Easing.Cubic.Out,
-                    duration: GameVars.timeStepFactor === 1 ? 600 : 200,
-                    onComplete: () => {
-                        glueCircle.destroy();
-                    },
-                    onCompleteScope: this
-                });
                 break;
             }
         }
@@ -704,7 +672,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.scene.anims.create({ key: "enemy_flier_run", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_flier_", start: 1, end: 5, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
         this.scene.anims.create({ key: "enemy_blob_run", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_blob_", start: 1, end: 5, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
         this.scene.anims.create({ key: "enemy_healer_heal", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_healing_", start: 1, end: 6, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
-        this.scene.anims.create({ key: "glue_bullet", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "bullet_3_1_", start: 1, end: 8, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
+        this.scene.anims.create({ key: "glue_fx", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "fx_snow_shoot_", start: 1, end: 16, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: 0});
         this.scene.anims.create({ key: "explosion", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "tower4_fx_", start: 1, end: 21, zeroPad: 2, suffix: ""}), frameRate: 60, repeat: 0});
         this.scene.anims.create({ key: "mine", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "mina_", start: 1, end: 5, zeroPad: 2, suffix: ""}), frameRate: 30, repeat: 0});
     }
