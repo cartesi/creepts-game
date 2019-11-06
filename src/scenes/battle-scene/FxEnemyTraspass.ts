@@ -10,24 +10,24 @@ export class FxEnemyTraspass extends Phaser.GameObjects.Container {
 
         let left = new Phaser.GameObjects.Image(this.scene, 0, 122 * GameVars.scaleY, "texture_atlas_1", "fx_enemy_traspass");
         left.setOrigin(1, 0);
-        left.setScale((GameConstants.GAME_HEIGHT - 122 * GameVars.scaleY) / left.width, 1);
+        left.setScale((GameConstants.GAME_HEIGHT - 122 * GameVars.scaleY) / left.width, .5);
         left.setAngle(-90);
         this.add(left);
 
         let right = new Phaser.GameObjects.Image(this.scene, GameConstants.GAME_WIDTH, 122 * GameVars.scaleY, "texture_atlas_1", "fx_enemy_traspass");
         right.setOrigin(1, 0);
-        right.setScale((GameConstants.GAME_HEIGHT - 122 * GameVars.scaleY) / left.width, -1);
+        right.setScale((GameConstants.GAME_HEIGHT - 122 * GameVars.scaleY) / left.width, -.5);
         right.setAngle(-90);
         this.add(right);
 
         let top = new Phaser.GameObjects.Image(this.scene, 0, 122 * GameVars.scaleY, "texture_atlas_1", "fx_enemy_traspass");
         top.setOrigin(0);
-        top.setScale(GameConstants.GAME_WIDTH / left.width, 1);
+        top.setScale(GameConstants.GAME_WIDTH / left.width, .5);
         this.add(top);
 
         let bottom = new Phaser.GameObjects.Image(this.scene, 0, GameConstants.GAME_HEIGHT, "texture_atlas_1", "fx_enemy_traspass");
         bottom.setOrigin(0);
-        bottom.setScale(GameConstants.GAME_WIDTH / left.width, -1);
+        bottom.setScale(GameConstants.GAME_WIDTH / left.width, -.5);
         this.add(bottom);
 
         let duration = GameVars.timeStepFactor === 1 ? 800 : 200;
