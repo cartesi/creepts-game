@@ -58,7 +58,7 @@ export class GlueTurretActor extends TurretActor {
         }
 
         if (this.anutoTurret.grade === 2) {
-            AudioManager.playSound("t2_hielo");
+            AudioManager.playSound("t3_pegamento");
 
             let fx = this.scene.add.sprite(30 * Math.sin(this.canon.rotation), - 30 * Math.cos(this.canon.rotation), "texture_atlas_1");
             fx.setScale(.25);

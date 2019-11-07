@@ -32,13 +32,15 @@ export class AudioManager {
         AudioManager.music.mute(GameVars.gameData.musicMuted);
     }
 
-    public static playSound(key: string, loop?: boolean, volume?: number): void {
+    public static playSound(key: string, loop?: boolean, volume?: number, rate?: number): void {
 
         loop = loop || false;
         volume = volume || 1;
+        rate = rate || 1;
 
         let id = AudioManager.sound.play(key);
         AudioManager.sound.loop(loop, id);
+        AudioManager.sound.rate(rate, id);
         AudioManager.sound.volume(volume, id);
     }
 

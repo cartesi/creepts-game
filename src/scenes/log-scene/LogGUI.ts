@@ -140,7 +140,7 @@ export class LogGUI extends Phaser.GameObjects.Container {
             BattleManager.setTimeStepFactor(8);
             this.timeStepImage.setFrame("btn_fastforward");
         } else {
-            BattleManager.setTimeStepFactor(1);
+            BattleManager.setTimeStepFactor(2);
             this.timeStepImage.setFrame("btn_normal_speed");
         }
     }

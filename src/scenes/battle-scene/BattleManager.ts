@@ -66,7 +66,7 @@ export class BattleManager {
         BattleManager.generateTurretsAttributes();
 
         if (GameVars.currentScene === BattleScene.currentInstance || !GameVars.timeStepFactor) {
-            GameVars.timeStepFactor = 1;
+            GameVars.timeStepFactor = 2;
         }
         
         GameVars.currentWave = 1;
@@ -76,6 +76,7 @@ export class BattleManager {
         GameVars.autoSendWave = false;
         GameVars.loopNumber = 1;
         GameVars.loopRate = 1;
+        GameVars.dangerRate = 1;
 
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData, GameVars.wavesData);
 
@@ -292,7 +293,13 @@ export class BattleManager {
     private static onEnemyReachedExit(anutoEnemy: Anuto.Enemy): void {
 
         BoardContainer.currentInstance.removeEnemy(anutoEnemy.id);
-        BattleScene.currentInstance.showFxEnemyTraspass();
+
+        if (!BattleManager.anutoEngine.gameOver) {
+            AudioManager.playSound("danger", false, 1, GameVars.dangerRate);
+            GameVars.dangerRate = Math.max(GameVars.dangerRate - .0125, .75);
+            BattleScene.currentInstance.showFxEnemyTraspass();
+        }
+        
 
         if (GameVars.currentScene === BattleScene.currentInstance) {
             BattleScene.currentInstance.hud.updateLifes();

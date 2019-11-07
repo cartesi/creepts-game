@@ -8,11 +8,7 @@ import { Board } from "./Board";
 import { GameConstants } from "../../GameConstants";
 import { BulletActor } from "./turret-actors/BulletActor";
 import { GameVars } from "../../GameVars";
-import { SoldierEnemyActor } from "./enemy-actors/SoldierEnemyActor";
-import { RunnerEnemyActor } from "./enemy-actors/RunnerEnemyActor";
 import { HealerEnemyActor } from "./enemy-actors/HealerEnemyActor";
-import { BlobEnemyActor } from "./enemy-actors/BlobEnemyActor";
-import { FlierEnemyActor } from "./enemy-actors/FlierEnemyActor";
 import { ProjectileTurretActor } from "./turret-actors/ProjectileTurretActor";
 import { LaserTurretActor } from "./turret-actors/LaserTurretActor";
 import { LaserBeam } from "./turret-actors/LaserBeam";
@@ -165,22 +161,12 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         switch (anutoEnemy.type) {
 
-            case Anuto.GameConstants.ENEMY_SOLDIER:
-                enemyActor = new SoldierEnemyActor(this.scene, anutoEnemy, position);
-                break;
-            case Anuto.GameConstants.ENEMY_RUNNER:
-                enemyActor = new RunnerEnemyActor(this.scene, anutoEnemy, position);
-                break;
             case Anuto.GameConstants.ENEMY_HEALER:
                 enemyActor = new HealerEnemyActor(this.scene, anutoEnemy, position);
                 break;
-            case Anuto.GameConstants.ENEMY_BLOB:
-                enemyActor = new BlobEnemyActor(this.scene, anutoEnemy, position);
-                break;
-            case Anuto.GameConstants.ENEMY_FLIER:
-                enemyActor = new FlierEnemyActor(this.scene, anutoEnemy, position);
-                break;
             default:
+                enemyActor = new EnemyActor(this.scene, anutoEnemy, position);
+                break;
         }
         
         if (enemyActor) {
@@ -672,6 +658,14 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.scene.anims.create({ key: "enemy_flier_run", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_flier_", start: 1, end: 5, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
         this.scene.anims.create({ key: "enemy_blob_run", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_blob_", start: 1, end: 5, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
         this.scene.anims.create({ key: "enemy_healer_heal", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_healing_", start: 1, end: 6, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: -1});
+        
+        this.scene.anims.create({ key: "enemy_soldier_run_frozen", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_soldier_", start: 1, end: 6, zeroPad: 1, suffix: "_frozen"}), frameRate: 8, repeat: -1});
+        this.scene.anims.create({ key: "enemy_runner_run_frozen", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_runner_", start: 1, end: 6, zeroPad: 1, suffix: "_frozen"}), frameRate: 8, repeat: -1});
+        this.scene.anims.create({ key: "enemy_healer_run_frozen", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_healer_", start: 1, end: 6, zeroPad: 1, suffix: "_frozen"}), frameRate: 8, repeat: -1});
+        this.scene.anims.create({ key: "enemy_flier_run_frozen", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_flier_", start: 1, end: 5, zeroPad: 1, suffix: "_frozen"}), frameRate: 8, repeat: -1});
+        this.scene.anims.create({ key: "enemy_blob_run_frozen", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_blob_", start: 1, end: 5, zeroPad: 1, suffix: "_frozen"}), frameRate: 8, repeat: -1});
+        this.scene.anims.create({ key: "enemy_healer_heal_frozen", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "enemy_healing_", start: 1, end: 6, zeroPad: 1, suffix: "_frozen"}), frameRate: 8, repeat: -1});
+        
         this.scene.anims.create({ key: "glue_fx", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "fx_snow_shoot_", start: 1, end: 16, zeroPad: 1, suffix: ""}), frameRate: 12, repeat: 0});
         this.scene.anims.create({ key: "explosion", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "tower4_fx_", start: 1, end: 21, zeroPad: 2, suffix: ""}), frameRate: 60, repeat: 0});
         this.scene.anims.create({ key: "mine", frames: this.scene.anims.generateFrameNames( "texture_atlas_1", { prefix: "mina_", start: 1, end: 5, zeroPad: 2, suffix: ""}), frameRate: 30, repeat: 0});

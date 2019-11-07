@@ -43,7 +43,7 @@ export class GluePool extends Phaser.GameObjects.Container {
         this.setScale(0);
         this.alpha = 0;
 
-        AudioManager.playSound("t3_pegamento");
+        AudioManager.playSound("t2_hielo");
     }
 
     public destroy(): void {

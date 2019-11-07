@@ -9,6 +9,7 @@ export class GameVars {
     public static paused: boolean;
     public static loopNumber: number;
     public static loopRate: number;
+    public static dangerRate: number;
     public static waveOver: boolean;
     public static semipaused: boolean;
     public static enemiesData: any;

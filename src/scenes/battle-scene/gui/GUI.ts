@@ -151,14 +151,14 @@ export class GUI extends Phaser.GameObjects.Container {
             return;
         }
 
-        if (GameVars.timeStepFactor === 1) {
+        if (GameVars.timeStepFactor === 2) {
             BattleManager.setTimeStepFactor(4);
-            this.timeStepText.setText("4x");
+            this.timeStepText.setText("2x");
         } else if (GameVars.timeStepFactor === 4) {
             BattleManager.setTimeStepFactor(8);
-            this.timeStepText.setText("8x");
+            this.timeStepText.setText("4x");
         } else {
-            BattleManager.setTimeStepFactor(1);
+            BattleManager.setTimeStepFactor(2);
             this.timeStepText.setText("1x");
         }
     }
