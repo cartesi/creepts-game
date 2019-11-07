@@ -24,7 +24,7 @@ export class BattleScene extends Phaser.Scene {
 
         GameVars.currentScene = this;
 
-        this.cameras.main.setBackgroundColor(0xCCCCCC);
+        this.cameras.main.setBackgroundColor(0x000018);
 
         BattleManager.init();
 

@@ -44,15 +44,17 @@ export class AudioManager {
         AudioManager.sound.volume(volume, id);
     }
 
-    public static playMusic(key: string, rate?: number): void {
+    public static playMusic(key: string, rate?: number, volume?: number): void {
 
         if (AudioManager.backgroundKeyMusic === key) {
             AudioManager.music.rate(rate, AudioManager.backgroundIdMusic);
+            AudioManager.music.volume(volume || 1, AudioManager.backgroundIdMusic);
             return;
         }
 
         AudioManager.backgroundKeyMusic = key;
         rate = rate || 1;
+        volume = volume || 1;
 
         AudioManager.music.fade(1, 0, 500, AudioManager.backgroundIdMusic);
 
@@ -62,6 +64,11 @@ export class AudioManager {
         AudioManager.music.fade(0, 1, 500, AudioManager.backgroundIdMusic);
         AudioManager.music.loop(true, AudioManager.backgroundIdMusic);
         AudioManager.music.rate(rate, AudioManager.backgroundIdMusic);
+    }
+
+    public static stopMusic(): void {
+
+        AudioManager.music.fade(1, 0, 500, AudioManager.backgroundIdMusic);
     }
 
     public static setMusicRate(rate: number): void {

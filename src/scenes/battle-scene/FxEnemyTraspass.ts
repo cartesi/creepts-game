@@ -33,7 +33,7 @@ export class FxEnemyTraspass extends Phaser.GameObjects.Container {
         let duration = GameVars.timeStepFactor === 1 ? 800 : 200;
 
         if (BattleManager.anutoEngine.noEnemiesOnStage) {
-            duration *= 2;
+            duration *= 4;
         }
 
         this.scene.tweens.add({

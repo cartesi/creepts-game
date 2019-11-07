@@ -76,6 +76,7 @@ export class BattleManager {
         GameVars.autoSendWave = false;
         GameVars.loopNumber = 1;
         GameVars.loopRate = 1;
+        GameVars.loopVolume = .2;
         GameVars.dangerRate = 1;
 
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData, GameVars.wavesData);
@@ -162,15 +163,24 @@ export class BattleManager {
             const action = {type: GameConstants.TYPE_NEXT_WAVE, tick: BattleManager.anutoEngine.ticksCounter};
             BattleManager.addAction(action);
 
-            AudioManager.playMusic("loop_" + GameVars.loopNumber, GameVars.loopRate);
+            AudioManager.playMusic("alt_soundtrack", 1, GameVars.loopVolume);
 
             if (BattleManager.anutoEngine.round % 5 === 0) {
-                if (GameVars.loopNumber < 7) {
-                    GameVars.loopNumber++;
-                } else {
-                    GameVars.loopRate = Math.min(1.2, GameVars.loopRate + .01);
-                }
+                AudioManager.stopMusic();
+                GameVars.loopVolume = .2;
+            } else {
+                GameVars.loopVolume += .2;
             }
+
+            // AudioManager.playMusic("loop_" + GameVars.loopNumber, GameVars.loopRate);
+
+            // if (BattleManager.anutoEngine.round % 5 === 0) {
+            //     if (GameVars.loopNumber < 7) {
+            //         GameVars.loopNumber++;
+            //     } else {
+            //         GameVars.loopRate = Math.min(1.2, GameVars.loopRate + .01);
+            //     }
+            // }
             
         }
     }
