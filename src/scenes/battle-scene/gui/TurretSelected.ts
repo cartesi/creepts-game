@@ -49,7 +49,7 @@ export class TurretSelected extends Phaser.GameObjects.Container {
                 break;
             case Anuto.GameConstants.TURRET_LAUNCH:
                 base_name = "base_4_1";
-                canon_name = "canon_4_1_3";
+                canon_name = "canon_4_1_1";
                 range *= 2.5;
                 break;
             case Anuto.GameConstants.TURRET_GLUE:

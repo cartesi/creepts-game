@@ -66,7 +66,7 @@ export class BattleManager {
         BattleManager.generateTurretsAttributes();
 
         if (GameVars.currentScene === BattleScene.currentInstance || !GameVars.timeStepFactor) {
-            GameVars.timeStepFactor = 2;
+            GameVars.timeStepFactor = 1;
         }
         
         GameVars.currentWave = 1;
