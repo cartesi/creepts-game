@@ -240,6 +240,16 @@ export class TurretMenu extends Phaser.GameObjects.Container {
 
         this.checkAndUpdateInfo();
 
+        this.setScale(.95);
+
+        this.scene.tweens.add({
+            targets: this,
+            scaleX: 1,
+            scaleY: 1,
+            ease: Phaser.Math.Easing.Cubic.Out,
+            duration: 250
+        });
+
         this.scene.sys.updateList.add(this);
     }
 

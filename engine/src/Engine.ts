@@ -115,7 +115,7 @@ import * as Types from "./Types";
             this.canLaunchNextWave = true;
 
             this.initWaveVars();
-            this._noEnemiesOnStage = false;
+            this._noEnemiesOnStage = true;
             this.allEnemiesSpawned = false;
             this.enemiesSpawned = 0;
             this.waveEnemiesLength = 0;

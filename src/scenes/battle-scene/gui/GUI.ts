@@ -65,6 +65,19 @@ export class GUI extends Phaser.GameObjects.Container {
         this.autoButton.on("pointerout", () => { this.onBtnOut(this.autoButton); });
         this.add(this.autoButton);
 
+        this.scene.time.addEvent({ delay: 3000, callback: () => {
+            if (this.nextWaveButton.alpha === 1 && BattleManager.anutoEngine.noEnemiesOnStage) {
+                this.scene.tweens.add({
+                    targets: this.nextWaveButton,
+                    scaleX: 1.1,
+                    scaleY: 1.1,
+                    ease: Phaser.Math.Easing.Cubic.Out,
+                    duration: 200,
+                    yoyo: true
+                });
+            }
+        }, callbackScope: this, loop: true});
+
         if (GameVars.autoSendWave) {
             this.autoButton.setFrame("btn_auto");
         } else {

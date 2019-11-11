@@ -73,6 +73,16 @@ export class PauseMenu extends Phaser.GameObjects.Container {
         background.alpha = .75;
 
         this.add(box);
+
+        this.setScale(.95);
+
+        this.scene.tweens.add({
+            targets: this,
+            scaleX: 1,
+            scaleY: 1,
+            ease: Phaser.Math.Easing.Cubic.Out,
+            duration: 250
+        });
     }
 
 }
