@@ -22,7 +22,7 @@ const routes = {
 export const App = () => {
     // TODO: create <NotFoundPage />
     const match = useRoutes(routes);
-    const gameVisible = match.type === TournamentContainer || match.type === Replay || __GAME_ONLY__;
+    const gameVisible = __GAME_ONLY__ || match.type === TournamentContainer || match.type === Replay ;
     return (
         <div>
             <div className={'menu-container'}>

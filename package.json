@@ -53,6 +53,7 @@
         "test": "jest verifier.test",
         "test:djs": "npm run build:verifier && jest djs.test",
         "build": "webpack --mode production && react-env --env .env --dest ./dist",
+        "build:game": "webpack --env.GAME_ONLY=true --mode production && react-env --env .env --dest ./dist",
         "build:app": "webpack --config-name app --mode production && react-env --env .env --dest ./dist",
         "build:verifier": "webpack --config-name verifier --mode production",
         "verifier": "webpack --config-name verifier --mode production && verifier/djs dist/djs-verifier-bundle.js",

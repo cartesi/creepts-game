@@ -1,7 +1,7 @@
 {
   "urls": [
-    "../../assets/audio/music.mp3",
-    "../../assets/audio/music.ogg"
+    "assets/audio/music.mp3",
+    "assets/audio/music.ogg"
   ],
   "sprite": {
     "alt_soundtrack": [
