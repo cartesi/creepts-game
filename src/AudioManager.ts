@@ -61,14 +61,14 @@ export class AudioManager {
         // AudioManager.music.stop(AudioManager.backgroundIdMusic);
 
         AudioManager.backgroundIdMusic = AudioManager.music.play(key);
-        AudioManager.music.fade(0, 1, 500, AudioManager.backgroundIdMusic);
+        AudioManager.music.fade(0, volume, 500, AudioManager.backgroundIdMusic);
         AudioManager.music.loop(true, AudioManager.backgroundIdMusic);
         AudioManager.music.rate(rate, AudioManager.backgroundIdMusic);
     }
 
     public static stopMusic(): void {
 
-        AudioManager.music.fade(1, 0, 500, AudioManager.backgroundIdMusic);
+        AudioManager.music.fade(AudioManager.music.volume(AudioManager.backgroundIdMusic) as number, 0, 500, AudioManager.backgroundIdMusic);
     }
 
     public static setMusicRate(rate: number): void {

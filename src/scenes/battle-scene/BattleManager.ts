@@ -163,12 +163,11 @@ export class BattleManager {
             const action = {type: GameConstants.TYPE_NEXT_WAVE, tick: BattleManager.anutoEngine.ticksCounter};
             BattleManager.addAction(action);
 
-            AudioManager.playMusic("alt_soundtrack", 1, GameVars.loopVolume);
-
             if (BattleManager.anutoEngine.round % 5 === 0) {
                 AudioManager.stopMusic();
                 GameVars.loopVolume = .2;
             } else {
+                AudioManager.playMusic("alt_soundtrack", 1, GameVars.loopVolume);
                 GameVars.loopVolume += .2;
             }
 
@@ -418,7 +417,7 @@ export class BattleManager {
             BattleScene.currentInstance.gui.onClickNextWave();
         } else {
             GameVars.waveOver = true;
-            AudioManager.playMusic("music");
+            AudioManager.stopMusic();
         }
         
     }
