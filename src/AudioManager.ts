@@ -75,4 +75,9 @@ export class AudioManager {
 
         AudioManager.music.rate(rate, AudioManager.backgroundIdMusic);
     }
+
+    public static setMusicVolume(volume: number): void {
+
+        AudioManager.music.volume(volume, AudioManager.backgroundIdMusic);
+    }
 }

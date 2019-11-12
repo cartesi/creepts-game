@@ -12,8 +12,8 @@ export class GameOverLayer extends Phaser.GameObjects.Container {
         super(scene);
 
         // upper and lower margin for the dialog, and gap between elements
-        const margin = 20;
-        const gap = 10;
+        const margin = 30;
+        const gap = 20;
 
         // this is a box for the content, vertically centered
         // XXX: it's not really vertically centered, because we don't calculate the total height at this point
@@ -38,19 +38,19 @@ export class GameOverLayer extends Phaser.GameObjects.Container {
         const score = new Phaser.GameObjects.Text(this.scene, 0, y + (scoreHeight / 2), "SCORE: " + GameVars.formatNumber(BattleManager.anutoEngine.score), {fontFamily: "Rubik-Regular", fontSize: "65px", color: "#FFFFFF"});
         score.setOrigin(.5);
         box.add(score);
-        y += scoreHeight + gap + gap;
+        y += scoreHeight;
 
         // restart button
         const restartButton = new MenuButton(this.scene, "RESTART", () => GameManager.reset());
         restartButton.setPosition(0, y + (restartButton.height / 2));
         box.add(restartButton);
-        y += restartButton.height + gap;
+        y += restartButton.height + gap / 2;
 
         // exit button, just emit an exit event
         const exitButton = new MenuButton(this.scene, "EXIT", () => GameManager.events.emit("exit") );
         exitButton.setPosition(0, y + (exitButton.height / 2));
         box.add(exitButton);
-        y += exitButton.height + margin;
+        y += exitButton.height + margin / 2;
 
         this.scene.tweens.add({
             targets: this,
@@ -67,7 +67,7 @@ export class GameOverLayer extends Phaser.GameObjects.Container {
         box.setSize(GameConstants.GAME_WIDTH, y);
 
         // draw black background with the final y height
-        background.fillStyle(0x000000);
+        background.fillStyle(0x0B003E);
         background.fillRect(-GameConstants.GAME_WIDTH / 2, 0, GameConstants.GAME_WIDTH, y);
         background.alpha = .75;
 

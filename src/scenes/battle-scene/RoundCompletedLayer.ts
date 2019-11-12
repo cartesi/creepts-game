@@ -10,13 +10,10 @@ export class RoundCompletedLayer extends Phaser.GameObjects.Container {
     constructor(scene: Phaser.Scene) {
         super(scene);
 
-        const bck = new Phaser.GameObjects.Graphics(this.scene);
-        bck.fillStyle(0x000000);
-        bck.fillRect(-GameConstants.GAME_WIDTH / 2, -100, GameConstants.GAME_WIDTH, 200);
-        bck.alpha = .75;
-        this.add(bck);
+        const titleBck = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "title_area");
+        this.add(titleBck);
 
-        let score = new Phaser.GameObjects.Text(this.scene, 0, 0, "ROUND  " + BattleManager.anutoEngine.round + "  COMPLETED", {fontFamily: "Rubik-Regular", fontSize: "52px", color: "#FFFFFF"});
+        let score = new Phaser.GameObjects.Text(this.scene, 0, 0, "ROUND  " + BattleManager.anutoEngine.round + "  COMPLETED", {fontFamily: "Rubik-Regular", fontSize: "28px", color: "#FFFFFF"});
         score.setOrigin(.5);
         this.add(score);
 

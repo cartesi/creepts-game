@@ -417,7 +417,7 @@ export class BattleManager {
             BattleScene.currentInstance.gui.onClickNextWave();
         } else {
             GameVars.waveOver = true;
-            AudioManager.stopMusic();
+            AudioManager.setMusicVolume(.1);
         }
         
     }
