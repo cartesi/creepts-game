@@ -419,7 +419,6 @@ export class BattleManager {
             GameVars.waveOver = true;
             AudioManager.setMusicVolume(.1);
         }
-        
     }
 
     private static activeNextWave(): void {
