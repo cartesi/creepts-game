@@ -163,13 +163,15 @@ export class BattleManager {
             const action = {type: GameConstants.TYPE_NEXT_WAVE, tick: BattleManager.anutoEngine.ticksCounter};
             BattleManager.addAction(action);
 
-            if (BattleManager.anutoEngine.round % 5 === 0) {
-                AudioManager.stopMusic();
-                GameVars.loopVolume = .2;
-            } else {
-                AudioManager.playMusic("alt_soundtrack", 1, GameVars.loopVolume);
-                GameVars.loopVolume += .2;
-            }
+            // if (BattleManager.anutoEngine.round % 5 === 0) {
+            //     AudioManager.stopMusic();
+            //     GameVars.loopVolume = .2;
+            // } else {
+            //     AudioManager.playMusic("alt_soundtrack", 1, GameVars.loopVolume);
+            //     GameVars.loopVolume += .2;
+            // }
+
+            AudioManager.playMusic("alt_soundtrack", 2, GameVars.loopVolume);
 
             // AudioManager.playMusic("loop_" + GameVars.loopNumber, GameVars.loopRate);
 

@@ -1,3 +1,4 @@
+import { TurretLevel } from './TurretLevel';
 import { BattleScene } from './../BattleScene';
 import { BoardContainer } from "./../BoardContainer";
 import { GameConstants } from "../../../GameConstants";
@@ -13,6 +14,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
     public canonLength: number;
     public base: Phaser.GameObjects.Image;
     public canon: Phaser.GameObjects.Image;
+    public turretLevel: TurretLevel;
     public anutoTurret: Anuto.Turret;
     
     private rangeCircle: Phaser.GameObjects.Image;
@@ -55,6 +57,16 @@ export class TurretActor extends Phaser.GameObjects.Container {
         }
 
         this.rangeCircle = BattleManager.createRangeCircle(this.anutoTurret.range * GameConstants.CELLS_SIZE, this.x, this.y, typeRange);
+
+        this.turretLevel = new TurretLevel(this.scene, this.anutoTurret);
+        this.add(this.turretLevel);
+
+        this.scene.sys.updateList.add(this);
+    }
+
+    public preUpdate(time: number, delta: number): void {
+
+        this.turretLevel.update();
     }
 
     public update(time: number, delta: number): void {

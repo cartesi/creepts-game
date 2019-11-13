@@ -16,6 +16,27 @@ export class AudioManager {
 
         AudioManager.sound.mute(GameVars.gameData.soundMuted);
         AudioManager.music.mute(GameVars.gameData.musicMuted);
+
+        AudioManager.music.on("end", () => {
+
+            if (AudioManager.music.volume(AudioManager.backgroundIdMusic) as number === .1) {
+                return;
+            }
+
+            let volumes = [.2, .4, .6, .8];
+            let newVolume = volumes[Math.floor(Math.random() * 4)];
+
+            while (newVolume === AudioManager.music.volume(AudioManager.backgroundIdMusic) as number) {
+                newVolume = volumes[Math.floor(Math.random() * 4)];
+            }
+
+            GameVars.loopVolume = newVolume;
+            AudioManager.setMusicVolume(newVolume);
+        });
+
+        AudioManager.music.on("fade", () => {
+            // 
+        });
     }
 
     public static toggleSoundState(): void {
@@ -57,8 +78,6 @@ export class AudioManager {
         volume = volume || 1;
 
         AudioManager.music.fade(1, 0, 500, AudioManager.backgroundIdMusic);
-
-        // AudioManager.music.stop(AudioManager.backgroundIdMusic);
 
         AudioManager.backgroundIdMusic = AudioManager.music.play(key);
         AudioManager.music.fade(0, volume, 500, AudioManager.backgroundIdMusic);

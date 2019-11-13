@@ -15,6 +15,8 @@ export class LaunchTurretActor extends TurretActor {
 
         this.canon = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "canon_4_1_1");
         this.add(this.canon);
+
+        this.bringToTop(this.turretLevel);
     }
 
     public update(time: number, delta: number): void {

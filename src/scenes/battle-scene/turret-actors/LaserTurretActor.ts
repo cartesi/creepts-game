@@ -25,6 +25,8 @@ export class LaserTurretActor extends TurretActor {
         this.canonLength = 30;
 
         this.laserShoot = false;
+
+        this.bringToTop(this.turretLevel);
     }
 
     public update(time: number, delta: number): void {

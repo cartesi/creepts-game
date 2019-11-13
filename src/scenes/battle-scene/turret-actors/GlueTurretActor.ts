@@ -17,6 +17,8 @@ export class GlueTurretActor extends TurretActor {
         this.canon = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "canon_3_2_1");
         this.canon.visible = false;
         this.add(this.canon);
+
+        this.bringToTop(this.turretLevel);
     }
 
     public update(time: number, delta: number): void {

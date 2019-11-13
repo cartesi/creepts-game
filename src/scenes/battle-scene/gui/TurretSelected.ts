@@ -97,6 +97,7 @@ export class TurretSelected extends Phaser.GameObjects.Container {
         this.scene.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => { this.onPointerMove(pointer); }, this);
         this.scene.input.on("pointermove", (pointer: Phaser.Input.Pointer) => { this.onPointerMove(pointer); }, this);
         
+        GameVars.turretSelectedOn = true;
     }
 
     public preUpdate(time: number, delta: number): void {
@@ -130,5 +131,7 @@ export class TurretSelected extends Phaser.GameObjects.Container {
         
         this.scene.input.removeAllListeners();
         this.gui.removeTurret();
+
+        GameVars.turretSelectedOn = false;
     }
 }

@@ -7,6 +7,7 @@ export class GameVars {
     public static gameData: GameData;
     public static currentScene: Phaser.Scene;
     public static paused: boolean;
+    public static turretSelectedOn: boolean;
     public static loopNumber: number;
     public static loopRate: number;
     public static loopVolume: number;

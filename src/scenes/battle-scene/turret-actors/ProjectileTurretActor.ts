@@ -16,6 +16,8 @@ export class ProjectileTurretActor extends TurretActor {
 
         this.canon = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "canon_1_1_1");
         this.add(this.canon);
+
+        this.bringToTop(this.turretLevel);
     }
 
     public upgrade(): void {
