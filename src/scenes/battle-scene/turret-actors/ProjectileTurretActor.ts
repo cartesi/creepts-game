@@ -12,6 +12,8 @@ export class ProjectileTurretActor extends TurretActor {
         this.base = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "base_1_1");
         this.base.setInteractive();
         this.base.on("pointerdown", this.onDownTurret, this);
+        this.base.on("pointerover", this.onOverTurret, this);
+        this.base.on("pointerout", this.onOutTurret, this);
         this.addAt(this.base, 0);
 
         this.canon = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "canon_1_1_1");

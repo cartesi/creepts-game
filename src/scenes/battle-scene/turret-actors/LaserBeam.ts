@@ -139,12 +139,16 @@ export class LaserBeam extends Phaser.GameObjects.Container {
             impact_x += (offX * 50);
             impact_y += (offY * 50);
 
-            this.lines[0].setPosition(impact_x, impact_y);
-            this.lines[0].scaleX = 1;
-            this.lines[0].scaleX = Math.hypot(impact_y - emmission_y, impact_x - emmission_x) / this.lines[0].width;
-            this.lines[0].setAngle(Math.atan2(impact_y - emmission_y, impact_x - emmission_x) * 180 / Math.PI);
-
-            this.circles[0].setPosition(emmission_x, emmission_y);
+            if (this.lines[0]) {
+                this.lines[0].setPosition(impact_x, impact_y);
+                this.lines[0].scaleX = 1;
+                this.lines[0].scaleX = Math.hypot(impact_y - emmission_y, impact_x - emmission_x) / this.lines[0].width;
+                this.lines[0].setAngle(Math.atan2(impact_y - emmission_y, impact_x - emmission_x) * 180 / Math.PI);
+            }
+            
+            if (this.circles[0]) {
+                this.circles[0].setPosition(emmission_x, emmission_y);
+            }
 
         } else {
 
@@ -179,17 +183,22 @@ export class LaserBeam extends Phaser.GameObjects.Container {
                     emmission_y = this.impact_y[i - 1];
                 }
 
-                this.lines[i].setPosition(impact_x, impact_y);
-                this.lines[i].scaleX = 1;
-                this.lines[i].scaleX = Math.hypot(impact_y - emmission_y, impact_x - emmission_x) / this.lines[i].width;
-                this.lines[i].setAngle(Math.atan2(impact_y - emmission_y, impact_x - emmission_x) * 180 / Math.PI);
+                if (this.lines[i]) {
+                    this.lines[i].setPosition(impact_x, impact_y);
+                    this.lines[i].scaleX = 1;
+                    this.lines[i].scaleX = Math.hypot(impact_y - emmission_y, impact_x - emmission_x) / this.lines[i].width;
+                    this.lines[i].setAngle(Math.atan2(impact_y - emmission_y, impact_x - emmission_x) * 180 / Math.PI);
+                }
 
-                this.ends[i].setPosition(impact_x, impact_y);
-                this.ends[i].setAngle(Math.atan2(impact_y - emmission_y, impact_x - emmission_x) * 180 / Math.PI);
+                if (this.ends[i]) {
+                    this.ends[i].setPosition(impact_x, impact_y);
+                    this.ends[i].setAngle(Math.atan2(impact_y - emmission_y, impact_x - emmission_x) * 180 / Math.PI);
+                }
 
-                this.circles[i].setPosition(emmission_x, emmission_y);
+                if (this.circles[i]) {
+                    this.circles[i].setPosition(emmission_x, emmission_y);
+                }
             }
         }
-
     }
 }

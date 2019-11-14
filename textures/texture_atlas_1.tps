@@ -342,6 +342,19 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">texture_atlas_1/btn_rectangle.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>82,19,164,38</rect>
+                <key>scale9Paddings</key>
+                <rect>82,19,164,38</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">texture_atlas_1/bullet_1_1.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -671,6 +684,37 @@
                 <rect>16,16,32,32</rect>
                 <key>scale9Paddings</key>
                 <rect>16,16,32,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">texture_atlas_1/star_01.png</key>
+            <key type="filename">texture_atlas_1/star_02.png</key>
+            <key type="filename">texture_atlas_1/star_03.png</key>
+            <key type="filename">texture_atlas_1/star_04.png</key>
+            <key type="filename">texture_atlas_1/star_05.png</key>
+            <key type="filename">texture_atlas_1/star_06.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>6,5,11,10</rect>
+                <key>scale9Paddings</key>
+                <rect>6,5,11,10</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">texture_atlas_1/title_area.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>90,25,180,51</rect>
+                <key>scale9Paddings</key>
+                <rect>90,25,180,51</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

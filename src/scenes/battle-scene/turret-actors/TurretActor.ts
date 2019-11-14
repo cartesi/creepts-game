@@ -16,6 +16,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
     public canon: Phaser.GameObjects.Image;
     public turretLevel: TurretLevel;
     public anutoTurret: Anuto.Turret;
+    public showLevel: boolean;
     
     private rangeCircle: Phaser.GameObjects.Image;
 
@@ -25,6 +26,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
         this.p = position;
         this.name = type;
+        this.showLevel = false;
 
         this.setScale(.82);
         
@@ -58,7 +60,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
         this.rangeCircle = BattleManager.createRangeCircle(this.anutoTurret.range * GameConstants.CELLS_SIZE, this.x, this.y, typeRange);
 
-        this.turretLevel = new TurretLevel(this.scene, this.anutoTurret);
+        this.turretLevel = new TurretLevel(this.scene, this);
         this.add(this.turretLevel);
 
         this.scene.sys.updateList.add(this);
@@ -125,5 +127,15 @@ export class TurretActor extends Phaser.GameObjects.Container {
         } else {
             BattleManager.showTurretMenu(this.anutoTurret);
         }
+    }
+
+    protected onOverTurret(): void {
+
+        this.showLevel = true;
+    }
+
+    protected onOutTurret(): void {
+
+        this.showLevel = false;
     }
 }
