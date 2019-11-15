@@ -1,7 +1,7 @@
 {
   "urls": [
-    "../../assets/audio/sound.mp3",
-    "../../assets/audio/sound.ogg"
+    "/assets/audio/sound.mp3",
+    "/assets/audio/sound.ogg"
   ],
   "sprite": {
     "danger": [
