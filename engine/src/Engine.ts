@@ -43,6 +43,7 @@ import * as Types from "./Types";
         private _round: number;
         private _ticksCounter: number;
         private _bonus: number;
+        private _noEnemiesOnStage: boolean;
 
         private bullets: Bullet[];
         private glueBullets: GlueBullet[];
@@ -58,7 +59,6 @@ import * as Types from "./Types";
         private t: number;
         private eventDispatcher: EventDispatcher;
         private enemiesSpawner: EnemiesSpawner;
-        private noEnemiesOnStage: boolean;
         private waveEnemiesLength: number;
         private enemiesSpawned: number;
         private allEnemiesSpawned: boolean;
@@ -115,7 +115,7 @@ import * as Types from "./Types";
             this.canLaunchNextWave = true;
 
             this.initWaveVars();
-            this.noEnemiesOnStage = false;
+            this._noEnemiesOnStage = true;
             this.allEnemiesSpawned = false;
             this.enemiesSpawned = 0;
             this.waveEnemiesLength = 0;
@@ -160,7 +160,7 @@ import * as Types from "./Types";
                 this._gameOver = true;
             }
 
-            if (this.noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
+            if (this._noEnemiesOnStage && this.allEnemiesSpawned && this.bullets.length === 0 && this.glueBullets.length === 0 && this.glues.length === 0 && this.mortars.length === 0) {
                 this.waveActivated = false;
                 this.ageTurrets();
 
@@ -217,7 +217,6 @@ import * as Types from "./Types";
         public newWave(): boolean {
 
             if (!this.canLaunchNextWave) {
-                console.log("HOLA");
                 return false;
             }
 
@@ -226,7 +225,7 @@ import * as Types from "./Types";
 
             this.canLaunchNextWave = false;
 
-            this.noEnemiesOnStage = false;
+            this._noEnemiesOnStage = false;
             this.allEnemiesSpawned = false;
 
             let length = Object.keys(this.wavesData).length;
@@ -965,7 +964,7 @@ import * as Types from "./Types";
 
         private onNoEnemiesOnStage(): void {
 
-            this.noEnemiesOnStage = true;
+            this._noEnemiesOnStage = true;
 
             this._credits += this._bonus;
             this._creditsEarned += this._bonus;
@@ -1037,6 +1036,11 @@ import * as Types from "./Types";
         public get lifes(): number {
             
             return this._lifes;
+        }
+
+        public get noEnemiesOnStage(): boolean {
+            
+            return this._noEnemiesOnStage;
         }
 
         public set lifes(value: number) {

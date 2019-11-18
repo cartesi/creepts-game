@@ -8,6 +8,7 @@ import enemiesData from "../../../assets/config/enemies.json";
 import turretsData from "../../../assets/config/turrets.json";
 import wavesData from "../../../assets/config/waves.json";
 import * as Anuto from "../../../engine/src";
+import { AudioManager } from "../../AudioManager";
 
 export class BattleManager {
 
@@ -73,6 +74,10 @@ export class BattleManager {
         GameVars.semipaused = false;
         GameVars.waveOver = true;
         GameVars.autoSendWave = false;
+        GameVars.loopNumber = 1;
+        GameVars.loopRate = 1;
+        GameVars.loopVolume = .2;
+        GameVars.dangerRate = 1;
 
         BattleManager.anutoEngine = new Anuto.Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData, GameVars.wavesData);
 
@@ -157,6 +162,27 @@ export class BattleManager {
 
             const action = {type: GameConstants.TYPE_NEXT_WAVE, tick: BattleManager.anutoEngine.ticksCounter};
             BattleManager.addAction(action);
+
+            // if (BattleManager.anutoEngine.round % 5 === 0) {
+            //     AudioManager.stopMusic();
+            //     GameVars.loopVolume = .2;
+            // } else {
+            //     AudioManager.playMusic("alt_soundtrack", 1, GameVars.loopVolume);
+            //     GameVars.loopVolume += .2;
+            // }
+
+            AudioManager.playMusic("alt_soundtrack", 2, GameVars.loopVolume);
+
+            // AudioManager.playMusic("loop_" + GameVars.loopNumber, GameVars.loopRate);
+
+            // if (BattleManager.anutoEngine.round % 5 === 0) {
+            //     if (GameVars.loopNumber < 7) {
+            //         GameVars.loopNumber++;
+            //     } else {
+            //         GameVars.loopRate = Math.min(1.2, GameVars.loopRate + .01);
+            //     }
+            // }
+            
         }
     }
 
@@ -250,9 +276,9 @@ export class BattleManager {
         }
     }
 
-    public static createRangeCircle(range: number, x: number, y: number): Phaser.GameObjects.Graphics {
+    public static createRangeCircle(range: number, x: number, y: number, type: string): Phaser.GameObjects.Image {
 
-        return BoardContainer.currentInstance.createRangeCircle(range, x, y);
+        return BoardContainer.currentInstance.createRangeCircle(range, x, y, type);
     }
 
     public static hideRangeCircles(): void {
@@ -278,6 +304,13 @@ export class BattleManager {
     private static onEnemyReachedExit(anutoEnemy: Anuto.Enemy): void {
 
         BoardContainer.currentInstance.removeEnemy(anutoEnemy.id);
+
+        if (!BattleManager.anutoEngine.gameOver) {
+            AudioManager.playSound("danger", false, 1, GameVars.dangerRate);
+            GameVars.dangerRate = Math.max(GameVars.dangerRate - .0125, .75);
+            BattleScene.currentInstance.showFxEnemyTraspass();
+        }
+        
 
         if (GameVars.currentScene === BattleScene.currentInstance) {
             BattleScene.currentInstance.hud.updateLifes();
@@ -386,8 +419,8 @@ export class BattleManager {
             BattleScene.currentInstance.gui.onClickNextWave();
         } else {
             GameVars.waveOver = true;
+            AudioManager.setMusicVolume(.1);
         }
-        
     }
 
     private static activeNextWave(): void {

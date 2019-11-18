@@ -11,10 +11,14 @@ export class LaunchTurretActor extends TurretActor {
         this.base = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "base_4_1");
         this.base.setInteractive();
         this.base.on("pointerdown", this.onDownTurret, this);
+        this.base.on("pointerover", this.onOverTurret, this);
+        this.base.on("pointerout", this.onOutTurret, this);
         this.addAt(this.base, 0);
 
-        this.canon = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "canon_4_1_3");
+        this.canon = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "canon_4_1_1");
         this.add(this.canon);
+
+        this.bringToTop(this.turretLevel);
     }
 
     public update(time: number, delta: number): void {
@@ -33,7 +37,7 @@ export class LaunchTurretActor extends TurretActor {
                  break;
              case 3: 
                  this.base.setFrame("base_4_2");
-                 this.canon.setFrame("canon_4_3_3");
+                 this.canon.setFrame("canon_4_3_1");
                  break;
              default:
         }

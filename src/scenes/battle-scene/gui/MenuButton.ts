@@ -2,7 +2,7 @@ import Phaser from "phaser";
 
 export class MenuButton extends Phaser.GameObjects.Container {
 
-    public static readonly HEIGHT = 50;
+    public static readonly HEIGHT = 58;
     public static readonly WIDTH = 360;
 
     private text: Phaser.GameObjects.Text;
@@ -32,16 +32,11 @@ export class MenuButton extends Phaser.GameObjects.Container {
             }    
         });
 
-        const margin = 5;
-        const background = new Phaser.GameObjects.Graphics(this.scene);
-        background.fillStyle(0xFFFFFF);
-        background.fillRect(-MenuButton.WIDTH / 2 + margin, -MenuButton.HEIGHT / 2 + margin, MenuButton.WIDTH - (margin * 2), MenuButton.HEIGHT - (margin * 2));
-        background.lineStyle(2, 0xFFFFFF);
-        background.strokeRect(-MenuButton.WIDTH / 2, -MenuButton.HEIGHT / 2, MenuButton.WIDTH, MenuButton.HEIGHT);
+        const background = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "btn_rectangle");
         this.add(background);
 
         // text
-        this.text = new Phaser.GameObjects.Text(this.scene, 0, 0, label, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+        this.text = new Phaser.GameObjects.Text(this.scene, 0, 0, label, {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#00B4FF"});
         this.text.setOrigin(.5);
         this.add(this.text);
     }
@@ -51,7 +46,6 @@ export class MenuButton extends Phaser.GameObjects.Container {
     }
 
     public setEnabled(enabled: boolean) {
-        this.text.setColor(enabled ? "#000" : "#ccc");
         this.enabled = enabled;
    }
 }

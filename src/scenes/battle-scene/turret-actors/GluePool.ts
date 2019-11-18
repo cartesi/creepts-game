@@ -25,10 +25,11 @@ export class GluePool extends Phaser.GameObjects.Container {
 
         let range = this.anutoGlue.range * GameConstants.CELLS_SIZE;
 
-        let graphic = new Phaser.GameObjects.Graphics(this.scene);
-        graphic.fillStyle(0x66CCFF, 1);
-        graphic.fillCircle(0, 0, range);
-        this.add(graphic);
+        let rangeCircle = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "area_freeze");
+        rangeCircle.setScale((range * 2) / rangeCircle.width);
+        this.add(rangeCircle);
+
+        this.drawFx();
 
         this.scene.tweens.add({
             targets: this,
@@ -42,7 +43,7 @@ export class GluePool extends Phaser.GameObjects.Container {
         this.setScale(0);
         this.alpha = 0;
 
-        AudioManager.playSound("t3_pegamento");
+        AudioManager.playSound("t2_hielo");
     }
 
     public destroy(): void {
@@ -57,5 +58,55 @@ export class GluePool extends Phaser.GameObjects.Container {
             },
             onCompleteScope: this
         });
+    }
+
+    private drawFx(): void {
+
+        let angleExtra = Math.random() * 180;
+
+        let pos = 40;
+        let angle = Phaser.Math.DegToRad(Math.random() * 40 - 20 + angleExtra);
+
+        let fx = new Phaser.GameObjects.Image(this.scene, pos * Math.cos(angle), pos * Math.sin(angle), "texture_atlas_1", "bullet_fx_3");
+        fx.setScale(.4);
+        this.add(fx);
+
+        pos = 65;
+
+        fx = new Phaser.GameObjects.Image(this.scene, pos * Math.cos(angle), pos * Math.sin(angle), "texture_atlas_1", "bullet_fx_3");
+        fx.setScale(.25);
+        this.add(fx);
+
+        angle = Phaser.Math.DegToRad(100 + Math.random() * 40 + angleExtra);
+        pos = 40;
+
+        fx = new Phaser.GameObjects.Image(this.scene, pos * Math.cos(angle), pos * Math.sin(angle), "texture_atlas_1", "bullet_fx_3");
+        fx.setScale(.25);
+        this.add(fx);
+
+        pos = 65;
+
+        fx = new Phaser.GameObjects.Image(this.scene, pos * Math.cos(angle), pos * Math.sin(angle), "texture_atlas_1", "bullet_fx_3");
+        fx.setScale(.4);
+        this.add(fx);
+
+        pos = 54;
+
+        fx = new Phaser.GameObjects.Image(this.scene, pos * Math.cos(angle + .45), pos * Math.sin(angle + .45), "texture_atlas_1", "bullet_fx_3");
+        fx.setScale(.15);
+        this.add(fx);
+
+        angle = Phaser.Math.DegToRad(220 + Math.random() * 40 + angleExtra);
+        pos = 50;
+
+        fx = new Phaser.GameObjects.Image(this.scene, pos * Math.cos(angle - .1), pos * Math.sin(angle - .1), "texture_atlas_1", "bullet_fx_3");
+        fx.setScale(.3);
+        this.add(fx);
+
+        pos = 65;
+
+        fx = new Phaser.GameObjects.Image(this.scene, pos * Math.cos(angle + .25), pos * Math.sin(angle + .25), "texture_atlas_1", "bullet_fx_3");
+        fx.setScale(.25);
+        this.add(fx);
     }
 }

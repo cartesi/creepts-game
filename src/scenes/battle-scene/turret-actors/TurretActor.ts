@@ -1,3 +1,4 @@
+import { TurretLevel } from './TurretLevel';
 import { BattleScene } from './../BattleScene';
 import { BoardContainer } from "./../BoardContainer";
 import { GameConstants } from "../../../GameConstants";
@@ -13,9 +14,11 @@ export class TurretActor extends Phaser.GameObjects.Container {
     public canonLength: number;
     public base: Phaser.GameObjects.Image;
     public canon: Phaser.GameObjects.Image;
+    public turretLevel: TurretLevel;
     public anutoTurret: Anuto.Turret;
+    public showLevel: boolean;
     
-    private rangeCircle: Phaser.GameObjects.Graphics;
+    private rangeCircle: Phaser.GameObjects.Image;
 
     constructor(scene: Phaser.Scene, type: string, position: {r: number, c: number}, turret: Anuto.Turret) {
 
@@ -23,6 +26,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
         this.p = position;
         this.name = type;
+        this.showLevel = false;
 
         this.setScale(.82);
         
@@ -34,7 +38,37 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
         this.canonLength = 40;
 
-        this.rangeCircle = BattleManager.createRangeCircle(this.anutoTurret.range * GameConstants.CELLS_SIZE, this.x, this.y);
+        let typeRange = "";
+
+        switch (type) {
+
+            case Anuto.GameConstants.TURRET_LAUNCH:
+                typeRange = "yellow";
+                break;
+            case Anuto.GameConstants.TURRET_PROJECTILE:
+                    typeRange = "green";
+                break;
+            case Anuto.GameConstants.TURRET_LASER:
+                    typeRange = "pink";
+                break;
+            case Anuto.GameConstants.TURRET_GLUE:
+                    typeRange = "blue";
+                break;
+            default:
+                break;
+        }
+
+        this.rangeCircle = BattleManager.createRangeCircle(this.anutoTurret.range * GameConstants.CELLS_SIZE, this.x, this.y, typeRange);
+
+        this.turretLevel = new TurretLevel(this.scene, this);
+        this.add(this.turretLevel);
+
+        this.scene.sys.updateList.add(this);
+    }
+
+    public preUpdate(time: number, delta: number): void {
+
+        this.turretLevel.update();
     }
 
     public update(time: number, delta: number): void {
@@ -69,10 +103,8 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
     public reloadRangeCircle(): void {
 
-        this.rangeCircle.clear();
-        this.rangeCircle.setPosition(this.x, this.y);
-        this.rangeCircle.lineStyle(2, 0x00FF00);
-        this.rangeCircle.strokeCircle(0, 0, this.anutoTurret.range * GameConstants.CELLS_SIZE);
+        this.rangeCircle.setScale(1);
+        this.rangeCircle.setScale((this.anutoTurret.range * GameConstants.CELLS_SIZE * 2) / this.rangeCircle.width);
     }
 
     protected shoot(): void {
@@ -95,5 +127,15 @@ export class TurretActor extends Phaser.GameObjects.Container {
         } else {
             BattleManager.showTurretMenu(this.anutoTurret);
         }
+    }
+
+    protected onOverTurret(): void {
+
+        this.showLevel = true;
+    }
+
+    protected onOutTurret(): void {
+
+        this.showLevel = false;
     }
 }

@@ -27,7 +27,7 @@ export class LogGUI extends Phaser.GameObjects.Container {
         this.scaleY = GameVars.scaleY;
 
         this.backButton = new Phaser.GameObjects.Container(this.scene);
-        this.backButton.setPosition(GameConstants.GAME_WIDTH / 2 - 90, 79);
+        this.backButton.setPosition(GameConstants.GAME_WIDTH / 2 - 90, 39);
         this.backButton.setInteractive(new Phaser.Geom.Rectangle(-30, -30, 60, 60), Phaser.Geom.Rectangle.Contains);
         this.backButton.on("pointerdown", () => { this.onClickBack(); });
         this.backButton.on("pointerover", () => { this.onBtnOver(this.backButton); });
@@ -43,7 +43,7 @@ export class LogGUI extends Phaser.GameObjects.Container {
         this.backButton.add(this.backImage);
 
         this.playButton = new Phaser.GameObjects.Container(this.scene);
-        this.playButton.setPosition(GameConstants.GAME_WIDTH / 2, 79);
+        this.playButton.setPosition(GameConstants.GAME_WIDTH / 2, 39);
         this.playButton.setInteractive(new Phaser.Geom.Rectangle(-35, -35, 70, 70), Phaser.Geom.Rectangle.Contains);
         this.playButton.on("pointerdown", () => { this.onClickPlay(); });
         this.playButton.on("pointerover", () => { this.onBtnOver(this.playButton); });
@@ -61,7 +61,7 @@ export class LogGUI extends Phaser.GameObjects.Container {
         this.playButton.add(this.playImage);
 
         this.timeStepButton = new Phaser.GameObjects.Container(this.scene);
-        this.timeStepButton.setPosition(GameConstants.GAME_WIDTH / 2 + 90, 79);
+        this.timeStepButton.setPosition(GameConstants.GAME_WIDTH / 2 + 90, 39);
         this.timeStepButton.setInteractive(new Phaser.Geom.Rectangle(-30, -30, 60, 60), Phaser.Geom.Rectangle.Contains);
         this.timeStepButton.on("pointerdown", () => { this.onClickTimeStep(); });
         this.timeStepButton.on("pointerover", () => { this.onBtnOver(this.timeStepButton); });
@@ -84,7 +84,7 @@ export class LogGUI extends Phaser.GameObjects.Container {
         }
 
         this.exitButton = new Phaser.GameObjects.Container(this.scene);
-        this.exitButton.setPosition(GameConstants.GAME_WIDTH - 40, 79);
+        this.exitButton.setPosition(GameConstants.GAME_WIDTH - 40, 39);
         this.exitButton.setInteractive(new Phaser.Geom.Rectangle(-30, -30, 60, 60), Phaser.Geom.Rectangle.Contains);
         this.exitButton.on("pointerdown", () => { this.onClickExit(); });
         this.exitButton.on("pointerover", () => { this.onBtnOver(this.exitButton); });
@@ -100,7 +100,7 @@ export class LogGUI extends Phaser.GameObjects.Container {
         this.exitButton.add(exitImage);
 
         this.soundButton = new Phaser.GameObjects.Container(this.scene);
-        this.soundButton.setPosition(GameConstants.GAME_WIDTH - 110, 79);
+        this.soundButton.setPosition(GameConstants.GAME_WIDTH - 110, 39);
         this.soundButton.setInteractive(new Phaser.Geom.Rectangle(-30, -30, 60, 60), Phaser.Geom.Rectangle.Contains);
         this.soundButton.on("pointerdown", () => { this.onClickSound(); });
         this.soundButton.on("pointerover", () => { this.onBtnOver(this.soundButton); });

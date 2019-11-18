@@ -1,6 +1,7 @@
 import { BattleManager } from "./BattleManager";
 import { GameVars } from "../../GameVars";
 import * as Anuto from "../../../engine/src";
+import { AudioManager } from "../../AudioManager";
 
 export class TurretMenu extends Phaser.GameObjects.Container {
 
@@ -38,20 +39,16 @@ export class TurretMenu extends Phaser.GameObjects.Container {
         this.anutoTurret = anutoTurret;
 
         const bck = new Phaser.GameObjects.Graphics(this.scene);
-        bck.fillStyle(0x000000);
-        bck.fillRect(-200, -350, 400, 700);
+        bck.fillStyle(0x0B003E);
+        bck.fillRect(-200, -375, 400, 750);
         bck.alpha = .75;
         this.add(bck);
 
-        const titleLines = new Phaser.GameObjects.Graphics(this.scene);
-        titleLines.lineStyle(4, 0xffffff);
-        titleLines.strokeRect(-180, -330, 360, 70);
-        titleLines.lineStyle(2, 0xffffff);
-        titleLines.strokeRect(-170, -320, 340, 50);
-        this.add(titleLines);
+        const titleBck = new Phaser.GameObjects.Image(this.scene, 0, -315, "texture_atlas_1", "title_area");
+        this.add(titleBck);
 
-        let title = new Phaser.GameObjects.Text(this.scene, 0, -315, "TOWER INFO", {fontFamily: "Rubik-Regular", fontSize: "35px", color: "#FFFFFF"});
-        title.setOrigin(.5, 0);
+        let title = new Phaser.GameObjects.Text(this.scene, 0, -315, "TOWER INFO", {fontFamily: "Rubik-Regular", fontSize: "40px", color: "#FFFFFF"});
+        title.setOrigin(.5);
         this.add(title);
 
         let offY = -230;
@@ -143,14 +140,10 @@ export class TurretMenu extends Phaser.GameObjects.Container {
         this.strategyButton.on("pointerdown", () => { this.onClickStrategy(); });
         this.add(this.strategyButton);
 
-        const strategyBck = new Phaser.GameObjects.Graphics(this.scene);
-        strategyBck.fillStyle(0xFFFFFF);
-        strategyBck.fillRect(-width / 2, -height / 2, width, height);
-        strategyBck.lineStyle(2, 0xFFFFFF);
-        strategyBck.strokeRect(-width / 2 - 5, -height / 2 - 5, width + 10, height + 10);
+        const strategyBck = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "btn_rectangle");
         this.strategyButton.add(strategyBck);
 
-        this.strategyText = new Phaser.GameObjects.Text(this.scene, 0, 0, "STRATEGY (" + anutoTurret.shootingStrategy + ")" , {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+        this.strategyText = new Phaser.GameObjects.Text(this.scene, 0, 0, "STRATEGY (" + anutoTurret.shootingStrategy + ")" , {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#00B4FF"});
         this.strategyText.setOrigin(.5);
         this.strategyButton.add(this.strategyText);
 
@@ -164,14 +157,10 @@ export class TurretMenu extends Phaser.GameObjects.Container {
         this.objectiveButton.on("pointerdown", () => { this.onClickObjective(); });
         this.add(this.objectiveButton);
 
-        const objectiveBck = new Phaser.GameObjects.Graphics(this.scene);
-        objectiveBck.fillStyle(0xFFFFFF);
-        objectiveBck.fillRect(-width / 2, -height / 2, width, height);
-        objectiveBck.lineStyle(2, 0xFFFFFF);
-        objectiveBck.strokeRect(-width / 2 - 5, -height / 2 - 5, width + 10, height + 10);
+        const objectiveBck = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "btn_rectangle");
         this.objectiveButton.add(objectiveBck);
 
-        this.objectiveText = new Phaser.GameObjects.Text(this.scene, 0, 0, "FIXED TARGET (" + (anutoTurret.fixedTarget ? "On" : "Off") + ")" , {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+        this.objectiveText = new Phaser.GameObjects.Text(this.scene, 0, 0, "FIXED TARGET (" + (anutoTurret.fixedTarget ? "On" : "Off") + ")" , {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#00B4FF"});
         this.objectiveText.setOrigin(.5);
         this.objectiveButton.add(this.objectiveText);
 
@@ -185,14 +174,10 @@ export class TurretMenu extends Phaser.GameObjects.Container {
         this.levelButton.on("pointerdown", () => { this.onClickLevel(); });
         this.add(this.levelButton);
 
-        const levelBck = new Phaser.GameObjects.Graphics(this.scene);
-        levelBck.fillStyle(0xFFFFFF);
-        levelBck.fillRect(-width / 2, -height / 2, width, height);
-        levelBck.lineStyle(2, 0xFFFFFF);
-        levelBck.strokeRect(-width / 2 - 5, -height / 2 - 5, width + 10, height + 10);
+        const levelBck = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "btn_rectangle");
         this.levelButton.add(levelBck);
 
-        this.levelUpText = new Phaser.GameObjects.Text(this.scene, 0, 0, "LEVEL UP (" + GameVars.formatNumber(anutoTurret.priceImprovement) + ")" , {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+        this.levelUpText = new Phaser.GameObjects.Text(this.scene, 0, 0, "LEVEL UP (" + GameVars.formatNumber(anutoTurret.priceImprovement) + ")" , {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#00B4FF"});
         this.levelUpText.setOrigin(.5);
         this.levelButton.add(this.levelUpText);
 
@@ -206,14 +191,10 @@ export class TurretMenu extends Phaser.GameObjects.Container {
         this.upgradeButton.on("pointerdown", () => { this.onClickUpgrade(); });
         this.add(this.upgradeButton);
 
-        const upgradeBck = new Phaser.GameObjects.Graphics(this.scene);
-        upgradeBck.fillStyle(0xFFFFFF);
-        upgradeBck.fillRect(-width / 2, -height / 2, width, height);
-        upgradeBck.lineStyle(2, 0xFFFFFF);
-        upgradeBck.strokeRect(-width / 2 - 5, -height / 2 - 5, width + 10, height + 10);
+        const upgradeBck = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "btn_rectangle");
         this.upgradeButton.add(upgradeBck);
 
-        this.upgradeText = new Phaser.GameObjects.Text(this.scene, 0, 0, "UPGRADE (" + GameVars.formatNumber(anutoTurret.priceUpgrade) + ")" , {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+        this.upgradeText = new Phaser.GameObjects.Text(this.scene, 0, 0, "UPGRADE (" + GameVars.formatNumber(anutoTurret.priceUpgrade) + ")" , {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#00B4FF"});
         this.upgradeText.setOrigin(.5);
         this.upgradeButton.add(this.upgradeText);
 
@@ -227,20 +208,30 @@ export class TurretMenu extends Phaser.GameObjects.Container {
         this.sellButton.on("pointerdown", () => { this.onClickSell(); });
         this.add(this.sellButton);
 
-        const sellBck = new Phaser.GameObjects.Graphics(this.scene);
-        sellBck.fillStyle(0xFFFFFF);
-        sellBck.fillRect(-width / 2, -height / 2, width, height);
-        sellBck.lineStyle(2, 0xFFFFFF);
-        sellBck.strokeRect(-width / 2 - 5, -height / 2 - 5, width + 10, height + 10);
+        const sellBck = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "btn_rectangle");
         this.sellButton.add(sellBck);
 
-        this.sellText = new Phaser.GameObjects.Text(this.scene, 0, 0, "SELL (" + GameVars.formatNumber(anutoTurret.sellValue) + ")" , {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#000000"});
+        this.sellText = new Phaser.GameObjects.Text(this.scene, 0, 0, "SELL (" + GameVars.formatNumber(anutoTurret.sellValue) + ")" , {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#00B4FF"});
         this.sellText.setOrigin(.5);
         this.sellButton.add(this.sellText);
 
         this.checkAndUpdateInfo();
 
+        this.setScale(.95);
+        this.setAlpha(.7);
+
+        this.scene.tweens.add({
+            targets: this,
+            scaleX: 1,
+            scaleY: 1,
+            alpha: 1,
+            ease: Phaser.Math.Easing.Cubic.Out,
+            duration: 250
+        });
+
         this.scene.sys.updateList.add(this);
+
+        AudioManager.playSound("menu_emerging");
     }
 
     public preUpdate(time: number, delta: number): void {

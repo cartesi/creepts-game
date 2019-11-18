@@ -12,8 +12,9 @@ export class GlueBulletActor extends Phaser.GameObjects.Container {
 
         super(scene);
 
-        this.img = this.scene.add.sprite(0, 0, "texture_atlas_1", "bullet_3_1_1");
+        this.img = this.scene.add.sprite(0, 0, "texture_atlas_1", "bullet_fx_3");
         this.img.setOrigin(.5, 1);
+        this.img.setScale(.25);
         this.add(this.img);
 
         this.anutoGlueBullet = anutoGlueBullet;
@@ -24,8 +25,6 @@ export class GlueBulletActor extends Phaser.GameObjects.Container {
         this.y = this.anutoGlueBullet.y * GameConstants.CELLS_SIZE;
 
         this.initialPosition = {x: this.x, y: this.y};
-
-        this.img.anims.play("glue_bullet");
     }
 
     public update(time: number, delta: number): void {

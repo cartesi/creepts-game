@@ -66,7 +66,6 @@ export class LogScene extends Phaser.Scene {
                     BattleManager.setFixedTarget(action.id);
                     break;
                 default:
-                    console.log("DEFAULT");
                     break;
             }
         }

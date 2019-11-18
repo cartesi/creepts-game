@@ -9,7 +9,7 @@ export class MineActor extends Phaser.GameObjects.Container {
 
     public anutoMine: Anuto.Mine;
 
-    private mineImage: Phaser.GameObjects.Image;
+    private mineImage: Phaser.GameObjects.Sprite;
     private detonated: boolean;
 
     constructor(scene: Phaser.Scene, anutoMine: Anuto.Mine, launchTurretActor: LaunchTurretActor) {
@@ -25,9 +25,11 @@ export class MineActor extends Phaser.GameObjects.Container {
         this.x = launchTurretActor.x;
         this.y = launchTurretActor.y;
 
-        this.mineImage = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "mine");
+        this.mineImage = this.scene.add.sprite(0, 0, "texture_atlas_1");
         this.mineImage.setScale(.5);
         this.add(this.mineImage);
+
+        this.mineImage.anims.play("mine");
 
         this.scene.tweens.add({
             targets: this,

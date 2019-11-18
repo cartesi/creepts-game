@@ -9,8 +9,8 @@ export class BuyTurrets extends Phaser.GameObjects.Container {
 
         super(scene);
 
-        this.y = 75;
-        this.x = 50;
+        this.y = 33;
+        this.x = 130;
 
         this.turretButtons = [];
 

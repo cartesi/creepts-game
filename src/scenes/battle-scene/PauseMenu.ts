@@ -11,7 +11,7 @@ export class PauseMenu extends Phaser.GameObjects.Container {
         
         super(scene);
 
-        const margin = 20;
+        const margin = 30;
         const titleGap = 40;
         const gap = 10;
 
@@ -68,11 +68,25 @@ export class PauseMenu extends Phaser.GameObjects.Container {
         y += margin;
 
         // draw background using final y
-        background.fillStyle(0x000000);
-        background.fillRect(-200, 0, 400, y);
+        background.fillStyle(0x0B003E);
+        background.fillRect(-200, 0, 400, y - 10);
         background.alpha = .75;
 
         this.add(box);
+
+        this.setScale(.95);
+        this.setAlpha(.7);
+
+        this.scene.tweens.add({
+            targets: this,
+            scaleX: 1,
+            scaleY: 1,
+            alpha: 1,
+            ease: Phaser.Math.Easing.Cubic.Out,
+            duration: 250
+        });
+
+        AudioManager.playSound("menu_emerging");
     }
 
 }

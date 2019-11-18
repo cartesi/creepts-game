@@ -16,57 +16,36 @@ export class TurretButton extends Phaser.GameObjects.Container {
         this.x = index * 80;
         this.turretType = type;
 
-        this.setScale(.8);
+        this.base = new Phaser.GameObjects.Image(this.scene, 0, 25, "texture_atlas_1", "turret_" + (index + 1) + "_icon");
+        this.base.setInteractive();
+        this.base.setOrigin(.5, 1);
+        this.base.on("pointerdown", this.onDownTurret, this);
+        this.add(this.base);
 
-        let base_name;
-        let canon_name;
+        let creditIcon = new Phaser.GameObjects.Image(this.scene, -25, 40, "texture_atlas_1", "icon_coin_" + (index + 1));
+        this.add(creditIcon);
+
+        let color = "";
 
         switch (type) {
-
             case Anuto.GameConstants.TURRET_PROJECTILE:
-                base_name = "base_1_1";
-                canon_name = "canon_1_1_1";
+                color = "#05fb2e";
                 break;
             case Anuto.GameConstants.TURRET_LASER:
-                base_name = "base_2_1";
-                canon_name = "canon_2_1_1";
+                color = "#ff01d8";
                 break;
             case Anuto.GameConstants.TURRET_LAUNCH:
-                base_name = "base_4_1";
-                canon_name = "canon_4_1_3";
+                    color = "#ffed03";
                 break;
             case Anuto.GameConstants.TURRET_GLUE:
-                base_name = "base_3_1";
+                color = "#00caeb";
                 break;
             default:
         }
 
-        this.base = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", base_name);
-        this.base.setInteractive();
-        this.base.on("pointerdown", this.onDownTurret, this);
-        this.add(this.base);
-
-        if (type !== Anuto.GameConstants.TURRET_GLUE) {
-            this.canon = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", canon_name);
-            this.add(this.canon);
-        }
-
-        if (type === Anuto.GameConstants.TURRET_LASER) {
-            this.base.y += 6;
-            this.canon.y += 6;
-        }
-
-        let creditIcon = new Phaser.GameObjects.Image(this.scene, -30, 42, "texture_atlas_1", "coin_icon");
-        creditIcon.setTint(0x000000);
-        this.add(creditIcon);
-
-        let text = new Phaser.GameObjects.Text(this.scene, 12, 42, BattleManager.anutoEngine.turretData[this.turretType].price, {fontFamily: "Rubik-Light", fontSize: "30px", color: "#000000"});
+        let text = new Phaser.GameObjects.Text(this.scene, 8, 40, BattleManager.anutoEngine.turretData[this.turretType].price, {fontFamily: "Rubik-Regular", fontSize: "22px", color: color});
         text.setOrigin(.5);
         this.add(text);
-
-        if (this.turretType === Anuto.GameConstants.TURRET_GLUE) {
-            text.x = 15;
-        }
 
         this.scene.sys.updateList.add(this);
     }

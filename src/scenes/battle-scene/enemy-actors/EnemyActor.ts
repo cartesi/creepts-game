@@ -9,6 +9,7 @@ export class EnemyActor extends Phaser.GameObjects.Container {
     public id: number;
    
     protected img: Phaser.GameObjects.Sprite;
+    protected shield: Phaser.GameObjects.Image;
     protected lifeBar: LifeBar;
     protected anutoEnemy: Anuto.Enemy;
 
@@ -20,14 +21,23 @@ export class EnemyActor extends Phaser.GameObjects.Container {
         this.id = this.anutoEnemy.id;
         this.type = this.anutoEnemy.type;
         this.alpha = 0;
-       
+
+        this.x = GameConstants.CELLS_SIZE * (position.c + .5);
+        this.y = GameConstants.CELLS_SIZE * (position.r + .5);
+
+        this.img = this.scene.add.sprite(0, 0, "texture_atlas_1");
+        this.add(this.img);
+
+        this.shield = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "enemy_shield");
+        this.shield.visible = false;
+        this.add(this.shield);
+
         this.lifeBar = new LifeBar(this.scene, this.anutoEnemy.life);
         this.lifeBar.y = -32;
         this.lifeBar.x -= LifeBar.WIDTH / 2;
         this.add(this.lifeBar);
 
-        this.x = GameConstants.CELLS_SIZE * (position.c + .5);
-        this.y = GameConstants.CELLS_SIZE * (position.r + .5);
+        this.img.anims.play("enemy_" + this.type + "_run");
     }
 
     public update(time: number, delta: number): void {
@@ -43,18 +53,22 @@ export class EnemyActor extends Phaser.GameObjects.Container {
         }
 
         if (this.anutoEnemy.affectedByGlue || this.anutoEnemy.affectedByGlueBullet) {
-            if (this.img.tint !== 0xb2e5ff) {
-                this.img.setTint(0xb2e5ff);
+            if (this.img.anims.currentAnim.key === "enemy_" + this.type + "_run") {
+                this.img.anims.play("enemy_" + this.type + "_run_frozen");
             }
         } else {
-            if (this.anutoEnemy.hasBeenTeleported) {
-                if (this.img.tint !== 0xe4c0ff) {
-                    this.img.setTint(0xe4c0ff);
-                }
-            } else {
-                if (this.img.tint !== 0xFFFFFF) {
-                    this.img.setTint(0xFFFFFF);
-                }
+            if (this.img.anims.currentAnim.key === "enemy_" + this.type + "_run_frozen") {
+                this.img.anims.play("enemy_" + this.type + "_run");
+            }
+        }
+
+        if (this.anutoEnemy.hasBeenTeleported) {
+            if (!this.shield.visible) {
+                this.shield.visible = true;
+            }
+        } else {
+            if (this.shield.visible) {
+                this.shield.visible = false;
             }
         }
 

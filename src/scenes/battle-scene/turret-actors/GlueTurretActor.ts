@@ -12,11 +12,15 @@ export class GlueTurretActor extends TurretActor {
         this.base = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "base_3_1");
         this.base.setInteractive();
         this.base.on("pointerdown", this.onDownTurret, this);
+        this.base.on("pointerover", this.onOverTurret, this);
+        this.base.on("pointerout", this.onOutTurret, this);
         this.addAt(this.base, 0);
 
         this.canon = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "canon_3_2_1");
         this.canon.visible = false;
         this.add(this.canon);
+
+        this.bringToTop(this.turretLevel);
     }
 
     public update(time: number, delta: number): void {
@@ -58,7 +62,17 @@ export class GlueTurretActor extends TurretActor {
         }
 
         if (this.anutoTurret.grade === 2) {
-            AudioManager.playSound("t2_hielo");
+            AudioManager.playSound("t3_pegamento");
+
+            let fx = this.scene.add.sprite(30 * Math.sin(this.canon.rotation), - 30 * Math.cos(this.canon.rotation), "texture_atlas_1");
+            fx.setScale(.25);
+            this.add(fx);
+
+            fx.anims.play("glue_fx");
+
+            fx.on("animationcomplete", () => {
+                fx.destroy();
+            }, this);
         }
         
     }

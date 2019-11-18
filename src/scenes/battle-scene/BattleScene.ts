@@ -4,6 +4,7 @@ import { HUD } from "./hud/HUD";
 import { BattleManager } from "./BattleManager";
 import { GameVars } from "../../GameVars";
 import { AudioManager } from "../../AudioManager";
+import { FxEnemyTraspass } from "./FxEnemyTraspass";
 
 export class BattleScene extends Phaser.Scene {
 
@@ -23,7 +24,7 @@ export class BattleScene extends Phaser.Scene {
 
         GameVars.currentScene = this;
 
-        this.cameras.main.setBackgroundColor(0xCCCCCC);
+        this.cameras.main.setBackgroundColor(0x000018);
 
         BattleManager.init();
 
@@ -36,7 +37,7 @@ export class BattleScene extends Phaser.Scene {
         this.gui = new GUI(this);
         this.add.existing(this.gui);
 
-        AudioManager.playMusic("music");
+        AudioManager.playMusic("alt_soundtrack", 2, .1);
     }
 
     public update(time: number, delta: number): void {
@@ -58,5 +59,11 @@ export class BattleScene extends Phaser.Scene {
 
     public updateTurretMenu(): void {
         this.boardContainer.updateTurretMenu();
+    }
+
+    public showFxEnemyTraspass(): void {
+
+        let fx = new FxEnemyTraspass(this);
+        this.add.existing(fx);
     }
 }
