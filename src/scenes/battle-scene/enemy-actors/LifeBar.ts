@@ -13,11 +13,6 @@ export class LifeBar extends Phaser.GameObjects.Container {
 
         this.totalLife = totalLife;
 
-        const background = new Phaser.GameObjects.Graphics(this.scene);
-        background.fillStyle(0x000000);
-        background.fillRect(0, 0, 40, 4);
-        this.add(background);
-
         this.bar = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "life_bar_1");
         this.bar.setOrigin(0);
         this.add(this.bar);
@@ -27,8 +22,8 @@ export class LifeBar extends Phaser.GameObjects.Container {
 
     public updateValue(life: number): void {
 
-        let num = 41 - Math.round((life / this.totalLife) * 40);
-        this.bar.setFrame("life_bar_" + Math.min(num, 40));
+        let num = Math.round((life / this.totalLife) * 40);
+        this.bar.setFrame("life_bar_" + Math.max(num, 1));
         
         // this.bar.scaleX = life / this.totalLife;
     }
