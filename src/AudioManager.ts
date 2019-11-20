@@ -17,23 +17,6 @@ export class AudioManager {
         AudioManager.sound.mute(GameVars.gameData.soundMuted);
         AudioManager.music.mute(GameVars.gameData.musicMuted);
 
-        AudioManager.music.on("end", () => {
-
-            if (AudioManager.music.volume(AudioManager.backgroundIdMusic) as number === .1) {
-                return;
-            }
-
-            let volumes = [.2, .4, .6, .8];
-            let newVolume = volumes[Math.floor(Math.random() * 4)];
-
-            while (newVolume === AudioManager.music.volume(AudioManager.backgroundIdMusic) as number) {
-                newVolume = volumes[Math.floor(Math.random() * 4)];
-            }
-
-            GameVars.loopVolume = newVolume;
-            AudioManager.setMusicVolume(newVolume);
-        });
-
         AudioManager.music.on("fade", () => {
             // 
         });
