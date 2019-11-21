@@ -291,6 +291,11 @@ export class BattleManager {
         BoardContainer.currentInstance.showTurretMenu(anutoTurret);
     }
 
+    public static hideTurretMenu(): void {
+
+        BoardContainer.currentInstance.hideTurretMenu();
+    }
+
     private static addAction(action): void {
 
         GameVars.logsObject.actions.push(action);

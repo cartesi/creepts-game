@@ -122,6 +122,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
         }
 
         if (!this.rangeCircle.visible) {
+            BattleManager.hideTurretMenu();
             BattleManager.hideRangeCircles();
             this.rangeCircle.visible = true;
         } else {
