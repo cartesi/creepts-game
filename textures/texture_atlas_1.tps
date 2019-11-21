@@ -644,6 +644,58 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">texture_atlas_1/life_bar_1.png</key>
+            <key type="filename">texture_atlas_1/life_bar_10.png</key>
+            <key type="filename">texture_atlas_1/life_bar_11.png</key>
+            <key type="filename">texture_atlas_1/life_bar_12.png</key>
+            <key type="filename">texture_atlas_1/life_bar_13.png</key>
+            <key type="filename">texture_atlas_1/life_bar_14.png</key>
+            <key type="filename">texture_atlas_1/life_bar_15.png</key>
+            <key type="filename">texture_atlas_1/life_bar_16.png</key>
+            <key type="filename">texture_atlas_1/life_bar_17.png</key>
+            <key type="filename">texture_atlas_1/life_bar_18.png</key>
+            <key type="filename">texture_atlas_1/life_bar_19.png</key>
+            <key type="filename">texture_atlas_1/life_bar_2.png</key>
+            <key type="filename">texture_atlas_1/life_bar_20.png</key>
+            <key type="filename">texture_atlas_1/life_bar_21.png</key>
+            <key type="filename">texture_atlas_1/life_bar_22.png</key>
+            <key type="filename">texture_atlas_1/life_bar_23.png</key>
+            <key type="filename">texture_atlas_1/life_bar_24.png</key>
+            <key type="filename">texture_atlas_1/life_bar_25.png</key>
+            <key type="filename">texture_atlas_1/life_bar_26.png</key>
+            <key type="filename">texture_atlas_1/life_bar_27.png</key>
+            <key type="filename">texture_atlas_1/life_bar_28.png</key>
+            <key type="filename">texture_atlas_1/life_bar_29.png</key>
+            <key type="filename">texture_atlas_1/life_bar_3.png</key>
+            <key type="filename">texture_atlas_1/life_bar_30.png</key>
+            <key type="filename">texture_atlas_1/life_bar_31.png</key>
+            <key type="filename">texture_atlas_1/life_bar_32.png</key>
+            <key type="filename">texture_atlas_1/life_bar_33.png</key>
+            <key type="filename">texture_atlas_1/life_bar_34.png</key>
+            <key type="filename">texture_atlas_1/life_bar_35.png</key>
+            <key type="filename">texture_atlas_1/life_bar_36.png</key>
+            <key type="filename">texture_atlas_1/life_bar_37.png</key>
+            <key type="filename">texture_atlas_1/life_bar_38.png</key>
+            <key type="filename">texture_atlas_1/life_bar_39.png</key>
+            <key type="filename">texture_atlas_1/life_bar_4.png</key>
+            <key type="filename">texture_atlas_1/life_bar_40.png</key>
+            <key type="filename">texture_atlas_1/life_bar_5.png</key>
+            <key type="filename">texture_atlas_1/life_bar_6.png</key>
+            <key type="filename">texture_atlas_1/life_bar_7.png</key>
+            <key type="filename">texture_atlas_1/life_bar_8.png</key>
+            <key type="filename">texture_atlas_1/life_bar_9.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>11,1,21,3</rect>
+                <key>scale9Paddings</key>
+                <rect>11,1,21,3</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">texture_atlas_1/lives_icon.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

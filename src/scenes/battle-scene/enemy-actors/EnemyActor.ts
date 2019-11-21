@@ -95,7 +95,8 @@ export class EnemyActor extends Phaser.GameObjects.Container {
     }
 
     public hit(): void {
-        // de momento nada
+        
+        this.lifeBar.visible = true;
     }
 
     public glueHit(): void {

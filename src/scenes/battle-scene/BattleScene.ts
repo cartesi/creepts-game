@@ -37,7 +37,7 @@ export class BattleScene extends Phaser.Scene {
         this.gui = new GUI(this);
         this.add.existing(this.gui);
 
-        AudioManager.playMusic("alt_soundtrack", 2, .1);
+        AudioManager.playMusic("alt_soundtrack", 1, .1);
     }
 
     public update(time: number, delta: number): void {
