@@ -17,7 +17,7 @@ import { Turret } from "./Turret";
         // mirar en el ANUTO y generar las formulas que correspondan
         protected calculateTurretParameters(): void {
 
-            let turretDataAtributes = this.engine.turretData[this.type].attributes[this.grade - 1];
+            let turretDataAtributes = this.engine.turretsAttributes[this.type][this.grade - 1];
 
             this.damage = turretDataAtributes.damage[this.level - 1];
             this.reload = turretDataAtributes.reload[this.level - 1];

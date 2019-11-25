@@ -63,8 +63,6 @@ export class BattleManager {
             gameConfig = GameVars.levelObject.gameConfig;
         }
 
-        BattleManager.generateTurretsAttributes();
-
         if (GameVars.currentScene === BattleScene.currentInstance || !GameVars.timeStepFactor) {
             GameVars.timeStepFactor = 1;
         }
@@ -476,107 +474,5 @@ export class BattleManager {
             a2.innerHTML = "someinnerhtml";
             a2.click();
         } 
-    }
-
-    private static generateTurretsAttributes(): void {
-
-        let keys = Object.keys(GameVars.turretsData);
-        for (let i = 0; i < keys.length; i++) {
-
-            GameVars.turretsData[keys[i]].attributes = [{}, {}, {}];
-
-            if (keys[i] === Anuto.GameConstants.TURRET_PROJECTILE) {
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_DAMAGE, 100, 140, "prev + (prev - pprev) + (i + 2) * 2", 10);
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_RELOAD, 1, .95, "prev - .05", 10);
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_RANGE, 2.5, 2.55, "prev + .05", 10);
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_PRICE_IMPROVEMENT, 50, 60, "prev + (i + 4) * 2", 10);
-                GameVars.turretsData[keys[i]].attributes[0].priceUpgrade = 5600;
-
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_DAMAGE, 3400, 3560, "prev + (prev - pprev) + 64 + (i - 2) * 26", 10);
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_RELOAD, .55, .5, "prev - .05", 10);
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_RANGE, 3, 3.05, "prev + .05", 10);
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_PRICE_IMPROVEMENT, 470, 658, "prev + (prev - pprev) + 75 + (i - 2) * 31", 10);
-                GameVars.turretsData[keys[i]].attributes[1].priceUpgrade = 88500;
-
-                BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_DAMAGE, 20000, 20100, "prev + (i * 100)", 15);
-                BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_RELOAD, .2, .19, "prev - .01", 15);
-                BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_RANGE, 3.5, 3.55, "prev + .05", 15);
-                BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_PRICE_IMPROVEMENT, 750, 1125, "prev + (prev - pprev) + 188 + (i - 2) * 92", 15);
-            } else if (keys[i] === Anuto.GameConstants.TURRET_LAUNCH) {
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_DAMAGE, 100, 160, "prev + (prev - pprev) + (i + 4) * 2", 10);
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_EXPLOSION_RANGE, 1.5, 1.55, "prev + .05", 10);
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_RELOAD, 2, 1.95, "prev - .05", 10);
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_RANGE, 2.5, 2.55, "prev + .05", 10);
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_PRICE_IMPROVEMENT, 125, 150, "prev + (prev - pprev) + (i + 3)", 10);
-                GameVars.turretsData[keys[i]].attributes[0].priceUpgrade = 10000;
-
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_DAMAGE, 3287, 3744, "prev + (prev - pprev) + 150 + (i - 2) * 3", 10);
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_EXPLOSION_RANGE, 2, 2.05, "prev + .05", 10);
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_RELOAD, 2.55, 2.5, "prev - .05", 10);
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_RANGE, 2.5, 2.5, "prev", 10);
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_PRICE_IMPROVEMENT, 750, 1050, "prev + (prev - pprev) + 120 + (i - 2) * 48", 10);
-                GameVars.turretsData[keys[i]].attributes[1].priceUpgrade = 103000;
-
-                BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_DAMAGE, 48000, 48333, "prev + (prev - pprev) + 34", 15);
-                BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_EXPLOSION_RANGE, 1.75, 1.8, "prev + .05", 15);
-                BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_RELOAD, 3, 2.95, "prev - .05", 15);
-                BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_RANGE, 3, 3.1, "prev + .1", 15);
-                BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_PRICE_IMPROVEMENT, 950, 1425, "prev + (prev - pprev) + 238 + (i - 2) * 117", 15);
-            } else if (keys[i] === Anuto.GameConstants.TURRET_LASER) {
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_DAMAGE, 230, 270, "prev + (prev - pprev) + (i + 2) * 2", 10);
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_RELOAD, 1.5, 1.4, "prev - .1", 10);
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_RANGE, 3, 3.05, "prev + .05", 10);
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_PRICE_IMPROVEMENT, 50, 60, "prev + (i + 4) * 2", 10);
-                GameVars.turretsData[keys[i]].attributes[0].priceUpgrade = 7000;
-
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_DAMAGE, 4300, 4460, "prev + (prev - pprev) + 64 + (i - 2) * 26", 10);
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_RELOAD, 1.5, 1.4, "prev - .1", 10);
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_RANGE, 3, 3.05, "prev + .05", 10);
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_PRICE_IMPROVEMENT, 580, 812, "prev + (prev - pprev) + 93 + (i - 2) * 37", 10);
-                GameVars.turretsData[keys[i]].attributes[1].priceUpgrade = 96400;
-
-                BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_DAMAGE, 44000, 44333, "prev + (prev - pprev) + 34", 15);
-                BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_RELOAD, 3, 2.95, "prev - .05", 15);
-                BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_RANGE, 3.05, 3.1, "prev + .05", 15);
-                BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_PRICE_IMPROVEMENT, 839, 1203, "prev + (prev - pprev) + 239 + (i - 2) * 115", 15);
-            } else {
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_INTENSITY, 1.2, 1.4, "prev + .2", 5);
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_DURATION, 1.5, 1.5, "prev", 5);
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_RELOAD, 2, 2, "prev", 5);
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_RANGE, 1.5, 1.6, "prev + .1", 5);
-                BattleManager.setAttributes(keys[i], 1, Anuto.GameConstants.ATTRIBUTE_PRICE_IMPROVEMENT, 100, 120, "prev + (prev - pprev) + 4 + (i - 2)", 5);
-                GameVars.turretsData[keys[i]].attributes[0].priceUpgrade = 800;
-                
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_INTENSITY, 1.2, 1.5, "prev + 5", 5);
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_DURATION, 2.5, 2.5, "prev", 5);
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_RELOAD, 3, 3, "prev", 5);
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_RANGE, 2.5, 2.7, "prev + .2", 5);
-                BattleManager.setAttributes(keys[i], 2, Anuto.GameConstants.ATTRIBUTE_PRICE_IMPROVEMENT, 200, 240, "prev + (prev - pprev) + (i + 2) * 2", 5);
-                GameVars.turretsData[keys[i]].attributes[1].priceUpgrade = 1700;
-
-                BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_TELEPORT_DISTANCE, 15, 20, "prev + 5", 5);
-                BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_RELOAD, 5, 4.5, "prev - .5", 5);
-                BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_RANGE, 3.5, 3.5, "prev", 5);
-                BattleManager.setAttributes(keys[i], 3, Anuto.GameConstants.ATTRIBUTE_PRICE_IMPROVEMENT, 2000, 2400, "prev + (prev - pprev) + (i + 2) * 20", 5);
-            }
-        }
-    }
-
-    private static setAttributes(turret: string, grade: number , attribute: string, pprev: number, prev: number, func: string, length: number): void {
-
-        let res = [];
-        for (let i = 0; i < length; i++) {
-            if (i === 0) {
-                res[i] = pprev;
-            } else if (i === 1) {
-                res[i] = prev;
-            } else {
-                pprev = res[i - 2];
-                prev = res[i - 1];
-                res[i] = Math.round(eval(func) * 100) / 100;
-            }
-        }
-
-        GameVars.turretsData[turret].attributes[grade - 1][attribute] = res;
     }
 }

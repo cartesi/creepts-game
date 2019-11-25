@@ -28,7 +28,7 @@ import { GlueBullet } from "./GlueBullet";
         // mirar en el ANUTO y generar las formulas que correspondan
         protected calculateTurretParameters(): void {
 
-            let turretDataAtributes = this.engine.turretData[this.type].attributes[this.grade - 1];
+            let turretDataAtributes = this.engine.turretsAttributes[this.type][this.grade - 1];
 
             this.reload = turretDataAtributes.reload[this.level - 1];
             this.range = turretDataAtributes.range[this.level - 1];

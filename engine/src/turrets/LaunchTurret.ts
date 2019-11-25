@@ -52,7 +52,7 @@ import { Turret } from "../turrets/Turret";
 
         protected calculateTurretParameters(): void {
 
-            let turretDataAtributes = this.engine.turretData[this.type].attributes[this.grade - 1];
+            let turretDataAtributes = this.engine.turretsAttributes[this.type][this.grade - 1];
 
             this.damage = turretDataAtributes.damage[this.level - 1];
             this.explosionRange = turretDataAtributes.explosionRange[this.level - 1];
