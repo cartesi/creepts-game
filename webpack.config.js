@@ -50,7 +50,7 @@ module.exports = env => {
 			new BundleTracker({filename: './stats-app.json'}),
 			// new BundleAnalyzer(),
 			new CleanWebpackPlugin({
-				cleanOnceBeforeBuildPatterns: ['**/*', '!env*', '!verifier-*']
+				cleanOnceBeforeBuildPatterns: ['**/*', '!env*', '!*-verifier-*', '!level-*']
 			}),
 			new CopyWebpackPlugin([
 				{ from: 'assets/', to: 'assets/' }
@@ -87,9 +87,6 @@ module.exports = env => {
 		output: {
 			path: path.resolve(__dirname, 'dist'),
 			filename: '[name]-bundle.js'
-		},
-		stats: {
-			warningsFilter: [/node_modules\/yargs/]
 		},
 		module: {
 			rules: [

@@ -1,5 +1,6 @@
-import * as yargs from "yargs";
 import fs from 'fs';
+import path from 'path';
+import program from 'commander';
 import { MapObject, LevelObject } from "../types/tower-defense";
 import { GameConstants } from "../src/GameConstants";
 import * as Anuto from "../engine/src";
@@ -8,14 +9,6 @@ import maps from "../assets/config/maps.json";
 import enemies from "../assets/config/enemies.json";
 import turrets from "../assets/config/turrets.json";
 import waves from "../assets/config/waves.json";
-
-// parse command line
-const argv = yargs
-    .options({
-        map: { type: 'number', default: 0 }
-    })
-    .help()
-    .argv;
 
 const buildLevel = (map: MapObject): LevelObject => {
     // build level object using map and constant values
@@ -50,7 +43,7 @@ const one = (mapIndex: number) => {
     console.log(JSON.stringify(buildLevel(map)));
 };
 
-const all = (outdir: string) => {
+const all = (outdir: string, numbered: boolean) => {
     const names = [
         "original",
         "waiting-line",
@@ -64,13 +57,22 @@ const all = (outdir: string) => {
 
     const levels = maps.map(map => buildLevel(map));
     levels.forEach((level, index) => {
-        const name = names[index];
-        fs.writeFileSync(`${outdir}${name}.json`, JSON.stringify(level));
+        const name = numbered ? index.toString() : names[index];
+        const filename = path.resolve(outdir, `${name}.json`);
+        fs.writeFileSync(filename, JSON.stringify(level));
     });
 }
 
-if (argv.map) {
-    one(argv.map)
+// parse command line
+program.version('0.1.0');
+program
+    .option('-m, --map <index>', 'map index to generated to stdout', 0)
+    .option('-d, --directory <path>', 'output directory of json files', './')
+    .option('-n, --numbered', 'numbered files instead of named');
+program.parse(process.argv);
+
+if (program.map) {
+    one(program.map)
 } else {
-    all('./');
+    all(program.directory, program.numbered);
 }

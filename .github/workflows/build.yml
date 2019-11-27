@@ -1,0 +1,88 @@
+name: Build
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+
+      - run: npm install
+      - run: npm run build
+
+      - name: Generating level files
+        run: |
+          node dist/level-bundle.js -d ./test/levels
+          node dist/level-bundle.js -d ./test/levels -n
+      
+      - name: Running the engine with test logs
+        run: npm test
+
+      - name: Save verifier artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: verifier
+          path: dist/djs-verifier-bundle.js
+
+      - name: Save levels artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: levels
+          path: test/levels
+
+  machine:
+    runs-on: ubuntu-18.04
+    needs: test
+    steps:
+      - uses: actions/checkout@v1
+      
+      - name: Download verifier artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: verifier
+          path: machine/fs/bin/
+      
+      - name: Download levels artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: levels
+          path: machine/fs/levels
+      
+      - run: |
+          cd machine && make -j$(nproc)
+        env:
+          TOOLCHAIN_TAG: devel
+      
+      - name: Save fs artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: fs
+          path: machine/anutofs.ext2
+
+      - uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          prerelease: true
+          files: machine/anutofs.ext2
+        env:
+          GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
+
+  docker:
+    runs-on: ubuntu-18.04
+    needs: test
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Build Docker Image
+        run: docker build . -t cartesi/anuto-web
+
+      - name: Login to Docker Hub
+        run: docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Push to Docker Hub
+        run: docker push cartesi/anuto-web
