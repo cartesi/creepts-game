@@ -56,6 +56,7 @@
         "build:game": "webpack --env.GAME_ONLY=true --mode production && react-env --env .env --dest ./dist",
         "build:app": "webpack --config-name app --mode production && react-env --env .env --dest ./dist",
         "build:cmdline": "webpack --config-name cmdline --mode production",
-        "verifier": "webpack --config-name cmdline --mode production && node dist/node-verifier-bundle.js"
+        "verifier": "webpack --config-name cmdline --mode production && node dist/node-verifier-bundle.js",
+        "levels": "webpack --config-name cmdline --mode production && node dist/levels-bundle.js"
     }
 }
