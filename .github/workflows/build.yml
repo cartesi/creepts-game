@@ -14,8 +14,9 @@ jobs:
 
       - name: Generating level files
         run: |
-          node dist/level-bundle.js -d ./test/levels
-          node dist/level-bundle.js -d ./test/levels -n
+          mkdir -p ./test/levels
+          node dist/levels-bundle.js -d ./test/levels
+          node dist/levels-bundle.js -d ./test/levels -n
       
       - name: Running the engine with test logs
         run: npm test

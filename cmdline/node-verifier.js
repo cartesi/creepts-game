@@ -1,5 +1,5 @@
 import fs from 'fs';
-import verifier from './offlineVerifier';
+import verifier from './verifier';
 
 const logsFile = fs.readFileSync(process.argv[2]);
 const levelFile = fs.readFileSync(process.argv[3]);

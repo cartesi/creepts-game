@@ -52,12 +52,10 @@
         "dev": "webpack-dev-server --env.GAME_ONLY=true --mode development",
         "dev:cartesi": "mkdir -p dist/ && react-env --env .env --dest ./dist && webpack-dev-server --mode development",
         "test": "jest verifier.test",
-        "test:djs": "npm run build:verifier && jest djs.test",
         "build": "webpack --mode production && react-env --env .env --dest ./dist",
         "build:game": "webpack --env.GAME_ONLY=true --mode production && react-env --env .env --dest ./dist",
         "build:app": "webpack --config-name app --mode production && react-env --env .env --dest ./dist",
-        "build:verifier": "webpack --config-name verifier --mode production",
-        "verifier": "webpack --config-name verifier --mode production && verifier/djs dist/djs-verifier-bundle.js",
-        "verifier:node": "webpack --config-name verifier --mode production && node dist/node-verifier-bundle.js"
+        "build:cmdline": "webpack --config-name cmdline --mode production",
+        "verifier": "webpack --config-name cmdline --mode production && node dist/node-verifier-bundle.js"
     }
 }
