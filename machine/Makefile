@@ -42,7 +42,7 @@ DEPDIRS := $(DJSDIR) $(VIMDIR)
 
 fs: anutofs.ext2
 
-anutofs.ext2: $(FSDIR)/bin/djs $(FSDIR)/bin/xxd $(FSDIR)/bin/* $(FSDIR)/levels/*
+anutofs.ext2: $(FSDIR)/bin/djs $(FSDIR)/bin/xxd $(FSDIR)/levels
 	$(MAKE) toolchain-exec CONTAINER_COMMAND="$(CONTAINER_MAKE) $@.toolchain"
 
 $(FSDIR)/bin/djs: $(DJS)
@@ -66,6 +66,10 @@ $(DJS).toolchain:
 
 $(FSDIR)/bin/xxd: $(XXD)
 	cp -f $< $@
+
+$(FSDIR)/levels:
+	mkdir -p $@
+	cd .. && npm run levels -- -d machine/fs/levels -n
 
 $(XXD): $(DEPDIR)/vim-8.1.2069
 	$(MAKE) toolchain-exec CONTAINER_COMMAND="$(CONTAINER_MAKE) $@.toolchain"
@@ -110,6 +114,6 @@ toolchain-env:
 		cartesi/image-toolchain:$(TOOLCHAIN_TAG)
 
 clean:
-	\rm -rf anutofs.ext2 $(FSDIR)/bin/djs $(DJS) $(FSDIR)/bin/xxd $(XXD) $(DOWNLOADDIR) $(DEPDIRS) $(BUILDDIR)
+	\rm -rf anutofs.ext2 $(DJS) $(FSDIR)/bin/djs $(FSDIR)/bin/xxd $(FSDIR)/levels $(XXD) $(DOWNLOADDIR) $(DEPDIRS) $(BUILDDIR)
 
 .PHONY: toolchain-exec djs build-djs xxd build-xxd clean downloads $(XXD).toolchain $(DJS).toolchain anutofs.ext2.toolchain
