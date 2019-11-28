@@ -20,6 +20,7 @@ FSDIR := fs
 DEPDIR := third-party
 SRCDIR := $(abspath src)
 DOWNLOADDIR := $(DEPDIR)/downloads
+BUILDDIR := build
 
 CONTAINER_BASE := /opt/cartesi/anuto-dapp
 CONTAINER_MAKE := /usr/bin/make
@@ -49,6 +50,16 @@ $(FSDIR)/bin/djs: $(DJS)
 
 $(DJS): $(DEPDIR)/duktape-2.4.0
 	$(MAKE) toolchain-exec CONTAINER_COMMAND="$(CONTAINER_MAKE) $@.toolchain"
+
+$(BUILDDIR)/djs: $(DEPDIR)/duktape-2.4.0
+	mkdir -p $(BUILDDIR)
+	rm -f $(DJS) &&	$(MAKE) -C $(DJSDIR) -f Makefile.djs
+	cp -f $(DJS) $@
+
+djs: $(BUILDDIR)/djs
+
+djs.clean:
+	rm -f $(BUILDDIR)/djs
 
 $(DJS).toolchain:
 	$(MAKE) -C $(DJSDIR) -f Makefile.djs CC=$(RVCC)
@@ -99,6 +110,6 @@ toolchain-env:
 		cartesi/image-toolchain:$(TOOLCHAIN_TAG)
 
 clean:
-	\rm -rf anutofs.ext2 $(FSDIR)/bin/djs $(DJS) $(FSDIR)/bin/xxd $(XXD) $(DOWNLOADDIR) $(DEPDIRS)
+	\rm -rf anutofs.ext2 $(FSDIR)/bin/djs $(DJS) $(FSDIR)/bin/xxd $(XXD) $(DOWNLOADDIR) $(DEPDIRS) $(BUILDDIR)
 
 .PHONY: toolchain-exec djs build-djs xxd build-xxd clean downloads $(XXD).toolchain $(DJS).toolchain anutofs.ext2.toolchain
