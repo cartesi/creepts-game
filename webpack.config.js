@@ -50,7 +50,7 @@ module.exports = env => {
 			new BundleTracker({filename: './stats-app.json'}),
 			// new BundleAnalyzer(),
 			new CleanWebpackPlugin({
-				cleanOnceBeforeBuildPatterns: ['**/*', '!env*', '!verifier-*']
+				cleanOnceBeforeBuildPatterns: ['**/*', '!env*', '!*-verifier-*', '!levels-*']
 			}),
 			new CopyWebpackPlugin([
 				{ from: 'assets/', to: 'assets/' }
@@ -75,21 +75,18 @@ module.exports = env => {
 		}
 	};
 
-	const verifierConfig = {
-		name: 'verifier',
+	const cmdlineConfig = {
+		name: 'cmdline',
 		target: 'node',
 		entry: {
-			'djs-verifier': './verifier/djs-verifier.js',
-			'node-verifier': './verifier/node-verifier.js',
-			level: './cmdline/level.ts'
+			'djs-verifier': './cmdline/djs-verifier.js',
+			'node-verifier': './cmdline/node-verifier.js',
+			'levels': './cmdline/levels.ts'
 		},
 		devtool: 'source-map',
 		output: {
 			path: path.resolve(__dirname, 'dist'),
 			filename: '[name]-bundle.js'
-		},
-		stats: {
-			warningsFilter: [/node_modules\/yargs/]
 		},
 		module: {
 			rules: [
@@ -101,12 +98,12 @@ module.exports = env => {
 			]
 		},
 		plugins: [
-			new BundleTracker({filename: './stats-verifier.json'})
+			new BundleTracker({filename: './stats-cmdline.json'})
 		],
 		resolve: {
 			extensions: ['.ts', '.js']
 		}
 	};
 
-	return [ appConfig, verifierConfig ];
+	return [ appConfig, cmdlineConfig ];
 };

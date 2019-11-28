@@ -1,7 +1,47 @@
-diff -Naur old/duktape-2.4.0/examples/js/duk_js.c duktape-2.4.0/examples/js/duk_js.c
---- old/duktape-2.4.0/examples/js/duk_js.c	1969-12-31 21:00:00.000000000 -0300
-+++ duktape-2.4.0/examples/js/duk_js.c	2019-08-12 17:51:25.900362513 -0300
-@@ -0,0 +1,732 @@
+diff -Naur duktape-2.4.0.old/Makefile.djs duktape-2.4.0/Makefile.djs
+--- duktape-2.4.0.old/Makefile.djs	1969-12-31 21:00:00.000000000 -0300
++++ duktape-2.4.0/Makefile.djs	2019-08-31 14:24:26.000000000 -0300
+@@ -0,0 +1,36 @@
++#
++#  Example Makefile for building a program with embedded Duktape.
++#  The example program here is the Duktape command line tool.
++#
++
++DUKTAPE_SOURCES = src/duktape.c
++
++CMDLINE_SOURCES = \
++	examples/djs/duk_js.c
++
++CC ?= gcc
++CCOPTS = -O2 -pedantic -std=c99 -Wall -fstrict-aliasing -fomit-frame-pointer
++CCOPTS += -I./examples/djs -I./src   # duktape.h and duk_config.h must be in include path
++CCLIBS = -lm
++
++# Enable print() and alert() for command line using an optional extra module.
++CCOPTS += -DDUK_CMDLINE_PRINTALERT_SUPPORT -I./extras/print-alert
++CMDLINE_SOURCES += extras/print-alert/duk_print_alert.c
++
++# Enable console object (console.log() etc) for command line.
++CCOPTS += -DDUK_CMDLINE_CONSOLE_SUPPORT -I./extras/console
++CMDLINE_SOURCES += extras/console/duk_console.c
++
++# Enable Duktape.Logger for command line.
++CCOPTS += -DDUK_CMDLINE_LOGGING_SUPPORT -I./extras/logging
++CMDLINE_SOURCES += extras/logging/duk_logging.c
++
++# Enable Duktape 1.x module loading for command line.
++CCOPTS += -DDUK_CMDLINE_MODULE_SUPPORT -I./extras/module-duktape
++CMDLINE_SOURCES += extras/module-duktape/duk_module_duktape.c
++
++# Enable Trivial readFile/writeFile bindings for testing.
++CCOPTS += -DDUK_CMDLINE_FILEIO
++
++djs: $(DUKTAPE_SOURCES) $(CMDLINE_SOURCES)
++	$(CC) -o $@ $(DEFINES) $(CCOPTS) $(DUKTAPE_SOURCES) $(CMDLINE_SOURCES) $(CCLIBS)
+diff -Naur duktape-2.4.0.old/examples/djs/duk_js.c duktape-2.4.0/examples/djs/duk_js.c
+--- duktape-2.4.0.old/examples/djs/duk_js.c	1969-12-31 21:00:00.000000000 -0300
++++ duktape-2.4.0/examples/djs/duk_js.c	2019-09-09 10:33:36.000000000 -0300
+@@ -0,0 +1,743 @@
 +#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || \
 +    defined(WIN64) || defined(_WIN64) || defined(__WIN64__)
 +/* Suppress warnings about plain fopen() etc. */
@@ -488,22 +528,33 @@ diff -Naur old/duktape-2.4.0/examples/js/duk_js.c duktape-2.4.0/examples/js/duk_
 +	duk_logging_init(ctx, 0 /*flags*/);
 +#endif
 +
-+	/* Register require() (removed in Duktape 2.x). */
-+#if defined(DUK_CMDLINE_MODULE_SUPPORT)
-+	duk_module_duktape_init(ctx);
-+#endif
-+
-+	/* Register CBOR. */
-+#if defined(DUK_CMDLINE_CBOR_SUPPORT)
-+	duk_cbor_init(ctx, 0 /*flags*/);
-+#endif
-+
 +	/* Trivial readFile/writeFile bindings for testing. */
 +#if defined(DUK_CMDLINE_FILEIO)
 +	duk_push_c_function(ctx, fileio_read_file, 1 /*nargs*/);
 +	duk_put_global_string(ctx, "readFile");
 +	duk_push_c_function(ctx, fileio_write_file, 2 /*nargs*/);
 +	duk_put_global_string(ctx, "writeFile");
++#endif
++
++	/* Register require() (removed in Duktape 2.x). */
++#if defined(DUK_CMDLINE_MODULE_SUPPORT)
++	duk_eval_string(ctx,
++		"Duktape.modSearch = function (id, require, exports, module) {\n"
++			"var base = scriptArgs[0].replace(/[^\\/]+$/, '');\n"
++			"var res = readFile(base + id + '.js');\n"
++            "if (typeof res === 'string') {\n"
++            "    return res;\n"
++            "} else {\n"
++            "    throw new Error('module not found: ' + id);\n"
++            "}\n"
++		"}\n"
++	);
++	duk_module_duktape_init(ctx);
++#endif
++
++	/* Register CBOR. */
++#if defined(DUK_CMDLINE_CBOR_SUPPORT)
++	duk_cbor_init(ctx, 0 /*flags*/);
 +#endif
 +
 +	/* Stash a formatting function for evaluation results. */
@@ -674,7 +725,7 @@ diff -Naur old/duktape-2.4.0/examples/js/duk_js.c duktape-2.4.0/examples/js/duk_
 +        }
 +        duk_push_int(ctx, script_argc);
 +        duk_put_prop_literal(ctx, -2, "length");
-+        duk_put_global_literal(ctx, "arg");
++        duk_put_global_literal(ctx, "scriptArgs");
 +        /* run script */
 +        if (handle_file(ctx, argv[script_i], NULL) != 0) {
 +            retval = 1;
@@ -719,7 +770,7 @@ diff -Naur old/duktape-2.4.0/examples/js/duk_js.c duktape-2.4.0/examples/js/duk_
 +	 */
 +
 + usage:
-+	fprintf(stderr, "Usage: duk [options] [<script> [args]]\n"
++	fprintf(stderr, "Usage: djs [options] [<script> [args]]\n"
 +	                "\n"
 +	                "   -i                 enter interactive mode after executing argument file(s) / eval code\n"
 +	                "   -e CODE            evaluate code\n"
@@ -734,9 +785,9 @@ diff -Naur old/duktape-2.4.0/examples/js/duk_js.c duktape-2.4.0/examples/js/duk_
 +	fflush(stderr);
 +	exit(1);
 +}
-diff -Naur old/duktape-2.4.0/examples/js/duk_js.h duktape-2.4.0/examples/js/duk_js.h
---- old/duktape-2.4.0/examples/js/duk_js.h	1969-12-31 21:00:00.000000000 -0300
-+++ duktape-2.4.0/examples/js/duk_js.h	2019-07-28 17:34:21.000000000 -0300
+diff -Naur duktape-2.4.0.old/examples/djs/duk_js.h duktape-2.4.0/examples/djs/duk_js.h
+--- duktape-2.4.0.old/examples/djs/duk_js.h	1969-12-31 21:00:00.000000000 -0300
++++ duktape-2.4.0/examples/djs/duk_js.h	2019-07-28 17:34:21.000000000 -0300
 @@ -0,0 +1,16 @@
 +#if !defined(DUK_CMDLINE_H_INCLUDED)
 +#define DUK_CMDLINE_H_INCLUDED
@@ -754,50 +805,3 @@ diff -Naur old/duktape-2.4.0/examples/js/duk_js.h duktape-2.4.0/examples/js/duk_
 +void lowmem_free_wrapped(void *udata, void *ptr);
 +
 +#endif  /* DUK_CMDLINE_H_INCLUDED */
-diff -Naur old/duktape-2.4.0/json-sample.js duktape-2.4.0/json-sample.js
---- old/duktape-2.4.0/json-sample.js	1969-12-31 21:00:00.000000000 -0300
-+++ duktape-2.4.0/json-sample.js	2019-08-12 17:56:57.437167723 -0300
-@@ -0,0 +1,3 @@
-+var s = readFile(arg[1]);
-+var log = JSON.parse(s.replace(/\r?\n/g, ""))
-+print(JSON.stringify(log))
-diff -Naur old/duktape-2.4.0/Makefile.js duktape-2.4.0/Makefile.js
---- old/duktape-2.4.0/Makefile.js	1969-12-31 21:00:00.000000000 -0300
-+++ duktape-2.4.0/Makefile.js	2019-08-12 15:35:41.345140398 -0300
-@@ -0,0 +1,36 @@
-+#
-+#  Example Makefile for building a program with embedded Duktape.
-+#  The example program here is the Duktape command line tool.
-+#
-+
-+DUKTAPE_SOURCES = src/duktape.c
-+
-+CMDLINE_SOURCES = \
-+	examples/js/duk_js.c
-+
-+CC = gcc
-+CCOPTS = -Os -pedantic -std=c99 -Wall -fstrict-aliasing -fomit-frame-pointer
-+CCOPTS += -I./examples/js -I./src   # duktape.h and duk_config.h must be in include path
-+CCLIBS = -lm
-+
-+# Enable print() and alert() for command line using an optional extra module.
-+CCOPTS += -DDUK_CMDLINE_PRINTALERT_SUPPORT -I./extras/print-alert
-+CMDLINE_SOURCES += extras/print-alert/duk_print_alert.c
-+
-+# Enable console object (console.log() etc) for command line.
-+CCOPTS += -DDUK_CMDLINE_CONSOLE_SUPPORT -I./extras/console
-+CMDLINE_SOURCES += extras/console/duk_console.c
-+
-+# Enable Duktape.Logger for command line.
-+CCOPTS += -DDUK_CMDLINE_LOGGING_SUPPORT -I./extras/logging
-+CMDLINE_SOURCES += extras/logging/duk_logging.c
-+
-+# Enable Duktape 1.x module loading for command line.
-+CCOPTS += -DDUK_CMDLINE_MODULE_SUPPORT -I./extras/module-duktape
-+CMDLINE_SOURCES += extras/module-duktape/duk_module_duktape.c
-+
-+# Enable Trivial readFile/writeFile bindings for testing.
-+CCOPTS += -DDUK_CMDLINE_FILEIO
-+
-+js: $(DUKTAPE_SOURCES) $(CMDLINE_SOURCES)
-+	$(CC) -o $@ $(DEFINES) $(CCOPTS) $(DUKTAPE_SOURCES) $(CMDLINE_SOURCES) $(CCLIBS)

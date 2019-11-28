@@ -1,8 +1,13 @@
-import verify from '../verifier/offlineVerifier';
+import verify from '../cmdline/verifier';
+import buildLevel from '../cmdline/level';
+import maps from '../assets/config/maps.json';
+
 const tests = require('./tests.json');
 
-tests.forEach(([ log, level, score ]) => {
+tests.forEach(([ log, mapIndex, score ]) => {
     test(log, () => {
-        expect(verify(require(level), require(log))).toBe(score);
+        const map = maps[mapIndex];
+        const level = buildLevel(map);
+        expect(verify(level, require(log))).toBe(score);
     });
 });

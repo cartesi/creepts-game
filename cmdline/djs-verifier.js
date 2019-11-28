@@ -1,5 +1,5 @@
 
-import verifier from './offlineVerifier';
+import verifier from './verifier';
 
 const logsFile = readFile(scriptArgs[1]);
 const levelFile = readFile(scriptArgs[2]);
