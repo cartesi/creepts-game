@@ -605,6 +605,10 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
     public showRoundCompletedLayer(): void {
 
+        if (GameVars.timeStepFactor === 8 || GameVars.autoSendWave) {
+            return;
+        } 
+
         this.roundCompletedLayer = new RoundCompletedLayer(this.scene);
         this.add(this.roundCompletedLayer);
     }

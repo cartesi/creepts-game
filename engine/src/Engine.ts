@@ -472,7 +472,7 @@ import * as Types from "./Types";
             }
 
             this.eventDispatcher.dispatchEvent(new Event(Event.LASER_SHOT, [laserTurret, enemies]));
-            this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [[enemies]]));
+            this.eventDispatcher.dispatchEvent(new Event(Event.ENEMY_HIT, [enemies]));
         }
 
         public flagEnemyToTeleport(enemy: Enemy, glueTurret: GlueTurret): void {
