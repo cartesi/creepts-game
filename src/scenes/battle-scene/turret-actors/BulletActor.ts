@@ -3,23 +3,23 @@ import * as Creepts from "../../../../engine/src";
 
 export class BulletActor extends Phaser.GameObjects.Image {
 
-    public anutoBullet: Creepts.Bullet;
+    public bullet: Creepts.Bullet;
     public initialPosition: {x: number, y: number};
     public realX: number;
     public realY: number;
 
-    constructor(scene: Phaser.Scene, anutoBullet: Creepts.Bullet) {
+    constructor(scene: Phaser.Scene, bullet: Creepts.Bullet) {
 
         super(scene, 0, 0, "texture_atlas_1", "bullet_1_1");
 
-        this.anutoBullet = anutoBullet;
+        this.bullet = bullet;
 
         this.setScale(.75);
         this.setOrigin(.5, 0);
         this.visible = false;
 
-        this.x = this.anutoBullet.x * GameConstants.CELLS_SIZE;
-        this.y = this.anutoBullet.y * GameConstants.CELLS_SIZE;
+        this.x = this.bullet.x * GameConstants.CELLS_SIZE;
+        this.y = this.bullet.y * GameConstants.CELLS_SIZE;
 
         this.realX = this.x;
         this.realY = this.y;
@@ -37,8 +37,8 @@ export class BulletActor extends Phaser.GameObjects.Image {
             smoothFactor = 1;
         }
 
-        let offX = (this.anutoBullet.x * GameConstants.CELLS_SIZE - this.realX) * smoothFactor;
-        let offY = (this.anutoBullet.y * GameConstants.CELLS_SIZE - this.realY) * smoothFactor;
+        let offX = (this.bullet.x * GameConstants.CELLS_SIZE - this.realX) * smoothFactor;
+        let offY = (this.bullet.y * GameConstants.CELLS_SIZE - this.realY) * smoothFactor;
         
         this.realX += offX;
         this.realY += offY;
@@ -48,10 +48,10 @@ export class BulletActor extends Phaser.GameObjects.Image {
         let canonX = 0;
         let canonY = 0;
 
-        if (this.anutoBullet.canonShoot === "left") {
+        if (this.bullet.canonShoot === "left") {
             canonX = Math.cos(this.rotation) * 7.5;
             canonY = Math.sin(this.rotation) * 7.5;
-        } else if (this.anutoBullet.canonShoot === "right") {
+        } else if (this.bullet.canonShoot === "right") {
             canonX = Math.cos(this.rotation) * -7.5;
             canonY = Math.sin(this.rotation) * -7.5;
         }

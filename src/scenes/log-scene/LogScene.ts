@@ -39,7 +39,7 @@ export class LogScene extends Phaser.Scene {
 
     public update(time: number, delta: number): void {
 
-        while (GameVars.logsObject.actions.length && GameVars.logsObject.actions[0].tick === BattleManager.anutoEngine.ticksCounter) {
+        while (GameVars.logsObject.actions.length && GameVars.logsObject.actions[0].tick === BattleManager.engine.ticksCounter) {
 
             var action = GameVars.logsObject.actions.shift();
     

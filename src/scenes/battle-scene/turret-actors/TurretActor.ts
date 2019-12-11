@@ -15,7 +15,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
     public base: Phaser.GameObjects.Image;
     public canon: Phaser.GameObjects.Image;
     public turretLevel: TurretLevel;
-    public anutoTurret: Creepts.Turret;
+    public turret: Creepts.Turret;
     public showLevel: boolean;
     
     private rangeCircle: Phaser.GameObjects.Image;
@@ -30,8 +30,8 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
         this.setScale(.82);
         
-        this.anutoTurret = turret;
-        this.id = this.anutoTurret.id;
+        this.turret = turret;
+        this.id = this.turret.id;
 
         this.x = GameConstants.CELLS_SIZE * (this.p.c + .5);
         this.y = GameConstants.CELLS_SIZE * (this.p.r + .5);
@@ -58,7 +58,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
                 break;
         }
 
-        this.rangeCircle = BattleManager.createRangeCircle(this.anutoTurret.range * GameConstants.CELLS_SIZE, this.x, this.y, typeRange);
+        this.rangeCircle = BattleManager.createRangeCircle(this.turret.range * GameConstants.CELLS_SIZE, this.x, this.y, typeRange);
 
         this.turretLevel = new TurretLevel(this.scene, this);
         this.add(this.turretLevel);
@@ -73,11 +73,11 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
     public update(time: number, delta: number): void {
         
-        if (this.anutoTurret.enemiesWithinRange.length > 0) {
+        if (this.turret.enemiesWithinRange.length > 0) {
             
-            if (this.anutoTurret.followedEnemy) {
+            if (this.turret.followedEnemy) {
 
-                const followedEnemyActor = BoardContainer.currentInstance.getEnemyActorByID(this.anutoTurret.followedEnemy.id);
+                const followedEnemyActor = BoardContainer.currentInstance.getEnemyActorByID(this.turret.followedEnemy.id);
 
                 if (followedEnemyActor) {
                     const dx = followedEnemyActor.x - this.x;
@@ -104,7 +104,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
     public reloadRangeCircle(): void {
 
         this.rangeCircle.setScale(1);
-        this.rangeCircle.setScale((this.anutoTurret.range * GameConstants.CELLS_SIZE * 2) / this.rangeCircle.width);
+        this.rangeCircle.setScale((this.turret.range * GameConstants.CELLS_SIZE * 2) / this.rangeCircle.width);
     }
 
     protected shoot(): void {
@@ -117,7 +117,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
             return;
         }
 
-        if (GameVars.paused || BattleManager.anutoEngine.gameOver) {
+        if (GameVars.paused || BattleManager.engine.gameOver) {
             return;
         }
 
@@ -126,7 +126,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
             BattleManager.hideRangeCircles();
             this.rangeCircle.visible = true;
         } else {
-            BattleManager.showTurretMenu(this.anutoTurret);
+            BattleManager.showTurretMenu(this.turret);
         }
     }
 

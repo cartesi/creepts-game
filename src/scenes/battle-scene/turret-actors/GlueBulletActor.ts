@@ -3,12 +3,12 @@ import * as Creepts from "../../../../engine/src";
 
 export class GlueBulletActor extends Phaser.GameObjects.Container {
 
-    public anutoGlueBullet: Creepts.GlueBullet;
+    public glueBullet: Creepts.GlueBullet;
     public initialPosition: {x: number, y: number};
 
     private img: Phaser.GameObjects.Sprite;
 
-    constructor(scene: Phaser.Scene, anutoGlueBullet: Creepts.GlueBullet) {
+    constructor(scene: Phaser.Scene, glueBullet: Creepts.GlueBullet) {
 
         super(scene);
 
@@ -17,12 +17,12 @@ export class GlueBulletActor extends Phaser.GameObjects.Container {
         this.img.setScale(.25);
         this.add(this.img);
 
-        this.anutoGlueBullet = anutoGlueBullet;
+        this.glueBullet = glueBullet;
 
         this.visible = false;
 
-        this.x = this.anutoGlueBullet.x * GameConstants.CELLS_SIZE;
-        this.y = this.anutoGlueBullet.y * GameConstants.CELLS_SIZE;
+        this.x = this.glueBullet.x * GameConstants.CELLS_SIZE;
+        this.y = this.glueBullet.y * GameConstants.CELLS_SIZE;
 
         this.initialPosition = {x: this.x, y: this.y};
     }
@@ -37,8 +37,8 @@ export class GlueBulletActor extends Phaser.GameObjects.Container {
             smoothFactor = 1;
         }
 
-        const offX = (this.anutoGlueBullet.x * GameConstants.CELLS_SIZE - this.x) * smoothFactor;
-        const offY = (this.anutoGlueBullet.y * GameConstants.CELLS_SIZE - this.y) * smoothFactor;
+        const offX = (this.glueBullet.x * GameConstants.CELLS_SIZE - this.x) * smoothFactor;
+        const offY = (this.glueBullet.y * GameConstants.CELLS_SIZE - this.y) * smoothFactor;
         
         this.x += offX;
         this.y += offY;

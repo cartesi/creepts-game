@@ -35,7 +35,7 @@ export class GameOverLayer extends Phaser.GameObjects.Container {
 
         // score
         const scoreHeight = 80;
-        const score = new Phaser.GameObjects.Text(this.scene, 0, y + (scoreHeight / 2), "SCORE: " + GameVars.formatNumber(BattleManager.anutoEngine.score), {fontFamily: "Rubik-Regular", fontSize: "65px", color: "#FFFFFF"});
+        const score = new Phaser.GameObjects.Text(this.scene, 0, y + (scoreHeight / 2), "SCORE: " + GameVars.formatNumber(BattleManager.engine.score), {fontFamily: "Rubik-Regular", fontSize: "65px", color: "#FFFFFF"});
         score.setOrigin(.5);
         box.add(score);
         y += scoreHeight;

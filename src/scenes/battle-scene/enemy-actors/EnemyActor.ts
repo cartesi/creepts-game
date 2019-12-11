@@ -11,15 +11,15 @@ export class EnemyActor extends Phaser.GameObjects.Container {
     protected img: Phaser.GameObjects.Sprite;
     protected shield: Phaser.GameObjects.Image;
     protected lifeBar: LifeBar;
-    protected anutoEnemy: Creepts.Enemy;
+    protected enemy: Creepts.Enemy;
 
-    constructor(scene: Phaser.Scene, anutoEnemy: Creepts.Enemy, position: {r: number, c: number}) {
+    constructor(scene: Phaser.Scene, enemy: Creepts.Enemy, position: {r: number, c: number}) {
 
         super(scene);
 
-        this.anutoEnemy = anutoEnemy;
-        this.id = this.anutoEnemy.id;
-        this.type = this.anutoEnemy.type;
+        this.enemy = enemy;
+        this.id = this.enemy.id;
+        this.type = this.enemy.type;
         this.alpha = 0;
 
         this.x = GameConstants.CELLS_SIZE * (position.c + .5);
@@ -32,7 +32,7 @@ export class EnemyActor extends Phaser.GameObjects.Container {
         this.shield.visible = false;
         this.add(this.shield);
 
-        this.lifeBar = new LifeBar(this.scene, this.anutoEnemy.life);
+        this.lifeBar = new LifeBar(this.scene, this.enemy.life);
         this.lifeBar.y = -32;
         this.lifeBar.x -= LifeBar.WIDTH / 2;
         this.add(this.lifeBar);
@@ -42,17 +42,17 @@ export class EnemyActor extends Phaser.GameObjects.Container {
 
     public update(time: number, delta: number): void {
 
-        if (this.anutoEnemy.life === 0) {
+        if (this.enemy.life === 0) {
             return;
         }
 
-        if (this.anutoEnemy.teleporting) {
+        if (this.enemy.teleporting) {
             this.scaleX = .175;
             this.scaleY = .175;
             return;
         }
 
-        if (this.anutoEnemy.affectedByGlue || this.anutoEnemy.affectedByGlueBullet) {
+        if (this.enemy.affectedByGlue || this.enemy.affectedByGlueBullet) {
             if (this.img.anims.currentAnim.key === "enemy_" + this.type + "_run") {
                 this.img.anims.play("enemy_" + this.type + "_run_frozen");
             }
@@ -62,7 +62,7 @@ export class EnemyActor extends Phaser.GameObjects.Container {
             }
         }
 
-        if (this.anutoEnemy.hasBeenTeleported) {
+        if (this.enemy.hasBeenTeleported) {
             if (!this.shield.visible) {
                 this.shield.visible = true;
             }
@@ -83,10 +83,10 @@ export class EnemyActor extends Phaser.GameObjects.Container {
             smoothFactor = 1;
         }
 
-        this.x += (this.anutoEnemy.x * GameConstants.CELLS_SIZE - this.x) * smoothFactor;
-        this.y += (this.anutoEnemy.y * GameConstants.CELLS_SIZE - this.y) * smoothFactor;
+        this.x += (this.enemy.x * GameConstants.CELLS_SIZE - this.x) * smoothFactor;
+        this.y += (this.enemy.y * GameConstants.CELLS_SIZE - this.y) * smoothFactor;
 
-        this.lifeBar.updateValue(this.anutoEnemy.life);
+        this.lifeBar.updateValue(this.enemy.life);
 
         // para suavizar la aparición
         if (this.alpha < 1) {
@@ -103,10 +103,10 @@ export class EnemyActor extends Phaser.GameObjects.Container {
         // de momento nada
     }
 
-    public teleport(anutoGlueTurret: Creepts.GlueTurret): void {
+    public teleport(glueTurret: Creepts.GlueTurret): void {
         
-        const glueTurret_px = (anutoGlueTurret.position.c + .5) * GameConstants.CELLS_SIZE;
-        const glueTurret_py = (anutoGlueTurret.position.r + .5) * GameConstants.CELLS_SIZE - 8;
+        const glueTurret_px = (glueTurret.position.c + .5) * GameConstants.CELLS_SIZE;
+        const glueTurret_py = (glueTurret.position.r + .5) * GameConstants.CELLS_SIZE - 8;
 
         this.scene.tweens.add({
             targets: this,
@@ -128,8 +128,8 @@ export class EnemyActor extends Phaser.GameObjects.Container {
         // al desaparecer continue moviendose
         let f = this.type === Creepts.GameConstants.ENEMY_FLIER || this.type === Creepts.GameConstants.ENEMY_RUNNER ? 3 : 1.5;
 
-        const dx = f * (this.anutoEnemy.x - this.anutoEnemy.prevX) * GameConstants.CELLS_SIZE;
-        const dy = f * (this.anutoEnemy.y - this.anutoEnemy.prevY) * GameConstants.CELLS_SIZE;
+        const dx = f * (this.enemy.x - this.enemy.prevX) * GameConstants.CELLS_SIZE;
+        const dy = f * (this.enemy.y - this.enemy.prevY) * GameConstants.CELLS_SIZE;
 
         this.scene.tweens.add({
             targets: this,

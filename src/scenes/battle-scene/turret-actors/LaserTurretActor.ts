@@ -47,7 +47,7 @@ export class LaserTurretActor extends TurretActor {
 
         super.upgrade();
 
-        switch (this.anutoTurret.grade) {
+        switch (this.turret.grade) {
  
              case 2:
                 this.base.setFrame("base_2_2");
@@ -72,6 +72,6 @@ export class LaserTurretActor extends TurretActor {
         this.framesDuration = GameVars.timeStepFactor === 1 ? 24 : 6;
         this.f = 0;
 
-        AudioManager.playSound("t2_laser" + this.anutoTurret.grade);
+        AudioManager.playSound("t2_laser" + this.turret.grade);
     }
 }

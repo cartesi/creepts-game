@@ -7,16 +7,16 @@ import { AudioManager } from '../../../AudioManager';
 
 export class MineActor extends Phaser.GameObjects.Container {
 
-    public anutoMine: Creepts.Mine;
+    public mine: Creepts.Mine;
 
     private mineImage: Phaser.GameObjects.Sprite;
     private detonated: boolean;
 
-    constructor(scene: Phaser.Scene, anutoMine: Creepts.Mine, launchTurretActor: LaunchTurretActor) {
+    constructor(scene: Phaser.Scene, mine: Creepts.Mine, launchTurretActor: LaunchTurretActor) {
 
         super(scene, 0, 0);
 
-        this.anutoMine = anutoMine;
+        this.mine = mine;
         this.detonated = false;
 
         let randX = Math.random() * GameConstants.CELLS_SIZE / 2 - GameConstants.CELLS_SIZE / 3;
@@ -33,8 +33,8 @@ export class MineActor extends Phaser.GameObjects.Container {
 
         this.scene.tweens.add({
             targets: this,
-            x: this.anutoMine.x * GameConstants.CELLS_SIZE + randX,
-            y: this.anutoMine.y * GameConstants.CELLS_SIZE + randY,
+            x: this.mine.x * GameConstants.CELLS_SIZE + randX,
+            y: this.mine.y * GameConstants.CELLS_SIZE + randY,
             ease: Phaser.Math.Easing.Cubic.Out,
             duration: GameVars.timeStepFactor === 1 ? 600 : 200,
         });

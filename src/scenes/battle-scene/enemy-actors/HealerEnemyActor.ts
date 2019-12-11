@@ -3,9 +3,9 @@ import * as Creepts from "../../../../engine/src";
 
 export class HealerEnemyActor extends EnemyActor {
 
-    constructor(scene: Phaser.Scene, anutoEnemy: Creepts.Enemy, position: {r: number, c: number}) {
+    constructor(scene: Phaser.Scene, enemy: Creepts.Enemy, position: {r: number, c: number}) {
 
-        super(scene, anutoEnemy, position);
+        super(scene, enemy, position);
 
         // this.img = this.scene.add.sprite(0, 0, "texture_atlas_1", "enemy_healer_1");
         // this.add(this.img);
@@ -17,16 +17,16 @@ export class HealerEnemyActor extends EnemyActor {
 
         super.update(time, delta);
 
-        const anutoEnemy = <Creepts.HealerEnemy> this.anutoEnemy;
+        const enemy = <Creepts.HealerEnemy> this.enemy;
 
-        if (anutoEnemy.healing && this.img.anims.currentAnim.key === "enemy_healer_run") {
-            if (this.anutoEnemy.affectedByGlue || this.anutoEnemy.affectedByGlueBullet) {
+        if (enemy.healing && this.img.anims.currentAnim.key === "enemy_healer_run") {
+            if (this.enemy.affectedByGlue || this.enemy.affectedByGlueBullet) {
                 this.img.anims.play("enemy_healer_heal_frozen");
             } else {
                 this.img.anims.play("enemy_healer_heal");
             }
-        } else if (!anutoEnemy.healing && this.img.anims.currentAnim.key === "enemy_healer_heal") {
-            if (this.anutoEnemy.affectedByGlue || this.anutoEnemy.affectedByGlueBullet) {
+        } else if (!enemy.healing && this.img.anims.currentAnim.key === "enemy_healer_heal") {
+            if (this.enemy.affectedByGlue || this.enemy.affectedByGlueBullet) {
                 this.img.anims.play("enemy_healer_run_frozen");
             } else {
                 this.img.anims.play("enemy_healer_run");

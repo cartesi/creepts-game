@@ -66,7 +66,7 @@ export class GUI extends Phaser.GameObjects.Container {
         this.add(this.autoButton);
 
         this.scene.time.addEvent({ delay: 3000, callback: () => {
-            if (this.nextWaveButton.alpha === 1 && BattleManager.anutoEngine.noEnemiesOnStage) {
+            if (this.nextWaveButton.alpha === 1 && BattleManager.engine.noEnemiesOnStage) {
                 this.scene.tweens.add({
                     targets: this.nextWaveButton,
                     scaleX: 1.1,
@@ -104,7 +104,7 @@ export class GUI extends Phaser.GameObjects.Container {
 
     public onClickNextWave(): void {
 
-        if (this.nextWaveButton.alpha !== 1 || GameVars.paused || BattleManager.anutoEngine.gameOver) {
+        if (this.nextWaveButton.alpha !== 1 || GameVars.paused || BattleManager.engine.gameOver) {
             return;
         }
     
@@ -133,7 +133,7 @@ export class GUI extends Phaser.GameObjects.Container {
 
     private onClickMenu(): void {
 
-        if (BattleManager.anutoEngine.gameOver) {
+        if (BattleManager.engine.gameOver) {
             return;
         }
 

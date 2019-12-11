@@ -12,7 +12,7 @@ import { AudioManager } from "../../AudioManager";
 
 export class BattleManager {
 
-    public static anutoEngine: Creepts.Engine;
+    public static engine: Creepts.Engine;
 
     public static init(): void {  
 
@@ -77,13 +77,13 @@ export class BattleManager {
         GameVars.loopVolume = .2;
         GameVars.dangerRate = 1;
 
-        BattleManager.anutoEngine = new Creepts.Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData, GameVars.wavesData);
+        BattleManager.engine = new Creepts.Engine(gameConfig, GameVars.enemiesData, GameVars.turretsData, GameVars.wavesData);
 
         BattleManager.setTimeStepFactor(GameVars.timeStepFactor);
 
         if (GameVars.currentScene === BattleScene.currentInstance) {
             GameVars.levelObject = {
-                engineVersion: BattleManager.anutoEngine.version,
+                engineVersion: BattleManager.engine.version,
                 gameConfig: gameConfig,
                 enemiesData: GameVars.enemiesData,
                 turretsData: GameVars.turretsData,
@@ -91,32 +91,32 @@ export class BattleManager {
             };
         }
         
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.GLUE_BULLET_SHOT, BattleManager.onGlueBulletShot, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.ENEMY_HIT, BattleManager.onEnemyHit, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.REMOVE_BULLET, BattleManager.removeBullet, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.REMOVE_GLUE_BULLET, BattleManager.removeGlueBullet, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.ENEMY_GLUE_HIT, BattleManager.onEnemyGlueHit, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.ENEMY_KILLED, BattleManager.onEnemyKilled, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.LASER_SHOT, BattleManager.onLaserBeamShot, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.MORTAR_SHOT, BattleManager.onMortarShot, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.GLUE_SHOT, BattleManager.onGlueShot, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.MINE_SHOT, BattleManager.onMineShot, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.GLUE_CONSUMED, BattleManager.onGlueConsumed, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.ENEMIES_TELEPORTED, BattleManager.onEnemiesTeleported, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.NO_ENEMIES_ON_STAGE, BattleManager.onNoEnemiesOnStage, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.WAVE_OVER, BattleManager.onWaveOver, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.GAME_OVER, BattleManager.onGameOver, BattleManager);
-        BattleManager.anutoEngine.addEventListener(Creepts.Event.ACTIVE_NEXT_WAVE, BattleManager.activeNextWave, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.ENEMY_SPAWNED, BattleManager.onEnemySpawned, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.ENEMY_REACHED_EXIT, BattleManager.onEnemyReachedExit, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.BULLET_SHOT, BattleManager.onBulletShot, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.GLUE_BULLET_SHOT, BattleManager.onGlueBulletShot, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.ENEMY_HIT, BattleManager.onEnemyHit, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.REMOVE_BULLET, BattleManager.removeBullet, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.REMOVE_GLUE_BULLET, BattleManager.removeGlueBullet, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.ENEMY_GLUE_HIT, BattleManager.onEnemyGlueHit, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.ENEMY_KILLED, BattleManager.onEnemyKilled, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.LASER_SHOT, BattleManager.onLaserBeamShot, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.MORTAR_SHOT, BattleManager.onMortarShot, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.GLUE_SHOT, BattleManager.onGlueShot, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.MINE_SHOT, BattleManager.onMineShot, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.GLUE_CONSUMED, BattleManager.onGlueConsumed, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.ENEMIES_TELEPORTED, BattleManager.onEnemiesTeleported, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.NO_ENEMIES_ON_STAGE, BattleManager.onNoEnemiesOnStage, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.WAVE_OVER, BattleManager.onWaveOver, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.GAME_OVER, BattleManager.onGameOver, BattleManager);
+        BattleManager.engine.addEventListener(Creepts.Event.ACTIVE_NEXT_WAVE, BattleManager.activeNextWave, BattleManager);
         
         GameManager.events.emit("ready");
     }
 
     public static update(time: number, delta: number): void {
 
-        BattleManager.anutoEngine.update();
+        BattleManager.engine.update();
     }
 
     public static pause(): void {
@@ -143,12 +143,12 @@ export class BattleManager {
 
         GameVars.timeStepFactor = timeStepFactor;
 
-        BattleManager.anutoEngine.timeStep = GameConstants.TIME_STEP / timeStepFactor;
+        BattleManager.engine.timeStep = GameConstants.TIME_STEP / timeStepFactor;
     }
 
     public static newWave(): void {
 
-        if (BattleManager.anutoEngine.newWave()) {
+        if (BattleManager.engine.newWave()) {
 
             GameVars.waveOver = false;
 
@@ -158,9 +158,9 @@ export class BattleManager {
                 LogScene.currentInstance.hud.updateRound();
             }
 
-            const action = {type: GameConstants.TYPE_NEXT_WAVE, tick: BattleManager.anutoEngine.ticksCounter};
+            const action = {type: GameConstants.TYPE_NEXT_WAVE, tick: BattleManager.engine.ticksCounter};
             BattleManager.addAction(action);
-            
+
         }
     }
 
@@ -178,10 +178,10 @@ export class BattleManager {
 
     public static addTurret(type: string, position: {r: number, c: number}): Creepts.Turret {
 
-        let data = BattleManager.anutoEngine.addTurret(type, position);
+        let data = BattleManager.engine.addTurret(type, position);
 
         if (data.turret) {
-            let action = {type: GameConstants.TYPE_ADD_TURRET, tick: BattleManager.anutoEngine.ticksCounter, turretType: data.turret.type, position: position};
+            let action = {type: GameConstants.TYPE_ADD_TURRET, tick: BattleManager.engine.ticksCounter, turretType: data.turret.type, position: position};
             BattleManager.addAction(action);
         }
 
@@ -190,9 +190,9 @@ export class BattleManager {
 
     public static sellTurret(id: number): void {
 
-        if (BattleManager.anutoEngine.sellTurret(id).success) {
+        if (BattleManager.engine.sellTurret(id).success) {
 
-            let action = {type: GameConstants.TYPE_SELL_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
+            let action = {type: GameConstants.TYPE_SELL_TURRET, tick: BattleManager.engine.ticksCounter, id: id};
             BattleManager.addAction(action);
 
             BoardContainer.currentInstance.removeTurret(id);
@@ -211,10 +211,10 @@ export class BattleManager {
 
     public static improveTurret(id: number): void {
 
-        const success = BattleManager.anutoEngine.improveTurret(id).success;
+        const success = BattleManager.engine.improveTurret(id).success;
 
         if (success) {
-            let action = {type: GameConstants.TYPE_LEVEL_UP_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
+            let action = {type: GameConstants.TYPE_LEVEL_UP_TURRET, tick: BattleManager.engine.ticksCounter, id: id};
             BattleManager.addAction(action);
 
             BoardContainer.currentInstance.improveTurret(id);
@@ -223,11 +223,11 @@ export class BattleManager {
 
     public static upgradeTower(id: number): void {
         
-        const success = BattleManager.anutoEngine.upgradeTurret(id).success;
+        const success = BattleManager.engine.upgradeTurret(id).success;
 
         if (success) {
 
-            let action = {type: GameConstants.TYPE_UPGRADE_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
+            let action = {type: GameConstants.TYPE_UPGRADE_TURRET, tick: BattleManager.engine.ticksCounter, id: id};
             BattleManager.addAction(action);
 
             BoardContainer.currentInstance.upgradeTurret(id);
@@ -240,16 +240,16 @@ export class BattleManager {
 
     public static setNextStrategy(id: number): void {
 
-        if (BattleManager.anutoEngine.setNextStrategy(id).success) {
-            let action = {type: GameConstants.TYPE_CHANGE_STRATEGY_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
+        if (BattleManager.engine.setNextStrategy(id).success) {
+            let action = {type: GameConstants.TYPE_CHANGE_STRATEGY_TURRET, tick: BattleManager.engine.ticksCounter, id: id};
             BattleManager.addAction(action);
         }
     }
 
     public static setFixedTarget(id: number): void {
 
-        if (BattleManager.anutoEngine.setFixedTarget(id).success) {
-            let action = {type: GameConstants.TYPE_CHANGE_FIXED_TARGET_TURRET, tick: BattleManager.anutoEngine.ticksCounter, id: id};
+        if (BattleManager.engine.setFixedTarget(id).success) {
+            let action = {type: GameConstants.TYPE_CHANGE_FIXED_TARGET_TURRET, tick: BattleManager.engine.ticksCounter, id: id};
             BattleManager.addAction(action);
         }
     }
@@ -264,9 +264,9 @@ export class BattleManager {
         BoardContainer.currentInstance.hideRangeCircles();
     }
 
-    public static showTurretMenu(anutoTurret: Creepts.Turret): void {
+    public static showTurretMenu(turret: Creepts.Turret): void {
 
-        BoardContainer.currentInstance.showTurretMenu(anutoTurret);
+        BoardContainer.currentInstance.showTurretMenu(turret);
     }
 
     public static hideTurretMenu(): void {
@@ -279,16 +279,16 @@ export class BattleManager {
         GameVars.logsObject.actions.push(action);
     }
 
-    private static onEnemySpawned(anutoEnemy: Creepts.Enemy, p: {r: number, c: number} ): void {
+    private static onEnemySpawned(enemy: Creepts.Enemy, p: {r: number, c: number} ): void {
         
-        BoardContainer.currentInstance.addEnemy(anutoEnemy, p);
+        BoardContainer.currentInstance.addEnemy(enemy, p);
     }
 
-    private static onEnemyReachedExit(anutoEnemy: Creepts.Enemy): void {
+    private static onEnemyReachedExit(enemy: Creepts.Enemy): void {
 
-        BoardContainer.currentInstance.removeEnemy(anutoEnemy.id);
+        BoardContainer.currentInstance.removeEnemy(enemy.id);
 
-        if (!BattleManager.anutoEngine.gameOver) {
+        if (!BattleManager.engine.gameOver) {
             AudioManager.playSound("danger", false, 1, GameVars.dangerRate);
             GameVars.dangerRate = Math.max(GameVars.dangerRate - .0125, .75);
             BattleScene.currentInstance.showFxEnemyTraspass();
@@ -302,78 +302,78 @@ export class BattleManager {
         }
     }
 
-    private static onBulletShot(anutoBullet: Creepts.Bullet, anutoProjectileTurret: Creepts.ProjectileTurret): void {
+    private static onBulletShot(bullet: Creepts.Bullet, projectileTurret: Creepts.ProjectileTurret): void {
 
-        BoardContainer.currentInstance.addBullet(anutoBullet, anutoProjectileTurret);
+        BoardContainer.currentInstance.addBullet(bullet, projectileTurret);
     }
 
-    private static onGlueBulletShot(anutoBullet: Creepts.GlueBullet, anutoGlueTurret: Creepts.GlueTurret): void {
+    private static onGlueBulletShot(bullet: Creepts.GlueBullet, turret: Creepts.GlueTurret): void {
 
-        BoardContainer.currentInstance.addGlueBullet(anutoBullet, anutoGlueTurret);
+        BoardContainer.currentInstance.addGlueBullet(bullet, turret);
     }
 
-    private static onLaserBeamShot(anutoLaserTurret: Creepts.LaserTurret, anutoEnemies: Creepts.Enemy[]): void {
+    private static onLaserBeamShot(laserTurret: Creepts.LaserTurret, enemies: Creepts.Enemy[]): void {
 
-        BoardContainer.currentInstance.addLaserBeam(anutoLaserTurret, anutoEnemies);
+        BoardContainer.currentInstance.addLaserBeam(laserTurret, enemies);
     }
 
-    private static onMortarShot(anutoMortar: Creepts.Mortar, anutoLaunchTurret: Creepts.LaunchTurret): void {
+    private static onMortarShot(mortar: Creepts.Mortar, launchTurret: Creepts.LaunchTurret): void {
 
-        BoardContainer.currentInstance.addMortar(anutoMortar, anutoLaunchTurret);
+        BoardContainer.currentInstance.addMortar(mortar, launchTurret);
     }
 
-    private static onGlueShot(anutoGlue: Creepts.Glue, anutoGlueTurret: Creepts.GlueTurret): void {
+    private static onGlueShot(glue: Creepts.Glue, turret: Creepts.GlueTurret): void {
 
-        BoardContainer.currentInstance.addGlue(anutoGlue, anutoGlueTurret);
+        BoardContainer.currentInstance.addGlue(glue, turret);
     }
 
-    private static onMineShot(anutoMine: Creepts.Mine, anutoLaunchMine: Creepts.LaunchTurret): void {
+    private static onMineShot(mine: Creepts.Mine, launchMine: Creepts.LaunchTurret): void {
 
-        BoardContainer.currentInstance.addMine(anutoMine, anutoLaunchMine);
+        BoardContainer.currentInstance.addMine(mine, launchMine);
     }
 
-    private static onGlueConsumed(anutoGlue: Creepts.Glue): void {
+    private static onGlueConsumed(glue: Creepts.Glue): void {
 
-        BoardContainer.currentInstance.onGlueConsumed(anutoGlue);
+        BoardContainer.currentInstance.onGlueConsumed(glue);
     }
 
-    private static onEnemyHit(anutoEnemies: Creepts.Enemy[], anutoBullet?: Creepts.Bullet, anutoMortar?: Creepts.Mortar, anutoMine?: Creepts.Mine): void {
+    private static onEnemyHit(enemies: Creepts.Enemy[], bullet?: Creepts.Bullet, mortar?: Creepts.Mortar, mine?: Creepts.Mine): void {
 
-        for (let i = 0; i < anutoEnemies.length; i ++) {
-            BoardContainer.currentInstance.onEnemyHit(anutoEnemies[i]);
+        for (let i = 0; i < enemies.length; i ++) {
+            BoardContainer.currentInstance.onEnemyHit(enemies[i]);
         }
         
-        if (anutoBullet) {
-            BoardContainer.currentInstance.removeBullet(anutoBullet);
+        if (bullet) {
+            BoardContainer.currentInstance.removeBullet(bullet);
         } 
 
-        if (anutoMortar) {
-            BoardContainer.currentInstance.detonateMortar(anutoMortar);
+        if (mortar) {
+            BoardContainer.currentInstance.detonateMortar(mortar);
         }
 
-        if (anutoMine) {
-            BoardContainer.currentInstance.detonateMine(anutoMine);
+        if (mine) {
+            BoardContainer.currentInstance.detonateMine(mine);
         }
     }
 
-    private static removeBullet(anutoBullet?: Creepts.Bullet) {
+    private static removeBullet(bullet?: Creepts.Bullet) {
 
-        BoardContainer.currentInstance.removeBullet(anutoBullet);
+        BoardContainer.currentInstance.removeBullet(bullet);
     }
 
-    private static removeGlueBullet(anutoGlueBullet: Creepts.GlueBullet): void {
+    private static removeGlueBullet(bullet: Creepts.GlueBullet): void {
         
-        BoardContainer.currentInstance.removeGlueBullet(anutoGlueBullet);
+        BoardContainer.currentInstance.removeGlueBullet(bullet);
     }
 
-    private static onEnemyGlueHit(anutoEnemies: Creepts.Enemy[], anutoGlueBullet: Creepts.GlueBullet): void {
+    private static onEnemyGlueHit(enemies: Creepts.Enemy[], bullet: Creepts.GlueBullet): void {
 
-        for (let i = 0; i < anutoEnemies.length; i ++) {
-            BoardContainer.currentInstance.onEnemyGlueHit(anutoEnemies[i]);
+        for (let i = 0; i < enemies.length; i ++) {
+            BoardContainer.currentInstance.onEnemyGlueHit(enemies[i]);
         }
 
-        if (anutoGlueBullet) {
-            BoardContainer.currentInstance.removeGlueBullet(anutoGlueBullet);
+        if (bullet) {
+            BoardContainer.currentInstance.removeGlueBullet(bullet);
         } 
     }
 
@@ -384,14 +384,14 @@ export class BattleManager {
         }
     }
 
-    private static onEnemyKilled(anutoEnemy: Creepts.Enemy): void {
+    private static onEnemyKilled(enemy: Creepts.Enemy): void {
 
-        BoardContainer.currentInstance.onEnemyKilled(anutoEnemy);
+        BoardContainer.currentInstance.onEnemyKilled(enemy);
     }
 
     private static onNoEnemiesOnStage(): void {
 
-        if (!BattleManager.anutoEngine.gameOver) {
+        if (!BattleManager.engine.gameOver) {
             BoardContainer.currentInstance.showRoundCompletedLayer();
         }
     }
@@ -414,8 +414,8 @@ export class BattleManager {
 
     private static onGameOver(): void {
 
-        if (BattleManager.anutoEngine.score > GameVars.gameData.scores[GameVars.gameData.currentMapIndex]) {
-            GameVars.gameData.scores[GameVars.gameData.currentMapIndex] = BattleManager.anutoEngine.score;
+        if (BattleManager.engine.score > GameVars.gameData.scores[GameVars.gameData.currentMapIndex]) {
+            GameVars.gameData.scores[GameVars.gameData.currentMapIndex] = BattleManager.engine.score;
         }
         GameManager.writeGameData();
         
@@ -425,8 +425,8 @@ export class BattleManager {
             "gameOver",
             GameVars.levelObject,
             GameVars.logsObject,
-            BattleManager.anutoEngine.score,
-            BattleManager.anutoEngine.round);
+            BattleManager.engine.score,
+            BattleManager.engine.round);
 
         if (GameConstants.DEVELOPMENT && GameVars.currentScene === BattleScene.currentInstance) {
             let data = JSON.stringify(GameVars.logsObject);

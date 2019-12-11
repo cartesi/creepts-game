@@ -31,7 +31,7 @@ export class GlueTurretActor extends TurretActor {
 
         super.upgrade();
 
-        switch (this.anutoTurret.grade) {
+        switch (this.turret.grade) {
 
             case 2:
                 this.base.setFrame("base_3_2");
@@ -48,8 +48,8 @@ export class GlueTurretActor extends TurretActor {
 
     public shootGlue(): void {
 
-        if (this.anutoTurret.shootAngle) {
-            this.canon.rotation = this.anutoTurret.shootAngle + Math.PI / 2;
+        if (this.turret.shootAngle) {
+            this.canon.rotation = this.turret.shootAngle + Math.PI / 2;
 
             this.scene.tweens.add({
                 targets: this.canon,
@@ -61,7 +61,7 @@ export class GlueTurretActor extends TurretActor {
             });
         }
 
-        if (this.anutoTurret.grade === 2) {
+        if (this.turret.grade === 2) {
             AudioManager.playSound("t3_pegamento");
 
             let fx = this.scene.add.sprite(30 * Math.sin(this.canon.rotation), - 30 * Math.cos(this.canon.rotation), "texture_atlas_1");

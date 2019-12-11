@@ -40,13 +40,13 @@ export class TurretLevel extends Phaser.GameObjects.Container {
                 this.visible = true;
             }
 
-            if (this.turret.anutoTurret.maxLevel === 5) {
+            if (this.turret.turret.maxLevel === 5) {
                 this.stars[0].visible = true;
                 this.stars[1].visible = false;
                 this.stars[2].visible = false;
 
                 this.stars[0].x = 0;
-            } else if (this.turret.anutoTurret.maxLevel === 10) {
+            } else if (this.turret.turret.maxLevel === 10) {
                 this.stars[0].visible = true;
                 this.stars[1].visible = true;
                 this.stars[2].visible = false;
@@ -63,16 +63,16 @@ export class TurretLevel extends Phaser.GameObjects.Container {
                 this.stars[2].x = 22;
             }
 
-            if (this.turret.anutoTurret.level <= 5) {
-                this.stars[0].setFrame("star_0" + (this.turret.anutoTurret.level + 1));
+            if (this.turret.turret.level <= 5) {
+                this.stars[0].setFrame("star_0" + (this.turret.turret.level + 1));
                 this.stars[1].setFrame("star_01");
                 this.stars[2].setFrame("star_01");
-            } else if (this.turret.anutoTurret.level <= 10) {
-                this.stars[1].setFrame("star_0" + (this.turret.anutoTurret.level - 5 + 1));
+            } else if (this.turret.turret.level <= 10) {
+                this.stars[1].setFrame("star_0" + (this.turret.turret.level - 5 + 1));
                 this.stars[0].setFrame("star_06");
                 this.stars[2].setFrame("star_01");
             } else {
-                this.stars[2].setFrame("star_0" + (this.turret.anutoTurret.level - 10 + 1));
+                this.stars[2].setFrame("star_0" + (this.turret.turret.level - 10 + 1));
                 this.stars[0].setFrame("star_06");
                 this.stars[1].setFrame("star_06");
             }

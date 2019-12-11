@@ -26,7 +26,7 @@ export class ProjectileTurretActor extends TurretActor {
 
         super.upgrade();
 
-        switch (this.anutoTurret.grade) {
+        switch (this.turret.grade) {
  
             case 2:
                 this.base.setFrame("base_1_2");
@@ -42,7 +42,7 @@ export class ProjectileTurretActor extends TurretActor {
 
     public shootBullet(): void {
         
-        this.canon.rotation = this.anutoTurret.shootAngle + Math.PI / 2;
+        this.canon.rotation = this.turret.shootAngle + Math.PI / 2;
         AudioManager.playSound("t1_bullets");
 
         this.scene.tweens.add({

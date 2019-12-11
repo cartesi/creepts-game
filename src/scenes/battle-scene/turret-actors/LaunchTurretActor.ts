@@ -29,7 +29,7 @@ export class LaunchTurretActor extends TurretActor {
 
         super.upgrade();
 
-        switch (this.anutoTurret.grade) {
+        switch (this.turret.grade) {
  
              case 2:
                  this.base.setFrame("base_4_2");
@@ -45,7 +45,7 @@ export class LaunchTurretActor extends TurretActor {
 
     public shootMortar(): void {
         // girar el cañón
-        this.canon.rotation = this.anutoTurret.shootAngle + Math.PI / 2;
+        this.canon.rotation = this.turret.shootAngle + Math.PI / 2;
 
         this.scene.tweens.add({
             targets: this.canon,
@@ -59,7 +59,7 @@ export class LaunchTurretActor extends TurretActor {
 
     public shootMine(): void {
         
-        this.canon.rotation = this.anutoTurret.shootAngle + Math.PI / 2;
+        this.canon.rotation = this.turret.shootAngle + Math.PI / 2;
 
         this.scene.tweens.add({
             targets: this.canon,

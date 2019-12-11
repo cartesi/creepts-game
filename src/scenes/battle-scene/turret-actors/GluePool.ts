@@ -9,21 +9,21 @@ export class GluePool extends Phaser.GameObjects.Container {
     public id: number;
 
     private glueTurretActor: GlueTurretActor;
-    private anutoGlue: Creepts.Glue;
+    private glue: Creepts.Glue;
 
-    constructor(scene: Phaser.Scene, glueTurretActor: GlueTurretActor, anutoGlue: Creepts.Glue) {
+    constructor(scene: Phaser.Scene, glueTurretActor: GlueTurretActor, glue: Creepts.Glue) {
 
         super(scene);
 
         this.glueTurretActor = glueTurretActor;
-        this.anutoGlue = anutoGlue;
+        this.glue = glue;
 
-        this.id = anutoGlue.id;
+        this.id = glue.id;
 
         this.x = this.glueTurretActor.x;
         this.y = this.glueTurretActor.y;
 
-        let range = this.anutoGlue.range * GameConstants.CELLS_SIZE;
+        let range = this.glue.range * GameConstants.CELLS_SIZE;
 
         let rangeCircle = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "area_freeze");
         rangeCircle.setScale((range * 2) / rangeCircle.width);
