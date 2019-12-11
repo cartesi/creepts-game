@@ -25,7 +25,7 @@ local ROOT_DEVICE_LENGTH      = nil -- auto-detect for now
 local ROOT_DEVICE_BACKING     = "rootfs.ext2"
 local ANUTO_DEVICE_START      = (1<<63)+(1<<61)
 local ANUTO_DEVICE_LENGTH     = nil -- auto-detect for now
-local ANUTO_DEVICE_BACKING    = "anutofs.ext2"
+local ANUTO_DEVICE_BACKING    = "creeptsfs.ext2"
 local LOG_DEVICE_START        = (1<<63)+(2<<61)
 local LOG_DEVICE_LOG2_SIZE    = nil -- auto-detect for now
 local LOG_DEVICE_LENGTH       = nil -- auto-detect for now
@@ -69,8 +69,8 @@ where options are:
   --root-backing=<filename>    backing file for root filesystem
                                (default: "rootfs.ext2")
 
-  --anuto-backing=<filename>   backing file for anuto filesystem
-                               (default: "anutofs.ext2")
+  --anuto-backing=<filename>   backing file for creepts filesystem
+                               (default: "creeptsfs.ext2")
 
   --rom-image=<filename>       image file for ROM
                                (default: "rom.bin")

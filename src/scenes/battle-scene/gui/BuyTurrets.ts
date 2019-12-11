@@ -1,5 +1,5 @@
 import { TurretButton } from "./TurretButton";
-import * as Anuto from "../../../../engine/src";
+import * as Creepts from "../../../../engine/src";
 
 export class BuyTurrets extends Phaser.GameObjects.Container {
 
@@ -14,7 +14,7 @@ export class BuyTurrets extends Phaser.GameObjects.Container {
 
         this.turretButtons = [];
 
-        let types = [Anuto.GameConstants.TURRET_PROJECTILE, Anuto.GameConstants.TURRET_LASER, Anuto.GameConstants.TURRET_LAUNCH, Anuto.GameConstants.TURRET_GLUE];
+        let types = [Creepts.GameConstants.TURRET_PROJECTILE, Creepts.GameConstants.TURRET_LASER, Creepts.GameConstants.TURRET_LAUNCH, Creepts.GameConstants.TURRET_GLUE];
 
         for (let i = 0; i < 4; i++) {
 

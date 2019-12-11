@@ -2,17 +2,17 @@ import { LaunchTurretActor } from './LaunchTurretActor';
 import { GameConstants } from "../../../GameConstants";
 import { GameVars } from '../../../GameVars';
 import { BoardContainer } from '../BoardContainer';
-import * as Anuto from "../../../../engine/src";
+import * as Creepts from "../../../../engine/src";
 import { AudioManager } from '../../../AudioManager';
 
 export class MineActor extends Phaser.GameObjects.Container {
 
-    public anutoMine: Anuto.Mine;
+    public anutoMine: Creepts.Mine;
 
     private mineImage: Phaser.GameObjects.Sprite;
     private detonated: boolean;
 
-    constructor(scene: Phaser.Scene, anutoMine: Anuto.Mine, launchTurretActor: LaunchTurretActor) {
+    constructor(scene: Phaser.Scene, anutoMine: Creepts.Mine, launchTurretActor: LaunchTurretActor) {
 
         super(scene, 0, 0);
 

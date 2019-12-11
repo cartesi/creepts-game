@@ -1,4 +1,4 @@
-import * as Anuto from "../engine/src";
+import * as Creepts from "../engine/src";
 
 declare interface GameData {
     soundMuted: boolean;
@@ -13,7 +13,7 @@ declare interface LogsObject {
 
 declare interface LevelObject {
     engineVersion: string;
-    gameConfig: Anuto.Types.GameConfig;
+    gameConfig: Creepts.Types.GameConfig;
     enemiesData: any;
     turretsData: any;
     wavesData: any;

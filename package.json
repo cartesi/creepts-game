@@ -1,7 +1,7 @@
 {
-    "name": "anuto",
+    "name": "creepts",
     "version": "0.0.1",
-    "description": "Tower defense game for Cartesi.io based on Anuto",
+    "description": "Tower defense game for Cartesi",
     "devDependencies": {
         "@babel/core": "^7.6.2",
         "@babel/plugin-proposal-class-properties": "^7.5.5",

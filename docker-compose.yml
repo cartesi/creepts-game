@@ -1,11 +1,11 @@
 version: "3.2"
 services:
-  anuto-server:
+  server:
     image: cartesi/anuto-server
     ports:
       - 8000:8000
-  anuto-web:
-    image: cartesi/anuto-web
+  web:
+    image: cartesi/creepts-web
     ports:
       - 8080:80
     environment:

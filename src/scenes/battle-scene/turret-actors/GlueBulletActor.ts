@@ -1,14 +1,14 @@
 import { GameConstants } from "../../../GameConstants";
-import * as Anuto from "../../../../engine/src";
+import * as Creepts from "../../../../engine/src";
 
 export class GlueBulletActor extends Phaser.GameObjects.Container {
 
-    public anutoGlueBullet: Anuto.GlueBullet;
+    public anutoGlueBullet: Creepts.GlueBullet;
     public initialPosition: {x: number, y: number};
 
     private img: Phaser.GameObjects.Sprite;
 
-    constructor(scene: Phaser.Scene, anutoGlueBullet: Anuto.GlueBullet) {
+    constructor(scene: Phaser.Scene, anutoGlueBullet: Creepts.GlueBullet) {
 
         super(scene);
 

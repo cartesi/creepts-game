@@ -3,18 +3,18 @@ import { GameVars } from "../../../GameVars";
 import { BoardContainer } from "../BoardContainer";
 import { BattleManager } from "../BattleManager";
 import { AudioManager } from "../../../AudioManager";
-import * as Anuto from "../../../../engine/src";
+import * as Creepts from "../../../../engine/src";
 
 export class MortarActor extends Phaser.GameObjects.Container {
 
-    public anutoMortar: Anuto.Mortar;
+    public anutoMortar: Creepts.Mortar;
 
     private mortarImage: Phaser.GameObjects.Image;
     private detonated: boolean;
     private initialPosition: {x: number, y: number};
     private deltaAngle: number;
     
-    constructor(scene: Phaser.Scene, anutoMortar: Anuto.Mortar) {
+    constructor(scene: Phaser.Scene, anutoMortar: Creepts.Mortar) {
 
         super(scene);
 

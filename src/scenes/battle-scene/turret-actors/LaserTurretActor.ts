@@ -2,7 +2,7 @@ import { AudioManager } from "./../../../AudioManager";
 import { TurretActor } from "./TurretActor";
 import { GameVars } from "../../../GameVars";
 import { EnemyActor } from "../enemy-actors/EnemyActor";
-import * as Anuto from "../../../../engine/src";
+import * as Creepts from "../../../../engine/src";
 
 export class LaserTurretActor extends TurretActor {
 
@@ -10,9 +10,9 @@ export class LaserTurretActor extends TurretActor {
     private f: number;
     private laserShoot: boolean;
 
-    constructor(scene: Phaser.Scene, position: {r: number, c: number}, turret: Anuto.Turret) {
+    constructor(scene: Phaser.Scene, position: {r: number, c: number}, turret: Creepts.Turret) {
 
-        super(scene, Anuto.GameConstants.TURRET_LASER, position, turret);
+        super(scene, Creepts.GameConstants.TURRET_LASER, position, turret);
 
         this.base = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "base_2_1");
         this.base.setInteractive();

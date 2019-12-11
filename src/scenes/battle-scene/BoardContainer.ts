@@ -20,7 +20,7 @@ import { PauseMenu } from "./PauseMenu";
 import { GlueBulletActor } from "./turret-actors/GlueBulletActor";
 import { AudioManager } from "../../AudioManager";
 import { RoundCompletedLayer } from "./RoundCompletedLayer";
-import * as Anuto from "../../../engine/src";
+import * as Creepts from "../../../engine/src";
 import { FxEnemyTraspass } from "./FxEnemyTraspass";
 
 export class BoardContainer extends Phaser.GameObjects.Container {
@@ -102,19 +102,19 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
     public addInitialTowers(): void {
 
-        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 0, c: 5});
-        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 1, c: 7});
-        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 2, c: 4});
-        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 3, c: 7});
-        this.addTurret(Anuto.GameConstants.TURRET_LASER, {r: 4, c: 6});
+        this.addTurret(Creepts.GameConstants.TURRET_LASER, {r: 0, c: 5});
+        this.addTurret(Creepts.GameConstants.TURRET_LASER, {r: 1, c: 7});
+        this.addTurret(Creepts.GameConstants.TURRET_LASER, {r: 2, c: 4});
+        this.addTurret(Creepts.GameConstants.TURRET_LASER, {r: 3, c: 7});
+        this.addTurret(Creepts.GameConstants.TURRET_LASER, {r: 4, c: 6});
 
-        this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 0, c: 4});
-        this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 0, c: 6});
-        this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 2, c: 3});
-        this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 2, c: 5});
-        this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 2, c: 7});
-        this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 4, c: 3});
-        this.addTurret(Anuto.GameConstants.TURRET_GLUE, {r: 4, c: 5});
+        this.addTurret(Creepts.GameConstants.TURRET_GLUE, {r: 0, c: 4});
+        this.addTurret(Creepts.GameConstants.TURRET_GLUE, {r: 0, c: 6});
+        this.addTurret(Creepts.GameConstants.TURRET_GLUE, {r: 2, c: 3});
+        this.addTurret(Creepts.GameConstants.TURRET_GLUE, {r: 2, c: 5});
+        this.addTurret(Creepts.GameConstants.TURRET_GLUE, {r: 2, c: 7});
+        this.addTurret(Creepts.GameConstants.TURRET_GLUE, {r: 4, c: 3});
+        this.addTurret(Creepts.GameConstants.TURRET_GLUE, {r: 4, c: 5});
     }
 
     public update(time: number, delta: number): void {
@@ -155,13 +155,13 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    public addEnemy(anutoEnemy: Anuto.Enemy, position: {r: number, c: number}): void {
+    public addEnemy(anutoEnemy: Creepts.Enemy, position: {r: number, c: number}): void {
 
         let enemyActor: EnemyActor = null;
 
         switch (anutoEnemy.type) {
 
-            case Anuto.GameConstants.ENEMY_HEALER:
+            case Creepts.GameConstants.ENEMY_HEALER:
                 enemyActor = new HealerEnemyActor(this.scene, anutoEnemy, position);
                 break;
             default:
@@ -239,16 +239,16 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         switch (type) {
 
-            case Anuto.GameConstants.TURRET_PROJECTILE:
+            case Creepts.GameConstants.TURRET_PROJECTILE:
                 turret = new ProjectileTurretActor(this.scene, position, anutoTurret);
                 break;
-            case Anuto.GameConstants.TURRET_LASER:
+            case Creepts.GameConstants.TURRET_LASER:
                 turret = new LaserTurretActor(this.scene, position, anutoTurret);
                 break;
-            case Anuto.GameConstants.TURRET_LAUNCH:
+            case Creepts.GameConstants.TURRET_LAUNCH:
                 turret = new LaunchTurretActor(this.scene, position, anutoTurret);
                 break;
-            case Anuto.GameConstants.TURRET_GLUE:
+            case Creepts.GameConstants.TURRET_GLUE:
                 turret = new GlueTurretActor(this.scene, position, anutoTurret);
                 break;
             default:
@@ -279,7 +279,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    public addBullet(anutoBullet: Anuto.Bullet, anutoProjectileTurret: Anuto.ProjectileTurret): void {
+    public addBullet(anutoBullet: Creepts.Bullet, anutoProjectileTurret: Creepts.ProjectileTurret): void {
 
         const projectileTurretActor = <ProjectileTurretActor> this.getTurretActorByID(anutoProjectileTurret.id);
         projectileTurretActor.shootBullet();
@@ -290,7 +290,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.bulletActors.push(bullet);
     }
 
-    public addGlueBullet(anutoBullet: Anuto.GlueBullet, anutoProjectileTurret: Anuto.GlueTurret): void {
+    public addGlueBullet(anutoBullet: Creepts.GlueBullet, anutoProjectileTurret: Creepts.GlueTurret): void {
 
         const glueTurretActor = <GlueTurretActor> this.getTurretActorByID(anutoProjectileTurret.id);
         glueTurretActor.shootGlue();
@@ -301,7 +301,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.glueBulletActors.push(bullet);
     }
 
-    public addLaserBeam (anutoLaserTurret: Anuto.LaserTurret, anutoEnemies: Anuto.Enemy[]): void {
+    public addLaserBeam (anutoLaserTurret: Creepts.LaserTurret, anutoEnemies: Creepts.Enemy[]): void {
 
         const laserTurretActor = <LaserTurretActor> this.getTurretActorByID(anutoLaserTurret.id);
 
@@ -317,7 +317,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.actorsContainer.add(laserBeam);
     }
 
-    public addMortar(anutoMortar: Anuto.Mortar, anutoLaunchTurret: Anuto.LaunchTurret): void {
+    public addMortar(anutoMortar: Creepts.Mortar, anutoLaunchTurret: Creepts.LaunchTurret): void {
 
         const launchTurretActor = <LaunchTurretActor> this.getTurretActorByID(anutoLaunchTurret.id);
         launchTurretActor.shootMortar();
@@ -328,7 +328,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.mortarActors.push(mortar);
     }
 
-    public addMine(anutoMine: Anuto.Mine, anutoLaunchTurret: Anuto.LaunchTurret): void {
+    public addMine(anutoMine: Creepts.Mine, anutoLaunchTurret: Creepts.LaunchTurret): void {
 
         const launchTurretActor = <LaunchTurretActor> this.getTurretActorByID(anutoLaunchTurret.id);
         launchTurretActor.shootMine();
@@ -340,7 +340,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.mineActors.push(mine);
     }
 
-    public addGlue(anutoGlue: Anuto.Glue, anutoGlueTurret: Anuto.GlueTurret): void {
+    public addGlue(anutoGlue: Creepts.Glue, anutoGlueTurret: Creepts.GlueTurret): void {
 
         const glueTurretActor = <GlueTurretActor> this.getTurretActorByID(anutoGlueTurret.id);
         glueTurretActor.shootGlue();
@@ -351,7 +351,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.gluePools.push(gluePool);
     }
 
-    public onGlueConsumed(anutoGlue: Anuto.Glue): void {
+    public onGlueConsumed(anutoGlue: Creepts.Glue): void {
 
         let glue: GluePool = null;
 
@@ -366,7 +366,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    public onEnemyHit(anutoEnemy: Anuto.Enemy): void {
+    public onEnemyHit(anutoEnemy: Creepts.Enemy): void {
         
         // encontrar el enemigo en cuestion
         let enemy: EnemyActor = this.getEnemyActorByID(anutoEnemy.id);
@@ -376,7 +376,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    public onEnemyGlueHit(anutoEnemy: Anuto.Enemy): void {
+    public onEnemyGlueHit(anutoEnemy: Creepts.Enemy): void {
         
         // encontrar el enemigo en cuestion
         let enemy: EnemyActor = this.getEnemyActorByID(anutoEnemy.id);
@@ -386,7 +386,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    public onEnemyKilled(anutoEnemy: Anuto.Enemy): void {
+    public onEnemyKilled(anutoEnemy: Creepts.Enemy): void {
 
         let enemyActor: EnemyActor = this.getEnemyActorByID(anutoEnemy.id);
 
@@ -396,7 +396,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    public teleportEnemy(anutoEnemy: Anuto.Enemy, anutoGlueTurret: Anuto.GlueTurret): void {
+    public teleportEnemy(anutoEnemy: Creepts.Enemy, anutoGlueTurret: Creepts.GlueTurret): void {
 
         let enemyActor: EnemyActor = this.getEnemyActorByID(anutoEnemy.id);
 
@@ -406,7 +406,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         } 
     }
 
-    public removeBullet(anutoBullet: Anuto.Bullet): void {
+    public removeBullet(anutoBullet: Creepts.Bullet): void {
 
         let bulletActor: BulletActor = null;
 
@@ -425,7 +425,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    public removeGlueBullet(anutoBullet: Anuto.GlueBullet): void {
+    public removeGlueBullet(anutoBullet: Creepts.GlueBullet): void {
 
         let bulletActor: GlueBulletActor = null;
 
@@ -444,7 +444,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    public detonateMortar(anutoMortar: Anuto.Mortar): void {
+    public detonateMortar(anutoMortar: Creepts.Mortar): void {
 
         let mortarActor: MortarActor = null;
 
@@ -461,7 +461,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    public detonateMine(anutoMine: Anuto.Mine): void {
+    public detonateMine(anutoMine: Creepts.Mine): void {
 
         let mineActor: MineActor = null;
 
@@ -551,7 +551,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         }
     }
 
-    public showTurretMenu(anutoTurret: Anuto.Turret): void {
+    public showTurretMenu(anutoTurret: Creepts.Turret): void {
 
         if (!this.turretMenu) {
             this.turretMenu = new TurretMenu(this.scene, anutoTurret);

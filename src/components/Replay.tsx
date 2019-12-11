@@ -4,7 +4,7 @@ import { FullScreenMessage } from "./FullScreenMessage";
 import { useScoreService } from "../services/scoreService";
 import { navigate } from "hookrouter";
 import { GameManager } from "../GameManager";
-import * as Anuto from "../../engine/src";
+import * as Creepts from "../../engine/src";
 import { LevelObject } from "../../types/tower-defense";
 import { GameConstants } from "../GameConstants";
 import enemiesData from "../../assets/config/enemies.json";
@@ -21,7 +21,7 @@ interface ReplayProps { tournamentId: string, id: string };
 const levelForMap = (mapName: string): LevelObject => {
     const map = getMapByName(mapName);
 
-    const gameConfig: Anuto.Types.GameConfig = {
+    const gameConfig: Creepts.Types.GameConfig = {
         timeStep: GameConstants.TIME_STEP,
         runningInClientSide: true,
         enemySpawningDeltaTicks: GameConstants.ENEMY_SPAWNING_DELTA_TICKS,
@@ -33,7 +33,7 @@ const levelForMap = (mapName: string): LevelObject => {
     };
 
     return {
-        engineVersion: Anuto.GameConstants.VERSION,
+        engineVersion: Creepts.GameConstants.VERSION,
         gameConfig,
         enemiesData: enemiesData.enemies,
         turretsData: turretsData.turrets,

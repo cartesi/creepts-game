@@ -22,7 +22,7 @@ SRCDIR := $(abspath src)
 DOWNLOADDIR := $(DEPDIR)/downloads
 BUILDDIR := build
 
-CONTAINER_BASE := /opt/cartesi/anuto-dapp
+CONTAINER_BASE := /opt/cartesi/creepts-dapp
 CONTAINER_MAKE := /usr/bin/make
 
 RVCC  = riscv64-unknown-linux-gnu-gcc
@@ -40,9 +40,9 @@ FSDIR = fs
 
 DEPDIRS := $(DJSDIR) $(VIMDIR)
 
-fs: anutofs.ext2
+fs: creeptsfs.ext2
 
-anutofs.ext2: $(FSDIR)/bin/djs $(FSDIR)/bin/xxd $(FSDIR)/levels
+creeptsfs.ext2: $(FSDIR)/bin/djs $(FSDIR)/bin/xxd $(FSDIR)/levels
 	$(MAKE) toolchain-exec CONTAINER_COMMAND="$(CONTAINER_MAKE) $@.toolchain"
 
 $(FSDIR)/bin/djs: $(DJS)
@@ -77,7 +77,7 @@ $(XXD): $(DEPDIR)/vim-8.1.2069
 $(XXD).toolchain:
 	$(MAKE) -C $(XXDDIR) CC=$(RVCC)
 
-anutofs.ext2.toolchain:
+creeptsfs.ext2.toolchain:
 	genext2fs -f -i 512 -b 4096 -d fs $(basename $@)
 	truncate -s %4096 $(basename $@)
 
@@ -114,6 +114,6 @@ toolchain-env:
 		cartesi/image-toolchain:$(TOOLCHAIN_TAG)
 
 clean:
-	\rm -rf anutofs.ext2 $(DJS) $(FSDIR)/bin/djs $(FSDIR)/bin/xxd $(FSDIR)/levels $(XXD) $(DOWNLOADDIR) $(DEPDIRS) $(BUILDDIR)
+	\rm -rf creeptsfs.ext2 $(DJS) $(FSDIR)/bin/djs $(FSDIR)/bin/xxd $(FSDIR)/levels $(XXD) $(DOWNLOADDIR) $(DEPDIRS) $(BUILDDIR)
 
-.PHONY: toolchain-exec djs build-djs xxd build-xxd clean downloads $(XXD).toolchain $(DJS).toolchain anutofs.ext2.toolchain
+.PHONY: toolchain-exec djs build-djs xxd build-xxd clean downloads $(XXD).toolchain $(DJS).toolchain creeptsfs.ext2.toolchain

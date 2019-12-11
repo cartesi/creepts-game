@@ -4,7 +4,7 @@ import { BoardContainer } from "./../BoardContainer";
 import { GameConstants } from "../../../GameConstants";
 import { BattleManager } from "../BattleManager";
 import { GameVars } from "../../../GameVars";
-import * as Anuto from "../../../../engine/src";
+import * as Creepts from "../../../../engine/src";
 
 export class TurretActor extends Phaser.GameObjects.Container {
 
@@ -15,12 +15,12 @@ export class TurretActor extends Phaser.GameObjects.Container {
     public base: Phaser.GameObjects.Image;
     public canon: Phaser.GameObjects.Image;
     public turretLevel: TurretLevel;
-    public anutoTurret: Anuto.Turret;
+    public anutoTurret: Creepts.Turret;
     public showLevel: boolean;
     
     private rangeCircle: Phaser.GameObjects.Image;
 
-    constructor(scene: Phaser.Scene, type: string, position: {r: number, c: number}, turret: Anuto.Turret) {
+    constructor(scene: Phaser.Scene, type: string, position: {r: number, c: number}, turret: Creepts.Turret) {
 
         super(scene);
 
@@ -42,16 +42,16 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
         switch (type) {
 
-            case Anuto.GameConstants.TURRET_LAUNCH:
+            case Creepts.GameConstants.TURRET_LAUNCH:
                 typeRange = "yellow";
                 break;
-            case Anuto.GameConstants.TURRET_PROJECTILE:
+            case Creepts.GameConstants.TURRET_PROJECTILE:
                     typeRange = "green";
                 break;
-            case Anuto.GameConstants.TURRET_LASER:
+            case Creepts.GameConstants.TURRET_LASER:
                     typeRange = "pink";
                 break;
-            case Anuto.GameConstants.TURRET_GLUE:
+            case Creepts.GameConstants.TURRET_GLUE:
                     typeRange = "blue";
                 break;
             default:

@@ -1,9 +1,9 @@
 import { EnemyActor } from "./EnemyActor";
-import * as Anuto from "../../../../engine/src";
+import * as Creepts from "../../../../engine/src";
 
 export class HealerEnemyActor extends EnemyActor {
 
-    constructor(scene: Phaser.Scene, anutoEnemy: Anuto.Enemy, position: {r: number, c: number}) {
+    constructor(scene: Phaser.Scene, anutoEnemy: Creepts.Enemy, position: {r: number, c: number}) {
 
         super(scene, anutoEnemy, position);
 
@@ -17,7 +17,7 @@ export class HealerEnemyActor extends EnemyActor {
 
         super.update(time, delta);
 
-        const anutoEnemy = <Anuto.HealerEnemy> this.anutoEnemy;
+        const anutoEnemy = <Creepts.HealerEnemy> this.anutoEnemy;
 
         if (anutoEnemy.healing && this.img.anims.currentAnim.key === "enemy_healer_run") {
             if (this.anutoEnemy.affectedByGlue || this.anutoEnemy.affectedByGlueBullet) {

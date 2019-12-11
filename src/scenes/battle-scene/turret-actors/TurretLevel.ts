@@ -1,6 +1,5 @@
 import { TurretActor } from './TurretActor';
 import { GameVars } from "../../../GameVars";
-import * as Anuto from "../../../../engine/src";
 
 export class TurretLevel extends Phaser.GameObjects.Container {
 

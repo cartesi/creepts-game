@@ -1,6 +1,6 @@
-# Anuto's Cartesi Machine
+# Creepts's Cartesi Machine
 
-This is the Cartesi Machine that produces the score given a log for the Anuto
+This is the Cartesi Machine that produces the score given a log for the Creepts
 game.
 
 ## Getting Started
@@ -16,7 +16,7 @@ Building:
 ```bash
 $ make
 ```
-This should produce anutofs.ext2.
+This should produce creeptsfs.ext2.
 
 Cleaning:
 
@@ -37,7 +37,7 @@ $ eval $(make env)
 to set the variables you will need.
 
 Then, copy rootfs.ext2, rom.bin, and kernel.bin to the working directory where
-you have anutofs.ext2 and anuto.lua.
+you have creeptsfs.ext2 and anuto.lua.
 
 Now you need to obtain a Brotli compressed, then TAR'd log matching one of the
 logs in test-logs. For example:

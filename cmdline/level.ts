@@ -1,6 +1,6 @@
 import { MapObject, LevelObject } from "../types/tower-defense";
 import { GameConstants } from "../src/GameConstants";
-import * as Anuto from "../engine/src";
+import * as Creepts from "../engine/src";
 
 import enemies from "../assets/config/enemies.json";
 import turrets from "../assets/config/turrets.json";
@@ -9,7 +9,7 @@ import waves from "../assets/config/waves.json";
 export default (map: MapObject): LevelObject => {
     // build level object using map and constant values
     return {
-        engineVersion: Anuto.GameConstants.VERSION,
+        engineVersion: Creepts.GameConstants.VERSION,
         gameConfig: {
             timeStep: GameConstants.TIME_STEP,
             runningInClientSide: false,

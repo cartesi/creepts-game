@@ -1,7 +1,7 @@
 import { GameConstants } from "../../../GameConstants";
 import { GameVars } from "../../../GameVars";
 import { LifeBar } from "./LifeBar";
-import * as Anuto from "../../../../engine/src";
+import * as Creepts from "../../../../engine/src";
 
 export class EnemyActor extends Phaser.GameObjects.Container {
 
@@ -11,9 +11,9 @@ export class EnemyActor extends Phaser.GameObjects.Container {
     protected img: Phaser.GameObjects.Sprite;
     protected shield: Phaser.GameObjects.Image;
     protected lifeBar: LifeBar;
-    protected anutoEnemy: Anuto.Enemy;
+    protected anutoEnemy: Creepts.Enemy;
 
-    constructor(scene: Phaser.Scene, anutoEnemy: Anuto.Enemy, position: {r: number, c: number}) {
+    constructor(scene: Phaser.Scene, anutoEnemy: Creepts.Enemy, position: {r: number, c: number}) {
 
         super(scene);
 
@@ -103,7 +103,7 @@ export class EnemyActor extends Phaser.GameObjects.Container {
         // de momento nada
     }
 
-    public teleport(anutoGlueTurret: Anuto.GlueTurret): void {
+    public teleport(anutoGlueTurret: Creepts.GlueTurret): void {
         
         const glueTurret_px = (anutoGlueTurret.position.c + .5) * GameConstants.CELLS_SIZE;
         const glueTurret_py = (anutoGlueTurret.position.r + .5) * GameConstants.CELLS_SIZE - 8;
@@ -126,7 +126,7 @@ export class EnemyActor extends Phaser.GameObjects.Container {
         // a veces la bala impacta contra un enemigo q ya esta muerto
         // y que ya no se mueve. por esto hacemos q el enemigo
         // al desaparecer continue moviendose
-        let f = this.type === Anuto.GameConstants.ENEMY_FLIER || this.type === Anuto.GameConstants.ENEMY_RUNNER ? 3 : 1.5;
+        let f = this.type === Creepts.GameConstants.ENEMY_FLIER || this.type === Creepts.GameConstants.ENEMY_RUNNER ? 3 : 1.5;
 
         const dx = f * (this.anutoEnemy.x - this.anutoEnemy.prevX) * GameConstants.CELLS_SIZE;
         const dy = f * (this.anutoEnemy.y - this.anutoEnemy.prevY) * GameConstants.CELLS_SIZE;

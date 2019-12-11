@@ -1,6 +1,6 @@
 import { BattleManager } from "./../BattleManager";
 import { GameVars } from "../../../GameVars";
-import * as Anuto from "../../../../engine/src";
+import * as Creepts from "../../../../engine/src";
 
 export class TurretButton extends Phaser.GameObjects.Container {
 
@@ -28,16 +28,16 @@ export class TurretButton extends Phaser.GameObjects.Container {
         let color = "";
 
         switch (type) {
-            case Anuto.GameConstants.TURRET_PROJECTILE:
+            case Creepts.GameConstants.TURRET_PROJECTILE:
                 color = "#05fb2e";
                 break;
-            case Anuto.GameConstants.TURRET_LASER:
+            case Creepts.GameConstants.TURRET_LASER:
                 color = "#ff01d8";
                 break;
-            case Anuto.GameConstants.TURRET_LAUNCH:
+            case Creepts.GameConstants.TURRET_LAUNCH:
                     color = "#ffed03";
                 break;
-            case Anuto.GameConstants.TURRET_GLUE:
+            case Creepts.GameConstants.TURRET_GLUE:
                 color = "#00caeb";
                 break;
             default:

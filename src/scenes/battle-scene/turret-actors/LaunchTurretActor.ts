@@ -1,12 +1,12 @@
 import { TurretActor } from "./TurretActor";
 import { GameVars } from "../../../GameVars";
-import * as Anuto from "../../../../engine/src";
+import * as Creepts from "../../../../engine/src";
 
 export class LaunchTurretActor extends TurretActor {
 
-    constructor(scene: Phaser.Scene, position: {r: number, c: number}, turret: Anuto.Turret) {
+    constructor(scene: Phaser.Scene, position: {r: number, c: number}, turret: Creepts.Turret) {
 
-        super(scene, Anuto.GameConstants.TURRET_LAUNCH, position, turret);
+        super(scene, Creepts.GameConstants.TURRET_LAUNCH, position, turret);
 
         this.base = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", "base_4_1");
         this.base.setInteractive();

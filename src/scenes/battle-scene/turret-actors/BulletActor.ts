@@ -1,14 +1,14 @@
 import { GameConstants } from "../../../GameConstants";
-import * as Anuto from "../../../../engine/src";
+import * as Creepts from "../../../../engine/src";
 
 export class BulletActor extends Phaser.GameObjects.Image {
 
-    public anutoBullet: Anuto.Bullet;
+    public anutoBullet: Creepts.Bullet;
     public initialPosition: {x: number, y: number};
     public realX: number;
     public realY: number;
 
-    constructor(scene: Phaser.Scene, anutoBullet: Anuto.Bullet) {
+    constructor(scene: Phaser.Scene, anutoBullet: Creepts.Bullet) {
 
         super(scene, 0, 0, "texture_atlas_1", "bullet_1_1");
 

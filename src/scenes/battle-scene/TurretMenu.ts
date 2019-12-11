@@ -1,6 +1,6 @@
 import { BattleManager } from "./BattleManager";
 import { GameVars } from "../../GameVars";
-import * as Anuto from "../../../engine/src";
+import * as Creepts from "../../../engine/src";
 import { AudioManager } from "../../AudioManager";
 
 export class TurretMenu extends Phaser.GameObjects.Container {
@@ -31,9 +31,9 @@ export class TurretMenu extends Phaser.GameObjects.Container {
     private durationTextAux: Phaser.GameObjects.Text;
     private distanceTextAux: Phaser.GameObjects.Text;
 
-    private anutoTurret: Anuto.Turret;
+    private anutoTurret: Creepts.Turret;
 
-    constructor(scene: Phaser.Scene, anutoTurret: Anuto.Turret) {
+    constructor(scene: Phaser.Scene, anutoTurret: Creepts.Turret) {
 
         super(scene);
         this.anutoTurret = anutoTurret;
@@ -61,7 +61,7 @@ export class TurretMenu extends Phaser.GameObjects.Container {
 
         offY += 35;
 
-        if (anutoTurret.type !== Anuto.GameConstants.TURRET_GLUE) {
+        if (anutoTurret.type !== Creepts.GameConstants.TURRET_GLUE) {
             text = new Phaser.GameObjects.Text(this.scene, -180, offY, "DAMAGE:", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(text);
 
@@ -71,7 +71,7 @@ export class TurretMenu extends Phaser.GameObjects.Container {
             this.intensityTextAux = new Phaser.GameObjects.Text(this.scene, -180, offY, "INTENSITY:", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(this.intensityTextAux);
 
-            this.intensityText = new Phaser.GameObjects.Text(this.scene, 50, offY, GameVars.formatNumber((this.anutoTurret as Anuto.GlueTurret).intensity), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+            this.intensityText = new Phaser.GameObjects.Text(this.scene, 50, offY, GameVars.formatNumber((this.anutoTurret as Creepts.GlueTurret).intensity), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(this.intensityText);
 
             offY += 35;
@@ -79,23 +79,23 @@ export class TurretMenu extends Phaser.GameObjects.Container {
             this.distanceTextAux = new Phaser.GameObjects.Text(this.scene, -180, offY, "DISTANCE:", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(this.distanceTextAux);
 
-            this.distanceText = new Phaser.GameObjects.Text(this.scene, 50, offY, GameVars.formatNumber((this.anutoTurret as Anuto.GlueTurret).teleportDistance), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+            this.distanceText = new Phaser.GameObjects.Text(this.scene, 50, offY, GameVars.formatNumber((this.anutoTurret as Creepts.GlueTurret).teleportDistance), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(this.distanceText);
 
             this.durationTextAux = new Phaser.GameObjects.Text(this.scene, -180, offY, "DURATION:", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(this.durationTextAux);
 
-            this.durationText = new Phaser.GameObjects.Text(this.scene, 50, offY, GameVars.formatNumber((this.anutoTurret as Anuto.GlueTurret).duration), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+            this.durationText = new Phaser.GameObjects.Text(this.scene, 50, offY, GameVars.formatNumber((this.anutoTurret as Creepts.GlueTurret).duration), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(this.durationText);
         }
 
         offY += 35;
 
-        if (anutoTurret.type === Anuto.GameConstants.TURRET_LAUNCH) {
+        if (anutoTurret.type === Creepts.GameConstants.TURRET_LAUNCH) {
             text = new Phaser.GameObjects.Text(this.scene, -180, offY, "EXPLOSION RANGE:", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(text);
 
-            this.explosionText = new Phaser.GameObjects.Text(this.scene, 50, offY, GameVars.formatNumber((this.anutoTurret as Anuto.LaunchTurret).explosionRange), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
+            this.explosionText = new Phaser.GameObjects.Text(this.scene, 50, offY, GameVars.formatNumber((this.anutoTurret as Creepts.LaunchTurret).explosionRange), {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(this.explosionText);
 
             offY += 35;
@@ -117,7 +117,7 @@ export class TurretMenu extends Phaser.GameObjects.Container {
 
         offY += 35;
 
-        if (anutoTurret.type !== Anuto.GameConstants.TURRET_GLUE) {
+        if (anutoTurret.type !== Creepts.GameConstants.TURRET_GLUE) {
             text = new Phaser.GameObjects.Text(this.scene, -180, offY, "INFLICTED:", {fontFamily: "Rubik-Regular", fontSize: "24px", color: "#FFFFFF"});
             this.add(text);
 
@@ -253,7 +253,7 @@ export class TurretMenu extends Phaser.GameObjects.Container {
 
     public checkAndUpdateInfo(): void {
 
-        if (this.anutoTurret.type === Anuto.GameConstants.TURRET_GLUE) {
+        if (this.anutoTurret.type === Creepts.GameConstants.TURRET_GLUE) {
 
             if (this.anutoTurret.grade === 3) {
 
@@ -286,7 +286,7 @@ export class TurretMenu extends Phaser.GameObjects.Container {
 
         // desactivar botones no necesarios
 
-        if ((this.anutoTurret.type === Anuto.GameConstants.TURRET_GLUE && this.anutoTurret.grade === 1) || (this.anutoTurret.type === Anuto.GameConstants.TURRET_LAUNCH && this.anutoTurret.grade === 2)) {
+        if ((this.anutoTurret.type === Creepts.GameConstants.TURRET_GLUE && this.anutoTurret.grade === 1) || (this.anutoTurret.type === Creepts.GameConstants.TURRET_LAUNCH && this.anutoTurret.grade === 2)) {
             this.strategyButton.alpha = .5;
             this.objectiveButton.alpha = .5;
 
@@ -314,22 +314,22 @@ export class TurretMenu extends Phaser.GameObjects.Container {
         
         this.levelText.setText(this.anutoTurret.level + "/" + this.anutoTurret.maxLevel);
 
-        if (this.anutoTurret.type !== Anuto.GameConstants.TURRET_GLUE) {
+        if (this.anutoTurret.type !== Creepts.GameConstants.TURRET_GLUE) {
             this.damageText.setText(GameVars.formatNumber(this.anutoTurret.damage));
         } else {
-            this.intensityText.setText(GameVars.formatNumber((this.anutoTurret as Anuto.GlueTurret).intensity));
-            this.durationText.setText(GameVars.formatNumber((this.anutoTurret as Anuto.GlueTurret).duration));
-            this.distanceText.setText(GameVars.formatNumber((this.anutoTurret as Anuto.GlueTurret).teleportDistance));
+            this.intensityText.setText(GameVars.formatNumber((this.anutoTurret as Creepts.GlueTurret).intensity));
+            this.durationText.setText(GameVars.formatNumber((this.anutoTurret as Creepts.GlueTurret).duration));
+            this.distanceText.setText(GameVars.formatNumber((this.anutoTurret as Creepts.GlueTurret).teleportDistance));
         }
 
-        if (this.anutoTurret.type === Anuto.GameConstants.TURRET_LAUNCH) {
-            this.explosionText.setText(GameVars.formatNumber((this.anutoTurret as Anuto.LaunchTurret).explosionRange));
+        if (this.anutoTurret.type === Creepts.GameConstants.TURRET_LAUNCH) {
+            this.explosionText.setText(GameVars.formatNumber((this.anutoTurret as Creepts.LaunchTurret).explosionRange));
         }
 
             this.reloadText.setText(GameVars.formatNumber(this.anutoTurret.reload));
             this.rangeText.setText(GameVars.formatNumber(this.anutoTurret.range));
 
-        if (this.anutoTurret.type !== Anuto.GameConstants.TURRET_GLUE) {
+        if (this.anutoTurret.type !== Creepts.GameConstants.TURRET_GLUE) {
             this.inflictedText.setText(GameVars.formatNumber(this.anutoTurret.inflicted));
         }
     }

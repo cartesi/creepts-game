@@ -2,7 +2,7 @@ import { BattleManager } from './../BattleManager';
 import { GameConstants } from './../../../GameConstants';
 import { GUI } from './GUI';
 import { GameVars } from '../../../GameVars';
-import * as Anuto from "../../../../engine/src";
+import * as Creepts from "../../../../engine/src";
 
 export class TurretSelected extends Phaser.GameObjects.Container {
 
@@ -37,22 +37,22 @@ export class TurretSelected extends Phaser.GameObjects.Container {
 
         switch (type) {
 
-            case Anuto.GameConstants.TURRET_PROJECTILE:
+            case Creepts.GameConstants.TURRET_PROJECTILE:
                 base_name = "base_1_1";
                 canon_name = "canon_1_1_1";
                 range *= 2.5;
                 break;
-            case Anuto.GameConstants.TURRET_LASER:
+            case Creepts.GameConstants.TURRET_LASER:
                 base_name = "base_2_1";
                 canon_name = "canon_2_1_1";
                 range *= 3.05;
                 break;
-            case Anuto.GameConstants.TURRET_LAUNCH:
+            case Creepts.GameConstants.TURRET_LAUNCH:
                 base_name = "base_4_1";
                 canon_name = "canon_4_1_1";
                 range *= 2.5;
                 break;
-            case Anuto.GameConstants.TURRET_GLUE:
+            case Creepts.GameConstants.TURRET_GLUE:
                 base_name = "base_3_1";
                 range *= 1.5;
                 break;
@@ -62,7 +62,7 @@ export class TurretSelected extends Phaser.GameObjects.Container {
         this.base = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", base_name);
         this.add(this.base);
 
-        if (type !== Anuto.GameConstants.TURRET_GLUE) {
+        if (type !== Creepts.GameConstants.TURRET_GLUE) {
             this.canon = new Phaser.GameObjects.Image(this.scene, 0, 0, "texture_atlas_1", canon_name);
             this.add(this.canon);
         }
@@ -71,16 +71,16 @@ export class TurretSelected extends Phaser.GameObjects.Container {
 
         switch (type) {
 
-            case Anuto.GameConstants.TURRET_LAUNCH:
+            case Creepts.GameConstants.TURRET_LAUNCH:
                 typeRange = "yellow";
                 break;
-            case Anuto.GameConstants.TURRET_PROJECTILE:
+            case Creepts.GameConstants.TURRET_PROJECTILE:
                     typeRange = "green";
                 break;
-            case Anuto.GameConstants.TURRET_LASER:
+            case Creepts.GameConstants.TURRET_LASER:
                     typeRange = "pink";
                 break;
-            case Anuto.GameConstants.TURRET_GLUE:
+            case Creepts.GameConstants.TURRET_GLUE:
                     typeRange = "blue";
                 break;
             default:

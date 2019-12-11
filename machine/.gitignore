@@ -1,7 +1,7 @@
 third-party/downloads
 third-party/duktape-2.4.0/
 third-party/vim-*
-anutofs.ext2
+creeptsfs.ext2
 fs/bin/xxd
 fs/bin/djs
 fs/levels/

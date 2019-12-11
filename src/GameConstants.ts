@@ -29,5 +29,5 @@ export class GameConstants {
 
     public static readonly TYPE_NEXT_WAVE = "next wave";
 
-    public static readonly SAVED_GAME_DATA_KEY = "anuto-data";
+    public static readonly SAVED_GAME_DATA_KEY = "creepts-data";
 }

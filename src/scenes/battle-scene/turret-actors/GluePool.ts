@@ -2,16 +2,16 @@ import { GameConstants } from "../../../GameConstants";
 import { GlueTurretActor } from "./GlueTurretActor";
 import { GameVars } from "../../../GameVars";
 import { AudioManager } from "../../../AudioManager";
-import * as Anuto from "../../../../engine/src";
+import * as Creepts from "../../../../engine/src";
 
 export class GluePool extends Phaser.GameObjects.Container {
 
     public id: number;
 
     private glueTurretActor: GlueTurretActor;
-    private anutoGlue: Anuto.Glue;
+    private anutoGlue: Creepts.Glue;
 
-    constructor(scene: Phaser.Scene, glueTurretActor: GlueTurretActor, anutoGlue: Anuto.Glue) {
+    constructor(scene: Phaser.Scene, glueTurretActor: GlueTurretActor, anutoGlue: Creepts.Glue) {
 
         super(scene);
 
