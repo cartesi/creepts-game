@@ -87,3 +87,4 @@ jobs:
       
       - name: Push to Docker Hub
         run: docker push cartesi/creepts-web
+        if: github.ref == 'refs/branches/develop'
