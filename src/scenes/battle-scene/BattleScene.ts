@@ -14,6 +14,8 @@ export class BattleScene extends Phaser.Scene {
     public gui: GUI;
     public boardContainer: BoardContainer;
 
+    private needSoundMusic: boolean;
+
     constructor() {
 
         super("BattleScene");
@@ -23,6 +25,8 @@ export class BattleScene extends Phaser.Scene {
     public create(): void {
 
         GameVars.currentScene = this;
+
+        this.needSoundMusic = true;
 
         this.cameras.main.setBackgroundColor(0x000018);
 
@@ -37,7 +41,12 @@ export class BattleScene extends Phaser.Scene {
         this.gui = new GUI(this);
         this.add.existing(this.gui);
 
-        AudioManager.playMusic("alt_soundtrack", 1, .5);
+        this.input.on("pointerdown", () => {
+            if (this.needSoundMusic) {
+                this.needSoundMusic = false;
+                AudioManager.playMusic("alt_soundtrack", 1, .5);
+            }
+        }, this);
     }
 
     public update(time: number, delta: number): void {
