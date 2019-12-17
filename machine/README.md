@@ -9,11 +9,21 @@ game.
 
 This prototype uses the cartesi.so library to run the emulator. It also needs
 the rootfs.ext2, rom.bin, and kernel.bin files. The building process uses
-the image-toolchain Docker image. These are all products of the machine-emulator-sdk repository.
+the `toolchain` Docker image. These are all products of the machine-emulator-sdk repository.
 
-Building:
+The first step is to create a filesystem with creepts engine and associated tools inside. To do that we use the genext2 tool to create a filesystem with everything that is inside the `fs` folder. Before doing this we must have the latest version of the creepts engine in that folder.
+
+Building Creepts:
 
 ```bash
+$ npm run build
+$ cp dist/djs-verifier-bundle.js machine/fs/bin/
+```
+
+Building djs and creeptsfs.ext2:
+
+```bash
+$ cd machine
 $ make
 ```
 This should produce creeptsfs.ext2.
@@ -37,28 +47,30 @@ $ eval $(make env)
 to set the variables you will need.
 
 Then, copy rootfs.ext2, rom.bin, and kernel.bin to the working directory where
-you have creeptsfs.ext2 and anuto.lua.
+you have creeptsfs.ext2 and creepts.lua.
 
-Now you need to obtain a Brotli compressed, then TAR'd log matching one of the
-logs in test-logs. For example:
+Now you need to obtain a Brotli compressed, then cpio'd log matching one of the
+logs in test/logs. For example:
 
 ```bash
-$ packlog test-logs/0-06.json 0-06.json.br.tar
+$ cd machine
+$ ./packlog ../test/logs/log_minimum.json 0.json.br.cpio
+$ truncate -s %4096 0.json.br.cpio -- (MacOS: `truncate -s 4096 0.json.br.cpio`)
 ```
 
-will give you one of the test logs 06 for level 0.
+will give you one of the test logs for level 0.
 
 You are finally ready to run the verifier on this log.
 
 ```bash
-$ ./anuto.lua --log-backing=0-06.json.br.tar --level=0 --auto-length
+$ ./creepts.lua --log-backing=0.json.br.cpio --level=0 --auto-length
 ```
 
 This should run the verifier and print a variety of diagnostics information on
 the screen:
 
 ```
-./anuto.lua --log-backing=0-06.json.br.tar --level=0 --auto-length
+./creepts.lua --log-backing=0.json.br.cpio --level=0 --auto-length
 
          .
         / \
@@ -87,7 +99,7 @@ then the value of mcycle.
 Run
 
 ```bash
-$ ./anuto.lua --help
+$ ./creepts.lua --help
 ```
 
 for other options.

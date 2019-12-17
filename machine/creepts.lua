@@ -23,9 +23,9 @@ local PAGE_LENGTH             = 1<<12
 local ROOT_DEVICE_START       = (1<<63)+(0<<61)
 local ROOT_DEVICE_LENGTH      = nil -- auto-detect for now
 local ROOT_DEVICE_BACKING     = "rootfs.ext2"
-local ANUTO_DEVICE_START      = (1<<63)+(1<<61)
-local ANUTO_DEVICE_LENGTH     = nil -- auto-detect for now
-local ANUTO_DEVICE_BACKING    = "creeptsfs.ext2"
+local CREEPTS_DEVICE_START    = (1<<63)+(1<<61)
+local CREEPTS_DEVICE_LENGTH   = nil -- auto-detect for now
+local CREEPTS_DEVICE_BACKING  = "creeptsfs.ext2"
 local LOG_DEVICE_START        = (1<<63)+(2<<61)
 local LOG_DEVICE_LOG2_SIZE    = nil -- auto-detect for now
 local LOG_DEVICE_LENGTH       = nil -- auto-detect for now
@@ -52,7 +52,7 @@ local max_mcycle              = 1<<61   -- reduce significantly before release
 local function help()
     io.stderr:write([=[
 Usage:
-  anuto.lua [options]
+  creepts.lua [options]
 where options are:
   --auto-length                set device length from backing
 
@@ -69,7 +69,7 @@ where options are:
   --root-backing=<filename>    backing file for root filesystem
                                (default: "rootfs.ext2")
 
-  --anuto-backing=<filename>   backing file for creepts filesystem
+  --creepts-backing=<filename> backing file for creepts filesystem
                                (default: "creeptsfs.ext2")
 
   --rom-image=<filename>       image file for ROM
@@ -143,9 +143,9 @@ local options = {
         LEVEL_DEVICE_BACKING = o
         return true
     end },
-    { "^%-%-anuto%-backing%=(.*)$", function(o)
+    { "^%-%-creepts%-backing%=(.*)$", function(o)
         if not o or #o < 1 then return false end
-        ANUTO_DEVICE_BACKING = o
+        CREEPTS_DEVICE_BACKING = o
         return true
     end },
     { "^%-%-root%-backing%=(.*)$", function(o)
@@ -240,10 +240,10 @@ local flash = {
         backing = ROOT_DEVICE_BACKING,
     },
     {
-        label = "anuto",
-        start = ANUTO_DEVICE_START,
-        length = ANUTO_DEVICE_LENGTH,
-        backing = ANUTO_DEVICE_BACKING,
+        label = "creepts",
+        start = CREEPTS_DEVICE_START,
+        length = CREEPTS_DEVICE_LENGTH,
+        backing = CREEPTS_DEVICE_BACKING,
     },
     {
         label = "log",
@@ -306,7 +306,7 @@ end
 bootargs = bootargs .. " mtdparts=" .. table.concat(mtdparts, ";")
 
 -- add command line to run verifier
-bootargs = bootargs .. " quiet -- /mnt/anuto/bin/verify"
+bootargs = bootargs .. " quiet -- /mnt/creepts/bin/verify"
 
 local rom = {
     bootargs = bootargs,

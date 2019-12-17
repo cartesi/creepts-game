@@ -14,7 +14,7 @@
 UNAME:=$(shell uname)
 
 # Containers tags
-TOOLCHAIN_TAG ?= latest
+TOOLCHAIN_TAG ?= 0.1.0
 
 FSDIR := fs
 DEPDIR := third-party
@@ -101,7 +101,7 @@ toolchain-exec:
 		-e GID=$$(id -g) \
 		-v `pwd`:$(CONTAINER_BASE) \
 		-w $(CONTAINER_BASE) \
-		cartesi/image-toolchain:$(TOOLCHAIN_TAG) $(CONTAINER_COMMAND)
+		cartesi/toolchain:$(TOOLCHAIN_TAG) $(CONTAINER_COMMAND)
 
 toolchain-env:
 	@docker run --hostname toolchain-env -it --rm \
@@ -111,7 +111,7 @@ toolchain-env:
 		-e GID=$$(id -g) \
 		-v `pwd`:$(CONTAINER_BASE) \
 		-w $(CONTAINER_BASE) \
-		cartesi/image-toolchain:$(TOOLCHAIN_TAG)
+		cartesi/toolchain:$(TOOLCHAIN_TAG)
 
 clean:
 	\rm -rf creeptsfs.ext2 $(DJS) $(FSDIR)/bin/djs $(FSDIR)/bin/xxd $(FSDIR)/levels $(XXD) $(DOWNLOADDIR) $(DEPDIRS) $(BUILDDIR)
