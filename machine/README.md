@@ -36,6 +36,10 @@ $ make clean
 
 ## Running Tests
 
+The emulator can be executed by having it installed locally or by using a pre-built Docker image for more convenience.
+
+### Running locally
+
 Make sure your environment variables are set so the machine-emulator and its
 dependencies can be found. In your development environment, go to the
 machine-emulator directory and type
@@ -105,6 +109,19 @@ $ ./creepts.lua --help
 for other options.
 
 Read the Lua source for details on the layout of the machine.
+
+### Running using Docker
+
+We created a convenient Docker image called `cartesi/creepts-emulator` to make it easier to run the emulator with any game log file.
+
+You have to mount a volume inside the container with the log file you want to run. There are some example log files at `../test/logs`. Example below:
+
+```bash
+$ cd machine
+$ docker run -it -v $(PWD)/../test/logs/:/logs cartesi/creepts-emulator /logs/log_minimum.json
+```
+
+You can also specify a `--print-proofs` argument to print the proofs at different stages of execution.
 
 ## Authors
 

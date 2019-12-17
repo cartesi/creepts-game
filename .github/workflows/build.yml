@@ -70,6 +70,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
 
+      - name: Build cartesi/creepts-emulator Docker image
+        run: |
+          echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
+          cd machine && docker build . -t cartesi/creepts-emulator
+          docker push cartesi/creepts-emulator
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        # if: github.ref == 'refs/branches/develop'
+  
   docker:
     runs-on: ubuntu-18.04
     needs: test
@@ -80,7 +90,7 @@ jobs:
         run: docker build . -t cartesi/creepts-web
 
       - name: Login to Docker Hub
-        run: docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        run: echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
