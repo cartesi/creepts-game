@@ -1,4 +1,5 @@
 [
+    ["./logs/log_minimum.json", 0, 200],
     ["./logs/log_short.json", 0, 960],
     ["./logs/log_medium.json", 0, 4787],
     ["./logs/log_long.json", 0, 154034]
