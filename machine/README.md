@@ -59,7 +59,7 @@ logs in test/logs. For example:
 ```bash
 $ cd machine
 $ ./packlog ../test/logs/log_minimum.json 0.json.br.cpio
-$ truncate -s %4096 0.json.br.cpio -- (MacOS: `truncate -s 4096 0.json.br.cpio`)
+$ truncate -s 1m 0.json.br.cpio
 ```
 
 will give you one of the test logs for level 0.
