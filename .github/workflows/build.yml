@@ -10,6 +10,10 @@ jobs:
           node-version: '12.x'
 
       - run: npm install
+
+      - name: Running the engine with test logs
+        run: npm test
+
       - run: npm run build
 
       - name: Generating level files
@@ -18,9 +22,6 @@ jobs:
           node dist/levels-bundle.js -d ./test/levels
           node dist/levels-bundle.js -d ./test/levels -n
       
-      - name: Running the engine with test logs
-        run: npm test
-
       - name: Save verifier artifact
         uses: actions/upload-artifact@v1
         with:
