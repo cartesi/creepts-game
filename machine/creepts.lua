@@ -306,7 +306,7 @@ end
 bootargs = bootargs .. " mtdparts=" .. table.concat(mtdparts, ";")
 
 -- add command line to run verifier
-bootargs = bootargs .. " quiet -- /mnt/creepts/bin/verify"
+bootargs = bootargs .. " -- /mnt/creepts/bin/verify"
 
 local rom = {
     bootargs = bootargs,
