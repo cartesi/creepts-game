@@ -1,4 +1,4 @@
-FROM cartesi/machine-emulator:0.1.0-rc2
+FROM cartesi/machine-emulator:0.1.0-rc3
 
 # Install tools
 RUN \
