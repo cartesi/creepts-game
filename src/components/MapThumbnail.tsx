@@ -27,8 +27,8 @@ export const MapThumbnail: React.SFC<MapThumbnailProps> = (props) => {
     };
 
     // path and plateus as a list of <rect>
-    const path = Array.from(map.path, tile("#555"));
-    const plateaus = Array.from(map.plateaus, tile("white"));
+    const path = Array.from(map.path, tile("#000018"));
+    const plateaus = Array.from(map.plateaus, tile("#008abe"));
 
     // maps have different sizes
     // so I draw the path and plateus, and then centralize that
@@ -48,10 +48,10 @@ export const MapThumbnail: React.SFC<MapThumbnailProps> = (props) => {
             width={props.width}
             height={props.height}
             xmlns="http://www.w3.org/2000/svg">
-            <rect width="100%" height="100%" fill={"#ccc"} />
+            <rect width="100%" height="100%" fill={"#002959"} />
             <g transform={`scale(${sx}, ${sy})`}>
                 <g transform={`translate(${dx}, ${dy})`}>
-                    <rect width="100%" height="100%" fill={map.plateaus.length > 0 ? "#ccc" : "#fff"} key="-1" />
+                    <rect width="100%" height="100%" fill={map.plateaus.length > 0 ? "#002959" : "#008abe"} key="-1" />
                     {path}
                     {plateaus} 
                 </g>
