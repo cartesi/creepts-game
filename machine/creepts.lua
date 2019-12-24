@@ -216,7 +216,7 @@ end
 
 local function intlog2(value)
     local i = 1
-    local j = 1
+    local j = 0
     while i < value do
         i = i*2
         j = j+1
