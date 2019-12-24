@@ -6,7 +6,7 @@ if [ "$#" -ne 2 ]; then
 fi
 
 tmpdir=$(mktemp -d -t creepts-XXXXXXXXXX)
-(cp $1 /$tmpdir/log.json; cd $tmpdir; brotli log.json; echo log.json.br | cpio -o -F log.json.cpio)
+(cp $1 /$tmpdir/log.json; cd $tmpdir; brotli log.json; touch -t 200001010000 log.json.br; echo log.json.br | cpio --reproducible -o -F log.json.cpio)
 cp $tmpdir/log.json.cpio $2
 
 \rm -rf  $tmpdir
