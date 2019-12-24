@@ -1,0 +1,24 @@
+diff -Naur quickjs-2019-12-21/quickjs.c quickjs-2019-12-21.new/quickjs.c
+--- quickjs-2019-12-21/quickjs.c	2019-12-21 10:18:38.000000000 -0300
++++ quickjs-2019-12-21.new/quickjs.c	2019-12-25 20:39:06.146196169 -0300
+@@ -68,7 +68,7 @@
+ /* define to include Atomics.* operations which depend on the OS
+    threads */
+ #if !defined(EMSCRIPTEN)
+-#define CONFIG_ATOMICS
++//#define CONFIG_ATOMICS
+ #endif
+ 
+ /* dump object free */
+diff -Naur quickjs-2019-12-21/quickjs.h quickjs-2019-12-21.new/quickjs.h
+--- quickjs-2019-12-21/quickjs.h	2019-12-21 10:18:38.000000000 -0300
++++ quickjs-2019-12-21.new/quickjs.h	2019-12-25 20:39:44.671034975 -0300
+@@ -53,7 +53,7 @@
+ typedef uint32_t JSClassID;
+ typedef uint32_t JSAtom;
+ 
+-#if defined(__x86_64__) || defined(__aarch64__)
++#if 1 || defined(__x86_64__) || defined(__aarch64__)
+ #define JS_PTR64
+ #define JS_PTR64_DEF(a) a
+ #else

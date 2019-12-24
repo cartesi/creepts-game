@@ -80,6 +80,7 @@ module.exports = env => {
 		target: 'node',
 		entry: {
 			'djs-verifier': './cmdline/djs-verifier.js',
+			'qjs-verifier': './cmdline/qjs-verifier.js',
 			'node-verifier': './cmdline/node-verifier.js',
 			'levels': './cmdline/levels.ts'
 		},

@@ -14,7 +14,7 @@
 UNAME:=$(shell uname)
 
 # Containers tags
-TOOLCHAIN_TAG ?= 0.1.0
+TOOLCHAIN_TAG ?= 0.2.0
 
 FSDIR := fs
 DEPDIR := third-party
@@ -34,15 +34,33 @@ RISCV_CFLAGS :=-march=rv64ima -mabi=lp64
 DJSDIR = $(DEPDIR)/duktape-2.4.0
 DJS = $(DJSDIR)/djs
 VIMDIR = $(DEPDIR)/vim-8.1.2069
+QJSDIR = $(DEPDIR)/quickjs-2019-12-21
+QJS = $(QJSDIR)/qjs
+QJSDBG = $(QJSDIR)/qjs-debug
 XXDDIR = $(VIMDIR)/src/xxd
 XXD = $(XXDDIR)/xxd
 FSDIR = fs
 
-DEPDIRS := $(DJSDIR) $(VIMDIR)
+DEPDIRS := $(DJSDIR) $(VIMDIR) $(QJSDIR)
+
+all: fs
+
+time-both: fs
+	time cartesi-machine.lua --batch --fs-backing=creeptsfs.ext2 --cmdline='quiet -- /mnt/fs/bin/qjs --std /mnt/fs/bin/qjs-verifier-bundle.js /mnt/fs/logs/log_short.json /mnt/fs/levels/0.json'
+	time cartesi-machine.lua --batch --fs-backing=creeptsfs.ext2 --cmdline='quiet -- /mnt/fs/bin/djs /mnt/fs/bin/djs-verifier-bundle.js /mnt/fs/logs/log_short.json /mnt/fs/levels/0.json'
+
+test-qjs: fs
+	cartesi-machine.lua --batch --fs-backing=creeptsfs.ext2 --cmdline='quiet -- /mnt/fs/bin/qjs --std /mnt/fs/bin/qjs-verifier-bundle.js /mnt/fs/logs/log_short.json /mnt/fs/levels/0.json' | tee in
+	./qjs --std fs/bin/qjs-verifier-bundle.js fs/logs/log_short.json fs/levels/0.json | tee out
+
+test-djs: fs
+	cartesi-machine.lua --batch --fs-backing=creeptsfs.ext2 --cmdline='quiet -- /mnt/fs/bin/djs /mnt/fs/bin/djs-verifier-bundle.js /mnt/fs/logs/log_short.json /mnt/fs/levels/0.json' | tee in
+	./djs fs/bin/djs-verifier-bundle.js fs/logs/log_short.json fs/levels/0.json | tee out
 
 fs: creeptsfs.ext2
 
-creeptsfs.ext2: $(FSDIR)/bin/djs $(FSDIR)/bin/xxd $(FSDIR)/levels
+#creeptsfs.ext2: $(FSDIR)/bin/qjs  $(FSDIR)/bin/qjs-debug $(FSDIR)/bin/djs $(FSDIR)/bin/xxd $(FSDIR)/levels
+creeptsfs.ext2: $(FSDIR)/bin/qjs $(FSDIR)/bin/djs $(FSDIR)/bin/xxd $(FSDIR)/levels
 	$(MAKE) toolchain-exec CONTAINER_COMMAND="$(CONTAINER_MAKE) $@.toolchain"
 
 $(FSDIR)/bin/djs: $(DJS)
@@ -67,9 +85,21 @@ $(DJS).toolchain:
 $(FSDIR)/bin/xxd: $(XXD)
 	cp -f $< $@
 
+$(FSDIR)/bin/qjs: $(QJS)
+	cp -f $< $@
+
+$(FSDIR)/bin/qjs-debug: $(QJSDBG)
+	cp -f $< $@
+
 $(FSDIR)/levels:
 	mkdir -p $@
 	cd .. && npm run levels -- -d machine/fs/levels -n
+
+$(QJS): $(DEPDIR)/quickjs-2019-12-21
+	$(MAKE) toolchain-exec CONTAINER_COMMAND="$(CONTAINER_MAKE) $@.toolchain"
+
+$(QJSDBG): $(DEPDIR)/quickjs-2019-12-21 | $(QJS)
+	$(MAKE) toolchain-exec CONTAINER_COMMAND="$(CONTAINER_MAKE) $@.toolchain"
 
 $(XXD): $(DEPDIR)/vim-8.1.2069
 	$(MAKE) toolchain-exec CONTAINER_COMMAND="$(CONTAINER_MAKE) $@.toolchain"
@@ -77,8 +107,14 @@ $(XXD): $(DEPDIR)/vim-8.1.2069
 $(XXD).toolchain:
 	$(MAKE) -C $(XXDDIR) CC=$(RVCC)
 
+$(QJS).toolchain:
+	$(MAKE) -C $(QJSDIR) CROSS_PREFIX=riscv64-unknown-linux-gnu- qjs
+
+$(QJSDBG).toolchain:
+	$(MAKE) -C $(QJSDIR) CROSS_PREFIX=riscv64-unknown-linux-gnu- qjs-debug
+
 creeptsfs.ext2.toolchain:
-	genext2fs -f -i 512 -b 4096 -d fs $(basename $@)
+	genext2fs -f -b 40960 -d fs $(basename $@)
 	truncate -s %4096 $(basename $@)
 
 $(DEPDIR)/vim-8.1.2069: | downloads
@@ -87,6 +123,10 @@ $(DEPDIR)/vim-8.1.2069: | downloads
 $(DEPDIR)/duktape-2.4.0: | downloads
 	tar -xJvf $(DOWNLOADDIR)/duktape-2.4.0.tar.xz -C $(DEPDIR)
 	cd $@ && patch -p1 < ../duktape-2.4.0.patch
+
+$(DEPDIR)/quickjs-2019-12-21: | downloads
+	tar -xJvf $(DOWNLOADDIR)/quickjs-2019-12-21.tar.xz -C $(DEPDIR)
+	cd $@ && patch -p1 < ../quickjs-2019-12-21.patch
 
 downloads:
 	mkdir -p $(DOWNLOADDIR)
