@@ -72,23 +72,23 @@ import { Enemy } from "../enemies/Enemy";
         }
 
         public update(): void {
-
-            this.enemiesWithinRange = this.getEnemiesWithinRange();
-
-            if (this.fixedTarget) {
-                if (this.enemiesWithinRange.length > 0) {
-                    if (this.enemiesWithinRange.indexOf(this.followedEnemy) === -1) {
-                        this.followedEnemy = this.enemiesWithinRange[0];
-                    }   
-                } else {
-                    this.followedEnemy = null;
-                }
-            } else {
-                this.followedEnemy = this.enemiesWithinRange[0];
-            }
-
+            
             if (this.readyToShoot) {
+                
+                this.enemiesWithinRange = this.getEnemiesWithinRange();
 
+                if (this.fixedTarget) {
+                    if (this.enemiesWithinRange.length > 0) {
+                        if (this.enemiesWithinRange.indexOf(this.followedEnemy) === -1) {
+                            this.followedEnemy = this.enemiesWithinRange[0];
+                        }
+                    } else {
+                        this.followedEnemy = null;
+                    }
+                } else {
+                    this.followedEnemy = this.enemiesWithinRange[0];
+                }
+            
                 if (this.enemiesWithinRange.length > 0) {
                     this.readyToShoot = false;   
                     this.shoot();
