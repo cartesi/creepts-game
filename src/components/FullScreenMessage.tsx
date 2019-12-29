@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Dimmer, Grid, Message } from "semantic-ui-react";
+import { Backdrop, Button } from '@material-ui/core';
+import { Alert, AlertTitle } from '@material-ui/lab';
 
 interface IProps {
     title: string,
@@ -12,15 +13,14 @@ interface IProps {
 export const FullScreenMessage: React.FC<IProps> = ({ title, message, buttonTitle, onClick, opacity = 1.0 }) => {
     return (
         <div style={{ height: "100vh", width: "100vw", position: "absolute", zIndex: 1, opacity: opacity }}>
-            <Grid verticalAlign="middle">
-                <Dimmer active>
-                    <Message negative>
-                        <Message.Header>{title}</Message.Header>
-                        <p>{message}</p>
-                        <Button negative fluid onClick={ onClick }>{buttonTitle}</Button>
-                    </Message>
-                </Dimmer>
-            </Grid>
+            <Backdrop open={true}>
+                <Alert variant="outlined" severity="error" action={
+                    <Button color="inherit" size="small" onClick={ onClick }>{buttonTitle}</Button>
+                }>
+                    <AlertTitle>{title}</AlertTitle>
+                    {message}                    
+                </Alert>
+            </Backdrop>
         </div>
     );
 };

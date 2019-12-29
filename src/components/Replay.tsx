@@ -82,4 +82,4 @@ export const Replay: React.FC<ReplayProps> = ({ tournamentId, id }) => {
             }
         </div>
     );
-}
+};

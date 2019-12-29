@@ -1,5 +1,7 @@
 declare var __GAME_ONLY__: boolean;
 import React from "react";
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { useRoutes } from "hookrouter";
 
 import Index from "./Index";
@@ -20,15 +22,47 @@ const routes = {
 };
 
 export const App = () => {
+    const theme = createMuiTheme({
+        palette: {
+          type: 'dark',
+          primary: {
+            light: '#534bae',
+            main: '#1a237e',
+            dark: '#000051',
+            contrastText: '#ffffff',
+          },
+          secondary: {
+            light: '#6ec6ff',
+            main: '#2196f3',
+            dark: '#0069c0',
+            contrastText: '#000000',
+          },
+          background: {
+              default: '#000000',
+              paper: '#000018'
+          }
+        },
+        overrides: {
+            MuiPaper: {
+                outlined: {
+                    borderColor: '#0069c0'
+                }
+            }
+        }
+    });
+    
     // TODO: create <NotFoundPage />
     const match = useRoutes(routes);
-    const gameVisible = __GAME_ONLY__ || match.type === TournamentContainer || match.type === Replay ;
+    const gameVisible = __GAME_ONLY__ || match.type === TournamentContainer || match.type === Replay;
     return (
-        <div>
-            <div className={'menu-container'}>
-                {__GAME_ONLY__ ? <div/> : match}
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <div>
+                <div className={'menu-container'}>
+                    {__GAME_ONLY__ ? <div/> : match}
+                </div>
+                <GameContainer visible={gameVisible} />
             </div>
-            <GameContainer visible={gameVisible} />
-        </div>
+        </ThemeProvider>
     );
 }

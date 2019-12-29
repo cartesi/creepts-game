@@ -1,6 +1,6 @@
 import React from "react";
-import { A } from "hookrouter";
-import { Breadcrumb, List, Message } from "semantic-ui-react";
+import { AppBar, Breadcrumbs, Grid, Link, Toolbar, Typography } from "@material-ui/core";
+import Alert from '@material-ui/lab/Alert';
 import { TournamentCard } from "./TournamentCard";
 import { LoadingCard } from "./LoadingCard";
 import { TournamentPhase } from "../Tournament";
@@ -13,30 +13,33 @@ export const TournamentsContainer: React.FC<IProps> = ({ name, phase, me }) => {
     const service = useTournamentsService(phase, me);
 
     return (
-        <div style={{ padding: "10px"}}>
-            <Breadcrumb>
-                <Breadcrumb.Section as={A} href="/">Home</Breadcrumb.Section>
-                <Breadcrumb.Divider />
-                <Breadcrumb.Section active>{name}</Breadcrumb.Section>
-            </Breadcrumb>
+        <React.Fragment>
 
-            {service.status === "loading" && <List><LoadingCard /></List> }
+            <AppBar position="static">
+                <Toolbar>
+                    <Breadcrumbs aria-label="breadcrumb">
+                        <Link color="inherit" href="/">
+                            Home
+                        </Link>
+                        <Typography color="textPrimary">{name}</Typography>
+                    </Breadcrumbs>
+                </Toolbar>
+            </AppBar>
+
+            {service.status === "loading" && <div><LoadingCard /></div> }
             {service.status === "loaded" && 
-                <List>
+                <Grid container direction="column" spacing={2}>
                     {service.payload.results.map((tournament, index) => (
                         <TournamentCard
                             key={index}
                             tournament={tournament}
                         />
                     ))}
-                </List>
+                </Grid>
             }
             {service.status === "error" && (
-                <Message negative>
-                    <Message.Header>Error</Message.Header>
-                    <p>{service.error.message}</p>
-                </Message>
+                <Alert variant="outlined" severity="error">{service.error.message}</Alert>
             )}
-        </div>
+        </React.Fragment>
     );
 };

@@ -1,22 +1,28 @@
 import React from "react";
-import { Card, Placeholder } from "semantic-ui-react";
+import { Box, Grid, Paper } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
 
 export const LoadingCard: React.FC<{}> = () => {
     return (
-        <Card raised fluid>
-            <Card.Content>
-                <Placeholder>
-                    <Placeholder.Paragraph>
-                        <Placeholder.Line length="short" />
-                        <Placeholder.Line length="very long" />
-                        <Placeholder.Line length="medium" />
-                        <Placeholder.Line length="very long" />
-                        <Placeholder.Line length="long" />
-                        <Placeholder.Line length="medium" />
-                        <Placeholder.Line length="short" />
-                    </Placeholder.Paragraph>
-                </Placeholder>
-            </Card.Content>
-        </Card>
+        <Grid item>
+            <Paper key="loading" variant="outlined" square>
+                <Grid container item spacing={0} alignItems="flex-start" justify="flex-end">
+                    <Grid item xs>
+                        <Grid container direction="column">
+                            <Box m={2}>
+                                <Skeleton variant="rect" height={30} />
+                                <Skeleton variant="text" />
+                                <Skeleton variant="rect" width={300} height={200} />
+                            </Box>
+                        </Grid>                        
+                    </Grid>
+                    <Grid item>
+                        <Box m={2}>
+                            <Skeleton variant="rect" width={100} height={120} />
+                        </Box>
+                    </Grid>
+                </Grid>                
+            </Paper>
+        </Grid>
     );
-}
+};
