@@ -2,6 +2,7 @@ import { GameConstants } from "../GameConstants";
 import { MathUtils } from "../utils/MathUtils";
 import { Engine } from "../Engine";
 import { Enemy } from "../enemies/Enemy";
+import * as TimSort from "timsort";
 
     export class Turret {
 
@@ -80,7 +81,7 @@ import { Enemy } from "../enemies/Enemy";
 
                 if (this.fixedTarget) {
                     if (this.enemiesWithinRange.length > 0) {
-                        if (!this.isInRange(this.followedEnemy)) {
+                        if (this.enemiesWithinRange.indexOf(this.followedEnemy) === -1) {
                             this.followedEnemy = this.enemiesWithinRange[0];
                         }
                     } else {
@@ -148,31 +149,6 @@ import { Enemy } from "../enemies/Enemy";
             this.fixedTarget = !this.fixedTarget;
         }
 
-        public isInRange(enemy: Enemy): boolean {
-
-            if (!enemy) {
-                return false;
-            }
-
-            if (this.type === GameConstants.TURRET_GLUE && this.grade === 3 && enemy.hasBeenTeleported) {
-                return false;
-            }
-
-            if (enemy.life > 0 && enemy.l < this.engine.enemiesPathCells.length - 1.5 && !enemy.teleporting) {
-
-                const dx = this.x - enemy.x;
-                const dy = this.y - enemy.y;
-
-                const squaredDist = MathUtils.fixNumber(dx * dx + dy * dy);    
-
-                if (this.squaredRange >= squaredDist) {   
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         protected calculateTurretParameters(): void {
             
             this.reloadTicks = Math.floor(GameConstants.RELOAD_BASE_TICKS * this.reload);
@@ -208,151 +184,123 @@ import { Enemy } from "../enemies/Enemy";
                 }
             }
 
-            const enemies: Enemy[] = [];
+            if (enemiesAndSquaredDistances.length > 1) {
 
-            if (enemiesAndSquaredDistances.length >= 1) {
+                switch (this.shootingStrategy) {
 
-                if (this.type === GameConstants.TURRET_LASER && this.grade === 2) {
-                    
-                    switch (this.shootingStrategy) {
+                    case GameConstants.STRATEGY_SHOOT_FIRST:
+                        TimSort.sort(enemiesAndSquaredDistances, (e1, e2) => e2.enemy.l - e1.enemy.l);
+                        break;
 
-                        case GameConstants.STRATEGY_SHOOT_LAST:
-                            enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.enemy.l - e2.enemy.l) < 0);
-                            break;
+                    case GameConstants.STRATEGY_SHOOT_LAST:
+                        TimSort.sort(enemiesAndSquaredDistances, (e1, e2) => e1.enemy.l - e2.enemy.l);
+                        break;
 
-                        case GameConstants.STRATEGY_SHOOT_CLOSEST:
+                    case GameConstants.STRATEGY_SHOOT_CLOSEST:
+                        TimSort.sort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): number {
+
+                            if (e1.squareDist === e2.squareDist) {
+                                return e2.enemy.l - e1.enemy.l;
+                            } else {
+                                return e1.squareDist - e2.squareDist;
+                            }
+                        });
+
+                        break;
+
+                    case GameConstants.STRATEGY_SHOOT_WEAKEST:
+                        TimSort.sort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): number {
+
+                            if (e1.enemy.life === e2.enemy.life) {
+                                return e2.enemy.l - e1.enemy.l;
+                            } else {
+                                return e1.enemy.life - e2.enemy.life;
+                            }
+                        });
                         
-                            enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): boolean {
-                                
-                                let ret: boolean;
+                        break;
 
-                                if (e1.squareDist === e2.squareDist) {
-                                    ret = (e1.enemy.l - e2.enemy.l) > 0;
-                                } else {
-                                    ret = (e1.squareDist - e2.squareDist) < 0;
-                                }
+                    case GameConstants.STRATEGY_SHOOT_STRONGEST:
+                        TimSort.sort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): number {
 
-                                return ret;
-                            });
-
-                            break;
-
-                        case GameConstants.STRATEGY_SHOOT_WEAKEST:
-                
-                            enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): boolean {
-                                
-                                let ret: boolean;
-
-                                if (e1.enemy.life === e2.enemy.life) {
-                                    ret = (e1.enemy.l - e2.enemy.l) > 0;
-                                } else {
-                                    ret = e1.enemy.life - e2.enemy.life < 0;
-                                }
-
-                                return ret;
-                            });
-                            
-                            break;
-
-                        case GameConstants.STRATEGY_SHOOT_STRONGEST:
-
-                            enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): boolean {
-                                
-                                let ret: boolean;
-
-                                if (e1.enemy.life === e2.enemy.life) {
-                                    ret = (e1.enemy.l - e2.enemy.l) > 0;
-                                } else {
-                                    ret = e1.enemy.life - e2.enemy.life > 0;
-                                }
-
-                                return ret;
-                            });
-                            
-                            break;
-
-                        case GameConstants.STRATEGY_SHOOT_FIRST:
-
-                            enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.enemy.l - e2.enemy.l) > 0);
-                            break;
-
-                        default:
-                    }
-
-                    for (let i = 0; i < enemiesAndSquaredDistances.length; i ++) {
-                        enemies.push(enemiesAndSquaredDistances[i].enemy);
-                    }
-
-                } else {
-                    switch (this.shootingStrategy) {
-
-                        case GameConstants.STRATEGY_SHOOT_LAST:
-                            enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.enemy.l - e2.enemy.l) < 0);
-                            break;
-
-                        case GameConstants.STRATEGY_SHOOT_CLOSEST:
+                            if (e1.enemy.life === e2.enemy.life) {
+                                return e2.enemy.l - e1.enemy.l;
+                            } else {
+                                return e2.enemy.life - e1.enemy.life;
+                            }
+                        });
                         
-                            enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): boolean {
-                                
-                                let ret: boolean;
+                        break;
 
-                                if (e1.squareDist === e2.squareDist) {
-                                    ret = (e1.enemy.l - e2.enemy.l) > 0;
-                                } else {
-                                    ret = (e1.squareDist - e2.squareDist) < 0;
-                                }
-
-                                return ret;
-                            });
-
-                            break;
-
-                        case GameConstants.STRATEGY_SHOOT_WEAKEST:
-                
-                            enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): boolean {
-                                
-                                let ret: boolean;
-
-                                if (e1.enemy.life === e2.enemy.life) {
-                                    ret = (e1.enemy.l - e2.enemy.l) > 0;
-                                } else {
-                                    ret = e1.enemy.life - e2.enemy.life < 0;
-                                }
-
-                                return ret;
-                            });
-                            
-                            break;
-
-                        case GameConstants.STRATEGY_SHOOT_STRONGEST:
-
-                            enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): boolean {
-                                
-                                let ret: boolean;
-
-                                if (e1.enemy.life === e2.enemy.life) {
-                                    ret = (e1.enemy.l - e2.enemy.l) > 0;
-                                } else {
-                                    ret = e1.enemy.life - e2.enemy.life > 0;
-                                }
-
-                                return ret;
-                            });
-                            
-                            break;
-
-                        case GameConstants.STRATEGY_SHOOT_FIRST:
-
-                            enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.enemy.l - e2.enemy.l) > 0);
-                            break;
-
-                        default:
-                    }
-
-                    enemies.push(enemiesAndSquaredDistances[0].enemy);
+                    default:
                 }
+
+                // switch (this.shootingStrategy) {
+
+                //     case GameConstants.STRATEGY_SHOOT_LAST:
+                //         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.enemy.l - e2.enemy.l) < 0);
+                //         break;
+
+                //     case GameConstants.STRATEGY_SHOOT_CLOSEST:
+                    
+                //         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): boolean {
+                            
+                //             let ret: boolean;
+
+                //             if (e1.squareDist === e2.squareDist) {
+                //                 ret = (e1.enemy.l - e2.enemy.l) > 0;
+                //             } else {
+                //                 ret = (e1.squareDist - e2.squareDist) < 0;
+                //             }
+
+                //             return ret;
+                //         });
+
+                //         break;
+
+                //     case GameConstants.STRATEGY_SHOOT_WEAKEST:
+            
+                //         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): boolean {
+                            
+                //             let ret: boolean;
+
+                //             if (e1.enemy.life === e2.enemy.life) {
+                //                 ret = (e1.enemy.l - e2.enemy.l) > 0;
+                //             } else {
+                //                 ret = e1.enemy.life - e2.enemy.life < 0;
+                //             }
+
+                //             return ret;
+                //         });
+                        
+                //         break;
+
+                //     case GameConstants.STRATEGY_SHOOT_STRONGEST:
+
+                //         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): boolean {
+                            
+                //             let ret: boolean;
+
+                //             if (e1.enemy.life === e2.enemy.life) {
+                //                 ret = (e1.enemy.l - e2.enemy.l) > 0;
+                //             } else {
+                //                 ret = e1.enemy.life - e2.enemy.life > 0;
+                //             }
+
+                //             return ret;
+                //         });
+                        
+                //         break;
+
+                //     case GameConstants.STRATEGY_SHOOT_FIRST:
+
+                //         enemiesAndSquaredDistances = MathUtils.mergeSort(enemiesAndSquaredDistances, (e1, e2) => (e1.enemy.l - e2.enemy.l) > 0);
+                //         break;
+
+                //     default:
+                // }
             }
 
-            return enemies;
+            return enemiesAndSquaredDistances.map(e => e.enemy);
         }
     }

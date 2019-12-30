@@ -36,6 +36,7 @@
     },
     "dependencies": {
         "@types/howler": "^2.1.1",
+        "@types/timsort": "^0.3.0",
         "commander": "^4.0.1",
         "hookrouter": "^1.2.3",
         "howler": "^2.1.2",
@@ -46,6 +47,7 @@
         "react-dom": "^16.9.0",
         "semantic-ui-css": "^2.4.1",
         "semantic-ui-react": "^0.88.1",
+        "timsort": "^0.3.0",
         "typed-emitter": "^0.1.0"
     },
     "scripts": {
