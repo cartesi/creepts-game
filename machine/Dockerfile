@@ -1,4 +1,4 @@
-FROM cartesi/machine-emulator:0.1.0-rc3
+FROM cartesi/machine-emulator:0.1.0-rc4
 
 # Install tools
 RUN \
@@ -9,9 +9,9 @@ RUN \
 WORKDIR /opt/cartesi/creepts
 
 RUN \
-    wget --no-verbose https://github.com/cartesi/image-kernel/releases/download/v0.1.0/kernel.bin && \
-    wget --no-verbose https://github.com/cartesi/machine-emulator-rom/releases/download/v0.1.0/rom.bin && \
-    wget --no-verbose https://github.com/cartesi/image-rootfs/releases/download/v0.1.0/rootfs.ext2
+    wget --no-verbose https://github.com/cartesi/image-kernel/releases/download/v0.2.0/kernel.bin && \
+    wget --no-verbose https://github.com/cartesi/machine-emulator-rom/releases/download/v0.2.0/rom.bin && \
+    wget --no-verbose https://github.com/cartesi/image-rootfs/releases/download/v0.2.0/rootfs.ext2
 
 COPY creeptsfs.ext2 .
 COPY creepts.lua .

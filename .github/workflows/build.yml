@@ -55,7 +55,7 @@ jobs:
       - run: |
           cd machine && make -j$(nproc)
         env:
-          TOOLCHAIN_TAG: 0.1.0
+          TOOLCHAIN_TAG: 0.2.0
       
       - name: Save fs artifact
         uses: actions/upload-artifact@v1
