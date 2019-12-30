@@ -18,7 +18,9 @@ export class TurretActor extends Phaser.GameObjects.Container {
     public turret: Creepts.Turret;
     public showLevel: boolean;
     
+    
     private rangeCircle: Phaser.GameObjects.Image;
+    private followedEnemy: any;
 
     constructor(scene: Phaser.Scene, type: string, position: {r: number, c: number}, turret: Creepts.Turret) {
 
@@ -73,22 +75,30 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
     public update(time: number, delta: number): void {
         
-        if (this.turret.enemiesWithinRange.length > 0) {
-            
-            if (this.turret.followedEnemy) {
+        let enemiesWithinRange = this.turret.getEnemiesWithinRange();
 
-                const followedEnemyActor = BoardContainer.currentInstance.getEnemyActorByID(this.turret.followedEnemy.id);
-
-                if (followedEnemyActor) {
-                    const dx = followedEnemyActor.x - this.x;
-                    const dy = followedEnemyActor.y - this.y;
-
-                    if (this.canon) {
-                        this.canon.rotation = Math.atan2(dy, dx) + Math.PI / 2;
-                    }
+        if (this.turret.fixedTarget) {
+            if (enemiesWithinRange.length > 0) {
+                if (enemiesWithinRange.indexOf(this.followedEnemy) === -1) {
+                    this.followedEnemy = enemiesWithinRange[0];
                 }
             }
+        } else if (enemiesWithinRange.length > 0) {
+            this.followedEnemy = enemiesWithinRange[0];
         }
+
+        if (this.followedEnemy) {
+            const followedEnemyActor = BoardContainer.currentInstance.getEnemyActorByID(this.followedEnemy.id);
+
+            if (followedEnemyActor) {
+                const dx = followedEnemyActor.x - this.x;
+                const dy = followedEnemyActor.y - this.y;
+
+                if (this.canon) {
+                    this.canon.rotation = Math.atan2(dy, dx) + Math.PI / 2;
+                }
+            } 
+        } 
     }
 
     public upgrade(): void {

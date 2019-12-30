@@ -156,7 +156,7 @@ import { Enemy } from "../enemies/Enemy";
             // override
         }
 
-        protected getEnemiesWithinRange(): Enemy [] {
+        public getEnemiesWithinRange(): Enemy [] {
 
             let enemiesAndSquaredDistances: {enemy: Enemy, squareDist: number} [] = [];
             const squaredRange = MathUtils.fixNumber(this.range * this.range);
