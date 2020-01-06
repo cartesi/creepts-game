@@ -1,4 +1,4 @@
-FROM cartesi/machine-emulator:0.1.0-rc4
+FROM cartesi/machine-emulator:0.1.0
 
 # Install tools
 RUN \
@@ -8,12 +8,16 @@ RUN \
 
 WORKDIR /opt/cartesi/creepts
 
+# download emulator files
 RUN \
     wget https://github.com/cartesi/image-kernel/releases/download/v0.2.0/kernel.bin && \
     wget https://github.com/cartesi/machine-emulator-rom/releases/download/v0.2.0/rom.bin && \
     wget https://github.com/cartesi/image-rootfs/releases/download/v0.2.0/rootfs.ext2
 
+# add creepts filesystem
 COPY creeptsfs.ext2 .
+
+# add lua script and utils
 COPY creepts.lua .
 COPY packlog .
 COPY docker-entrypoint.sh .
@@ -30,3 +34,4 @@ RUN cp 0.bin output.bin
 VOLUME /logs
 
 ENTRYPOINT [ "./docker-entrypoint.sh" ]
+CMD [ "--level=0" ]

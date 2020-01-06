@@ -1,8 +1,10 @@
 #!/bin/sh
 
-log=$1
+log="log.json"
 log_backing=$log.br.cpio
-shift 1
+
+# write stdin to file $log
+dd of=$log
 
 # brotli and cpio the log file
 echo "Creating log drive for $log at $log_backing"
@@ -18,4 +20,4 @@ cartesi-machine-hash --input=$log_backing --page-log2-size=10 --tree-log2-size=2
 
 echo "Running emulator"
 # run the emulator
-./creepts.lua --auto-length --log-backing=$log_backing --level=0 $@
+./creepts.lua --auto-length --log-backing=$log_backing $@

@@ -114,11 +114,11 @@ Read the Lua source for details on the layout of the machine.
 
 We created a convenient Docker image called `cartesi/creepts-emulator` to make it easier to run the emulator with any game log file.
 
-You have to mount a volume inside the container with the log file you want to run. There are some example log files at `../test/logs`. Example below:
+You have to feed the log to `stdin` of the container. There are some example log files at `../test/logs`. Example below:
 
 ```bash
 $ cd machine
-$ docker run -it -v $(PWD)/../test/logs/:/logs cartesi/creepts-emulator /logs/log_minimum.json
+$ cat ../test/logs/log_minimum.json | docker run -i cartesi/creepts-emulator --level=0
 ```
 
 You can also specify a `--print-proofs` argument to print the proofs at different stages of execution.
