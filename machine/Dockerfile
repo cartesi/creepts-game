@@ -19,13 +19,13 @@ COPY packlog .
 COPY docker-entrypoint.sh .
 
 # create drives for level ints
-RUN for i in $(seq 0 7); do printf "0: %.16x" $i | xxd -r -g0 >> $i.ext2; truncate -s 4k $i.ext2; done
+RUN for i in $(seq 0 7); do printf "0: %.16x" $i | xxd -r -g0 >> $i.bin; truncate -s 4k $i.bin; done
 
-# default level.ext2 is 0 (remove this later)
-RUN cp 0.ext2 level.ext2
+# default level.bin is 0 (remove this later)
+RUN cp 0.bin level.bin
 
 # default output is also 0
-RUN cp 0.ext2 output.ext2
+RUN cp 0.bin output.bin
 
 VOLUME /logs
 
