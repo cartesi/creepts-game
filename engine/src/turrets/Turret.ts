@@ -2,7 +2,6 @@ import { GameConstants } from "../GameConstants";
 import { MathUtils } from "../utils/MathUtils";
 import { Engine } from "../Engine";
 import { Enemy } from "../enemies/Enemy";
-import * as TimSort from "timsort";
 
     export class Turret {
 
@@ -189,18 +188,34 @@ import * as TimSort from "timsort";
                 switch (this.shootingStrategy) {
 
                     case GameConstants.STRATEGY_SHOOT_FIRST:
-                        TimSort.sort(enemiesAndSquaredDistances, (e1, e2) => e2.enemy.l - e1.enemy.l);
+                        enemiesAndSquaredDistances.sort(function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): number {
+
+                            if (e1.enemy.l === e2.enemy.l) {
+                                return e1.enemy.id - e2.enemy.id;
+                            } else {
+                                return e2.enemy.l - e1.enemy.l;
+                            }
+                        });
                         break;
 
                     case GameConstants.STRATEGY_SHOOT_LAST:
-                        TimSort.sort(enemiesAndSquaredDistances, (e1, e2) => e1.enemy.l - e2.enemy.l);
+                        enemiesAndSquaredDistances.sort(function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): number {
+
+                            if (e1.enemy.l === e2.enemy.l) {
+                                return e1.enemy.id - e2.enemy.id;
+                            } else {
+                                return e1.enemy.l - e2.enemy.l;
+                            }
+                        });
                         break;
 
                     case GameConstants.STRATEGY_SHOOT_CLOSEST:
-                        TimSort.sort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): number {
+                        enemiesAndSquaredDistances.sort(function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): number {
 
                             if (e1.squareDist === e2.squareDist) {
                                 return e2.enemy.l - e1.enemy.l;
+                            } else if (e1.enemy.l === e2.enemy.l) {
+                                return e1.enemy.id - e2.enemy.id;
                             } else {
                                 return e1.squareDist - e2.squareDist;
                             }
@@ -209,10 +224,12 @@ import * as TimSort from "timsort";
                         break;
 
                     case GameConstants.STRATEGY_SHOOT_WEAKEST:
-                        TimSort.sort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): number {
+                        enemiesAndSquaredDistances.sort(function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): number {
 
                             if (e1.enemy.life === e2.enemy.life) {
                                 return e2.enemy.l - e1.enemy.l;
+                            } else if (e1.enemy.l === e2.enemy.l) {
+                                return e1.enemy.id - e2.enemy.id;
                             } else {
                                 return e1.enemy.life - e2.enemy.life;
                             }
@@ -221,10 +238,12 @@ import * as TimSort from "timsort";
                         break;
 
                     case GameConstants.STRATEGY_SHOOT_STRONGEST:
-                        TimSort.sort(enemiesAndSquaredDistances, function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): number {
+                        enemiesAndSquaredDistances.sort(function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): number {
 
                             if (e1.enemy.life === e2.enemy.life) {
                                 return e2.enemy.l - e1.enemy.l;
+                            } else if (e1.enemy.l === e2.enemy.l) {
+                                return e1.enemy.id - e2.enemy.id;
                             } else {
                                 return e2.enemy.life - e1.enemy.life;
                             }
