@@ -213,9 +213,11 @@ import { Enemy } from "../enemies/Enemy";
                         enemiesAndSquaredDistances.sort(function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): number {
 
                             if (e1.squareDist === e2.squareDist) {
-                                return e2.enemy.l - e1.enemy.l;
-                            } else if (e1.enemy.l === e2.enemy.l) {
-                                return e1.enemy.id - e2.enemy.id;
+                                if (e1.enemy.l === e2.enemy.l) {
+                                    return e1.enemy.id - e2.enemy.id;
+                                } else {
+                                    return e2.enemy.l - e1.enemy.l;
+                                }
                             } else {
                                 return e1.squareDist - e2.squareDist;
                             }
@@ -227,9 +229,11 @@ import { Enemy } from "../enemies/Enemy";
                         enemiesAndSquaredDistances.sort(function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): number {
 
                             if (e1.enemy.life === e2.enemy.life) {
-                                return e2.enemy.l - e1.enemy.l;
-                            } else if (e1.enemy.l === e2.enemy.l) {
-                                return e1.enemy.id - e2.enemy.id;
+                                if (e1.enemy.l === e2.enemy.l) {
+                                    return e1.enemy.id - e2.enemy.id;
+                                } else {
+                                    return e2.enemy.l - e1.enemy.l;
+                                }
                             } else {
                                 return e1.enemy.life - e2.enemy.life;
                             }
@@ -241,9 +245,11 @@ import { Enemy } from "../enemies/Enemy";
                         enemiesAndSquaredDistances.sort(function(e1: {enemy: Enemy, squareDist: number} , e2: {enemy: Enemy, squareDist: number}): number {
 
                             if (e1.enemy.life === e2.enemy.life) {
-                                return e2.enemy.l - e1.enemy.l;
-                            } else if (e1.enemy.l === e2.enemy.l) {
-                                return e1.enemy.id - e2.enemy.id;
+                                if (e1.enemy.l === e2.enemy.l) {
+                                    return e1.enemy.id - e2.enemy.id;
+                                } else {
+                                    return e2.enemy.l - e1.enemy.l;
+                                }
                             } else {
                                 return e2.enemy.life - e1.enemy.life;
                             }
