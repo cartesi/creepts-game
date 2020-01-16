@@ -1,46 +1,6 @@
-diff -Naur duktape-2.4.0.old/Makefile.djs duktape-2.4.0/Makefile.djs
---- duktape-2.4.0.old/Makefile.djs	1969-12-31 21:00:00.000000000 -0300
-+++ duktape-2.4.0/Makefile.djs	2019-08-31 14:24:26.000000000 -0300
-@@ -0,0 +1,36 @@
-+#
-+#  Example Makefile for building a program with embedded Duktape.
-+#  The example program here is the Duktape command line tool.
-+#
-+
-+DUKTAPE_SOURCES = src/duktape.c
-+
-+CMDLINE_SOURCES = \
-+	examples/djs/duk_js.c
-+
-+CC ?= gcc
-+CCOPTS = -O2 -pedantic -std=c99 -Wall -fstrict-aliasing -fomit-frame-pointer
-+CCOPTS += -I./examples/djs -I./src   # duktape.h and duk_config.h must be in include path
-+CCLIBS = -lm
-+
-+# Enable print() and alert() for command line using an optional extra module.
-+CCOPTS += -DDUK_CMDLINE_PRINTALERT_SUPPORT -I./extras/print-alert
-+CMDLINE_SOURCES += extras/print-alert/duk_print_alert.c
-+
-+# Enable console object (console.log() etc) for command line.
-+CCOPTS += -DDUK_CMDLINE_CONSOLE_SUPPORT -I./extras/console
-+CMDLINE_SOURCES += extras/console/duk_console.c
-+
-+# Enable Duktape.Logger for command line.
-+CCOPTS += -DDUK_CMDLINE_LOGGING_SUPPORT -I./extras/logging
-+CMDLINE_SOURCES += extras/logging/duk_logging.c
-+
-+# Enable Duktape 1.x module loading for command line.
-+CCOPTS += -DDUK_CMDLINE_MODULE_SUPPORT -I./extras/module-duktape
-+CMDLINE_SOURCES += extras/module-duktape/duk_module_duktape.c
-+
-+# Enable Trivial readFile/writeFile bindings for testing.
-+CCOPTS += -DDUK_CMDLINE_FILEIO
-+
-+djs: $(DUKTAPE_SOURCES) $(CMDLINE_SOURCES)
-+	$(CC) -o $@ $(DEFINES) $(CCOPTS) $(DUKTAPE_SOURCES) $(CMDLINE_SOURCES) $(CCLIBS)
 diff -Naur duktape-2.4.0.old/examples/djs/duk_js.c duktape-2.4.0/examples/djs/duk_js.c
 --- duktape-2.4.0.old/examples/djs/duk_js.c	1969-12-31 21:00:00.000000000 -0300
-+++ duktape-2.4.0/examples/djs/duk_js.c	2019-09-09 10:33:36.000000000 -0300
++++ duktape-2.4.0/examples/djs/duk_js.c	2020-01-16 13:10:37.893836226 -0300
 @@ -0,0 +1,743 @@
 +#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || \
 +    defined(WIN64) || defined(_WIN64) || defined(__WIN64__)
@@ -520,7 +480,7 @@ diff -Naur duktape-2.4.0.old/examples/djs/duk_js.c duktape-2.4.0/examples/djs/du
 +
 +	/* Register console object. */
 +#if defined(DUK_CMDLINE_CONSOLE_SUPPORT)
-+	duk_console_init(ctx, DUK_CONSOLE_FLUSH /*flags*/);
++	duk_console_init(ctx, DUK_CONSOLE_FLUSH | DUK_CONSOLE_STDERR_ONLY /*flags*/);
 +#endif
 +
 +	/* Register Duktape.Logger (removed in Duktape 2.x). */
@@ -787,7 +747,7 @@ diff -Naur duktape-2.4.0.old/examples/djs/duk_js.c duktape-2.4.0/examples/djs/du
 +}
 diff -Naur duktape-2.4.0.old/examples/djs/duk_js.h duktape-2.4.0/examples/djs/duk_js.h
 --- duktape-2.4.0.old/examples/djs/duk_js.h	1969-12-31 21:00:00.000000000 -0300
-+++ duktape-2.4.0/examples/djs/duk_js.h	2019-07-28 17:34:21.000000000 -0300
++++ duktape-2.4.0/examples/djs/duk_js.h	2019-12-31 23:09:01.000000000 -0300
 @@ -0,0 +1,16 @@
 +#if !defined(DUK_CMDLINE_H_INCLUDED)
 +#define DUK_CMDLINE_H_INCLUDED
@@ -805,3 +765,43 @@ diff -Naur duktape-2.4.0.old/examples/djs/duk_js.h duktape-2.4.0/examples/djs/du
 +void lowmem_free_wrapped(void *udata, void *ptr);
 +
 +#endif  /* DUK_CMDLINE_H_INCLUDED */
+diff -Naur duktape-2.4.0.old/Makefile.djs duktape-2.4.0/Makefile.djs
+--- duktape-2.4.0.old/Makefile.djs	1969-12-31 21:00:00.000000000 -0300
++++ duktape-2.4.0/Makefile.djs	2019-12-31 23:09:01.000000000 -0300
+@@ -0,0 +1,36 @@
++#
++#  Example Makefile for building a program with embedded Duktape.
++#  The example program here is the Duktape command line tool.
++#
++
++DUKTAPE_SOURCES = src/duktape.c
++
++CMDLINE_SOURCES = \
++	examples/djs/duk_js.c
++
++CC ?= gcc
++CCOPTS = -O2 -pedantic -std=c99 -Wall -fstrict-aliasing -fomit-frame-pointer
++CCOPTS += -I./examples/djs -I./src   # duktape.h and duk_config.h must be in include path
++CCLIBS = -lm
++
++# Enable print() and alert() for command line using an optional extra module.
++CCOPTS += -DDUK_CMDLINE_PRINTALERT_SUPPORT -I./extras/print-alert
++CMDLINE_SOURCES += extras/print-alert/duk_print_alert.c
++
++# Enable console object (console.log() etc) for command line.
++CCOPTS += -DDUK_CMDLINE_CONSOLE_SUPPORT -I./extras/console
++CMDLINE_SOURCES += extras/console/duk_console.c
++
++# Enable Duktape.Logger for command line.
++CCOPTS += -DDUK_CMDLINE_LOGGING_SUPPORT -I./extras/logging
++CMDLINE_SOURCES += extras/logging/duk_logging.c
++
++# Enable Duktape 1.x module loading for command line.
++CCOPTS += -DDUK_CMDLINE_MODULE_SUPPORT -I./extras/module-duktape
++CMDLINE_SOURCES += extras/module-duktape/duk_module_duktape.c
++
++# Enable Trivial readFile/writeFile bindings for testing.
++CCOPTS += -DDUK_CMDLINE_FILEIO
++
++djs: $(DUKTAPE_SOURCES) $(CMDLINE_SOURCES)
++	$(CC) -o $@ $(DEFINES) $(CCOPTS) $(DUKTAPE_SOURCES) $(CMDLINE_SOURCES) $(CCLIBS)

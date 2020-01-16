@@ -6,4 +6,4 @@ var logger = new Duktape.Logger();
 // because it was designed for node, which includes node as process.argv[0]
 // so let's add it so program.parse works
 scriptArgs.unshift('./djs');
-verifier(scriptArgs, readFile, console.log, function (info) { logger.info(JSON.stringify(info)); });
+verifier(scriptArgs, readFile, print, function (info) { logger.info(JSON.stringify(info)); });
