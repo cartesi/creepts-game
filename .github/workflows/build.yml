@@ -71,15 +71,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
 
-      - name: Build cartesi/creepts-emulator Docker image
-        run: |
-          echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
-          cd machine && docker build . -t cartesi/creepts-emulator
-          docker push cartesi/creepts-emulator
+      - name: Login to Docker Hub
+        run: echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Build cartesi/creepts-emulator
+        run: cd machine && docker build . -t cartesi/creepts-emulator
+  
+      - name: Push to Docker Hub [latest]
+        run: docker push cartesi/creepts-emulator
         if: github.ref == 'refs/heads/develop'
+  
+      - name: Push to Docker Hub [tag]
+        run: |
+          docker tag cartesi/creepts-emulator cartesi/creepts-emulator:${GITHUB_REF:11}
+          docker push cartesi/creepts-emulator:${GITHUB_REF:11}
+        if: startsWith(github.ref, 'refs/tags/v')
   
   docker:
     runs-on: ubuntu-18.04
@@ -96,6 +105,12 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       
-      - name: Push to Docker Hub
+      - name: Push to Docker Hub [latest]
         run: docker push cartesi/creepts-web
         if: github.ref == 'refs/branches/develop'
+
+      - name: Push to Docker Hub [tag]
+        run: |
+          docker tag cartesi/creepts-web cartesi/creepts-web:${GITHUB_REF:11}
+          docker push cartesi/creepts-web:${GITHUB_REF:11}
+        if: startsWith(github.ref, 'refs/tags/v')
