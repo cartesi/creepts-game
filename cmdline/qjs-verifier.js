@@ -11,4 +11,4 @@ function readFile(n) {
 // because it was designed for node, which includes node as process.argv[0]
 // so let's add it so program.parse works
 scriptArgs.unshift('./qjs');
-verifier(scriptArgs, readFile, console.log);
+verifier(scriptArgs, readFile, console.log, console.error);
