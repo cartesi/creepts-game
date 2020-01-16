@@ -1,4 +1,4 @@
-import verify from '../cmdline/verifier';
+import engine from '../cmdline/engine';
 import buildLevel from '../cmdline/level';
 import maps from '../assets/config/maps.json';
 
@@ -8,6 +8,6 @@ tests.forEach(([ log, mapIndex, score ]) => {
     test(log, () => {
         const map = maps[mapIndex];
         const level = buildLevel(map);
-        expect(verify(level, require(log))).toBe(score);
+        expect(engine(level, require(log))).toBe(score);
     });
 });

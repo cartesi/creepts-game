@@ -47,6 +47,7 @@ local auto_length             = false
 local print_config            = false
 local level                   = nil
 local max_mcycle              = 1<<61   -- reduce significantly before release
+local debug                   = false
 
 -- Print help and exit
 local function help()
@@ -93,6 +94,8 @@ where options are:
   --level=<number>             level against which to score log
 
   --max-mcycle                 stop at a given mcycle
+
+  --debug                      print debug and progress information
 ]=])
     os.exit()
 end
@@ -126,6 +129,11 @@ local options = {
     { "^%-%-print%-proofs$", function(all)
         if not all then return false end
         print_proofs = true
+        return true
+    end },
+    { "^%-%-debug$", function(all)
+        if not all then return false end
+        debug = true
         return true
     end },
     { "^%-%-log%-backing%=(.*)$", function(o)
@@ -307,6 +315,9 @@ bootargs = bootargs .. " mtdparts=" .. table.concat(mtdparts, ";")
 
 -- add command line to run verifier
 bootargs = bootargs .. " -- /mnt/creepts/bin/verify"
+if debug then
+    bootargs = bootargs .. " --debug"
+end
 
 local rom = {
     bootargs = bootargs,

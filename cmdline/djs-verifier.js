@@ -1,23 +1,7 @@
-
 import verifier from './verifier';
 
-const logsFile = readFile(scriptArgs[1]);
-const levelFile = readFile(scriptArgs[2]);
-
-const logs = JSON.parse(logsFile);
-const level = JSON.parse(levelFile);
-
-try {
-    const score = verifier(level, logs);
-    
-    // Output score
-    console.log(score + "\t");
-
-} catch (e) {
-
-    // Output score
-    console.log(0 + "\t" + e.message);
-
-    // Exit program with failure
-    throw e;
-}
+// scriptArgs does not have djs in the beggining, but program.parse expect it
+// because it was designed for node, which includes node as process.argv[0]
+// so let's add it so program.parse works
+scriptArgs.unshift('./djs');
+verifier(scriptArgs, readFile, console.log);

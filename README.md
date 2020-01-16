@@ -18,5 +18,5 @@ Both targets share the engine code, but webpack already bundles each target appr
 - `npm run build:game`: build production assets at `dist/` without React UI for Cartesi tournaments.
 - `npm run build:app`: build only the `app` target at `dist/`
 - `npm run build:cmdline`: build only the command line tools at `dist/`
-- `npm run verifier -- <log.json> <level.json>`: run the verifier against a log and level files using `node`
+- `npm run verifier -- <log.json> <level.json> --debug`: run the verifier against a log and level files using `node`
 - `npm run levels -- [--numbered] [--map <index>] [--directory <path>]`: generate level files

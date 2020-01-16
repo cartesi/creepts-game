@@ -79,7 +79,7 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        # if: github.ref == 'refs/branches/develop'
+        if: github.ref == 'refs/heads/develop'
   
   docker:
     runs-on: ubuntu-18.04
