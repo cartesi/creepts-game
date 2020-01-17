@@ -42,6 +42,7 @@ local RAM_LENGTH              = 512<<20 -- 512MB
 local RAM_IMAGE               = "kernel.bin"
 local ROM_IMAGE               = "rom.bin"
 
+local template_hash           = false
 local print_proofs            = false
 local auto_length             = false
 local print_config            = false
@@ -96,6 +97,9 @@ where options are:
   --max-mcycle                 stop at a given mcycle
 
   --debug                      print debug and progress information
+
+  --hash-after-level-write     print root hash after level (but before log)
+                               has been written to state and exit
 ]=])
     os.exit()
 end
@@ -134,6 +138,11 @@ local options = {
     { "^%-%-debug$", function(all)
         if not all then return false end
         debug = true
+        return true
+    end },
+    { "^%-%-template%-hash$", function(all)
+        if not all then return false end
+        template_hash = true
         return true
     end },
     { "^%-%-log%-backing%=(.*)$", function(o)
@@ -277,7 +286,7 @@ local flash = {
 -- figure out all device sizes if command line asks for it
 if auto_length then
     for i,f in ipairs(flash) do
-        if not f.length and f.backing then
+        if f.backing then
             f.length = get_file_length(f.backing)
         end
         if not f.length then
@@ -401,6 +410,27 @@ local function print_json_proof(proof, out, indent)
     print_json_proof_sibling_hashes(proof.sibling_hashes, proof.log2_size, out,
         indent .. "  ")
     out:write(",\n", indent, '"root_hash": "', hexbytes(proof.root_hash), '" }')
+end
+
+if template_hash then
+    -- create a copy of the configuration so we can modify it
+    local prove_level_config = clone(config)
+    -- make sure log device has no backing it is pristine
+    for i, f in ipairs(prove_level_config.flash) do
+        if f.start == LOG_DEVICE_START then
+            f.backing = nil
+        end
+    end
+    local prove_level_machine = assert(cartesi.machine(prove_level_config))
+    if not LEVEL_DEVICE_BACKING then
+        -- write level directly to memory in big-endian format
+        prove_level_machine:write_memory(LEVEL_DEVICE_START,
+            string.pack(">I8", level))
+    end
+    io.stderr:write("computing state merkle tree\n")
+    assert(prove_level_machine:update_merkle_tree())
+    print(hexbytes(assert(prove_level_machine:get_root_hash())))
+    os.exit(0)
 end
 
 local machine = cartesi.machine(config)

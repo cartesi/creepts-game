@@ -7,6 +7,7 @@ RUN \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/cartesi/creepts
+ENV PATH="/opt/cartesi/creepts:${PATH}"
 
 # download emulator files
 RUN \
@@ -21,6 +22,7 @@ COPY creeptsfs.ext2 .
 COPY creepts.lua .
 COPY packlog .
 COPY docker-entrypoint.sh .
+COPY hashes .
 
 # create drives for level ints
 RUN for i in $(seq 0 7); do printf "0: %.16x" $i | xxd -r -g0 >> $i.bin; truncate -s 4k $i.bin; done

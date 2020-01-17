@@ -1,0 +1,4 @@
+#!/bin/sh
+for i in $(seq 0 7); do
+    ./creepts.lua --auto-length --template-hash --level=$i 2>/dev/null
+done
