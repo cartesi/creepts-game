@@ -13,7 +13,7 @@ Both targets share the engine code, but webpack already bundles each target appr
 ## NPM scripts:
 
 - `npm run dev`: runs webpack-dev-server for the game development only (phaser);
-- `npm run dev:cartesi`: runs webpack-dev-server including the React UI for Cartesi tournaments. You must have `anuto-server` running locally;
+- `npm run dev:cartesi`: runs webpack-dev-server including the React UI for Cartesi tournaments. You must have `backend` running locally;
 - `npm run build`: build production assets at `dist/`
 - `npm run build:game`: build production assets at `dist/` without React UI for Cartesi tournaments.
 - `npm run build:app`: build only the `app` target at `dist/`
