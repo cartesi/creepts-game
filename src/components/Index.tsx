@@ -9,7 +9,7 @@ export default class Index extends Component<IProps, IState> {
         return (
             <Grid container direction="column" alignItems="stretch" spacing={2}>
                 <Grid item container xs={12} justify="center">
-                    <Paper><img src="https://place-hold.it/700x700" /></Paper>
+                    <Paper><img width={600} src="/assets/img/art.jpg" /></Paper>
                 </Grid>
                 <Grid item>
                     <Button variant="outlined" color="secondary" fullWidth size="large" href="/play">Play</Button>
@@ -23,4 +23,4 @@ export default class Index extends Component<IProps, IState> {
             </Grid>
         );
     }
-}
+};
