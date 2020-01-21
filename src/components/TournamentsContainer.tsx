@@ -1,6 +1,6 @@
 import React from "react";
-import { AppBar, Breadcrumbs, Grid, Link, Toolbar, Typography } from "@material-ui/core";
-import Alert from '@material-ui/lab/Alert';
+import { AppBar, Button, Breadcrumbs, Grid, Link, Toolbar, Typography } from "@material-ui/core";
+import { Alert } from '@material-ui/lab';
 import { TournamentCard } from "./TournamentCard";
 import { LoadingCard } from "./LoadingCard";
 import { TournamentPhase } from "../Tournament";
@@ -28,14 +28,24 @@ export const TournamentsContainer: React.FC<IProps> = ({ name, phase, me }) => {
 
             {service.status === "loading" && <div><LoadingCard /></div> }
             {service.status === "loaded" && 
-                <Grid container direction="column" spacing={2}>
-                    {service.payload.results.map((tournament, index) => (
-                        <TournamentCard
-                            key={index}
-                            tournament={tournament}
-                        />
-                    ))}
-                </Grid>
+                ( service.payload.results.length > 0 ? 
+                    <Grid container direction="column" spacing={2}>
+                        {service.payload.results.map((tournament, index) => (
+                            <TournamentCard
+                                key={index}
+                                tournament={tournament}
+                            />
+                        ))}
+                    </Grid> : 
+                    <Grid container direction="column" spacing={2}>
+                        <Grid item>
+                            <Alert variant="outlined" severity="warning">No tournaments</Alert>
+                        </Grid>                        
+                        <Grid item>
+                            <Button variant="outlined" color="secondary" fullWidth size="large" href="/join">Join Tournament</Button>
+                        </Grid>                        
+                    </Grid>
+                )
             }
             {service.status === "error" && (
                 <Alert variant="outlined" severity="error">{service.error.message}</Alert>
