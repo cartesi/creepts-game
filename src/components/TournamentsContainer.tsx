@@ -5,11 +5,13 @@ import { TournamentCard } from "./TournamentCard";
 import { LoadingCard } from "./LoadingCard";
 import { TournamentPhase } from "../Tournament";
 import { useTournamentsService } from "../services/tournamentService";
+import { useAccountService } from "../services/accountService";
 
 interface IState { }
 interface IProps { name: string, me?: boolean, phase?: TournamentPhase }
 
 export const TournamentsContainer: React.FC<IProps> = ({ name, phase, me }) => {
+    const accountService = useAccountService();
     const service = useTournamentsService(phase, me);
 
     return (
@@ -27,13 +29,14 @@ export const TournamentsContainer: React.FC<IProps> = ({ name, phase, me }) => {
             </AppBar>
 
             {service.status === "loading" && <div><LoadingCard /></div> }
-            {service.status === "loaded" && 
+            {service.status === "loaded" && accountService.status === "loaded" &&
                 ( service.payload.results.length > 0 ? 
                     <Grid container direction="column" spacing={2}>
                         {service.payload.results.map((tournament, index) => (
                             <TournamentCard
                                 key={index}
                                 tournament={tournament}
+                                account={accountService.payload.account}
                             />
                         ))}
                     </Grid> : 

@@ -4,10 +4,21 @@ import { TournamentPhase, Tournament } from "../Tournament";
 
 // artificial delay, for testing purposes
 const DELAY = 300;
+const ACCOUNT_ADDRESS = "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077";
 const response404 = new Response(null, { status: 404, statusText: "Not Found" });
 
-const tournamentHandler = (url: string, id: string) => {
-    return new Promise<Response>((resolve, reject) => {
+const accountHandler = (_url: string) => {
+    return new Promise<Response>((resolve, _reject) => {
+        setTimeout(() => {
+            const body = JSON.stringify({ account: ACCOUNT_ADDRESS });
+            const response = new Response(body);
+            resolve(response);
+        }, DELAY);
+    });
+};
+
+const tournamentHandler = (_url: string, id: string) => {
+    return new Promise<Response>((resolve, _reject) => {
         setTimeout(() => {
             const tournament = allTournaments.results.find((t: any) => t.id === id);
             if (!tournament) {
@@ -19,19 +30,16 @@ const tournamentHandler = (url: string, id: string) => {
             }
         }, DELAY);
     });
-}
+};
 
 const tournamentsHandler = (url: string) => {
-    // TODO: move this
-    const address = "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077";
-
     const parsedUrl = queryString.parseUrl(url);
     const phaseFilter = (phase: TournamentPhase) => (t: any) => {
         return t.phase == phase;
     }
     const meFilter = (me: boolean) => (t: any) => {
         const scores = t.scores || {};
-        return me ? scores[address] : !scores[address];
+        return me ? scores[ACCOUNT_ADDRESS] : !scores[ACCOUNT_ADDRESS];
     };
 
     let tournaments = allTournaments.results;
@@ -47,13 +55,14 @@ const tournamentsHandler = (url: string) => {
             resolve(response);
         }, DELAY);
     });
-}
+};
 
 export default (request: RequestInfo) => {
     const url = (request as Request).url;
     const routes: [RegExp, (...args: string[]) => Promise<Response>][] = [
         [ /\/tournaments\/(.+)/, tournamentHandler ],
         [ /\/tournaments(.*)/, tournamentsHandler ],
+        [ /\/me/, accountHandler ],
     ];
 
     for (let [route, handler] of routes) {
@@ -67,4 +76,4 @@ export default (request: RequestInfo) => {
     return new Promise<Response>((resolve) => {
         resolve(response404);
     });
-}
+};

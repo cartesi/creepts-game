@@ -12,6 +12,7 @@ import OndemandVideoIcon from '@material-ui/icons/OndemandVideo';
 import VideogameAssetIcon from '@material-ui/icons/VideogameAsset';
 
 export interface TournamentCardProps {
+    account: string,
     tournament: Tournament,
     score?: TournamentScore,
     opponentScore?: TournamentScore,
@@ -36,12 +37,10 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const TournamentPhaseComponent: React.SFC<{ tournament: Tournament }> = ({ tournament }) => {
+const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournament }> = ({ account, tournament }) => {
     const { phase } = tournament;
 
-    // TODO: move this
-    const me = "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077";
-    const score = tournament.scores && tournament.scores[me];
+    const score = tournament.scores && tournament.scores[account];
     const opponentScore = tournament.scores && tournament.currentOpponent ? tournament.scores[tournament.currentOpponent] : null;
     const winningScore = tournament.scores && tournament.winner ? tournament.scores[tournament.winner] : null;
 
@@ -125,7 +124,7 @@ const TournamentPhaseComponent: React.SFC<{ tournament: Tournament }> = ({ tourn
     );
 };
 
-export const TournamentCard: React.SFC<TournamentCardProps> = ({ tournament }) => {
+export const TournamentCard: React.SFC<TournamentCardProps> = ({ account, tournament }) => {
 
     const playersText = tournament.playerCount === 0 ? "No players yet" : (tournament.playerCount === 1 ? `${tournament.playerCount} player` : `${tournament.playerCount} players`);
     return (
@@ -137,7 +136,7 @@ export const TournamentCard: React.SFC<TournamentCardProps> = ({ tournament }) =
                             <Box m={2}>
                                 <Typography variant="h5">{tournament.name}</Typography>
                                 <Typography>{playersText}</Typography>
-                                <TournamentPhaseComponent tournament={tournament} />
+                                <TournamentPhaseComponent account={account} tournament={tournament} />
                             </Box>
                         </Grid>                        
                     </Grid>
