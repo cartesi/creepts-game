@@ -4,7 +4,8 @@ import { get } from "./http";
 import { apiUrl } from './config';
 
 export interface Account {
-    account: string;
+    address: string;
+    balance: number;
 }
 
 export const getAccount = () => {

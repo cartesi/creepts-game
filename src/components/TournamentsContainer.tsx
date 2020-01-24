@@ -12,7 +12,7 @@ interface IProps { name: string, me?: boolean, phase?: TournamentPhase }
 
 export const TournamentsContainer: React.FC<IProps> = ({ name, phase, me }) => {
     const accountService = useAccountService();
-    const service = useTournamentsService(phase, me);
+    const tournamentService = useTournamentsService(phase, me);
 
     return (
         <React.Fragment>
@@ -28,15 +28,15 @@ export const TournamentsContainer: React.FC<IProps> = ({ name, phase, me }) => {
                 </Toolbar>
             </AppBar>
 
-            {service.status === "loading" && <div><LoadingCard /></div> }
-            {service.status === "loaded" && accountService.status === "loaded" &&
-                ( service.payload.results.length > 0 ? 
+            {tournamentService.status === "loading" && <div><LoadingCard /></div> }
+            {(tournamentService.status === "loaded" && accountService.status === "loaded") &&
+                ( tournamentService.payload.results.length > 0 ? 
                     <Grid container direction="column" spacing={2}>
-                        {service.payload.results.map((tournament, index) => (
+                        {tournamentService.payload.results.map((tournament, index) => (
                             <TournamentCard
                                 key={index}
                                 tournament={tournament}
-                                account={accountService.payload.account}
+                                account={accountService.payload.address}
                             />
                         ))}
                     </Grid> : 
@@ -50,8 +50,11 @@ export const TournamentsContainer: React.FC<IProps> = ({ name, phase, me }) => {
                     </Grid>
                 )
             }
-            {service.status === "error" && (
-                <Alert variant="outlined" severity="error">{service.error.message}</Alert>
+            {tournamentService.status === "error" && (
+                <Alert variant="outlined" severity="error">{tournamentService.error.message}</Alert>
+            )}
+            {accountService.status === "error" && (
+                <Alert variant="outlined" severity="error">{accountService.error.message}</Alert>
             )}
         </React.Fragment>
     );
