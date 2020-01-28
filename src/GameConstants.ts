@@ -1,11 +1,11 @@
-// javascript-obfuscator bundle.js --output bundle.js
-// especificaciones
-// https://docs.google.com/document/d/1Hd6C-gAsydmRAldb2iTRYEamLPxcfBlY51KNf9UOcQ4/edit#
+declare var __DEVELOPMENT__: boolean;
+declare var __GAME_ONLY__: boolean;
 
 export class GameConstants {
 
     public static readonly VERSION = "0.0";
-    public static readonly DEVELOPMENT = true;
+    public static readonly DEVELOPMENT = __DEVELOPMENT__;
+    public static readonly DOWNLOAD = __DEVELOPMENT__ || __GAME_ONLY__;
     public static readonly SHOW_DEBUG_GEOMETRY = false;
     public static readonly INTERPOLATE_TRAJECTORIES = true;
     public static readonly VERBOSE = false;

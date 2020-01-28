@@ -59,5 +59,11 @@
         "build:cmdline": "webpack --config-name cmdline --mode production",
         "verifier": "webpack --config-name cmdline --mode production && node dist/node-verifier-bundle.js",
         "levels": "webpack --config-name cmdline --mode production && node dist/levels-bundle.js"
+    },
+    "jest": {
+        "globals": {
+            "__DEVELOPMENT__": true,
+            "__GAME_ONLY__": true
+        }
     }
 }

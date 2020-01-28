@@ -8,7 +8,7 @@ const path = require('path');
 const pathToPhaser = path.join(__dirname, '/node_modules/phaser/');
 const phaser = path.join(pathToPhaser, 'dist/phaser-arcade-physics.min');
 
-module.exports = env => {
+module.exports = (env, argv) => {
 	const appConfig = {
 		name: 'app',
 		entry: {
@@ -59,7 +59,8 @@ module.exports = env => {
 				template: 'index.html'
 			}),
 			new webpack.DefinePlugin({
-				__GAME_ONLY__: JSON.stringify(env && env.GAME_ONLY || false)
+				__GAME_ONLY__: JSON.stringify(env && env.GAME_ONLY || false),
+				__DEVELOPMENT__: JSON.stringify(argv.mode === 'development')
 			})
 		],
 		optimization: {
@@ -99,7 +100,11 @@ module.exports = env => {
 			]
 		},
 		plugins: [
-			new BundleTracker({filename: './stats-cmdline.json'})
+			new BundleTracker({filename: './stats-cmdline.json'}),
+			new webpack.DefinePlugin({
+				__GAME_ONLY__: JSON.stringify(env && env.GAME_ONLY || false),
+				__DEVELOPMENT__: JSON.stringify(argv.mode === 'development')
+			})
 		],
 		resolve: {
 			extensions: ['.ts', '.js']

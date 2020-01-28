@@ -429,7 +429,7 @@ export class BattleManager {
             BattleManager.engine.score,
             BattleManager.engine.round);
 
-        if (GameConstants.DEVELOPMENT && GameVars.currentScene === BattleScene.currentInstance) {
+        if (GameConstants.DOWNLOAD && GameVars.currentScene === BattleScene.currentInstance) {
             const logData = JSON.stringify(GameVars.logsObject);
             const logBlob = new Blob([logData], { type: 'text/plain;charset=utf-8'});
             saveAs(logBlob, "log.json");
