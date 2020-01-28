@@ -9,6 +9,7 @@ import turretsData from "../../../assets/config/turrets.json";
 import wavesData from "../../../assets/config/waves.json";
 import * as Creepts from "../../../engine/src";
 import { AudioManager } from "../../AudioManager";
+import { saveAs } from "file-saver";
 
 export class BattleManager {
 
@@ -429,29 +430,13 @@ export class BattleManager {
             BattleManager.engine.round);
 
         if (GameConstants.DEVELOPMENT && GameVars.currentScene === BattleScene.currentInstance) {
-            let data = JSON.stringify(GameVars.logsObject);
-            let bl = new Blob([data], {
-                type: "text/html"
-            });
-            let a = document.createElement("a");
-            a.href = URL.createObjectURL(bl);
-            a.download = "log.json";
-            a.hidden = true;
-            document.body.appendChild(a);
-            a.innerHTML = "someinnerhtml";
-            a.click();
+            const logData = JSON.stringify(GameVars.logsObject);
+            const logBlob = new Blob([logData], { type: 'text/plain;charset=utf-8'});
+            saveAs(logBlob, "log.json");
 
-            let data2 = JSON.stringify(GameVars.levelObject);
-            let bl2 = new Blob([data2], {
-                type: "text/html"
-            });
-            let a2 = document.createElement("a");
-            a2.href = URL.createObjectURL(bl2);
-            a2.download = "level.json";
-            a2.hidden = true;
-            document.body.appendChild(a2);
-            a2.innerHTML = "someinnerhtml";
-            a2.click();
+            const levelData = JSON.stringify(GameVars.levelObject);
+            const levelBlob = new Blob([levelData], { type: 'text/plain;charset=utf-8'});
+            saveAs(levelBlob, "level.json");
         } 
     }
 }

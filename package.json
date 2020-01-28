@@ -39,6 +39,7 @@
         "@material-ui/lab": "^4.0.0-alpha.39",
         "@types/howler": "^2.1.1",
         "commander": "^4.0.1",
+        "file-saver": "^2.0.2",
         "hookrouter": "^1.2.3",
         "howler": "^2.1.2",
         "moment": "^2.24.0",
