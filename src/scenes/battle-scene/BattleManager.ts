@@ -434,9 +434,9 @@ export class BattleManager {
             const logBlob = new Blob([logData], { type: 'text/plain;charset=utf-8'});
             saveAs(logBlob, "log.json");
 
-            const levelData = JSON.stringify(GameVars.levelObject);
-            const levelBlob = new Blob([levelData], { type: 'text/plain;charset=utf-8'});
-            saveAs(levelBlob, "level.json");
+            // const levelData = JSON.stringify(GameVars.levelObject);
+            // const levelBlob = new Blob([levelData], { type: 'text/plain;charset=utf-8'});
+            // saveAs(levelBlob, "level.json");
         } 
     }
 }
