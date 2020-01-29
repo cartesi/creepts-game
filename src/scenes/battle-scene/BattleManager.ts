@@ -415,8 +415,9 @@ export class BattleManager {
 
     private static onGameOver(): void {
 
-        if (BattleManager.engine.score > GameVars.gameData.scores[GameVars.gameData.currentMapIndex]) {
-            GameVars.gameData.scores[GameVars.gameData.currentMapIndex] = BattleManager.engine.score;
+        const mapIndex = GameVars.gameData.currentMapIndex;
+        if (BattleManager.engine.score > GameVars.gameData.scores[mapIndex]) {
+            GameVars.gameData.scores[mapIndex] = BattleManager.engine.score;
         }
         GameManager.writeGameData();
         
@@ -432,11 +433,11 @@ export class BattleManager {
         if (GameConstants.DOWNLOAD && GameVars.currentScene === BattleScene.currentInstance) {
             const logData = JSON.stringify(GameVars.logsObject);
             const logBlob = new Blob([logData], { type: 'text/plain;charset=utf-8'});
-            saveAs(logBlob, "log.json");
+            saveAs(logBlob, `log-${mapIndex}.json`);
 
             // const levelData = JSON.stringify(GameVars.levelObject);
             // const levelBlob = new Blob([levelData], { type: 'text/plain;charset=utf-8'});
-            // saveAs(levelBlob, "level.json");
+            // saveAs(levelBlob, `level-${mapIndex}.json`);
         } 
     }
 }

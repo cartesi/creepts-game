@@ -30,13 +30,17 @@ export class PauseMenu extends Phaser.GameObjects.Container {
                 button.setLabel(GameVars.gameData.musicMuted ? "MUSIC ON" : "MUSIC OFF");
             }),
 
-            // change map
-            //vXXX: hiding change map menu
-            // new MenuButton(this.scene, width, height, "CHANGE MAP", () => GameManager.enterMapScene()),
-
-            // exitButton
-            new MenuButton(this.scene, "EXIT", () => GameManager.events.emit("exit"))
         ];
+
+        if (GameConstants.DEVELOPMENT) {
+            // change map, only if running game only (no tournaments)
+            buttons.push(new MenuButton(this.scene, "CHANGE MAP", () => GameManager.enterMapScene()));
+        }
+
+        if (!GameConstants.GAME_ONLY) {
+            // exitButton only if running with full UI (tournaments)
+            buttons.push(new MenuButton(this.scene, "EXIT", () => GameManager.events.emit("exit")));
+        }
 
         // this is a box for the content, vertically centered
         // XXX: it's not really vertically centered, because we don't calculate the total height at this point

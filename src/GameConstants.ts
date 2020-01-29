@@ -5,6 +5,7 @@ export class GameConstants {
 
     public static readonly VERSION = "0.0";
     public static readonly DEVELOPMENT = __DEVELOPMENT__;
+    public static readonly GAME_ONLY = __GAME_ONLY__;
     public static readonly DOWNLOAD = __DEVELOPMENT__ || __GAME_ONLY__;
     public static readonly SHOW_DEBUG_GEOMETRY = false;
     public static readonly INTERPOLATE_TRAJECTORIES = true;
