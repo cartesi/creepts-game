@@ -73,13 +73,6 @@ const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournam
                     <Typography>At this point, the score of each player is overtly revealed on the blockchain and from this point on, no one is allowed to try and improve their scores.</Typography>
                     <div className={classes.actionsContainer}>
                         <div>
-                            <Button
-                                className={classes.button}
-                                variant="outlined"
-                                startIcon={<CloudUploadIcon />}
-                                color="secondary">
-                                Submit
-                            </Button>
                             <Chip icon={<AlarmIcon />} size="small" label={moment(tournament.deadline).fromNow(true) + " left"} />
                         </div>
                     </div>
