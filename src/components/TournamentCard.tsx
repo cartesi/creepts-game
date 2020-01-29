@@ -80,6 +80,7 @@ const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournam
                                 color="secondary">
                                 Submit
                             </Button>
+                            <Chip icon={<AlarmIcon />} size="small" label={moment(tournament.deadline).fromNow(true) + " left"} />
                         </div>
                     </div>
                 </StepContent>
@@ -98,6 +99,7 @@ const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournam
                                 href={`/tournaments/${tournament.id}/scores/${tournament.currentOpponent}`}>
                                 Replay Opponent {opponentScore && `(${opponentScore.score.toLocaleString()})`}
                             </Button>
+                            <Chip icon={<AlarmIcon />} size="small" label={moment(tournament.deadline).fromNow(true) + " left"} />
                         </div>
                     </div>
                 </StepContent>
