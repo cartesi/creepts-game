@@ -62,7 +62,7 @@ export class GameManager {
                     };
                 }
 
-                GameManager.startGame();
+                GameManager.startGame(0);
             }
         );
     }
@@ -137,7 +137,7 @@ export class GameManager {
         }
     }
 
-    private static startGame(): void {
+    private static startGame(mapIndex: number): void {
 
         if (GameVars.gameData.scores.length === 0) {
             for (let i = 0; i < GameVars.mapsData.length; i++) {
@@ -145,8 +145,8 @@ export class GameManager {
             }
         }
 
-        GameVars.gameData.currentMapIndex = GameVars.gameData.currentMapIndex;
-        GameVars.currentMapData = GameVars.mapsData[GameVars.gameData.currentMapIndex];
+        GameVars.gameData.currentMapIndex = mapIndex;
+        GameVars.currentMapData = GameVars.mapsData[mapIndex];
 
         GameVars.currentScene.scene.start("PreloadScene");
     }
