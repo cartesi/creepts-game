@@ -47,10 +47,12 @@ export class GameOverLayer extends Phaser.GameObjects.Container {
         y += restartButton.height + gap / 2;
 
         // exit button, just emit an exit event
-        const exitButton = new MenuButton(this.scene, "EXIT", () => GameManager.events.emit("exit") );
-        exitButton.setPosition(0, y + (exitButton.height / 2));
-        box.add(exitButton);
-        y += exitButton.height + margin / 2;
+        if (!GameConstants.GAME_ONLY) {
+            const exitButton = new MenuButton(this.scene, "EXIT", () => GameManager.events.emit("exit") );
+            exitButton.setPosition(0, y + (exitButton.height / 2));
+            box.add(exitButton);
+            y += exitButton.height + margin / 2;
+        }
 
         this.scene.tweens.add({
             targets: this,
