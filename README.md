@@ -20,3 +20,18 @@ Both targets share the engine code, but webpack already bundles each target appr
 - `npm run build:cmdline`: build only the command line tools at `dist/`
 - `npm run verifier -- <log.json> <level.json> --debug`: run the verifier against a log and level files using `node`
 - `npm run levels -- [--numbered] [--map <index>] [--directory <path>]`: generate level files
+
+## Contributing
+
+Thank you for your interest in Cartesi! Head over to our [Contributing Guidelines](CONTRIBUTING.md) for instructions on how to sign our Contributors Agreement and get started with Cartesi!
+
+Please note we have a [Code of Conduct](CODE_OF_CONDUCT.md), please follow it in all your interactions with the project.
+
+## License
+
+This repository and all contributions are licensed under
+[APACHE 2.0](https://www.apache.org/licenses/LICENSE-2.0). Please review our [LICENSE](LICENSE) file.
+
+## Acknowledgments
+
+- Original work
