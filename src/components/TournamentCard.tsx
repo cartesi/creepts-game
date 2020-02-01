@@ -88,9 +88,8 @@ const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournam
                                 color="secondary"
                                 variant="outlined"
                                 className={classes.button}
-                                startIcon={<OndemandVideoIcon />}
-                                href={`/tournaments/${tournament.id}/scores/${tournament.currentOpponent}`}>
-                                Replay Opponent {opponentScore && `(${opponentScore.score.toLocaleString()})`}
+                                startIcon={<OndemandVideoIcon />}>
+                                Opponent {opponentScore && `(${opponentScore.score.toLocaleString()})`}
                             </Button>
                             <Chip icon={<AlarmIcon />} size="small" label={moment(tournament.deadline).fromNow(true) + " left"} />
                         </div>
@@ -107,9 +106,8 @@ const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournam
                                 color="secondary"
                                 variant="outlined"
                                 className={classes.button}
-                                startIcon={<EmojiEventsIcon />}
-                                href={`/tournaments/${tournament.id}/scores/${tournament.winner}`}>
-                                Replay Winner {winningScore && `(${winningScore.score.toLocaleString()})`}
+                                startIcon={<EmojiEventsIcon />}>
+                                Winner {winningScore && `(${winningScore.score.toLocaleString()})`}
                             </Button>
                         </div>
                     </div>
