@@ -74,7 +74,7 @@ export class GameManager {
                     };
                 }
 
-                GameManager.startGame(0);
+                GameManager.startGame(1);
             }
         );
     }
