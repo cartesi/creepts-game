@@ -14,6 +14,7 @@ import { TurretSelected } from "./TurretSelected";
 import { BuyTurrets } from "./BuyTurrets";
 import { BattleManager } from "../BattleManager";
 import { GameVars } from "../../../GameVars";
+import { GameConstants } from "../../../GameConstants";
 
 export class GUI extends Phaser.GameObjects.Container {
 
@@ -47,26 +48,19 @@ export class GUI extends Phaser.GameObjects.Container {
         this.buyTurrets = new BuyTurrets(this.scene);
         this.add(this.buyTurrets);
 
-        this.timeStepButton = new Phaser.GameObjects.Image(this.scene, 510, 45, "texture_atlas_1", "btn_x1");
+        this.timeStepButton = new Phaser.GameObjects.Image(this.scene, 560, 45, "texture_atlas_1", "btn_x1");
         this.timeStepButton.setInteractive();
         this.timeStepButton.on("pointerdown", () => { this.onClickTimeStep(); });
         this.timeStepButton.on("pointerover", () => { this.onBtnOver(this.timeStepButton); });
         this.timeStepButton.on("pointerout", () => { this.onBtnOut(this.timeStepButton); });
         this.add(this.timeStepButton);
 
-        this.pauseButton = new Phaser.GameObjects.Image(this.scene, 580, 45, "texture_atlas_1", "btn_pause");
+        this.pauseButton = new Phaser.GameObjects.Image(this.scene, 640, 45, "texture_atlas_1", "btn_pause");
         this.pauseButton.setInteractive();
         this.pauseButton.on("pointerdown", () => { this.onClickPause(); });
         this.pauseButton.on("pointerover", () => { this.onBtnOver(this.pauseButton); });
         this.pauseButton.on("pointerout", () => { this.onBtnOut(this.pauseButton); });
         this.add(this.pauseButton);
-
-        this.nextWaveButton = new Phaser.GameObjects.Image(this.scene, 650, 45, "texture_atlas_1", "btn_next_wave");
-        this.nextWaveButton.setInteractive();
-        this.nextWaveButton.on("pointerdown", () => { this.onClickNextWave(); });
-        this.nextWaveButton.on("pointerover", () => { this.onBtnOver(this.nextWaveButton); });
-        this.nextWaveButton.on("pointerout", () => { this.onBtnOut(this.nextWaveButton); });
-        this.add(this.nextWaveButton);
 
         this.autoButton = new Phaser.GameObjects.Image(this.scene, 720, 45, "texture_atlas_1", "btn_auto");
         this.autoButton.setInteractive();
@@ -74,6 +68,35 @@ export class GUI extends Phaser.GameObjects.Container {
         this.autoButton.on("pointerover", () => { this.onBtnOver(this.autoButton); });
         this.autoButton.on("pointerout", () => { this.onBtnOut(this.autoButton); });
         this.add(this.autoButton);
+
+        let prevPath = GameVars.currentMapData.path[0];
+        let path = GameVars.currentMapData.path[1];
+        let x = GameConstants.GAME_WIDTH / 2;
+        let y = (GameConstants.GAME_HEIGHT / 2 + GameConstants.CELLS_SIZE) / GameVars.scaleY;
+
+        x -= (GameConstants.CELLS_SIZE * GameVars.currentMapData.size.c / 2) * GameVars.scaleCorrectionFactor;
+        y -= (GameConstants.CELLS_SIZE * GameVars.currentMapData.size.r / 2) * GameVars.scaleCorrectionFactor;
+
+        x += (GameConstants.CELLS_SIZE * path.c + GameConstants.CELLS_SIZE / 2) * GameVars.scaleCorrectionFactor;
+        y += (GameConstants.CELLS_SIZE * path.r + GameConstants.CELLS_SIZE / 2) * GameVars.scaleCorrectionFactor;
+
+        this.nextWaveButton = new Phaser.GameObjects.Image(this.scene, x, y, "texture_atlas_1", "btn_next_wave");
+        this.nextWaveButton.setInteractive();
+        this.nextWaveButton.on("pointerdown", () => { this.onClickNextWave(); });
+        this.nextWaveButton.on("pointerover", () => { this.onBtnOver(this.nextWaveButton); });
+        this.nextWaveButton.on("pointerout", () => { this.onBtnOut(this.nextWaveButton); });
+        this.add(this.nextWaveButton);
+
+        if (prevPath.c < path.c) {
+            this.nextWaveButton.angle = 90;
+            this.nextWaveButton.x += 40 * GameVars.scaleCorrectionFactor;
+        } else if (prevPath.c > path.c) {
+            this.nextWaveButton.angle = -90;
+            this.nextWaveButton.x -= 40 * GameVars.scaleCorrectionFactor;
+        } else if (prevPath.r < path.r) {
+            this.nextWaveButton.angle = 180;
+            this.nextWaveButton.y += 40 * GameVars.scaleCorrectionFactor;
+        }
 
         this.scene.time.addEvent({ delay: 3000, callback: () => {
             if (this.nextWaveButton.alpha === 1 && BattleManager.engine.noEnemiesOnStage) {
@@ -109,7 +132,12 @@ export class GUI extends Phaser.GameObjects.Container {
 
     public activeNextWave(): void {
 
-        this.nextWaveButton.alpha = 1;
+        this.scene.tweens.add({
+            targets: this.nextWaveButton,
+            alpha: 1,
+            ease: Phaser.Math.Easing.Cubic.Out,
+            duration: 200
+        });
     }
 
     public onClickNextWave(): void {
@@ -118,7 +146,7 @@ export class GUI extends Phaser.GameObjects.Container {
             return;
         }
     
-        this.nextWaveButton.alpha = .5;
+        this.nextWaveButton.alpha = 0;
         this.nextWaveButton.setScale(1);
         BattleManager.newWave();
     }
