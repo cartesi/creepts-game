@@ -114,7 +114,9 @@ export class TurretSelected extends Phaser.GameObjects.Container {
 
     public preUpdate(time: number, delta: number): void {
 
-        // 
+        if (!this.scene.input.activePointer.isDown && GameVars.turretSelectedOn) {
+            this.onPointerUp(this.scene.input.activePointer);
+        }
     }
 
     private onPointerMove(pointer: Phaser.Input.Pointer): void {
