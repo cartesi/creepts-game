@@ -137,8 +137,6 @@ export class TurretMenu extends Phaser.GameObjects.Container {
             this.add(this.inflictedText);
         }
 
-        // BUTTONS
-
         let width = 350;
         let height = 40;
 
@@ -248,8 +246,6 @@ export class TurretMenu extends Phaser.GameObjects.Container {
 
     public preUpdate(time: number, delta: number): void {
 
-        // si no hay suficientes creditos desactivar botones de level up y upgrade
-
         if (BattleManager.engine.credits < this.turret.priceImprovement) {
             this.levelButton.alpha = .5;
         } else if (this.turret.level !== this.turret.maxLevel) {
@@ -290,13 +286,9 @@ export class TurretMenu extends Phaser.GameObjects.Container {
             }
         }
 
-        // update en la informacion de los botones
-
         this.levelUpText.setText("LEVEL UP (" + GameVars.formatNumber(this.turret.priceImprovement) + ")" );
         this.upgradeText.setText("UPGRADE (" + GameVars.formatNumber(this.turret.priceUpgrade) + ")" );
         this.sellText.setText("SELL (" + GameVars.formatNumber(this.turret.sellValue) + ")" );
-
-        // desactivar botones no necesarios
 
         if ((this.turret.type === Creepts.GameConstants.TURRET_GLUE && this.turret.grade === 1) || (this.turret.type === Creepts.GameConstants.TURRET_LAUNCH && this.turret.grade === 2)) {
             this.strategyButton.alpha = .5;
@@ -306,8 +298,6 @@ export class TurretMenu extends Phaser.GameObjects.Container {
             this.objectiveText.setText("FIXED TARGET");
         }
 
-        // si ya estamos a level maximo desactivar el boton
-
         if (this.turret.level === this.turret.maxLevel) {
             this.levelButton.alpha = .5;
             this.levelUpText.setText("LEVEL UP");
@@ -315,14 +305,10 @@ export class TurretMenu extends Phaser.GameObjects.Container {
             this.levelButton.alpha = 1;
         }
 
-        // si ya estamos a upgrade maximo desactivar el boton
-
         if (this.turret.grade === 3) {
             this.upgradeButton.alpha = .5;
             this.upgradeText.setText("UPGRADE");
         }
-
-        // update de la informacion en texto
         
         this.levelText.setText(this.turret.level + "/" + this.turret.maxLevel);
 

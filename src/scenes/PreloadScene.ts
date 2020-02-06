@@ -30,6 +30,8 @@ export class PreloadScene extends Phaser.Scene {
 
     public preload(): void {
 
+        this.cameras.main.setBackgroundColor(0x000018);
+
         this.composeScene();
 
         this.loadAssets();
@@ -42,7 +44,7 @@ export class PreloadScene extends Phaser.Scene {
     
     private composeScene(): void {
 
-        const loadingLabel = this.add.text(4, GameConstants.GAME_HEIGHT - 15, " LOADING...", {fontFamily: "Rubik-Regular", fontSize: "40px", color: "#FFFFFF"});
+        const loadingLabel = this.add.text(5, GameConstants.GAME_HEIGHT - 15, "LOADING...", {fontFamily: "Arial", fontSize: "40px", color: "#FFFFFF"});
         loadingLabel.setOrigin(0, 1);
         loadingLabel.scaleY = GameVars.scaleY;
 

@@ -100,7 +100,6 @@ export class EnemyActor extends Phaser.GameObjects.Container {
 
         this.lifeBar.updateValue(this.enemy.life);
 
-        // para suavizar la aparición
         if (this.alpha < 1) {
             this.alpha += GameVars.timeStepFactor === 1 ? .035 : .1;
         }
@@ -112,7 +111,7 @@ export class EnemyActor extends Phaser.GameObjects.Container {
     }
 
     public glueHit(): void {
-        // de momento nada
+        //
     }
 
     public teleport(glueTurret: Creepts.GlueTurret): void {
@@ -135,9 +134,6 @@ export class EnemyActor extends Phaser.GameObjects.Container {
 
         this.lifeBar.visible = false;
 
-        // a veces la bala impacta contra un enemigo q ya esta muerto
-        // y que ya no se mueve. por esto hacemos q el enemigo
-        // al desaparecer continue moviendose
         let f = this.type === Creepts.GameConstants.ENEMY_FLIER || this.type === Creepts.GameConstants.ENEMY_RUNNER ? 3 : 1.5;
 
         const dx = f * (this.enemy.x - this.enemy.prevX) * GameConstants.CELLS_SIZE;

@@ -47,7 +47,7 @@ import { LaunchTurret } from "./LaunchTurret";
         }
 
         public destroy(): void {
-            // nada de momento
+            //
         }
 
         public update(): void {

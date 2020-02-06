@@ -34,7 +34,7 @@ export class LaunchTurretActor extends TurretActor {
     }
 
     public update(time: number, delta: number): void {
-        // esta torreta no orienta el cañón hacia el enemigo
+        //
     }
 
     public upgrade(): void {
@@ -56,7 +56,6 @@ export class LaunchTurretActor extends TurretActor {
     }
 
     public shootMortar(): void {
-        // girar el cañón
         this.canon.rotation = this.turret.shootAngle + Math.PI / 2;
 
         this.scene.tweens.add({

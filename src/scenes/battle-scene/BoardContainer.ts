@@ -131,7 +131,6 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
     public update(time: number, delta: number): void {
 
-        // eliminar a los enemigos que ya han muerto
         for (let i = 0; i < this.deadEnemyActors.length; i++) {
             const index = this.enemyActors.indexOf(this.deadEnemyActors[i]);
             if (index !== -1) {
@@ -210,14 +209,12 @@ export class BoardContainer extends Phaser.GameObjects.Container {
             return;
         }
 
-        // mirar si estamos poniendo la torreta encima del camino
         for (let i = 0; i < GameVars.enemiesPathCells.length; i++) {
             if (position.c === GameVars.enemiesPathCells[i].c && position.r === GameVars.enemiesPathCells[i].r) {
                 return;
             }
         }
 
-        // mirar si ya hay una torreta
         for (let i = 0; i < this.turretActors.length; i++) {
             if (position.c === this.turretActors[i].turret.position.c && position.r === this.turretActors[i].turret.position.r) {
                 return;
@@ -226,7 +223,6 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         let isOnPlateau = false;
 
-        // miramos si esta en una celda en la que se puede posicionar
         if (GameVars.plateausCells.length !== 0) {
             for (let i = 0; i < GameVars.plateausCells.length; i++) {
                 if (GameVars.plateausCells[i].c === position.c && GameVars.plateausCells[i].r === position.r) {
@@ -380,7 +376,6 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
     public onEnemyHit(enemy: Creepts.Enemy): void {
         
-        // encontrar el enemigo en cuestion
         let enemyActor: EnemyActor = this.getEnemyActorByID(enemy.id);
 
         if (enemyActor) {
@@ -390,7 +385,6 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
     public onEnemyGlueHit(enemy: Creepts.Enemy): void {
         
-        // encontrar el enemigo en cuestion
         let enemyActor: EnemyActor = this.getEnemyActorByID(enemy.id);
 
         if (enemyActor) {

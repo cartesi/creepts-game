@@ -61,7 +61,6 @@ export class MortarActor extends Phaser.GameObjects.Container {
             return;
         }
 
-        // hacerla visible una vez haya pasado la boca del cañón
         if (!this.visible) {
             let distX = this.initialPosition.x - this.x;
             let distY = this.initialPosition.y - this.y;
@@ -70,16 +69,13 @@ export class MortarActor extends Phaser.GameObjects.Container {
             }
         }
 
-        // cambiar la escala para dar la sensacion de altura
         const tick = BattleManager.engine.ticksCounter;
         const dt = tick - this.mortar.creationTick;
         let scale: number;
 
-        // la escala crece
         if (dt < this.mortar.ticksToImpact / 2) {
             scale = .75 * ( 1 + dt / (this.mortar.ticksToImpact / 2));
         } else {
-            // la escala disminuye
             scale = .75 * ( 1 +  (this.mortar.ticksToImpact - dt) / (this.mortar.ticksToImpact / 2)); 
         }
 

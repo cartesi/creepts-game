@@ -110,7 +110,7 @@ import { Mortar } from "../turrets/Mortar";
         }
 
         public destroy(): void {
-            // de momento nada
+            //
         }
 
         public update(): void {
@@ -127,7 +127,6 @@ import { Mortar } from "../turrets/Mortar";
 
             let speed = this.speed;
 
-            // si esta encima de pegamento hacer que vaya mas lento
             if (this.affectedByGlue) {
 
                 speed = MathUtils.fixNumber(this.speed / this.glueIntensity);   
@@ -228,16 +227,12 @@ import { Mortar } from "../turrets/Mortar";
             this.life -= MathUtils.fixNumber(damage * modifier);
 
             if (bullet && bullet.turret) {
-                // console.log("BULLET " + bullet.turret.id + ": " + Math.round(damage) + " " + GameVars.ticksCounter);
                 bullet.turret.inflicted += Math.round(damage);
             } else if (mortar && mortar.turret) {
-                // console.log("MORTAR " + mortar.turret.id + ": " + Math.round(damage) + " " + GameVars.ticksCounter);
                 mortar.turret.inflicted += Math.round(damage);
             } else if (mine && mine.turret) {
-                // console.log("MINE " + mine.turret.id + ": " + Math.round(damage) + " " + GameVars.ticksCounter);
                 mine.turret.inflicted += Math.round(damage);
             } else if (laserTurret) {
-                // console.log("LASER " + laserTurret.id + ": " + Math.round(damage) + " " + GameVars.ticksCounter);
                 laserTurret.inflicted += Math.round(damage);
             }
 

@@ -41,7 +41,7 @@ import { Engine } from "../Engine";
         }
 
         public destroy(): void {
-            // nada de momento
+            //
         }
 
         public update(): void {

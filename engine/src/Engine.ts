@@ -324,14 +324,12 @@ import * as Types from "./Types";
                 return {success: false, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
             }
 
-            // mirar si estamos poniendo la torreta encima del camino
             for (let i = 0; i < this.enemiesPathCells.length; i++) {
                 if (p.c === this.enemiesPathCells[i].c && p.r === this.enemiesPathCells[i].r) {
                     return {success: false, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
                 }
             }
 
-            // mirar si ya hay una torreta
             for (let i = 0; i < this.turrets.length; i++) {
                 if (p.c === this.turrets[i].position.c && p.r === this.turrets[i].position.r) {
                     return {success: false, error: {type: GameConstants.ERROR_ADD_TURRET_POSITION}};
@@ -340,7 +338,6 @@ import * as Types from "./Types";
 
             let isOnPlateau = false;
 
-            // miramos si esta en una celda en la que se puede posicionar
             if (this.plateausCells.length !== 0) {
                 for (let i = 0; i < this.plateausCells.length; i++) {
                     if (this.plateausCells[i].c === p.c && this.plateausCells[i].r === p.r) {
@@ -616,7 +613,6 @@ import * as Types from "./Types";
 
                 const dl = MathUtils.fixNumber(l - i);
 
-                // interpolar entre i e i + 1
                 x = this.enemiesPathCells[i].c + .5;
                 y = this.enemiesPathCells[i].r + .5;
     
@@ -642,7 +638,6 @@ import * as Types from "./Types";
 
         private checkCollisions(): void {
 
-            // las balas
             for (let i = 0; i < this.bullets.length; i ++) {
                 
                 const bullet = this.bullets[i];
@@ -658,7 +653,6 @@ import * as Types from "./Types";
                     let enemyPosition: {x: number, y: number};
                     let enemyHit: boolean;
 
-                    // no importa si el enemigo ya ha muerto la bala se marca cuando alcanza la posicion que el enemigo muerto tuvo
                     if (enemy) {
                         
                         enemyPosition = {x: enemy.x, y: enemy.y};
@@ -669,9 +663,6 @@ import * as Types from "./Types";
                             this.bulletsColliding.push(bullet);
                         }
                     } else {
-                        // es una bala que tenia asiganada un enemigo que ha sido teletransportada
-                        // mirar si colisiona contra otro enemigo y en este caso reasignarselo
-                        // y meterla en el array de balas a eliminar
                         for (let j = 0; j < this.enemies.length; j ++) {
 
                             enemy = this.enemies[j];
@@ -777,7 +768,7 @@ import * as Types from "./Types";
             
                             if (squaredRange >= squaredDist) {
                                 enemy.glue(glue.intensity);
-                                break; // EL EFECTO DEL PEGAMENTO NO ES ACUMULATIVO, NO HACE FALTA COMPROBAR CON MAS PEGAMENTOS
+                                break;
                             }
                         }
                     }
@@ -787,13 +778,11 @@ import * as Types from "./Types";
 
         private removeProjectilesAndAccountDamage(): void {
 
-            // las balas
             for (let i = 0; i < this.bulletsColliding.length; i ++) {
 
                 const bullet = this.bulletsColliding[i];
                 const enemy = bullet.assignedEnemy;
 
-                // si el enemigo ya ha muerto o la bala ha salido del tablero
                 if (bullet.outOfStageBoundaries || enemy.life === 0) {
                     this.eventDispatcher.dispatchEvent(new Event(Event.REMOVE_BULLET, [bullet]));
                 } else {
@@ -808,13 +797,11 @@ import * as Types from "./Types";
 
             this.bulletsColliding.length = 0;
 
-            // las balas de pegamento
             for (let i = 0; i < this.glueBulletsColliding.length; i ++) {
 
                 const glueBullet = this.glueBulletsColliding[i];
                 const enemy = glueBullet.assignedEnemy;
 
-                // si el enemigo ya ha muerto o la bala ha salido del tablero
                 if (glueBullet.outOfStageBoundaries || enemy.life === 0) {
                     this.eventDispatcher.dispatchEvent(new Event(Event.REMOVE_GLUE_BULLET, [glueBullet]));
                 } else {
@@ -829,7 +816,6 @@ import * as Types from "./Types";
 
             this.glueBulletsColliding.length = 0;
             
-            // los morteros
             for (let i = 0; i < this.mortarsImpacting.length; i ++) {
 
                 const mortar = this.mortarsImpacting[i];
@@ -860,7 +846,6 @@ import * as Types from "./Types";
 
             this.mortarsImpacting.length = 0;
 
-            // las minas
             for (let i = 0; i < this.minesImpacting.length; i ++) {
 
                 const mine = this.minesImpacting[i];
@@ -897,7 +882,6 @@ import * as Types from "./Types";
 
             this.minesImpacting.length = 0;
 
-            // los pegamentos
             for (let i = 0; i < this.consumedGlues.length; i ++) {
 
                 const glue = this.consumedGlues[i];
@@ -922,7 +906,6 @@ import * as Types from "./Types";
                 enemy.teleport(this.teleportedEnemies[i].glueTurret.teleportDistance);
                 teleportedEnemiesData.push({enemy: enemy, glueTurret: this.teleportedEnemies[i].glueTurret});
                 
-                // ¿hay balas que tenian asignadas este enemigo?
                 for (let i = 0; i < this.bullets.length; i ++) {
 
                     const bullet = this.bullets[i];

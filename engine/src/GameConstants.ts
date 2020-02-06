@@ -21,14 +21,12 @@
         public static readonly MORTAR_SPEED = .45;
         public static readonly INITIAL_TICKS_WAVE = 4;
 
-        // los nombres de los enemigos
         public static readonly ENEMY_SOLDIER = "soldier";
         public static readonly ENEMY_RUNNER = "runner";
         public static readonly ENEMY_HEALER = "healer";
         public static readonly ENEMY_BLOB = "blob";
         public static readonly ENEMY_FLIER = "flier";
 
-        // los nombres de las torretas
         public static readonly TURRET_PROJECTILE = "projectile";
         public static readonly TURRET_LASER = "laser";
         public static readonly TURRET_LAUNCH = "launch";
@@ -44,7 +42,6 @@
         public static readonly ATTRIBUTE_PRICE_UPGRADE = "priceUpgrade";
         public static readonly ATTRIBUTE_TELEPORT_DISTANCE = "teleportDistance";
 
-        // estrategia de disparo
         public static readonly STRATEGY_SHOOT_FIRST = "first";
         public static readonly STRATEGY_SHOOT_LAST = "last";
         public static readonly STRATEGY_SHOOT_CLOSEST = "closest";
@@ -59,7 +56,6 @@
                                                     GameConstants.STRATEGY_SHOOT_STRONGEST
                                                 ];
 
-        // caracteristicas de los enemigos
         public static readonly HEALER_HEALING_TICKS = 200;
         public static readonly HEALER_STOP_TICKS = 5;
         public static readonly HEALER_HEALING_RADIUS = 2;
