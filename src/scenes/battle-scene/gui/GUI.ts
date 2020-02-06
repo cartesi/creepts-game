@@ -85,17 +85,18 @@ export class GUI extends Phaser.GameObjects.Container {
         this.nextWaveButton.on("pointerdown", () => { this.onClickNextWave(); });
         this.nextWaveButton.on("pointerover", () => { this.onBtnOver(this.nextWaveButton); });
         this.nextWaveButton.on("pointerout", () => { this.onBtnOut(this.nextWaveButton); });
+        this.nextWaveButton.setScale(1);
         this.add(this.nextWaveButton);
 
         if (prevPath.c < path.c) {
             this.nextWaveButton.angle = 90;
-            this.nextWaveButton.x += 40 * GameVars.scaleCorrectionFactor;
+            this.nextWaveButton.x += 35 * GameVars.scaleCorrectionFactor;
         } else if (prevPath.c > path.c) {
             this.nextWaveButton.angle = -90;
-            this.nextWaveButton.x -= 40 * GameVars.scaleCorrectionFactor;
+            this.nextWaveButton.x -= 35 * GameVars.scaleCorrectionFactor;
         } else if (prevPath.r < path.r) {
             this.nextWaveButton.angle = 180;
-            this.nextWaveButton.y += 40 * GameVars.scaleCorrectionFactor;
+            this.nextWaveButton.y += 35 * GameVars.scaleCorrectionFactor;
         }
 
         this.scene.time.addEvent({ delay: 3000, callback: () => {
