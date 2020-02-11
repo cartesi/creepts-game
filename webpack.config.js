@@ -88,40 +88,5 @@ module.exports = (env, argv) => {
 		}
 	};
 
-	const cmdlineConfig = {
-		name: 'cmdline',
-		target: 'node',
-		entry: {
-			'djs-verifier': './cmdline/djs-verifier.js',
-			'qjs-verifier': './cmdline/qjs-verifier.js',
-			'node-verifier': './cmdline/node-verifier.js',
-			'levels': './cmdline/levels.ts'
-		},
-		devtool: 'source-map',
-		output: {
-			path: path.resolve(__dirname, 'dist'),
-			filename: '[name]-bundle.js'
-		},
-		module: {
-			rules: [
-				{
-					test: /\.ts$/,
-					loader: 'ts-loader',
-					exclude: /node_modules/
-				},
-			]
-		},
-		plugins: [
-			new BundleTracker({filename: './stats-cmdline.json'}),
-			new webpack.DefinePlugin({
-				__GAME_ONLY__: JSON.stringify(env && env.GAME_ONLY || false),
-				__DEVELOPMENT__: JSON.stringify(argv.mode === 'development')
-			})
-		],
-		resolve: {
-			extensions: ['.ts', '.js']
-		}
-	};
-
-	return [ appConfig, cmdlineConfig ];
+	return [ appConfig ];
 };

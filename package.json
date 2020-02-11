@@ -1,6 +1,6 @@
 {
-    "name": "creepts",
-    "version": "0.0.1",
+    "name": "@cartesi/creepts-game",
+    "version": "0.1.0",
     "description": "Tower defense game for Cartesi",
     "devDependencies": {
         "@babel/core": "^7.6.2",
@@ -12,6 +12,7 @@
         "@babel/preset-typescript": "^7.6.0",
         "@beam-australia/react-env": "^2.1.2",
         "@types/hookrouter": "^2.2.1",
+        "@types/howler": "^2.1.1",
         "@types/jest": "^24.0.18",
         "@types/node": "^12.7.4",
         "@types/react": "^16.9.2",
@@ -37,8 +38,6 @@
         "@material-ui/core": "^4.8.3",
         "@material-ui/icons": "^4.5.1",
         "@material-ui/lab": "^4.0.0-alpha.39",
-        "@types/howler": "^2.1.1",
-        "commander": "^4.0.1",
         "file-saver": "^2.0.2",
         "hookrouter": "^1.2.3",
         "howler": "^2.1.2",
@@ -52,13 +51,10 @@
     "scripts": {
         "dev": "webpack-dev-server --env.GAME_ONLY=true --mode development",
         "dev:cartesi": "mkdir -p dist/ && react-env --env .env --dest ./dist && webpack-dev-server --mode development",
-        "test": "jest verifier.test",
+        "test": "jest",
         "build": "webpack --mode production && react-env --env .env --dest ./dist",
         "build:game": "webpack --env.GAME_ONLY=true --mode production && react-env --env .env --dest ./dist",
-        "build:app": "webpack --config-name app --mode production && react-env --env .env --dest ./dist",
-        "build:cmdline": "webpack --config-name cmdline --mode production",
-        "verifier": "webpack --config-name cmdline --mode production && node dist/node-verifier-bundle.js",
-        "levels": "webpack --config-name cmdline --mode production && node dist/levels-bundle.js"
+        "build:app": "webpack --config-name app --mode production && react-env --env .env --dest ./dist"
     },
     "jest": {
         "globals": {

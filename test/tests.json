@@ -1,6 +1,0 @@
-[
-    ["./logs/log_minimum.json", 0, 200],
-    ["./logs/log_short.json", 0, 905],
-    ["./logs/log_medium.json", 0, 4740],
-    ["./logs/log_long.json", 0, 14781]
-]
