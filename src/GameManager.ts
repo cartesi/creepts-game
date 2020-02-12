@@ -33,8 +33,8 @@ export class GameManager {
         // load all maps
         const maps = [
             "original",
-            "waiting-line",
-            "turn-round",
+            "waiting_line",
+            "turn_round",
             "hurry",
             "civyshk_yard",
             "civyshk_2y",
