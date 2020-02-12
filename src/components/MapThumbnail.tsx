@@ -11,22 +11,22 @@
 
 
 import React from "react";
-import maps from "../../assets/config/maps.json";
-import { getMapByName } from "./Map";
+import { loadMap } from "@cartesi/creepts-mappack";
+import { MapObject } from "@cartesi/creepts-engine";
 
 export interface MapThumbnailProps { map: string, width: number, height: number };
 
 export const MapThumbnail: React.SFC<MapThumbnailProps> = (props) => {
 
     // if map is undefined, we draw an empty canvas
-    const emptyMap = {
+    const emptyMap: MapObject = {
         name: "Empty",
         size: { r: 15, c: 10 },
         path: [],
         plateaus: []
     };
 
-    const map = getMapByName(props.map) || emptyMap;
+    const map = loadMap(props.map) || emptyMap;
 
     // cell width and height
     const cw = props.width / map.size.c;
@@ -44,8 +44,10 @@ export const MapThumbnail: React.SFC<MapThumbnailProps> = (props) => {
 
     // maps have different sizes
     // so I draw the path and plateus, and then centralize that
-    const maxC = Math.max(...Array.from(maps, (map) => map.size.c));
-    const maxR = Math.max(...Array.from(maps, (map) => map.size.r));
+    // const maxC = Math.max(...Array.from(maps, (map) => map.size.c));
+    // const maxR = Math.max(...Array.from(maps, (map) => map.size.r));
+    const maxC = 12;
+    const maxR = 15;
     const sx = map.size.c / maxC;
     const sy = map.size.r / maxR;
     const dx = ((maxC - map.size.c) / 2) * cw;

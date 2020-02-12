@@ -13,7 +13,7 @@
 import { GameConstants } from "../../../GameConstants";
 import { GameVars } from "../../../GameVars";
 import { LifeBar } from "./LifeBar";
-import * as Creepts from "../../../../engine/src";
+import * as Creepts from "@cartesi/creepts-engine";
 
 export class EnemyActor extends Phaser.GameObjects.Container {
 

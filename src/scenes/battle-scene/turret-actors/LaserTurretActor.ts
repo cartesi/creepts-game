@@ -14,7 +14,7 @@ import { AudioManager } from "./../../../AudioManager";
 import { TurretActor } from "./TurretActor";
 import { GameVars } from "../../../GameVars";
 import { EnemyActor } from "../enemy-actors/EnemyActor";
-import * as Creepts from "../../../../engine/src";
+import * as Creepts from "@cartesi/creepts-engine";
 
 export class LaserTurretActor extends TurretActor {
 

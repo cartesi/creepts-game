@@ -13,7 +13,7 @@
 import { TurretActor } from "./TurretActor";
 import { AudioManager } from "../../../AudioManager";
 import { GameVars } from "../../../GameVars";
-import * as Creepts from "../../../../engine/src";
+import * as Creepts from "@cartesi/creepts-engine";
 
 export class GlueTurretActor extends TurretActor {
 

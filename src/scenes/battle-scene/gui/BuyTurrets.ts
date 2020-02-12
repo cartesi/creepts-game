@@ -11,7 +11,7 @@
 
 
 import { TurretButton } from "./TurretButton";
-import * as Creepts from "../../../../engine/src";
+import * as Creepts from "@cartesi/creepts-engine";
 
 export class BuyTurrets extends Phaser.GameObjects.Container {
 

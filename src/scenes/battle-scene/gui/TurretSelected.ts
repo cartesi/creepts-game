@@ -14,7 +14,7 @@ import { BattleManager } from './../BattleManager';
 import { GameConstants } from './../../../GameConstants';
 import { GUI } from './GUI';
 import { GameVars } from '../../../GameVars';
-import * as Creepts from "../../../../engine/src";
+import * as Creepts from "@cartesi/creepts-engine";
 
 export class TurretSelected extends Phaser.GameObjects.Container {
 

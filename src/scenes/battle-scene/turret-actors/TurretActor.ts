@@ -16,7 +16,7 @@ import { BoardContainer } from "./../BoardContainer";
 import { GameConstants } from "../../../GameConstants";
 import { BattleManager } from "../BattleManager";
 import { GameVars } from "../../../GameVars";
-import * as Creepts from "../../../../engine/src";
+import * as Creepts from "@cartesi/creepts-engine";
 
 export class TurretActor extends Phaser.GameObjects.Container {
 

@@ -10,10 +10,10 @@
 // specific language governing permissions and limitations under the License.
 
 
+import { MapObject } from "@cartesi/creepts-engine";
 import { GameConstants } from "../../GameConstants";
 import { GameManager } from "../../GameManager";
 import { GameVars } from "../../GameVars";
-import { MapObject } from "../../../types/tower-defense";
 
 export class MapInfo extends Phaser.GameObjects.Container {
 

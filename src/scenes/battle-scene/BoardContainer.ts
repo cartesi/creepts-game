@@ -10,6 +10,7 @@
 // specific language governing permissions and limitations under the License.
 
 
+import * as Creepts from "@cartesi/creepts-engine";
 import { GameOverLayer } from "./GameOverLayer";
 import { MineActor } from "./turret-actors/MineActor";
 import { TurretMenu } from "./TurretMenu";
@@ -32,8 +33,6 @@ import { PauseMenu } from "./PauseMenu";
 import { GlueBulletActor } from "./turret-actors/GlueBulletActor";
 import { AudioManager } from "../../AudioManager";
 import { RoundCompletedLayer } from "./RoundCompletedLayer";
-import * as Creepts from "../../../engine/src";
-import { FxEnemyTraspass } from "./FxEnemyTraspass";
 
 export class BoardContainer extends Phaser.GameObjects.Container {
 

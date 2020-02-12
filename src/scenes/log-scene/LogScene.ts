@@ -9,12 +9,11 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-
+import * as Creepts from "@cartesi/creepts-engine";
 import { HUD } from "../battle-scene/hud/HUD";
 import { GameVars } from "../../GameVars";
 import { BattleManager } from "../battle-scene/BattleManager";
 import { BoardContainer } from "../battle-scene/BoardContainer";
-import { GameConstants } from "../../GameConstants";
 import { LogGUI } from "./LogGUI";
 
 export class LogScene extends Phaser.Scene {
@@ -56,25 +55,25 @@ export class LogScene extends Phaser.Scene {
             var action = GameVars.logsObject.actions.shift();
     
             switch (action.type) {
-                case GameConstants.TYPE_NEXT_WAVE:
+                case Creepts.GameConstants.ACTION_TYPE_NEXT_WAVE:
                     BattleManager.newWave();
                     break;
-                case GameConstants.TYPE_ADD_TURRET:
+                case Creepts.GameConstants.ACTION_TYPE_ADD_TURRET:
                     BattleManager.addTurretToScene(action.turretType, action.position);
                     break;
-                case GameConstants.TYPE_SELL_TURRET:
+                case Creepts.GameConstants.ACTION_TYPE_SELL_TURRET:
                     BattleManager.sellTurret(action.id);
                     break;
-                case GameConstants.TYPE_UPGRADE_TURRET:
+                case Creepts.GameConstants.ACTION_TYPE_UPGRADE_TURRET:
                     BattleManager.upgradeTower(action.id);
                     break;
-                case GameConstants.TYPE_LEVEL_UP_TURRET:
+                case Creepts.GameConstants.ACTION_TYPE_LEVEL_UP_TURRET:
                     BattleManager.improveTurret(action.id);
                     break;
-                case GameConstants.TYPE_CHANGE_STRATEGY_TURRET:
+                case Creepts.GameConstants.ACTION_TYPE_CHANGE_STRATEGY_TURRET:
                     BattleManager.setNextStrategy(action.id);
                     break;
-                case GameConstants.TYPE_CHANGE_FIXED_TARGET_TURRET:
+                case Creepts.GameConstants.ACTION_TYPE_CHANGE_FIXED_TARGET_TURRET:
                     BattleManager.setFixedTarget(action.id);
                     break;
                 default:

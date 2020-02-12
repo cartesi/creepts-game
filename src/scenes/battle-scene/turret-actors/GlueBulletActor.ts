@@ -11,7 +11,7 @@
 
 
 import { GameConstants } from "../../../GameConstants";
-import * as Creepts from "../../../../engine/src";
+import * as Creepts from "@cartesi/creepts-engine";
 
 export class GlueBulletActor extends Phaser.GameObjects.Container {
 

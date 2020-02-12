@@ -16,42 +16,9 @@ import { FullScreenMessage } from "./FullScreenMessage";
 import { useScoreService } from "../services/scoreService";
 import { navigate } from "hookrouter";
 import { GameManager } from "../GameManager";
-import * as Creepts from "../../engine/src";
-import { LevelObject } from "../../types/tower-defense";
-import { GameConstants } from "../GameConstants";
-import enemiesData from "../../assets/config/enemies.json";
-import turretsData from "../../assets/config/turrets.json";
-import wavesData from "../../assets/config/waves.json";
-import { getMapByName } from "./Map";
+import { loadLevel, loadMap } from "@cartesi/creepts-mappack";
 
 interface ReplayProps { tournamentId: string, id: string };
-
-/**
- * Build a LevelObject for a map
- * @param mapName name of the map of the tournament
- */
-const levelForMap = (mapName: string): LevelObject => {
-    const map = getMapByName(mapName);
-
-    const gameConfig: Creepts.Types.GameConfig = {
-        timeStep: GameConstants.TIME_STEP,
-        runningInClientSide: true,
-        enemySpawningDeltaTicks: GameConstants.ENEMY_SPAWNING_DELTA_TICKS,
-        credits: GameConstants.INITIAL_CREDITS,
-        lifes: GameConstants.INITIAL_LIFES,
-        boardSize: map.size,
-        enemiesPathCells : map.path,
-        plateausCells: map.plateaus
-    };
-
-    return {
-        engineVersion: Creepts.GameConstants.VERSION,
-        gameConfig,
-        enemiesData: enemiesData.enemies,
-        turretsData: turretsData.turrets,
-        wavesData: wavesData.waves
-    }
-}
 
 export const Replay: React.FC<ReplayProps> = ({ tournamentId, id }) => {
 
@@ -61,10 +28,11 @@ export const Replay: React.FC<ReplayProps> = ({ tournamentId, id }) => {
     useEffect(() => {
         if (service.status == "loaded") {
             // get map name from tournament
-            const map = service.payload[0].map;
+            const mapName = service.payload[0].map;
+            const map = loadMap(mapName);
 
             // build level object from map
-            const level = levelForMap(map);
+            const level = loadLevel(map);
 
             // log from server
             const log = service.payload[1].log;

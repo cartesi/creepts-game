@@ -14,7 +14,7 @@ import { LaunchTurretActor } from './LaunchTurretActor';
 import { GameConstants } from "../../../GameConstants";
 import { GameVars } from '../../../GameVars';
 import { BoardContainer } from '../BoardContainer';
-import * as Creepts from "../../../../engine/src";
+import * as Creepts from "@cartesi/creepts-engine";
 import { AudioManager } from '../../../AudioManager';
 
 export class MineActor extends Phaser.GameObjects.Container {

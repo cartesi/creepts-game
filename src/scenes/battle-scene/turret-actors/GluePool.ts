@@ -14,7 +14,7 @@ import { GameConstants } from "../../../GameConstants";
 import { GlueTurretActor } from "./GlueTurretActor";
 import { GameVars } from "../../../GameVars";
 import { AudioManager } from "../../../AudioManager";
-import * as Creepts from "../../../../engine/src";
+import * as Creepts from "@cartesi/creepts-engine";
 
 export class GluePool extends Phaser.GameObjects.Container {
 

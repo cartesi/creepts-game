@@ -15,7 +15,7 @@ import { GameVars } from "../../../GameVars";
 import { BoardContainer } from "../BoardContainer";
 import { BattleManager } from "../BattleManager";
 import { AudioManager } from "../../../AudioManager";
-import * as Creepts from "../../../../engine/src";
+import * as Creepts from "@cartesi/creepts-engine";
 
 export class MortarActor extends Phaser.GameObjects.Container {
 

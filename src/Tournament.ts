@@ -10,7 +10,7 @@
 // specific language governing permissions and limitations under the License.
 
 
-import { LogsObject } from "../types/tower-defense";
+import { LogsObject } from "@cartesi/creepts-engine";
 
 export enum TournamentPhase {
     commit = "commit",

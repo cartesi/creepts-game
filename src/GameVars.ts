@@ -10,7 +10,8 @@
 // specific language governing permissions and limitations under the License.
 
 
-import { GameData, LevelObject, LogsObject, MapObject } from "../types/tower-defense";
+import { LevelObject, LogsObject, MapObject, WaveAttributes, EnemyAttributes, EnemyNames, TurretAttributes, TurretNames } from "@cartesi/creepts-engine";
+import { GameData } from "./GameData";
 
 export class GameVars {
 
@@ -26,9 +27,9 @@ export class GameVars {
     public static dangerRate: number;
     public static waveOver: boolean;
     public static semipaused: boolean;
-    public static enemiesData: any;
-    public static turretsData: any;
-    public static wavesData: any;
+    public static enemiesData: Record<EnemyNames, EnemyAttributes>;
+    public static turretsData: Record<TurretNames, TurretAttributes>;
+    public static wavesData: WaveAttributes[];
     public static mapsData: MapObject[];
     public static currentMapData: MapObject;
     public static currentWave: number;

@@ -26,20 +26,7 @@ export class GameConstants {
     public static readonly GAME_HEIGHT = 1024;
 
     public static readonly TIME_STEP = 100;
-    public static readonly ENEMY_SPAWNING_DELTA_TICKS = 10;
-    public static readonly INITIAL_CREDITS = 500;
-    public static readonly INITIAL_LIFES = 20;
     public static readonly CELLS_SIZE = 60;
-
-    // LOGS TYPES
-    public static readonly TYPE_ADD_TURRET = "add turret";
-    public static readonly TYPE_SELL_TURRET = "sell turret";
-    public static readonly TYPE_UPGRADE_TURRET = "upgrade turret";
-    public static readonly TYPE_LEVEL_UP_TURRET = "level up turret";
-    public static readonly TYPE_CHANGE_STRATEGY_TURRET = "change strategy turret";
-    public static readonly TYPE_CHANGE_FIXED_TARGET_TURRET = "change fixed target turret";
-
-    public static readonly TYPE_NEXT_WAVE = "next wave";
 
     public static readonly SAVED_GAME_DATA_KEY = "creepts-data";
 }

@@ -12,7 +12,7 @@
 
 import { BattleManager } from "./BattleManager";
 import { GameVars } from "../../GameVars";
-import * as Creepts from "../../../engine/src";
+import * as Creepts from "@cartesi/creepts-engine";
 import { AudioManager } from "../../AudioManager";
 
 export class TurretMenu extends Phaser.GameObjects.Container {

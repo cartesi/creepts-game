@@ -10,16 +10,14 @@
 // specific language governing permissions and limitations under the License.
 
 
+import * as Creepts from "@cartesi/creepts-engine";
+import { loadEnemies, loadTurrets, loadWaves } from '@cartesi/creepts-mappack';
 import { LogScene } from "./../log-scene/LogScene";
 import { BattleScene } from "./BattleScene";
 import { GameConstants } from "../../GameConstants";
 import { GameVars } from "../../GameVars";
 import { BoardContainer } from "./BoardContainer";
 import { GameManager } from "../../GameManager";
-import enemiesData from "../../../assets/config/enemies.json";
-import turretsData from "../../../assets/config/turrets.json";
-import wavesData from "../../../assets/config/waves.json";
-import * as Creepts from "../../../engine/src";
 import { AudioManager } from "../../AudioManager";
 import { saveAs } from "file-saver";
 
@@ -27,7 +25,7 @@ export class BattleManager {
 
     public static engine: Creepts.Engine;
 
-    public static init(): void {  
+    public static init(): void {
 
         const aspectRatio = window.innerHeight / window.innerWidth;
 
@@ -41,22 +39,22 @@ export class BattleManager {
             }
         }
 
-        let gameConfig: Creepts.Types.GameConfig;
+        let gameConfig: Creepts.GameConfig;
 
         if (GameVars.currentScene === BattleScene.currentInstance) {
             GameVars.enemiesPathCells = GameVars.currentMapData.path;
             GameVars.plateausCells = GameVars.currentMapData.plateaus;
 
-            GameVars.enemiesData = enemiesData.enemies;
-            GameVars.turretsData = turretsData.turrets;
-            GameVars.wavesData = wavesData.waves;
+            GameVars.enemiesData = loadEnemies();
+            GameVars.turretsData = loadTurrets();
+            GameVars.wavesData = loadWaves();
 
             gameConfig = {
                 timeStep: GameConstants.TIME_STEP,
                 runningInClientSide: true,
-                enemySpawningDeltaTicks: GameConstants.ENEMY_SPAWNING_DELTA_TICKS,
-                credits: GameConstants.INITIAL_CREDITS,
-                lifes: GameConstants.INITIAL_LIFES,
+                enemySpawningDeltaTicks: Creepts.GameConstants.ENEMY_SPAWNING_DELTA_TICKS,
+                credits: Creepts.GameConstants.INITIAL_CREDITS,
+                lifes: Creepts.GameConstants.INITIAL_LIFES,
                 boardSize: GameVars.currentMapData.size,
                 enemiesPathCells : GameVars.enemiesPathCells,
                 plateausCells: GameVars.plateausCells
@@ -171,7 +169,7 @@ export class BattleManager {
                 LogScene.currentInstance.hud.updateRound();
             }
 
-            const action = {type: GameConstants.TYPE_NEXT_WAVE, tick: BattleManager.engine.ticksCounter};
+            const action = {type: Creepts.GameConstants.ACTION_TYPE_NEXT_WAVE, tick: BattleManager.engine.ticksCounter};
             BattleManager.addAction(action);
 
         }
@@ -194,7 +192,7 @@ export class BattleManager {
         let data = BattleManager.engine.addTurret(type, position);
 
         if (data.turret) {
-            let action = {type: GameConstants.TYPE_ADD_TURRET, tick: BattleManager.engine.ticksCounter, turretType: data.turret.type, position: position};
+            let action = {type: Creepts.GameConstants.ACTION_TYPE_ADD_TURRET, tick: BattleManager.engine.ticksCounter, turretType: data.turret.type, position: position};
             BattleManager.addAction(action);
         }
 
@@ -205,7 +203,7 @@ export class BattleManager {
 
         if (BattleManager.engine.sellTurret(id).success) {
 
-            let action = {type: GameConstants.TYPE_SELL_TURRET, tick: BattleManager.engine.ticksCounter, id: id};
+            let action = {type: Creepts.GameConstants.ACTION_TYPE_SELL_TURRET, tick: BattleManager.engine.ticksCounter, id: id};
             BattleManager.addAction(action);
 
             BoardContainer.currentInstance.removeTurret(id);
@@ -227,7 +225,7 @@ export class BattleManager {
         const success = BattleManager.engine.improveTurret(id).success;
 
         if (success) {
-            let action = {type: GameConstants.TYPE_LEVEL_UP_TURRET, tick: BattleManager.engine.ticksCounter, id: id};
+            let action = {type: Creepts.GameConstants.ACTION_TYPE_LEVEL_UP_TURRET, tick: BattleManager.engine.ticksCounter, id: id};
             BattleManager.addAction(action);
 
             BoardContainer.currentInstance.improveTurret(id);
@@ -240,7 +238,7 @@ export class BattleManager {
 
         if (success) {
 
-            let action = {type: GameConstants.TYPE_UPGRADE_TURRET, tick: BattleManager.engine.ticksCounter, id: id};
+            let action = {type: Creepts.GameConstants.ACTION_TYPE_UPGRADE_TURRET, tick: BattleManager.engine.ticksCounter, id: id};
             BattleManager.addAction(action);
 
             BoardContainer.currentInstance.upgradeTurret(id);
@@ -254,7 +252,7 @@ export class BattleManager {
     public static setNextStrategy(id: number): void {
 
         if (BattleManager.engine.setNextStrategy(id).success) {
-            let action = {type: GameConstants.TYPE_CHANGE_STRATEGY_TURRET, tick: BattleManager.engine.ticksCounter, id: id};
+            let action = {type: Creepts.GameConstants.ACTION_TYPE_CHANGE_STRATEGY_TURRET, tick: BattleManager.engine.ticksCounter, id: id};
             BattleManager.addAction(action);
         }
     }
@@ -262,7 +260,7 @@ export class BattleManager {
     public static setFixedTarget(id: number): void {
 
         if (BattleManager.engine.setFixedTarget(id).success) {
-            let action = {type: GameConstants.TYPE_CHANGE_FIXED_TARGET_TURRET, tick: BattleManager.engine.ticksCounter, id: id};
+            let action = {type: Creepts.GameConstants.ACTION_TYPE_CHANGE_FIXED_TARGET_TURRET, tick: BattleManager.engine.ticksCounter, id: id};
             BattleManager.addAction(action);
         }
     }

@@ -12,7 +12,7 @@
 
 import { BattleManager } from "./../BattleManager";
 import { GameVars } from "../../../GameVars";
-import * as Creepts from "../../../../engine/src";
+import * as Creepts from "@cartesi/creepts-engine";
 
 export class TurretButton extends Phaser.GameObjects.Container {
 
@@ -55,7 +55,8 @@ export class TurretButton extends Phaser.GameObjects.Container {
             default:
         }
 
-        let text = new Phaser.GameObjects.Text(this.scene, 8, 40, BattleManager.engine.turretData[this.turretType].price, {fontFamily: "Rubik-Regular", fontSize: "22px", color: color});
+        const price = BattleManager.engine.turretData[this.turretType].price;
+        let text = new Phaser.GameObjects.Text(this.scene, 8, 40, price.toString(), {fontFamily: "Rubik-Regular", fontSize: "22px", color: color});
         text.setOrigin(.5);
         this.add(text);
 

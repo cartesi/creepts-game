@@ -10,15 +10,13 @@
 // specific language governing permissions and limitations under the License.
 
 
+import { LevelObject, LogsObject } from "@cartesi/creepts-engine";
+import { loadMap } from "@cartesi/creepts-mappack";
 import { GameConstants } from "./GameConstants";
 import { GameVars } from "./GameVars";
 import { AudioManager } from "./AudioManager";
-import mapsData from "../assets/config/maps.json";
-import defaultLevel from "../assets/level.json";
-import defaultLog from "../assets/log.json";
 import EventEmitter from "events";
 import TypedEmitter from "typed-emitter";
-import { LevelObject, LogsObject } from "../types/tower-defense";
 
 interface GameManagerEvents {
     ready: () => void
@@ -32,7 +30,18 @@ export class GameManager {
 
     public static init(): void {
 
-        GameVars.mapsData = mapsData;
+        // load all maps
+        const maps = [
+            "original",
+            "waiting-line",
+            "turn-round",
+            "hurry",
+            "civyshk_yard",
+            "civyshk_2y",
+            "civyshk_line5",
+            "civyshk_labyrinth",
+        ];
+        GameVars.mapsData = maps.map(loadMap);
 
         if (GameVars.currentScene.sys.game.device.os.desktop) {
             GameVars.scaleY = 1;
@@ -106,11 +115,11 @@ export class GameManager {
         GameVars.currentScene.scene.start("BattleScene");
     }
 
-    public static enterLogScene(log?: LogsObject, level?: LevelObject): void {
+    public static enterLogScene(log: LogsObject, level: LevelObject): void {
 
-        GameVars.logsObject = log || defaultLog;
+        GameVars.logsObject = log;
         GameVars.initialLogsObjects = JSON.parse(JSON.stringify(GameVars.logsObject));
-        GameVars.levelObject = level || defaultLevel;
+        GameVars.levelObject = level;
 
         GameVars.currentScene.scene.start("LogScene");
     }
