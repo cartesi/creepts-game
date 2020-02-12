@@ -15,6 +15,7 @@ import { BuyTurrets } from "./BuyTurrets";
 import { BattleManager } from "../BattleManager";
 import { GameVars } from "../../../GameVars";
 import { GameConstants } from "../../../GameConstants";
+import { GameObjects } from "phaser";
 
 export class GUI extends Phaser.GameObjects.Container {
 
@@ -205,14 +206,14 @@ export class GUI extends Phaser.GameObjects.Container {
         }
     }
 
-    private onBtnOver(btn: any): void {
+    private onBtnOver(btn: GameObjects.Image): void {
 
         if (btn.alpha === 1) {
             btn.setScale(1.1);
         }
     }
 
-    private onBtnOut(btn: any): void {
+    private onBtnOut(btn: GameObjects.Image): void {
         
         if (btn.alpha === 1) {
             btn.setScale(1);

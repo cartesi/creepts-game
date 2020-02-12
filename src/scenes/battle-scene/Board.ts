@@ -12,6 +12,7 @@
 
 import { GameConstants } from "../../GameConstants";
 import { GameVars } from "../../GameVars";
+import { GameObjects } from "phaser";
 
 export class Board extends Phaser.GameObjects.Container {
 
@@ -73,7 +74,7 @@ export class Board extends Phaser.GameObjects.Container {
         
     }
 
-    public sendActorBack(actor: any): void {
+    public sendActorBack(actor: GameObjects.GameObject): void {
 
         this.sendToBack(actor);
         this.sendToBack(this.pathContainer);
