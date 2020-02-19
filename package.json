@@ -53,7 +53,7 @@
     "scripts": {
         "dev": "webpack-dev-server --env.GAME_ONLY=true --mode development",
         "dev:cartesi": "mkdir -p dist/ && react-env --env .env --dest ./dist && webpack-dev-server --mode development",
-        "test": "jest",
+        "test": "jest --passWithNoTests",
         "build": "webpack --mode production && react-env --env .env --dest ./dist",
         "build:game": "webpack --env.GAME_ONLY=true --mode production && react-env --env .env --dest ./dist",
         "build:app": "webpack --config-name app --mode production && react-env --env .env --dest ./dist"
