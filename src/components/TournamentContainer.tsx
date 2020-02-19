@@ -25,8 +25,8 @@ export const TournamentContainer: React.FC<IProps> = ({ id }) => {
 
     const maps = [
         "original",
-        "waiting-line",
-        "turn-round",
+        "waiting_line",
+        "turn_round",
         "hurry",
         "civyshk_yard",
         "civyshk_2y",
