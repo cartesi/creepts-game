@@ -57,6 +57,17 @@ const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournam
     const winningScore = tournament.scores && tournament.winner ? tournament.scores[tournament.winner] : null;
 
     const steps = [TournamentPhase.commit, TournamentPhase.reveal, TournamentPhase.round, TournamentPhase.end];
+
+    // convert deadline string to moment object
+    const deadline = moment(tournament.deadline);
+    const now = moment();
+    
+    // player can play if tournament is still in commit phase and deadline is ahead of now
+    const canPlay: boolean = phase == TournamentPhase.commit && (deadline > now);
+
+    // label of deadline
+    const deadlineLabel = deadline > now ? `${deadline.fromNow(true)} left` : `expired ${deadline.fromNow(true)} ago`;
+
     const classes = useStyles({});
     return (
         <Stepper activeStep={steps.indexOf(phase)} orientation="vertical">
@@ -66,26 +77,26 @@ const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournam
                     <Typography>The player can choose to participate in any tournament. The selection will set the maze and the player will be able to play repeated times in order to improve their score; At the end of each game, information about the score and player moves are sent to the blockchain.</Typography>
                     <div className={classes.actionsContainer}>
                         <div>
-                            <Button
+                            {canPlay && <Button
                                 color="secondary" 
                                 variant="outlined"
                                 className={classes.button} 
                                 startIcon={<VideogameAssetIcon />}
                                 href={`/tournaments/${tournament.id}`}>
                                 {score ? `Play Again (${score.score.toLocaleString()})` : 'Play'}
-                            </Button>
-                            <Chip icon={<AlarmIcon />} size="small" label={moment(tournament.deadline).fromNow(true) + " left"} />
+                            </Button>}
+                            <Chip icon={<AlarmIcon />} size="small" label={deadlineLabel} />
                         </div>
                     </div>
                 </StepContent>
             </Step>
-            <Step key="Reveal">
+            <Step key="reveal">
                 <StepLabel>Reveal</StepLabel>
                 <StepContent>
                     <Typography>At this point, the score of each player is overtly revealed on the blockchain and from this point on, no one is allowed to try and improve their scores.</Typography>
                     <div className={classes.actionsContainer}>
                         <div>
-                            <Chip icon={<AlarmIcon />} size="small" label={moment(tournament.deadline).fromNow(true) + " left"} />
+                            <Chip icon={<AlarmIcon />} size="small" label={deadlineLabel} />
                         </div>
                     </div>
                 </StepContent>
@@ -103,7 +114,7 @@ const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournam
                                 startIcon={<OndemandVideoIcon />}>
                                 Opponent {opponentScore && `(${opponentScore.score.toLocaleString()})`}
                             </Button>
-                            <Chip icon={<AlarmIcon />} size="small" label={moment(tournament.deadline).fromNow(true) + " left"} />
+                            <Chip icon={<AlarmIcon />} size="small" label={deadlineLabel} />
                         </div>
                     </div>
                 </StepContent>
