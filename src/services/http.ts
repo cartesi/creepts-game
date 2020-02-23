@@ -23,7 +23,7 @@ export const http = <T>(request: RequestInfo): Promise<IHttpResponse<T>> => {
         fetch(request)
             .then(res => {
                 response = res;
-                return res.json()
+                return res.status !== 204 ? res.json() : null;
             })
             .then(body => {
                 if (response.ok) {
