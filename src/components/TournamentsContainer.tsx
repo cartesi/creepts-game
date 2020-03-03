@@ -14,6 +14,7 @@ import React from "react";
 import { AppBar, Button, Breadcrumbs, Grid, Link, Toolbar, Typography } from "@material-ui/core";
 import { Alert } from '@material-ui/lab';
 import { TournamentCard } from "./TournamentCard";
+import { AWrapper } from "./App";
 import { LoadingCard } from "./LoadingCard";
 import { TournamentPhase } from "../Tournament";
 import { useTournamentsService } from "../services/tournamentService";
@@ -32,7 +33,7 @@ export const TournamentsContainer: React.FC<IProps> = ({ name, phase, me }) => {
             <AppBar position="static">
                 <Toolbar>
                     <Breadcrumbs aria-label="breadcrumb">
-                        <Link color="inherit" href="/">
+                        <Link color="inherit" href="/" component={AWrapper}>
                             Home
                         </Link>
                         <Typography color="textPrimary">{name}</Typography>
@@ -57,7 +58,7 @@ export const TournamentsContainer: React.FC<IProps> = ({ name, phase, me }) => {
                             <Alert variant="outlined" severity="warning">No tournaments</Alert>
                         </Grid>                        
                         <Grid item>
-                            <Button variant="outlined" color="secondary" fullWidth size="large" href="/join">Join Tournament</Button>
+                            <Button variant="outlined" color="secondary" fullWidth size="large" href="/join" component={AWrapper}>Join Tournament</Button>
                         </Grid>                        
                     </Grid>
                 )

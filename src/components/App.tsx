@@ -14,7 +14,7 @@ declare var __GAME_ONLY__: boolean;
 import React from "react";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { useRoutes } from "hookrouter";
+import { A, useRoutes, HookRouter } from "hookrouter";
 
 import Index from "./Index";
 import { TournamentsContainer } from "./TournamentsContainer";
@@ -31,6 +31,14 @@ const routes = {
     "/my": () => <TournamentsContainer name="My Tournaments" me={true} />,
     "/tournaments/:id": ({id}) => <TournamentContainer id={id} />,
     "/tournaments/:tournamentId/scores/:id": ({ tournamentId, id }) => <Replay tournamentId={ tournamentId } id={ id } />
+};
+
+export class AWrapper extends React.Component<HookRouter.AProps> {
+    render() {
+        return (
+            <A {...this.props} />
+        )
+    }
 };
 
 export const App = () => {
@@ -58,6 +66,18 @@ export const App = () => {
             MuiPaper: {
                 outlined: {
                     borderColor: '#0069c0'
+                }
+            },
+            MuiButton: {
+                root: {
+                    background: 'linear-gradient(45deg, rgba(0,0,0,0.8), rgba(26,35,126,0.8))',
+                    borderColor: '#2196f3',
+                    color: '#2196f3',
+                    height: 48,
+                    padding: '0 30px',
+                    '&:hover': {
+                        border: '3px solid',
+                    }
                 }
             }
         }

@@ -14,6 +14,7 @@ import React from "react";
 import moment from "moment";
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Box, Button, Chip, Grid, Paper, Stepper, Step, StepContent, StepLabel, Typography } from '@material-ui/core';
+import { AWrapper } from "./App";
 import { MapThumbnail } from "./MapThumbnail";
 import { Tournament, TournamentScore, TournamentPhase } from "../Tournament";
 
@@ -82,6 +83,7 @@ const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournam
                                 variant="outlined"
                                 className={classes.button} 
                                 startIcon={<VideogameAssetIcon />}
+                                component={AWrapper}
                                 href={`/tournaments/${tournament.id}`}>
                                 {score ? `Play Again (${score.score.toLocaleString()})` : 'Play'}
                             </Button>}
@@ -107,13 +109,15 @@ const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournam
                     <Typography>This is the phase in which the single-elimination process happens. Player claims are organized on a bracket structure where the loser of each match-up is immediately eliminated. Each winner is promoted to the next round in the bracket until the final match-up, whose winner becomes the tournament champion.</Typography>
                     <div className={classes.actionsContainer}>
                         <div>
-                            <Button
+                            {opponentScore && <Button
                                 color="secondary"
                                 variant="outlined"
                                 className={classes.button}
+                                component={AWrapper}
+                                href={`/tournaments/${tournament.id}/scores/${tournament.currentOpponent}`}
                                 startIcon={<OndemandVideoIcon />}>
                                 Opponent {opponentScore && `(${opponentScore.score.toLocaleString()})`}
-                            </Button>
+                            </Button>}
                             <Chip icon={<AlarmIcon />} size="small" label={deadlineLabel} />
                         </div>
                     </div>
@@ -129,6 +133,8 @@ const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournam
                                 color="secondary"
                                 variant="outlined"
                                 className={classes.button}
+                                component={AWrapper}
+                                href={`/tournaments/${tournament.id}/scores/${tournament.winner}`}
                                 startIcon={<EmojiEventsIcon />}>
                                 Winner {winningScore && `(${winningScore.score.toLocaleString()})`}
                             </Button>
