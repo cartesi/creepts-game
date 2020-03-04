@@ -16,6 +16,7 @@ interface ServiceInit {
 
 interface ServiceLoading {
     status: 'loading';
+    progress?: number
 }
 
 interface ServiceLoaded<T> {

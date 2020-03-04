@@ -22,7 +22,8 @@ export enum TournamentPhase {
 export type TournamentScore = {
     score?: number,
     waves?: number,
-    log?: LogsObject
+    log?: LogsObject,
+    progress?: number
 }
 
 interface Dictionary<T> {

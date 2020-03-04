@@ -18,9 +18,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
  * Full screen loading with a 1 z-index
  */
 
-interface LoadingProps { opacity?: number };
+interface LoadingProps { progress?: number, opacity?: number };
 
-export const Loading: React.FC<LoadingProps> = ({ opacity = 1.0 }) => {
+export const Loading: React.FC<LoadingProps> = ({ progress, opacity = 1.0 }) => {
     return (
         <div style={{
             height: "100vh",
@@ -30,7 +30,10 @@ export const Loading: React.FC<LoadingProps> = ({ opacity = 1.0 }) => {
             zIndex: 1
             }}>
             <Backdrop open={true}>
-                <CircularProgress color="secondary" />
+                <CircularProgress
+                    color="secondary"
+                    variant={progress ? "static" : "indeterminate"}
+                    value={progress} />
             </Backdrop>
         </div>
     );

@@ -10,7 +10,7 @@
 // specific language governing permissions and limitations under the License.
 
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Service } from "./service";
 import { get, put } from "./http";
 import { apiUrl } from "./config";
@@ -39,21 +39,60 @@ export const useScoreSubmitService = (tournamentId: string, payload: TournamentS
     return result;
 };
 
-export const useScoreService = (tournamentId: string, id: string) => {
-    const [result, setResult] = useState<Service<[Tournament, TournamentScore]>>({
-        status: "loading"
-    });
+const useInterval = (callback: () => void, delay: number) => {
+    const savedCallback = useRef<() => void>();
+
+    // Remember the latest function.
+    useEffect(() => {
+        savedCallback.current = callback;
+    }, [callback]);
 
     useEffect(() => {
+        function tick() {
+            savedCallback.current();
+        }
+        if (delay !== null) {
+            let id = setInterval(tick, delay);
+            return () => clearInterval(id);
+        }
+    }, [delay]);
+};
+
+export const useScoreService = (tournamentId: string, id: string) => {
+    const [result, setResult] = useState<Service<[Tournament, TournamentScore]>>({ status: "loading" });
+    const [continuePolling, setContinuePolling] = useState(true);
+
+    // download of log takes time, we must poll every N milliseconds
+    const pollingInterval = 1000;
+
+    const fetchData = () => {
+        // first get the tournament
         getTournament(tournamentId)
             .then(response => {
                 const tournament = response.parsedBody;
+
                 getScore(tournamentId, id)
-                    .then(response => setResult({ status: "loaded", payload: [tournament, response.parsedBody]}))
-                    .catch(error => setResult({ status: "error", error }));
+                    .then(response => {
+                        if (response.status == 202) {
+                            const body = response.parsedBody;
+                            setResult({ status: "loading", progress: body.progress });
+                        } else {
+                            setResult({ status: "loaded", payload: [tournament, response.parsedBody] });
+                            setContinuePolling(false);
+                        }                        
+                    })
+                    .catch(error => {
+                        setResult({ status: "error", error: new Error("score: " + error.message) });
+                        setContinuePolling(false);
+                    });
             })
-            .catch(error => setResult({ status: "error", error }));
-    }, []);
+            .catch(error => {
+                setResult({ status: "error", error: new Error("tournament: " + error.message) });
+                setContinuePolling(false);
+            });
+    };
+
+    useInterval(fetchData, continuePolling ? pollingInterval : null);
 
     return result;
 };
