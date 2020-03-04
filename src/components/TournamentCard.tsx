@@ -85,9 +85,10 @@ const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournam
                                 startIcon={<VideogameAssetIcon />}
                                 component={AWrapper}
                                 href={`/tournaments/${tournament.id}`}>
-                                {score ? `Play Again (${score.score.toLocaleString()})` : 'Play'}
+                                {score ? `Play Again` : 'Play'}
                             </Button>}
-                            <Chip icon={<AlarmIcon />} size="small" label={deadlineLabel} />
+                            {score && <Chip icon={<EmojiEventsIcon />} size="medium" label={`${score.score.toLocaleString()} points`} />}
+                            <Chip icon={<AlarmIcon />} size="medium" label={deadlineLabel} />
                         </div>
                     </div>
                 </StepContent>
@@ -98,7 +99,7 @@ const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournam
                     <Typography>At this point, the score of each player is overtly revealed on the blockchain and from this point on, no one is allowed to try and improve their scores.</Typography>
                     <div className={classes.actionsContainer}>
                         <div>
-                            <Chip icon={<AlarmIcon />} size="small" label={deadlineLabel} />
+                            <Chip icon={<AlarmIcon />} size="medium" label={deadlineLabel} />
                         </div>
                     </div>
                 </StepContent>
@@ -116,9 +117,10 @@ const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournam
                                 component={AWrapper}
                                 href={`/tournaments/${tournament.id}/scores/${tournament.currentOpponent}`}
                                 startIcon={<OndemandVideoIcon />}>
-                                Opponent {opponentScore && `(${opponentScore.score.toLocaleString()})`}
+                                Opponent
                             </Button>}
-                            <Chip icon={<AlarmIcon />} size="small" label={deadlineLabel} />
+                            {opponentScore && <Chip icon={<EmojiEventsIcon />} size="medium" label={`${opponentScore.score.toLocaleString()} points`} />}
+                            <Chip icon={<AlarmIcon />} size="medium" label={deadlineLabel} />
                         </div>
                     </div>
                 </StepContent>
@@ -136,8 +138,9 @@ const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournam
                                 component={AWrapper}
                                 href={`/tournaments/${tournament.id}/scores/${tournament.winner}`}
                                 startIcon={<EmojiEventsIcon />}>
-                                Winner {winningScore && `(${winningScore.score.toLocaleString()})`}
+                                Winner
                             </Button>
+                            {winningScore && <Chip icon={<EmojiEventsIcon />} size="medium" label={`${winningScore.score.toLocaleString()} points`} />}
                         </div>
                     </div>
                 </StepContent>
