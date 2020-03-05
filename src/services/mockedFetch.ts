@@ -11,6 +11,7 @@
 
 
 import allTournaments from "./tournaments.json";
+import logShort from "./mock/log_short.json";
 import queryString from "query-string";
 import { TournamentPhase, Tournament } from "../Tournament";
 
@@ -28,6 +29,26 @@ const accountHandler = (_url: string) => {
         }, DELAY);
     });
 };
+
+let globalProgress = 0;
+
+const scoreHandler = (_url: string, id: string, player: string) => {
+    return new Promise<Response>((resolve, reject) => {
+        setTimeout(() => {
+            globalProgress += 10;
+            if (globalProgress == 100) {
+                globalProgress = 0;
+                const body = JSON.stringify({ log: logShort });
+                const response = new Response(body);
+                resolve(response);
+            } else {
+                const body = JSON.stringify({ progress: globalProgress });
+                const response = new Response(body, { status: 202 });
+                resolve(response);
+            }
+        }, DELAY);
+    });
+}
 
 const tournamentHandler = (_url: string, id: string) => {
     return new Promise<Response>((resolve, _reject) => {
@@ -71,7 +92,9 @@ const tournamentsHandler = (url: string) => {
 
 export default (request: RequestInfo) => {
     const url = (request as Request).url;
+    console.log(url);
     const routes: [RegExp, (...args: string[]) => Promise<Response>][] = [
+        [ /\/tournaments\/(.+)\/scores\/(.+)/, scoreHandler ],
         [ /\/tournaments\/(.+)/, tournamentHandler ],
         [ /\/tournaments(.*)/, tournamentsHandler ],
         [ /\/me/, accountHandler ],
