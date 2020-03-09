@@ -60,8 +60,8 @@ export class LaunchTurretActor extends TurretActor {
 
         this.scene.tweens.add({
             targets: this.canon,
-            x: this.canon.x - 5 * Math.sin(this.canon.rotation),
-            y: this.canon.y + 5 * Math.cos(this.canon.rotation),
+            x: -5 * Math.sin(this.canon.rotation),
+            y: 5 * Math.cos(this.canon.rotation),
             ease: Phaser.Math.Easing.Cubic.Out,
             duration: GameVars.timeStepFactor === 1 ? 300 : 75,
             yoyo: true
@@ -74,8 +74,8 @@ export class LaunchTurretActor extends TurretActor {
 
         this.scene.tweens.add({
             targets: this.canon,
-            x: this.canon.x - 5 * Math.sin(this.canon.rotation),
-            y: this.canon.y + 5 * Math.cos(this.canon.rotation),
+            x: -5 * Math.sin(this.canon.rotation),
+            y: 5 * Math.cos(this.canon.rotation),
             ease: Phaser.Math.Easing.Cubic.Out,
             duration: GameVars.timeStepFactor === 1 ? 80 : 20,
             yoyo: true
