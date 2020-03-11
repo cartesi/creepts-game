@@ -10,11 +10,14 @@
 // specific language governing permissions and limitations under the License.
 
 
-import React, { Component } from "react";
-import { Button, Grid } from '@material-ui/core';
+import React from "react";
+import { Button, Grid, Paper } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import { AWrapper } from './App';
+import { AccountInformation } from './AccountInformation';
+import { useAccountService } from '../services/accountService';
+import { Loading } from "./Loading";
 
-interface IState { }
 interface IProps { }
 
 const styles = {
@@ -28,22 +31,45 @@ const styles = {
     }
 };
 
-export default class Index extends Component<IProps, IState> {
-    render() {
-        return (
-            <Grid container direction="column" alignItems="center" justify="space-between" style={styles.grid}>
-                <Grid item>
-                    <img src="/assets/img/logo.png" width="350px" />
-                </Grid>
-                <Grid item>
-                    <Button fullWidth size="large" href="/play" component={AWrapper}>Play</Button>
-                    <Button fullWidth size="large" href="/join" component={AWrapper}>Join Tournament</Button>
-                    <Button fullWidth size="large" href="/my" component={AWrapper}>My Tournaments</Button>
-                </Grid>
-                <Grid item>
-                    <img src="/assets/img/footer.png" width="400px" />
+export const Index: React.FC<IProps> = (props) => {
+
+    // fetch account information
+    const accountService = useAccountService();
+    const funded = accountService.status == 'loaded' && accountService.payload.balance > 0;
+    
+    return (
+        <Grid container direction="column" alignItems="center" justify="space-between" style={styles.grid}>
+            <Grid item>
+                <img src="/assets/img/logo.png" width="350px" />
+            </Grid>
+            <Grid item>
+                <Grid container item direction="column" alignItems="center" style={{ padding: '10px' }} spacing={1}>
+                    {accountService.status == 'loading' &&
+                    <Loading />
+                    }
+                    {accountService.status == 'error' && 
+                    <Alert severity="error" variant="outlined" style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
+                        {accountService.error.message}
+                    </Alert>
+                    }
+                    {accountService.status == 'loaded' &&
+                    <AccountInformation
+                        address={accountService.payload.address}
+                        balance={accountService.payload.balance}
+                    />
+                    }
                 </Grid>
             </Grid>
-        );
-    }
+            {funded &&
+            <Grid item>
+                <Button fullWidth size="large" href="/play" component={AWrapper}>Play</Button>
+                <Button fullWidth size="large" href="/join" component={AWrapper}>Join Tournament</Button>
+                <Button fullWidth size="large" href="/my" component={AWrapper}>My Tournaments</Button>
+            </Grid>
+            }
+            <Grid item>
+                <img src="/assets/img/footer.png" width="400px" />
+            </Grid>
+        </Grid>
+    );
 };

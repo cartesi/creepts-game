@@ -16,7 +16,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { A, useRoutes, HookRouter } from "hookrouter";
 
-import Index from "./Index";
+import { Index } from "./Index";
 import { TournamentsContainer } from "./TournamentsContainer";
 import { TournamentContainer } from "./TournamentContainer";
 import { Replay } from "./Replay";
@@ -64,13 +64,16 @@ export const App = () => {
         },
         overrides: {
             MuiPaper: {
+                root: {
+                    backgroundColor: 'rgba(0,0,0,0.7)'
+                },
                 outlined: {
                     borderColor: '#0069c0'
                 }
             },
             MuiButton: {
                 root: {
-                    background: 'linear-gradient(45deg, rgba(0,0,0,0.8), rgba(26,35,126,0.8))',
+                    background: 'linear-gradient(45deg, rgba(0,0,0,0.7), rgba(26,35,126,0.7))',
                     borderColor: '#2196f3',
                     color: '#2196f3',
                     height: 48,

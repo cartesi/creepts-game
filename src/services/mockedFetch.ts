@@ -23,7 +23,10 @@ const response404 = new Response(null, { status: 404, statusText: "Not Found" })
 const accountHandler = (_url: string) => {
     return new Promise<Response>((resolve, _reject) => {
         setTimeout(() => {
-            const body = JSON.stringify({ account: ACCOUNT_ADDRESS });
+            const balance = 0;
+            // const balance = (100000000000000000000 - 534321);
+            // const balance = 10000000000000000;
+            const body = JSON.stringify({ address: ACCOUNT_ADDRESS, balance });
             const response = new Response(body);
             resolve(response);
         }, DELAY);
