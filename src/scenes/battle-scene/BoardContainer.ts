@@ -576,7 +576,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         if (!this.pauseMenu) {
             BattleManager.pause();
-            this.pauseMenu = new PauseMenu(this.scene);
+            this.pauseMenu = new PauseMenu(this.scene, true);
             this.add(this.pauseMenu);
 
             this.hideRangeCircles();
@@ -598,7 +598,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
     public showGameOverLayer(): void {
 
-        this.gameOverLayer = new GameOverLayer(this.scene);
+        this.gameOverLayer = new GameOverLayer(this.scene, true);
         this.add(this.gameOverLayer);
 
         this.hideTurretMenu();

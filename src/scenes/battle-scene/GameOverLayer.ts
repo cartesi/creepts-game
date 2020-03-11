@@ -20,7 +20,7 @@ import { MenuTitle } from "./gui/MenuTitle";
 
 export class GameOverLayer extends Phaser.GameObjects.Container {
 
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Phaser.Scene, showExit: boolean) {
         super(scene);
 
         // upper and lower margin for the dialog, and gap between elements
@@ -58,8 +58,8 @@ export class GameOverLayer extends Phaser.GameObjects.Container {
         box.add(restartButton);
         y += restartButton.height + gap / 2;
 
-        // exit button, just emit an exit event
-        if (!GameConstants.GAME_ONLY) {
+        if (showExit) {
+            // exit button, just emit an exit event
             const exitButton = new MenuButton(this.scene, "EXIT", () => GameManager.events.emit("exit") );
             exitButton.setPosition(0, y + (exitButton.height / 2));
             box.add(exitButton);

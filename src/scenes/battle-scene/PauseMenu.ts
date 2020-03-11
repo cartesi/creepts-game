@@ -19,7 +19,7 @@ import { MenuTitle } from "./gui/MenuTitle";
 
 export class PauseMenu extends Phaser.GameObjects.Container {
 
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Phaser.Scene, showExit: boolean) {
         
         super(scene);
 
@@ -49,7 +49,7 @@ export class PauseMenu extends Phaser.GameObjects.Container {
             buttons.push(new MenuButton(this.scene, "CHANGE MAP", () => GameManager.enterMapScene()));
         }
 
-        if (!GameConstants.GAME_ONLY) {
+        if (showExit) {
             // exitButton only if running with full UI (tournaments)
             buttons.push(new MenuButton(this.scene, "EXIT", () => GameManager.events.emit("exit")));
         }

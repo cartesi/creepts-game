@@ -24,7 +24,7 @@ module.exports = (env, argv) => {
 	const appConfig = {
 		name: 'app',
 		entry: {
-			app: './src/app.tsx'
+			app: './src/app.ts'
 		},
 		devtool: 'source-map',
 		output: {
@@ -62,7 +62,7 @@ module.exports = (env, argv) => {
 			new BundleTracker({filename: './stats-app.json'}),
 			// new BundleAnalyzer(),
 			new CleanWebpackPlugin({
-				cleanOnceBeforeBuildPatterns: ['**/*', '!env*', '!*-verifier-*', '!levels-*']
+				cleanOnceBeforeBuildPatterns: ['**/*']
 			}),
 			new CopyWebpackPlugin([
 				{ from: 'assets/', to: 'assets/' }
@@ -71,7 +71,6 @@ module.exports = (env, argv) => {
 				template: 'index.html'
 			}),
 			new webpack.DefinePlugin({
-				__GAME_ONLY__: JSON.stringify(env && env.GAME_ONLY || false),
 				__DEVELOPMENT__: JSON.stringify(argv.mode === 'development')
 			})
 		],
@@ -81,7 +80,7 @@ module.exports = (env, argv) => {
 			}
 		},
 		resolve: {
-			extensions: ['.ts', '.tsx', '.js'],
+			extensions: ['.ts', '.js'],
 			alias: {
 				phaser: phaser
 			}
