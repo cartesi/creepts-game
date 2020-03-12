@@ -12,7 +12,7 @@
             "totalRounds": 7,
             "lastRound": 2,
             "winner": "0xba4ff7070fb59d83aab639c8833bb7c39e4c1e40",
-            "deadline": "2019-07-31T00:00:00",
+            "deadline": "2020-07-31T00:00:00",
             "scores": {
                 "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077": {
                     "score": 76865,
@@ -33,7 +33,7 @@
             "currentRound": 5,
             "totalRounds": 8,
             "currentOpponent": "0xe7b54494ef9c1d25448a6fc8e58e47713817755b",
-            "deadline": "2019-09-02T00:00:00",
+            "deadline": "2020-09-02T00:00:00",
             "scores": {
                 "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077": {
                     "score": 76865,
@@ -51,7 +51,7 @@
             "map": "waiting_line",
             "playerCount": 167,
             "phase": "reveal",
-            "deadline": "2019-09-30T00:00:00",
+            "deadline": "2020-09-30T00:00:00",
             "scores": {
                 "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077": {
                     "score": 76865,
@@ -67,7 +67,7 @@
             "map": "original",
             "playerCount": 45,
             "phase": "commit",
-            "deadline": "2019-09-30T00:00:00",
+            "deadline": "2020-09-30T00:00:00",
             "scores": {
                 "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077": {
                     "score": 76865,
@@ -81,7 +81,7 @@
             "map": "original",
             "playerCount": 5,
             "phase": "commit",
-            "deadline": "2019-10-31T00:00:00",
+            "deadline": "2020-10-31T00:00:00",
             "scores": {
                 "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077": {
                     "score": 7624,
@@ -95,7 +95,7 @@
             "map": "waiting_line",
             "playerCount": 16,
             "phase": "commit",
-            "deadline": "2019-10-15T14:00:00"
+            "deadline": "2020-10-15T14:00:00"
         },
         {
             "id": "7",
@@ -103,7 +103,7 @@
             "map": "turn_round",
             "playerCount": 0,
             "phase": "commit",
-            "deadline": "2019-10-15T14:00:00",
+            "deadline": "2020-10-15T14:00:00",
             "scores": {
                 "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077": {
                     "score": 817654,
@@ -117,7 +117,7 @@
             "map": "hurry",
             "playerCount": 0,
             "phase": "commit",
-            "deadline": "2019-10-15T14:00:00",
+            "deadline": "2020-10-15T14:00:00",
             "scores": {
                 "0x036f5cf5ca56c6b5650c9de2a41d94a3fe1e2077": {
                     "score": 866568,
@@ -131,7 +131,7 @@
             "map": "civyshk_yard",
             "playerCount": 0,
             "phase": "commit",
-            "deadline": "2019-10-15T14:00:00"
+            "deadline": "2020-10-15T14:00:00"
         },
         {
             "id": "10",
@@ -139,7 +139,7 @@
             "map": "civyshk_2y",
             "playerCount": 0,
             "phase": "commit",
-            "deadline": "2019-10-15T14:00:00"
+            "deadline": "2020-10-15T14:00:00"
         },
         {
             "id": "11",
@@ -147,7 +147,7 @@
             "map": "civyshk_line5",
             "playerCount": 0,
             "phase": "commit",
-            "deadline": "2019-10-15T14:00:00"
+            "deadline": "2020-10-15T14:00:00"
         },
         {
             "id": "12",
@@ -155,7 +155,7 @@
             "map": "civyshk_labyrinth",
             "playerCount": 0,
             "phase": "commit",
-            "deadline": "2019-10-15T14:00:00"
+            "deadline": "2020-10-15T14:00:00"
         }
     ]
 }
