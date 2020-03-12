@@ -66,7 +66,7 @@ export const Index: React.FC<IProps> = (props) => {
             <Loading />
             }
 
-            {!started &&
+            {(!started && accountService.status == "loaded" && tournamentService.status == "loaded") &&
             <Grid item>
                 <Button onClick={() => setStarted(true)}>Get Started!</Button>
             </Grid>
