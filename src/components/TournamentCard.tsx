@@ -63,7 +63,7 @@ const TournamentPhaseComponent: React.SFC<ITournamentPhaseProps> = ({ account, b
     const now = moment();
     
     // player can play if tournament is still in commit phase and deadline is ahead of now, and he has funds
-    const canPlay: boolean = phase == TournamentPhase.commit && (deadline > now) && balance > 0 || true;
+    const canPlay: boolean = phase == TournamentPhase.commit && (deadline > now);
 
     // label of deadline
     const deadlineLabel = deadline > now ? `${deadline.fromNow(true)} left` : `expired ${deadline.fromNow(true)} ago`;
@@ -82,6 +82,7 @@ const TournamentPhaseComponent: React.SFC<ITournamentPhaseProps> = ({ account, b
                         {canPlay && <Grid item><Button
                             color="secondary"
                             variant="outlined"
+                            disabled={balance == 0}
                             startIcon={<VideogameAssetIcon />}
                             component={AWrapper}
                             href={`/tournaments/${tournament.id}`}>
