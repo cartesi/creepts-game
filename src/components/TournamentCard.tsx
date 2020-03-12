@@ -19,18 +19,24 @@ import { MapThumbnail } from "./MapThumbnail";
 import { Tournament, TournamentScore, TournamentPhase } from "../Tournament";
 
 import AlarmIcon from '@material-ui/icons/Alarm';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import OndemandVideoIcon from '@material-ui/icons/OndemandVideo';
 import VideogameAssetIcon from '@material-ui/icons/VideogameAsset';
 
-export interface TournamentCardProps {
+interface ITournamentCardProps {
     account: string,
+    balance: number,
     tournament: Tournament,
     score?: TournamentScore,
     opponentScore?: TournamentScore,
     winningScore?: TournamentScore
-}
+};
+
+interface ITournamentPhaseProps {
+    tournament: Tournament,
+    account: string,
+    balance: number
+};
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -50,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournament }> = ({ account, tournament }) => {
+const TournamentPhaseComponent: React.SFC<ITournamentPhaseProps> = ({ account, balance, tournament }) => {
     const { phase } = tournament;
 
     const score = tournament.scores && tournament.scores[account];
@@ -63,8 +69,8 @@ const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournam
     const deadline = moment(tournament.deadline);
     const now = moment();
     
-    // player can play if tournament is still in commit phase and deadline is ahead of now
-    const canPlay: boolean = phase == TournamentPhase.commit && (deadline > now);
+    // player can play if tournament is still in commit phase and deadline is ahead of now, and he has funds
+    const canPlay: boolean = phase == TournamentPhase.commit && (deadline > now) && balance > 0;
 
     // label of deadline
     const deadlineLabel = deadline > now ? `${deadline.fromNow(true)} left` : `expired ${deadline.fromNow(true)} ago`;
@@ -149,7 +155,7 @@ const TournamentPhaseComponent: React.SFC<{ account: string, tournament: Tournam
     );
 };
 
-export const TournamentCard: React.SFC<TournamentCardProps> = ({ account, tournament }) => {
+export const TournamentCard: React.SFC<ITournamentCardProps> = ({ account, balance, tournament }) => {
 
     const playersText = tournament.playerCount === 0 ? "No players yet" : (tournament.playerCount === 1 ? `${tournament.playerCount} player` : `${tournament.playerCount} players`);
     return (
@@ -161,7 +167,7 @@ export const TournamentCard: React.SFC<TournamentCardProps> = ({ account, tourna
                             <Box m={2}>
                                 <Typography variant="h5">{tournament.name}</Typography>
                                 <Typography>{playersText}</Typography>
-                                <TournamentPhaseComponent account={account} tournament={tournament} />
+                                <TournamentPhaseComponent account={account} balance={balance} tournament={tournament} />
                             </Box>
                         </Grid>                        
                     </Grid>

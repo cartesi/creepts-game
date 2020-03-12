@@ -13,7 +13,6 @@
 import React, { useState } from "react";
 import { Button, Grid } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
-import { AWrapper } from './App';
 import { AccountInformation } from './AccountInformation';
 import { useAccountService } from '../services/accountService';
 import { Loading } from "./Loading";
@@ -73,7 +72,7 @@ export const Index: React.FC<IProps> = (props) => {
             </Grid>
             }
 
-            {(tournamentService.status === "loaded" && accountService.status === "loaded" && funded && started) &&
+            {(tournamentService.status === "loaded" && accountService.status === "loaded" && started) &&
                 ( tournamentService.payload.results.length > 0 ? 
                     <React.Fragment>
                         {tournamentService.payload.results.map((tournament, index) => (
@@ -81,6 +80,7 @@ export const Index: React.FC<IProps> = (props) => {
                                 key={index}
                                 tournament={tournament}
                                 account={accountService.payload.address}
+                                balance={accountService.payload.balance}
                             />
                         ))}
                     </React.Fragment> : 
