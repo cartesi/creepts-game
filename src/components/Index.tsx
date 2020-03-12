@@ -10,24 +10,24 @@
 // specific language governing permissions and limitations under the License.
 
 
-import React from "react";
-import { Button, Grid, Paper } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import React, { useState } from "react";
+import { Button, Grid } from '@material-ui/core';
+import { Alert, AlertTitle } from '@material-ui/lab';
 import { AWrapper } from './App';
 import { AccountInformation } from './AccountInformation';
 import { useAccountService } from '../services/accountService';
 import { Loading } from "./Loading";
+import { TournamentCard } from "./TournamentCard";
+import { useTournamentsService } from "../services/tournamentService";
 
 interface IProps { }
 
 const styles = {
     grid: {
-        height: "100vh",
-        padding: "30px",
+        minHeight: "100vh",
+        marginTop: "15px",
         backgroundImage: `url(${"/assets/img/background.png"})`,
         backgroundSize: "100%",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat"
     }
 };
 
@@ -36,9 +36,15 @@ export const Index: React.FC<IProps> = (props) => {
     // fetch account information
     const accountService = useAccountService();
     const funded = accountService.status == 'loaded' && accountService.payload.balance > 0;
+
+    // fetch tournaments
+    const tournamentService = useTournamentsService();
+
+    // get started button
+    const [started, setStarted] = useState(false);
     
     return (
-        <Grid container direction="column" alignItems="center" justify="space-between" style={styles.grid}>
+        <Grid container direction="column" alignItems="center" justify="flex-start" style={styles.grid} spacing={1}>
             {accountService.status == "loaded" &&
                 <AccountInformation
                     address={accountService.payload.address}
@@ -48,25 +54,50 @@ export const Index: React.FC<IProps> = (props) => {
             <Grid item style={{ flexGrow: 2 }}>
                 <img src="/assets/img/logo.png" width="350px" />
             </Grid>
+            {accountService.status == "error" &&
             <Grid item>
-                <Grid container item direction="column" alignItems="center" style={{ padding: '10px' }} spacing={1}>
-                    {accountService.status == 'loading' &&
-                    <Loading />
-                    }
-                    {accountService.status == 'error' && 
-                    <Alert severity="error" variant="outlined" style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
-                        {accountService.error.message}
-                    </Alert>
-                    }
-                </Grid>
-            </Grid>
-            {funded &&
-            <Grid item>
-                <Button fullWidth size="large" href="/play" component={AWrapper}>Play</Button>
-                <Button fullWidth size="large" href="/join" component={AWrapper}>Join Tournament</Button>
-                <Button fullWidth size="large" href="/my" component={AWrapper}>My Tournaments</Button>
+                <Alert severity="error" variant="outlined" style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
+                    <AlertTitle>Error querying account information</AlertTitle>
+                    {accountService.error.message}
+                </Alert>
             </Grid>
             }
+            
+            {(tournamentService.status == "loading" || accountService.status == "loading") &&
+            <Loading />
+            }
+
+            {!started &&
+            <Grid item>
+                <Button onClick={() => setStarted(true)}>Get Started!</Button>
+            </Grid>
+            }
+
+            {(tournamentService.status === "loaded" && accountService.status === "loaded" && funded && started) &&
+                ( tournamentService.payload.results.length > 0 ? 
+                    <React.Fragment>
+                        {tournamentService.payload.results.map((tournament, index) => (
+                            <TournamentCard
+                                key={index}
+                                tournament={tournament}
+                                account={accountService.payload.address}
+                            />
+                        ))}
+                    </React.Fragment> : 
+                    <Grid item>
+                        <Alert variant="outlined" severity="warning" style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>No tournaments</Alert>
+                    </Grid>
+                )
+            }
+            {tournamentService.status === "error" && (
+            <Grid item>
+                <Alert variant="outlined" severity="error" style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
+                    <AlertTitle>Error querying tournaments</AlertTitle>
+                    {tournamentService.error.message}
+                </Alert>
+            </Grid>
+            )}
+
             <Grid item>
                 <img src="/assets/img/footer.png" width="400px" />
             </Grid>

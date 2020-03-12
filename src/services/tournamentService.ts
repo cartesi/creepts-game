@@ -25,7 +25,7 @@ export const getTournament = (id: string) => {
     return get<Tournament>(`${apiUrl}/tournaments/${id}`);
 }
 
-export const getTournaments = (phase: TournamentPhase, me: boolean) => {
+export const getTournaments = (phase?: TournamentPhase, me?: boolean) => {
     const qs = queryString.stringify({ phase, me });
     const url = `${apiUrl}/tournaments${qs && '?' + qs}`;
     return get<Tournaments>(url);
@@ -45,7 +45,7 @@ export const useTournamentService = (id: string) => {
     return result;
 };
 
-export const useTournamentsService = (phase: TournamentPhase, me: boolean) => {
+export const useTournamentsService = (phase?: TournamentPhase, me?: boolean) => {
     const [result, setResult] = useState<Service<Tournaments>>({
         status: "loading"
     });
