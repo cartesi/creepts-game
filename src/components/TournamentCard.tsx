@@ -16,12 +16,15 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Box, Button, Chip, Grid, Paper, Stepper, Step, StepContent, StepLabel, Typography } from '@material-ui/core';
 import { AWrapper } from "./App";
 import { MapThumbnail } from "./MapThumbnail";
+import { ReadMore } from "./ReadMore";
 import { Tournament, TournamentScore, TournamentPhase } from "../Tournament";
 
 import AlarmIcon from '@material-ui/icons/Alarm';
+import HelpIcon from '@material-ui/icons/Help';
 import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import OndemandVideoIcon from '@material-ui/icons/OndemandVideo';
 import VideogameAssetIcon from '@material-ui/icons/VideogameAsset';
+import GradeIcon from '@material-ui/icons/Grade';
 
 interface ITournamentCardProps {
     account: string,
@@ -42,17 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             width: '100%',
-        },
-        button: {
-            marginTop: theme.spacing(1),
-            marginRight: theme.spacing(1),
-        },
-        actionsContainer: {
-            marginBottom: theme.spacing(1),
-        },
-        resetContainer: {
-            padding: theme.spacing(3),
-        },
+        }
     }),
 );
 
@@ -70,85 +63,91 @@ const TournamentPhaseComponent: React.SFC<ITournamentPhaseProps> = ({ account, b
     const now = moment();
     
     // player can play if tournament is still in commit phase and deadline is ahead of now, and he has funds
-    const canPlay: boolean = phase == TournamentPhase.commit && (deadline > now) && balance > 0;
+    const canPlay: boolean = phase == TournamentPhase.commit && (deadline > now) && balance > 0 || true;
 
     // label of deadline
     const deadlineLabel = deadline > now ? `${deadline.fromNow(true)} left` : `expired ${deadline.fromNow(true)} ago`;
 
     const classes = useStyles({});
     return (
-        <Stepper activeStep={steps.indexOf(phase)} orientation="vertical">
+        <Stepper activeStep={steps.indexOf(phase)} orientation="vertical" style={{ backgroundColor: 'rgba(0,0,0,0)' }}>
             <Step key="commit">
                 <StepLabel>Commit</StepLabel>
                 <StepContent>
-                    <Typography>The player can choose to participate in any tournament. The selection will set the maze and the player will be able to play repeated times in order to improve their score; At the end of each game, information about the score and player moves are sent to the blockchain.</Typography>
-                    <div className={classes.actionsContainer}>
-                        <div>
-                            {canPlay && <Button
-                                color="secondary" 
-                                variant="outlined"
-                                className={classes.button} 
-                                startIcon={<VideogameAssetIcon />}
-                                component={AWrapper}
-                                href={`/tournaments/${tournament.id}`}>
-                                {score ? `Play Again` : 'Play'}
-                            </Button>}
-                            {score && <Chip icon={<EmojiEventsIcon />} size="medium" label={`${score.score.toLocaleString()} points`} />}
-                            <Chip icon={<AlarmIcon />} size="medium" label={deadlineLabel} />
-                        </div>
-                    </div>
+                    <Typography>During the commit phase you can play the game.</Typography>
+                    <ReadMore label="Learn more">
+                        <Typography>After you die your actions during the game and your score are submitted to your Cartesi node, and later sent to the blockchain during the Reveal phase. If you think you can do better you can play again, your node will submit the best score you get.</Typography>
+                    </ReadMore>
+                    <Grid container spacing={1} alignItems="center">
+                        {canPlay && <Grid item><Button
+                            color="secondary"
+                            variant="outlined"
+                            startIcon={<VideogameAssetIcon />}
+                            component={AWrapper}
+                            href={`/tournaments/${tournament.id}`}>
+                            {score ? `Play Again` : 'Play'}
+                        </Button></Grid>}
+                        {score && <Grid item><Chip icon={<GradeIcon />} size="medium" label={`${score.score.toLocaleString()} points`} /></Grid>}
+                        <Grid item><Chip icon={<AlarmIcon />} size="medium" label={deadlineLabel} /></Grid>
+                    </Grid>
                 </StepContent>
             </Step>
             <Step key="reveal">
                 <StepLabel>Reveal</StepLabel>
                 <StepContent>
-                    <Typography>At this point, the score of each player is overtly revealed on the blockchain and from this point on, no one is allowed to try and improve their scores.</Typography>
-                    <div className={classes.actionsContainer}>
-                        <div>
-                            <Chip icon={<AlarmIcon />} size="medium" label={deadlineLabel} />
-                        </div>
-                    </div>
+                    <Typography>During the reveal phase your game actions and your score are sent to the blockchain.</Typography>
+                    <ReadMore label="Learn more">
+                        <Typography>Your game actions are uploaded to the blockchain and your score is calculated by your Cartesi node emulator. At this point, the scores of all players are revealed and from this point on, no one is allowed to try to improve their scores. The next phase will be reponsible to confront every player pairwise to declare the winner.</Typography>
+                    </ReadMore>
+                    <Grid container spacing={1} alignItems="center">
+                        <Grid item><Chip icon={<AlarmIcon />} size="medium" label={deadlineLabel} /></Grid>
+                    </Grid>
                 </StepContent>
             </Step>
             <Step key="round">
                 <StepLabel>Round</StepLabel>
                 <StepContent>
-                    <Typography>This is the phase in which the single-elimination process happens. Player claims are organized on a bracket structure where the loser of each match-up is immediately eliminated. Each winner is promoted to the next round in the bracket until the final match-up, whose winner becomes the tournament champion.</Typography>
-                    <div className={classes.actionsContainer}>
-                        <div>
-                            {opponentScore && <Button
+                    <Typography>During this phase a pair of players is confronted to eliminate the lower score.</Typography>
+                    <ReadMore label="Learn more">
+                        <Typography>Players are organized into a bracket structure and each pair of players are confronted. If your opponent is cheating a iteractive verification game is automatically triggered by our Cartesi node to eliminate the cheater.</Typography>
+                    </ReadMore>
+                    <Grid container spacing={1} alignItems="center">
+                        {opponentScore &&
+                        <Grid item>
+                            <Button
                                 color="secondary"
                                 variant="outlined"
-                                className={classes.button}
                                 component={AWrapper}
                                 href={`/tournaments/${tournament.id}/scores/${tournament.currentOpponent}`}
                                 startIcon={<OndemandVideoIcon />}>
                                 Opponent
-                            </Button>}
-                            {opponentScore && <Chip icon={<EmojiEventsIcon />} size="medium" label={`${opponentScore.score.toLocaleString()} points`} />}
-                            <Chip icon={<AlarmIcon />} size="medium" label={deadlineLabel} />
-                        </div>
-                    </div>
+                            </Button>
+                        </Grid>}
+                        {opponentScore && <Grid item><Chip icon={<EmojiEventsIcon />} size="medium" label={`${opponentScore.score.toLocaleString()} points`} /></Grid>}
+                        <Grid item><Chip icon={<AlarmIcon />} size="medium" label={deadlineLabel} /></Grid>
+                    </Grid>
                 </StepContent>
             </Step>
             <Step key="end">
                 <StepLabel>End</StepLabel>
                 <StepContent>
-                    <Typography>The tournament enters the end state when the last match-up is concluded with a winner. From this point on, all players involved in the tournament are able to replay the game of the winner.</Typography>
-                    <div className={classes.actionsContainer}>
-                        <div>
+                    <Typography>This is the end of the tournament and a winner is declared!</Typography>
+                    <ReadMore>
+                        <Typography>When all pairs of players are confronted only one player is left, he is declared the winner. His gameplay can be replayed.</Typography>
+                    </ReadMore>
+                    <Grid container spacing={1} alignItems="center">
+                        <Grid item>
                             <Button
                                 color="secondary"
                                 variant="outlined"
-                                className={classes.button}
                                 component={AWrapper}
                                 href={`/tournaments/${tournament.id}/scores/${tournament.winner}`}
                                 startIcon={<EmojiEventsIcon />}>
                                 Winner
                             </Button>
-                            {winningScore && <Chip icon={<EmojiEventsIcon />} size="medium" label={`${winningScore.score.toLocaleString()} points`} />}
-                        </div>
-                    </div>
+                        </Grid>
+                        {winningScore && <Grid item><Chip icon={<EmojiEventsIcon />} size="medium" label={`${winningScore.score.toLocaleString()} points`} /></Grid>}
+                    </Grid>
                 </StepContent>
             </Step>
         </Stepper>

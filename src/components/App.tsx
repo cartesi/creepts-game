@@ -60,19 +60,29 @@ export const App = () => {
         overrides: {
             MuiPaper: {
                 root: {
-                    backgroundColor: 'rgba(0,0,0,0.7)'
+                    backgroundColor: 'rgba(0,0,0,0.85)'
                 },
                 outlined: {
                     borderColor: '#0069c0'
                 }
             },
+            MuiStepConnector: {
+                lineVertical: {
+                    minHeight: '12px'
+                }
+            },
+            MuiExpansionPanel: {
+                root: {
+                    backgroundColor: 'rgba(0,0,0,0)'
+                }
+            },
             MuiButton: {
                 root: {
                     background: 'linear-gradient(45deg, rgba(0,0,0,0.7), rgba(26,35,126,0.7))',
-                    borderColor: '#2196f3',
                     color: '#2196f3',
-                    height: 48,
-                    padding: '0 30px',
+                },
+                outlined: {
+                    borderColor: '#2196f3',
                     '&:hover': {
                         border: '3px solid',
                     }
