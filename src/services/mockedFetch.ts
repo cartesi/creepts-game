@@ -82,7 +82,9 @@ const tournamentsHandler = (url: string) => {
     if (parsedUrl.query.phase) {
         tournaments = tournaments.filter(phaseFilter(TournamentPhase[parsedUrl.query.phase as string]));
     }
-    tournaments = tournaments.filter(meFilter(parsedUrl.query.me === "true"));
+    if (parsedUrl.query.me) {
+        tournaments = tournaments.filter(meFilter(parsedUrl.query.me === "true"));
+    }    
 
     return new Promise<Response>((resolve, reject) => {
         setTimeout(() => {
