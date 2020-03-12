@@ -30,8 +30,6 @@ export const AccountInformation: React.FC<IProps> = ({ address, balance }) => {
         <React.Fragment>
             <Grid item>
                 <Chip icon={<LockIcon />} label={address} variant="outlined" style={{ backgroundColor: blackBackground }} />
-            </Grid>
-            <Grid item>
                 <Chip icon={<AccountBalanceWalletIcon />} label={balanceLabel} variant="outlined" style={{ backgroundColor }} />
             </Grid>
         </React.Fragment>

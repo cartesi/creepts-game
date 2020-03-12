@@ -39,7 +39,13 @@ export const Index: React.FC<IProps> = (props) => {
     
     return (
         <Grid container direction="column" alignItems="center" justify="space-between" style={styles.grid}>
-            <Grid item>
+            {accountService.status == "loaded" &&
+                <AccountInformation
+                    address={accountService.payload.address}
+                    balance={accountService.payload.balance}
+                />
+            }
+            <Grid item style={{ flexGrow: 2 }}>
                 <img src="/assets/img/logo.png" width="350px" />
             </Grid>
             <Grid item>
@@ -51,12 +57,6 @@ export const Index: React.FC<IProps> = (props) => {
                     <Alert severity="error" variant="outlined" style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
                         {accountService.error.message}
                     </Alert>
-                    }
-                    {accountService.status == 'loaded' &&
-                    <AccountInformation
-                        address={accountService.payload.address}
-                        balance={accountService.payload.balance}
-                    />
                     }
                 </Grid>
             </Grid>
