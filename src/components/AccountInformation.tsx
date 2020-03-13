@@ -26,11 +26,16 @@ export const AccountInformation: React.FC<IProps> = ({ address, balance }) => {
     const blackBackground = 'rgba(0,0,0,0.7)';
     const backgroundColor = balance > 0 ? blackBackground : 'rgba(255,0,0,0.7)';
     const balanceLabel = balance > 0 ? `${Units.convert(balance.toString(), 'wei', 'eth')} ETH` : '0 ETH (you need funds to play)';
+    const clickHandler = balance > 0 ? undefined : () => {
+        // TODO: make this url support different networks
+        const faucetUrl = 'https://faucet.rinkeby.io';
+        window.open(faucetUrl, '_blank');
+    };
     return (
         <React.Fragment>
             <Grid item>
                 <Chip icon={<LockIcon />} label={address} variant="outlined" style={{ backgroundColor: blackBackground }} />
-                <Chip icon={<AccountBalanceWalletIcon />} label={balanceLabel} variant="outlined" style={{ backgroundColor }} />
+                <Chip icon={<AccountBalanceWalletIcon />} label={balanceLabel} variant="outlined" style={{ backgroundColor }} onClick={clickHandler} />
             </Grid>
         </React.Fragment>
     );
