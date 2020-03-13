@@ -11,6 +11,7 @@
 
 
 import React, { useState } from "react";
+import createPersistedState from 'use-persisted-state';
 import { Button, Grid } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { AccountInformation } from './AccountInformation';
@@ -40,7 +41,8 @@ export const Index: React.FC<IProps> = (props) => {
     const tournamentService = useTournamentsService();
 
     // get started button
-    const [started, setStarted] = useState(false);
+    const userStartedState = createPersistedState('getStarted');
+    const [started, setStarted] = userStartedState(false);
     
     return (
         <Grid container direction="column" alignItems="center" justify="flex-start" style={styles.grid} spacing={1}>
