@@ -18,16 +18,16 @@ import { A, useRoutes, HookRouter } from "hookrouter";
 
 import { Index } from "./Index";
 import { TournamentContainer } from "./TournamentContainer";
+import { TournamentReplay } from "./TournamentReplay";
 import { Replay } from "./Replay";
-import { LocalReplay } from "./LocalReplay";
 import GameContainer from "./GameContainer";
 import '../styles/menu.css';
 
 const routes = {
     "/": () => <Index />,
     "/tournaments/:id": ({id}) => <TournamentContainer id={id} />,
-    "/tournaments/:tournamentId/scores/:id": ({ tournamentId, id }) => <Replay tournamentId={ tournamentId } id={ id } />,
-    "/replay": () => <LocalReplay />
+    "/tournaments/:tournamentId/scores/:id": ({ tournamentId, id }) => <TournamentReplay tournamentId={ tournamentId } id={ id } />,
+    "/replay": () => <Replay />
 };
 
 export class AWrapper extends React.Component<HookRouter.AProps> {
@@ -95,7 +95,11 @@ export const App = () => {
     
     // TODO: create <NotFoundPage />
     const match = useRoutes(routes);
-    const gameVisible = __GAME_ONLY__ || match.type === TournamentContainer || match.type === Replay || match.type === LocalReplay;
+    const gameVisible = 
+        __GAME_ONLY__ || 
+        match.type === TournamentContainer || 
+        match.type === TournamentReplay || 
+        match.type === Replay;
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />

@@ -10,56 +10,14 @@
 // specific language governing permissions and limitations under the License.
 
 
-import React, { useEffect } from "react";
-import { Loading } from "./Loading";
-import { FullScreenMessage } from "./FullScreenMessage";
-import { useScoreService } from "../services/scoreService";
-import { navigate } from "hookrouter";
-import { GameManager } from "../GameManager";
-import { loadLevel, loadMap } from "@cartesi/creepts-mappack";
+import React from "react";
+import { LocalReplay } from "./LocalReplay";
+import { RemoteReplay } from "./RemoteReplay";
+import { useQueryParams } from "hookrouter";
 
-interface ReplayProps { tournamentId: string, id: string };
+interface IProps { };
 
-export const Replay: React.FC<ReplayProps> = ({ tournamentId, id }) => {
-
-    // get the score with log from server
-    const service = useScoreService(tournamentId, id);
-
-    useEffect(() => {
-        if (service.status == "loaded") {
-            // get map name from tournament
-            const mapName = service.payload[0].map;
-            const map = loadMap(mapName);
-
-            // build level object from map
-            const level = loadLevel(map);
-
-            // log from server
-            const log = service.payload[1].log;
-
-            // open game log replay screen
-            GameManager.enterLogScene(log, level);
-        }
-
-    }, [service.status]);
-
-    // register gameOver and exit event handlers on mount, and removes them on unmount
-    useEffect(() => {
-        const exitHandler = () => navigate('/');
-        GameManager.events.on("exit", exitHandler);
-        return () => GameManager.events.removeListener("exit", exitHandler);
-    }, []);
-    
-    return (
-        <div>
-            {service.status == "loading" && <Loading progress={service.progress} />}
-            {service.status == "error" &&
-                <FullScreenMessage
-                    title="Error Loading Log"
-                    message={service.error.message}
-                    buttonTitle="Exit"
-                    onClick={() => navigate('/')} />
-            }
-        </div>
-    );
+export const Replay: React.FC<IProps> = () => {
+    const [queryParams] = useQueryParams();
+    return queryParams.log ? <RemoteReplay {...queryParams} /> : <LocalReplay />;
 };
