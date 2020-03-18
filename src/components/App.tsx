@@ -105,7 +105,7 @@ export const App = () => {
             <CssBaseline />
             <div>
                 <div className={'menu-container'}>
-                    {__GAME_ONLY__ ? <div/> : match}
+                    {__GAME_ONLY__ && match.type !== Replay ? <div/> : match}
                 </div>
                 <GameContainer visible={gameVisible} />
             </div>
