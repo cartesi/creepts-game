@@ -24,19 +24,23 @@ export const RemoteReplay: React.FC<IProps> = () => {
 
     const [queryParams] = useQueryParams();
     const logUrl = queryParams.log;
-    const mapName = queryParams.map || "original";
+    const mapName = queryParams.map;
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<Error>(undefined);
 
     const load = () => {
-        console.log('load');
         setError(undefined);
         setLoading(true);
         fetch(logUrl)
             .then(resp => resp.json())
             .then(log => {
                 try {
+                    if (!mapName) {
+                        // map must be defined
+                        throw new Error("Undefined map");
+                    }
+
                     const map = loadMap(mapName);
 
                     // build level object from map

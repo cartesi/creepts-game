@@ -16,17 +16,24 @@ import { FullScreenMessage } from "./FullScreenMessage";
 import { navigate } from "hookrouter";
 import { GameManager } from "../GameManager";
 import { loadLevel, loadMap } from "@cartesi/creepts-mappack";
-import { Backdrop } from "@material-ui/core";
+import { Backdrop, Select, MenuItem, FormControl, InputLabel, Paper } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import { DropzoneArea } from "material-ui-dropzone";
 
 interface IProps { };
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     dropzone: {
         backgroundColor: 'rgba(0,0,0,0.7)'
     },
-});
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+    },
+    selectEmpty: {
+        marginTop: theme.spacing(2)
+    }
+}));
   
 export const LocalReplay: React.FC<IProps> = () => {
 
@@ -34,6 +41,8 @@ export const LocalReplay: React.FC<IProps> = () => {
     const [error, setError] = useState<Error>(undefined);
     const [loaded, setLoaded] = useState(false);
     const classes = useStyles();
+
+    const [mapName, setMapName] = useState<string>(undefined);
 
     const load = (file: Blob) => {
         try {
@@ -48,8 +57,7 @@ export const LocalReplay: React.FC<IProps> = () => {
                     // log from file
                     const log = JSON.parse(content.toString());
 
-                    // get map name from file (default to "original")
-                    const mapName = log.map || "original";
+                    // load map
                     const map = loadMap(mapName);
 
                     // build level object from map
@@ -81,6 +89,17 @@ export const LocalReplay: React.FC<IProps> = () => {
         return () => GameManager.events.removeListener("exit", exitHandler);
     }, []);
     
+    const maps = [
+        "original",
+        "waiting_line",
+        "turn_round",
+        "hurry",
+        "civyshk_yard",
+        "civyshk_2y",
+        "civyshk_line5",
+        "civyshk_labyrinth",
+    ];
+
     return (
         <div style={{ height: "100vh", width: "100vw", position: "absolute", zIndex: 1 }}>
             {loading && <Loading />}
@@ -92,14 +111,28 @@ export const LocalReplay: React.FC<IProps> = () => {
                     onClick={() => navigate('/')} />
             }
             <Backdrop open={!loaded}>
-                <DropzoneArea
-                    dropzoneClass={classes.dropzone}
-                    dropzoneText="Drag and drop or select a JSON Log File"
-                    acceptedFiles={[ 'application/json' ]}
-                    filesLimit={1}
-                    showAlerts={false}
-                    onChange={e => load(e[0])}
-                />
+                <Paper>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel id="map-select-label">Map</InputLabel>
+                        <Select
+                            labelId="map-select-label"
+                            id="map-select"
+                            value={mapName}
+                            displayEmpty
+                            className={classes.selectEmpty}
+                            onChange={e => setMapName(e.target.value.toString())}>
+                            {maps.map(mapName => <MenuItem key={mapName} value={mapName}>{mapName}</MenuItem>)}
+                        </Select>
+                        {mapName && <DropzoneArea
+                            dropzoneClass={classes.dropzone}
+                            dropzoneText="Drag and drop or select a JSON Log File"
+                            acceptedFiles={[ 'application/json' ]}
+                            filesLimit={1}
+                            showAlerts={false}
+                            onChange={e => load(e[0])}
+                        />}
+                    </FormControl>
+                </Paper>
             </Backdrop>
         </div>
     );
