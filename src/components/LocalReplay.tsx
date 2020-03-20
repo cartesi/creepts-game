@@ -18,6 +18,7 @@ import { GameManager } from "../GameManager";
 import { loadLevel, loadMap } from "@cartesi/creepts-mappack";
 import { Backdrop, FormControl, FormHelperText, MenuItem, Select, Input, InputLabel, Paper } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
+import { MapThumbnail } from './MapThumbnail';
 
 interface IProps { };
 
@@ -117,7 +118,12 @@ export const LocalReplay: React.FC<IProps> = () => {
                                 value={mapName}
                                 className={classes.selectEmpty}
                                 onChange={e => setMapName(e.target.value.toString())}>
-                                {maps.map(mapName => <MenuItem key={mapName} value={mapName}>{mapName}</MenuItem>)}
+                                {maps.map(mapName =>
+                                    <MenuItem key={mapName} value={mapName}>
+                                        <MapThumbnail map={mapName} width={50} height={60} />
+                                        <span>{mapName}</span>
+                                    </MenuItem>
+                                )}
                             </Select>
                             <FormHelperText id="map-helper-text">Name of the map associated with log file.</FormHelperText>
                         </FormControl>
