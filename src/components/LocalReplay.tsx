@@ -16,16 +16,12 @@ import { FullScreenMessage } from "./FullScreenMessage";
 import { navigate } from "hookrouter";
 import { GameManager } from "../GameManager";
 import { loadLevel, loadMap } from "@cartesi/creepts-mappack";
-import { Backdrop, Select, MenuItem, FormControl, InputLabel, Paper } from "@material-ui/core";
+import { Backdrop, FormControl, FormHelperText, MenuItem, Select, Input, InputLabel, Paper } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import { DropzoneArea } from "material-ui-dropzone";
 
 interface IProps { };
 
 const useStyles = makeStyles(theme => ({
-    dropzone: {
-        backgroundColor: 'rgba(0,0,0,0.7)'
-    },
     formControl: {
         margin: theme.spacing(1),
         minWidth: 120,
@@ -42,7 +38,7 @@ export const LocalReplay: React.FC<IProps> = () => {
     const [loaded, setLoaded] = useState(false);
     const classes = useStyles();
 
-    const [mapName, setMapName] = useState<string>(undefined);
+    const [mapName, setMapName] = useState('');
 
     const load = (file: Blob) => {
         try {
@@ -112,26 +108,34 @@ export const LocalReplay: React.FC<IProps> = () => {
             }
             <Backdrop open={!loaded}>
                 <Paper>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel id="map-select-label">Map</InputLabel>
-                        <Select
-                            labelId="map-select-label"
-                            id="map-select"
-                            value={mapName}
-                            displayEmpty
-                            className={classes.selectEmpty}
-                            onChange={e => setMapName(e.target.value.toString())}>
-                            {maps.map(mapName => <MenuItem key={mapName} value={mapName}>{mapName}</MenuItem>)}
-                        </Select>
-                        {mapName && <DropzoneArea
-                            dropzoneClass={classes.dropzone}
-                            dropzoneText="Drag and drop or select a JSON Log File"
-                            acceptedFiles={[ 'application/json' ]}
-                            filesLimit={1}
-                            showAlerts={false}
-                            onChange={e => load(e[0])}
-                        />}
-                    </FormControl>
+                    <form>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel id="map-select-label">Map</InputLabel>
+                            <Select
+                                labelId="map-select-label"
+                                id="map-select"
+                                value={mapName}
+                                className={classes.selectEmpty}
+                                onChange={e => setMapName(e.target.value.toString())}>
+                                {maps.map(mapName => <MenuItem key={mapName} value={mapName}>{mapName}</MenuItem>)}
+                            </Select>
+                            <FormHelperText id="map-helper-text">Name of the map associated with log file.</FormHelperText>
+                        </FormControl>
+                        <FormControl fullWidth>
+                            <InputLabel id="file-label" htmlFor="file">Log File</InputLabel>
+                            <Input
+                                id="file"
+                                type="file"
+                                aria-describedby="file-helper-text"
+                                required={true}
+                                placeholder="JSON Log File"
+                                name="file"
+                                disabled={mapName === ''}
+                                onChange={(e: any) => load(e.target.files[0])}
+                            />
+                            <FormHelperText id="file-helper-text">JSON Log File to load.</FormHelperText>
+                        </FormControl>
+                    </form>
                 </Paper>
             </Backdrop>
         </div>
