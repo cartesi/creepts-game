@@ -49,6 +49,7 @@ export const Index: React.FC<IProps> = (props) => {
             {accountService.status == "loaded" &&
                 <AccountInformation
                     address={accountService.payload.address}
+                    network_id={accountService.payload.network_id}
                     balance={accountService.payload.balance}
                 />
             }

@@ -17,6 +17,7 @@ import { apiUrl } from './config';
 
 export interface Account {
     address: string;
+    network_id: string;
     balance: number;
 }
 

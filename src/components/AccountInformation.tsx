@@ -12,30 +12,48 @@
 
 import React from 'react';
 import { Chip, Grid } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
 import Units from 'ethereumjs-units';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import LockIcon from '@material-ui/icons/Lock';
 
 interface IProps {
     address: string,
+    network_id: string,
     balance: number
 };
 
-export const AccountInformation: React.FC<IProps> = ({ address, balance }) => {
+export const AccountInformation: React.FC<IProps> = ({ address, network_id, balance }) => {
     const blackBackground = 'rgba(0,0,0,0.7)';
     const backgroundColor = balance > 0 ? blackBackground : 'rgba(255,0,0,0.7)';
-    const balanceLabel = balance > 0 ? `${Units.convert(balance.toString(), 'wei', 'eth')} ETH` : '0 ETH (you need funds to play)';
-    const clickHandler = balance > 0 ? undefined : () => {
-        // TODO: make this url support different networks
-        const faucetUrl = 'https://faucet.rinkeby.io';
-        window.open(faucetUrl, '_blank');
+
+    const networkNames = {
+        '3': 'Ropsten',
+        '4': 'Rinkeby',
+        '42': 'Kovan',
+        '15001': 'Matic TESTNET'
     };
+
+    const faucetUrls = {
+        '3': 'https://faucet.ropsten.be',
+        '4': 'https://faucet.rinkeby.io',
+        '42': 'https://github.com/kovan-testnet/faucet',
+        '15001': 'https://faucet.matic.network'
+    };
+
+    const balanceLabel = Units.convert(balance.toString(), 'wei', 'eth') + ' ETH';
+    const networkLabel = networkNames[network_id] ? `${networkNames[network_id]}: ` : '';
+    const errorLabel = balance > 0 ? '' : ' (you need funds to play)';
+    const label = networkLabel + balanceLabel + errorLabel;
+
+    const clickHandler = balance > 0 || !faucetUrls[network_id] ? undefined : () => {
+        window.open(faucetUrls[network_id], '_blank');
+    };
+
     return (
         <React.Fragment>
             <Grid item>
                 <Chip icon={<LockIcon />} label={address} variant="outlined" style={{ backgroundColor: blackBackground }} />
-                <Chip icon={<AccountBalanceWalletIcon />} label={balanceLabel} variant="outlined" style={{ backgroundColor }} onClick={clickHandler} />
+                <Chip icon={<AccountBalanceWalletIcon />} label={label} variant="outlined" style={{ backgroundColor }} onClick={clickHandler} />
             </Grid>
         </React.Fragment>
     );
