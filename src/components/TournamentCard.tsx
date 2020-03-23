@@ -52,9 +52,9 @@ const useStyles = makeStyles((theme: Theme) =>
 const TournamentPhaseComponent: React.SFC<ITournamentPhaseProps> = ({ account, balance, tournament }) => {
     const { phase } = tournament;
 
-    const score = tournament.scores && tournament.scores[account.toLowerCase()];
-    const opponentScore = tournament.scores && tournament.currentOpponent ? tournament.scores[tournament.currentOpponent.toLowerCase()] : null;
-    const winningScore = tournament.scores && tournament.winner ? tournament.scores[tournament.winner.toLowerCase()] : null;
+    const score = tournament.scores && tournament.scores[account];
+    const opponentScore = tournament.scores && tournament.currentOpponent && tournament.scores[tournament.currentOpponent];
+    const winningScore = tournament.scores && tournament.winner && tournament.scores[tournament.winner];
 
     const steps = [TournamentPhase.commit, TournamentPhase.reveal, TournamentPhase.round, TournamentPhase.end];
 
