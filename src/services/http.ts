@@ -32,12 +32,15 @@ export const http = <T>(request: RequestInfo): Promise<IHttpResponse<T>> => {
                     response.parsedBody = body;
                     resolve(response);
                 } else {
-                    reject(response);
+                    const message =
+                        body.description || 
+                        body.title ||
+                        response.statusText ||
+                        `Error ${response.status}`;
+                    reject(new Error(message));
                 }
             })
-            .catch(err => {
-                reject(err);
-            });
+            .catch(err => reject(err));
     });
 };
 
