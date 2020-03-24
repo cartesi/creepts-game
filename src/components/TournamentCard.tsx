@@ -20,15 +20,14 @@ import { ReadMore } from "./ReadMore";
 import { Tournament, TournamentScore, TournamentPhase } from "../Tournament";
 
 import AlarmIcon from '@material-ui/icons/Alarm';
-import HelpIcon from '@material-ui/icons/Help';
 import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import OndemandVideoIcon from '@material-ui/icons/OndemandVideo';
 import VideogameAssetIcon from '@material-ui/icons/VideogameAsset';
 import GradeIcon from '@material-ui/icons/Grade';
 
 interface ITournamentCardProps {
-    account: string,
-    balance: number,
+    account?: string,
+    balance?: number,
     tournament: Tournament,
     score?: TournamentScore,
     opponentScore?: TournamentScore,
@@ -37,8 +36,8 @@ interface ITournamentCardProps {
 
 interface ITournamentPhaseProps {
     tournament: Tournament,
-    account: string,
-    balance: number
+    account?: string,
+    balance?: number
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -52,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const TournamentPhaseComponent: React.SFC<ITournamentPhaseProps> = ({ account, balance, tournament }) => {
     const { phase } = tournament;
 
-    const score = tournament.scores && tournament.scores[account];
+    const score = account && tournament.scores && tournament.scores[account];
     const opponentScore = tournament.scores && tournament.currentOpponent && tournament.scores[tournament.currentOpponent];
     const winningScore = tournament.scores && tournament.winner && tournament.scores[tournament.winner];
 
@@ -82,7 +81,7 @@ const TournamentPhaseComponent: React.SFC<ITournamentPhaseProps> = ({ account, b
                         {canPlay && <Grid item><Button
                             color="secondary"
                             variant="outlined"
-                            disabled={balance == 0}
+                            disabled={!account || !balance || balance == 0}
                             startIcon={<VideogameAssetIcon />}
                             component={AWrapper}
                             href={`/tournaments/${tournament.id}`}>

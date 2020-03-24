@@ -82,15 +82,15 @@ export const Index: React.FC<IProps> = (props) => {
             </Grid>
             }
 
-            {(tournamentService.status === "loaded" && accountService.status === "loaded" && started) &&
+            {(tournamentService.status === "loaded" && started) &&
                 ( tournamentService.payload.results.length > 0 ? 
                     <React.Fragment>
                         {tournamentService.payload.results.map((tournament, index) => (
                             <TournamentCard
                                 key={index}
                                 tournament={tournament}
-                                account={accountService.payload.address}
-                                balance={accountService.payload.balance}
+                                account={accountService.status == "loaded" && accountService.payload.address}
+                                balance={accountService.status == "loaded" && accountService.payload.balance}
                             />
                         ))}
                     </React.Fragment> : 
