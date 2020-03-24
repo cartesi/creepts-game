@@ -10,15 +10,17 @@
 // specific language governing permissions and limitations under the License.
 
 
-import React, { useState } from "react";
+import React from "react";
 import createPersistedState from 'use-persisted-state';
-import { Button, Grid } from '@material-ui/core';
+import { Button, Chip, Grid } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { AccountInformation } from './AccountInformation';
 import { useAccountService } from '../services/accountService';
 import { Loading } from "./Loading";
 import { TournamentCard } from "./TournamentCard";
 import { useTournamentsService } from "../services/tournamentService";
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import LockIcon from '@material-ui/icons/Lock';
 
 interface IProps { }
 
@@ -35,7 +37,6 @@ export const Index: React.FC<IProps> = (props) => {
 
     // fetch account information
     const accountService = useAccountService();
-    const funded = accountService.status == 'loaded' && accountService.payload.balance > 0;
 
     // fetch tournaments
     const tournamentService = useTournamentsService();
@@ -53,17 +54,23 @@ export const Index: React.FC<IProps> = (props) => {
                     balance={accountService.payload.balance}
                 />
             }
+            {accountService.status == "error" &&
+                <Grid item>
+                    <Chip
+                        icon={<LockIcon />}
+                        label={accountService.error.message}
+                        variant="outlined"
+                        style={{ backgroundColor: 'rgba(255,0,0,0.7)' }} />
+                    <Chip
+                        icon={<AccountBalanceWalletIcon />}
+                        label={accountService.error.message}
+                        variant="outlined"
+                        style={{ backgroundColor: 'rgba(255,0,0,0.7)' }} />
+                </Grid>
+            }
             <Grid item style={{ flexGrow: 2 }}>
                 <img src="/assets/img/logo.png" width="350px" />
             </Grid>
-            {accountService.status == "error" &&
-            <Grid item>
-                <Alert severity="error" variant="outlined" style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
-                    <AlertTitle>Error querying account information</AlertTitle>
-                    {accountService.error.message}
-                </Alert>
-            </Grid>
-            }
             
             {(tournamentService.status == "loading" || accountService.status == "loading") &&
             <Loading />
