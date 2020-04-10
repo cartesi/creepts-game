@@ -1,0 +1,187 @@
+// Copyright 2020 Cartesi Pte. Ltd.
+
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+// this file except in compliance with the License. You may obtain a copy of the
+// License at http://www.apache.org/licenses/LICENSE-2.0
+
+// Unless required by applicable law or agreed to in writing, software distributed
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations under the License.
+
+
+import React, { useEffect, useState } from "react";
+import { Backdrop, Button, Grid, LinearProgress, TextField } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import { navigate } from "hookrouter";
+import { useContestService, submitContestEntry } from '../services/contestService';
+import { Loading } from "./Loading";
+import { Layover, LayoverTitle, LayoverHeading } from "./GameComponents";
+import { GameManager } from "../GameManager";
+import { LevelObject, LogsObject } from "@cartesi/creepts-engine";
+import { GameVars } from "../GameVars";
+
+interface IProps {
+    id: string;
+};
+
+interface GameOverProps {
+    score: number;
+    waves: number;
+    log: LogsObject;
+};
+
+export const ContestGame: React.FC<IProps> = ({ id }) => {
+
+    const maps = [
+        "original",
+        "waiting_line",
+        "turn_round",
+        "hurry",
+        "civyshk_yard",
+        "civyshk_2y",
+        "civyshk_line5",
+        "civyshk_labyrinth",
+    ];
+
+    // control variables
+    const [gameReady, setGameReady] = useState(false);
+    const [contestantId, setContestantId] = useState('');
+    const [submitting, setSubmitting] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
+    const [error, setError] = useState('');
+
+    // fetch contest information
+    const contestService = useContestService(id);
+
+    // this will control a loading screen
+    const [mapLoaded, setMapLoaded] = useState(false);
+    // const [gameOver, setGameOver] = useState<GameOverProps>({ score: 999999, waves: 999, log: { actions: [] } });
+    const [gameOver, setGameOver] = useState<GameOverProps>(undefined);
+
+    // save gameover state
+    const onGameOver = (level: LevelObject, log: LogsObject, score: number, waves: number) => {
+        setGameOver({ score, waves, log });
+    };
+
+    const restart = () => {
+        if (gameReady) {
+            setSubmitted(false);
+            setSubmitting(false);    
+            setError('');
+            setGameOver(undefined);
+            GameManager.reset();
+        }
+    };
+
+    // submit score
+    const submit = () => {
+        if (contestService.status === 'loaded') {
+            // reset state
+            setSubmitted(false);
+            setSubmitting(true);
+            setError('');
+
+            // post game
+            submitContestEntry(
+                contestService.payload.id,
+                contestantId,
+                gameOver.score,
+                gameOver.waves,
+                gameOver.log
+            )
+            .then(response => {
+                if (response.ok) {
+                    setSubmitted(true);
+                    setSubmitting(false);
+                    setError('');
+                } else {
+                    setSubmitted(false);
+                    setSubmitting(false);
+                    setError(response.statusText);
+                }
+            })
+            .catch(err => {
+                setSubmitted(false);
+                setSubmitting(false);
+                setError(err.message);
+            });
+        }
+    }
+
+    // hook game events
+    useEffect(() => {
+        // we can only interact with GameManager if game is ready
+        const onGameReady = () => setGameReady(true);
+
+        // navigate away
+        const onExit = () => navigate('/');
+
+        GameVars.showGameOverLayer = false;
+        GameManager.events.on("ready", onGameReady);
+        GameManager.events.on("exit", onExit);
+        GameManager.events.on('gameOver', onGameOver);
+        return () => {
+            // cleanup hooks
+            GameVars.showGameOverLayer = true;
+            GameManager.events.removeListener("ready", onGameReady);
+            GameManager.events.removeListener("exit", onExit);
+            GameManager.events.removeListener("gameOver", onGameOver);
+        };
+    }, []);
+
+    // select correct map based on contest
+    useEffect(() => {
+        if (contestService.status === "loaded" && gameReady) {
+            // get map from contest information
+            const map = contestService.payload.map;
+            
+            // select the map of the contest
+            GameManager.mapSelected(maps.indexOf(map));
+
+            // this will remove the loading screen
+            setMapLoaded(true);
+        } else if (contestService.status === "error") {
+            setMapLoaded(true);
+        }
+    }, [contestService.status, gameReady]);
+
+    return (
+        <div style={{ height: "100vh", width: "100vw", position: gameOver ? "absolute" : "static", zIndex: 1 }}>
+            {!mapLoaded && <Loading />}
+            <Backdrop open={!!gameOver}>
+                {contestService.status === 'loaded' && gameOver && (
+                <Layover>
+                    <Grid container direction="column" justify="flex-start" alignItems="center" spacing={1}>
+                        <Grid item><LayoverTitle>Game Over</LayoverTitle></Grid>
+                        <Grid item><LayoverHeading>SCORE: {gameOver.score.toLocaleString()}</LayoverHeading></Grid>
+                        <Grid item>{contestService.payload.logo && <img height='60px' src={contestService.payload.logo} />}</Grid>
+                        <Grid item><LinearProgress color="secondary" style={{ width: '100vw', visibility: submitting ? "visible" : "hidden" }} /></Grid>
+                        {submitted && <Grid item><Alert severity="success" variant="outlined">Score submitted!</Alert></Grid>}
+                        {error && <Grid item><Alert severity="error" variant="outlined">{error}</Alert></Grid>}
+                        {!submitted && (<Grid item container justify='center' alignItems='flex-start' spacing={2}>
+                            <Grid item>
+                                <TextField
+                                    id='contestant'
+                                    required
+                                    value={contestantId}
+                                    disabled={submitting}
+                                    onChange={(event) => setContestantId(event.target.value)}
+                                    label={contestService.payload.contestantLabel}
+                                    variant='filled'
+                                    size='small'
+                                    helperText={<span>Get your Binance Referral ID <a style={{ color: '#fff' }} href='https://launchpad.binance.com/' target='_blank'>here</a></span>}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <Button variant='outlined' onClick={submit} disabled={submitting}>Submit</Button>
+                            </Grid>
+                        </Grid>)}
+                        <Grid item><Button variant='outlined' color="secondary" onClick={restart}>Play Again</Button></Grid>
+                    </Grid>
+                </Layover>
+                )}
+            </Backdrop>
+        </div>
+    );
+};

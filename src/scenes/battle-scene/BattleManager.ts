@@ -431,7 +431,9 @@ export class BattleManager {
         }
         GameManager.writeGameData();
         
-        BoardContainer.currentInstance.showGameOverLayer();
+        if (GameVars.showGameOverLayer) {
+            BoardContainer.currentInstance.showGameOverLayer();
+        }
 
         GameManager.events.emit(
             "gameOver",

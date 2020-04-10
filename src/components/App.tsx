@@ -20,11 +20,13 @@ import { Index } from "./Index";
 import { TournamentContainer } from "./TournamentContainer";
 import { TournamentReplay } from "./TournamentReplay";
 import { Replay } from "./Replay";
+import { ContestGame } from "./ContestGame";
 import GameContainer from "./GameContainer";
 import '../styles/menu.css';
 
 const routes = {
     "/": () => <Index />,
+    "/contest/:id": ({ id }) => <ContestGame id={id} />,
     "/tournaments/:id": ({id}) => <TournamentContainer id={id} />,
     "/tournaments/:tournamentId/scores/:id": ({ tournamentId, id }) => <TournamentReplay tournamentId={ tournamentId } id={ id } />,
     "/replay": () => <Replay />
@@ -49,10 +51,8 @@ export const App = () => {
             contrastText: '#ffffff',
           },
           secondary: {
-            light: '#6ec6ff',
-            main: '#2196f3',
-            dark: '#0069c0',
-            contrastText: '#000000',
+            main: '#ff00dc',
+            contrastText: '#ffffff',
           },
           background: {
               default: '#000000',
@@ -80,13 +80,28 @@ export const App = () => {
             },
             MuiButton: {
                 root: {
-                    background: 'linear-gradient(45deg, rgba(0,0,0,0.7), rgba(26,35,126,0.7))',
+                    backgroundColor: 'rgba(0,0,255,0.1)',
                     color: '#2196f3',
+                    borderRadius: '0px',
+                    transition: 'transform .2s',
+                },
+                label: {
+                    marginLeft: '40px',
+                    marginRight: '40px',
+                    fontSize: 'large'
                 },
                 outlined: {
                     borderColor: '#2196f3',
                     '&:hover': {
-                        border: '3px solid',
+                        transform: 'scale(1.05)',
+                        border: '1px solid',
+                    }
+                }
+            },
+            MuiFormLabel: {
+                root: {
+                    "&focused": {
+                        color: '#2196f3'
                     }
                 }
             }
@@ -99,7 +114,8 @@ export const App = () => {
         __GAME_ONLY__ || 
         match.type === TournamentContainer || 
         match.type === TournamentReplay || 
-        match.type === Replay;
+        match.type === Replay ||
+        match.type === ContestGame;
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />

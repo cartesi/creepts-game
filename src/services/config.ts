@@ -13,3 +13,4 @@
 import env from "@beam-australia/react-env";
 
 export const apiUrl = env("API_URL");
+export const contestUrl = "https://contest.creepts.io";
