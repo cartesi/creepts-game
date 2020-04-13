@@ -20,12 +20,14 @@ import { Index } from "./Index";
 import { TournamentContainer } from "./TournamentContainer";
 import { TournamentReplay } from "./TournamentReplay";
 import { Replay } from "./Replay";
+import { SimpleGame } from "./SimpleGame";
 import { ContestGame } from "./ContestGame";
 import GameContainer from "./GameContainer";
 import '../styles/menu.css';
 
 const routes = {
     "/": () => <Index />,
+    "/map/:map": ({ map }) => <SimpleGame map={map} />,
     "/contest/:id": ({ id }) => <ContestGame id={id} />,
     "/tournaments/:id": ({id}) => <TournamentContainer id={id} />,
     "/tournaments/:tournamentId/scores/:id": ({ tournamentId, id }) => <TournamentReplay tournamentId={ tournamentId } id={ id } />,
@@ -115,6 +117,7 @@ export const App = () => {
         match.type === TournamentContainer || 
         match.type === TournamentReplay || 
         match.type === Replay ||
+        match.type === SimpleGame ||
         match.type === ContestGame;
     return (
         <ThemeProvider theme={theme}>
