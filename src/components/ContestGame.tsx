@@ -11,8 +11,10 @@
 
 
 import React, { useEffect, useState } from "react";
-import { Backdrop, Button, Grid, LinearProgress, TextField } from '@material-ui/core';
+import { Backdrop, Button, Grid, LinearProgress } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+import { Formik, Form, Field } from 'formik';
+import { TextField } from 'formik-material-ui'; 
 import { navigate } from "hookrouter";
 import { useContestService, submitContestEntry } from '../services/contestService';
 import { Loading } from "./Loading";
@@ -46,8 +48,6 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
 
     // control variables
     const [gameReady, setGameReady] = useState(false);
-    const [contestantId, setContestantId] = useState('');
-    const [submitting, setSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState('');
 
@@ -67,7 +67,6 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
     const restart = () => {
         if (gameReady) {
             setSubmitted(false);
-            setSubmitting(false);    
             setError('');
             setGameOver(undefined);
             GameManager.reset();
@@ -75,17 +74,16 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
     };
 
     // submit score
-    const submit = () => {
+    const submit = (values, { setSubmitting }) => {
         if (contestService.status === 'loaded') {
             // reset state
             setSubmitted(false);
-            setSubmitting(true);
             setError('');
 
             // post game
             submitContestEntry(
                 contestService.payload.id,
-                contestantId,
+                values.contestantId,
                 gameOver.score,
                 gameOver.waves,
                 gameOver.log
@@ -107,7 +105,7 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
                 setError(err.message);
             });
         }
-    }
+    };
 
     // hook game events
     useEffect(() => {
@@ -146,39 +144,61 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
         }
     }, [contestService.status, gameReady]);
 
+    // ID validattion function
+    const validate = (pattern: string) => (values) => {
+        if (!values.contestantId) {
+            return { contestantId: 'Required' };
+        } else if (pattern) {
+            const regex = new RegExp(pattern);
+            if (!regex.test(values.contestantId)) {
+                return { contestantId: 'Invalid Binance Referral ID' };
+            }
+        }
+        return {};
+    };
+
     return (
         <div style={{ height: "100vh", width: "100vw", position: gameOver ? "absolute" : "static", zIndex: 1 }}>
             {!mapLoaded && <Loading />}
             <Backdrop open={!!gameOver}>
                 {contestService.status === 'loaded' && gameOver && (
                 <Layover>
-                    <Grid container direction="column" justify="flex-start" alignItems="center" spacing={1}>
-                        <Grid item><LayoverTitle>Game Over</LayoverTitle></Grid>
-                        <Grid item><LayoverHeading>SCORE: {gameOver.score.toLocaleString()}</LayoverHeading></Grid>
-                        <Grid item>{contestService.payload.logo && <img height='60px' src={contestService.payload.logo} />}</Grid>
-                        <Grid item><LinearProgress color="secondary" style={{ width: '100vw', visibility: submitting ? "visible" : "hidden" }} /></Grid>
-                        {submitted && <Grid item><Alert severity="success" variant="outlined">Score submitted!</Alert></Grid>}
-                        {error && <Grid item><Alert severity="error" variant="outlined">{error}</Alert></Grid>}
-                        {!submitted && (<Grid item container justify='center' alignItems='flex-start' spacing={2}>
-                            <Grid item>
-                                <TextField
-                                    id='contestant'
-                                    required
-                                    value={contestantId}
-                                    disabled={submitting}
-                                    onChange={(event) => setContestantId(event.target.value)}
-                                    label={contestService.payload.contestantLabel}
-                                    variant='filled'
-                                    size='small'
-                                    helperText={<span>Get your Binance Referral ID <a style={{ color: '#fff' }} href='https://launchpad.binance.com/' target='_blank'>here</a></span>}
-                                />
-                            </Grid>
-                            <Grid item>
-                                <Button variant='outlined' onClick={submit} disabled={submitting}>Submit</Button>
-                            </Grid>
-                        </Grid>)}
-                        <Grid item><Button variant='outlined' color="secondary" onClick={restart}>Play Again</Button></Grid>
-                    </Grid>
+                    <Formik
+                        initialValues={{ contestantId: '' }}
+                        validate={validate('^\\d{8}$')}
+                        onSubmit={submit}
+                    >
+                        {({ submitForm, isSubmitting, errors }) => (
+                            <Form translate="">
+                                <Grid container direction="column" justify="flex-start" alignItems="center" spacing={1}>
+                                    <Grid item><LayoverTitle>Game Over</LayoverTitle></Grid>
+                                    <Grid item><LayoverHeading>SCORE: {gameOver.score.toLocaleString()}</LayoverHeading></Grid>
+                                    <Grid item>{contestService.payload.logo && <img height='60px' src={contestService.payload.logo} />}</Grid>
+                                    <Grid item><LinearProgress color="secondary" style={{ width: '100vw', visibility: isSubmitting ? "visible" : "hidden" }} /></Grid>
+                                    {submitted && <Grid item><Alert severity="success" variant="outlined">Score submitted!</Alert></Grid>}
+                                    {error && <Grid item><Alert severity="error" variant="outlined">{error}</Alert></Grid>}
+                                    {!submitted && (<Grid item container justify='center' alignItems='flex-start' spacing={2}>
+                                        <Grid item>
+                                            <Field
+                                                component={TextField}
+                                                name="contestantId"
+                                                required
+                                                disabled={isSubmitting}
+                                                label={contestService.payload.contestantLabel}
+                                                variant="filled"
+                                                size="small"
+                                                helperText={<span>Get your Binance Referral ID <a style={{ color: '#fff' }} href='https://www.binance.com/en/activity/referral' target='_blank'>here</a></span>}
+                                            />
+                                        </Grid>
+                                        <Grid item>
+                                            <Button variant='outlined' onClick={submitForm} disabled={isSubmitting || (errors.contestantId !== undefined)}>Submit</Button>
+                                        </Grid>
+                                    </Grid>)}
+                                    <Grid item><Button variant='outlined' color="secondary" onClick={restart}>Play Again</Button></Grid>
+                                </Grid>
+                            </Form>
+                        )}
+                    </Formik>
                 </Layover>
                 )}
             </Backdrop>
