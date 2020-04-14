@@ -16,8 +16,10 @@ import { Alert } from '@material-ui/lab';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-material-ui'; 
 import { navigate } from "hookrouter";
+import moment from "moment";
 import { useContestService, submitContestEntry } from '../services/contestService';
 import { Loading } from "./Loading";
+import { Countdown } from "./Countdown";
 import { Layover, LayoverTitle, LayoverHeading } from "./GameComponents";
 import { GameManager } from "../GameManager";
 import { LevelObject, LogsObject } from "@cartesi/creepts-engine";
@@ -48,6 +50,7 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
 
     // control variables
     const [gameReady, setGameReady] = useState(false);
+    const [showCountdown, setShowCountdown] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState('');
 
@@ -128,7 +131,6 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
         };
     }, []);
 
-    // select correct map based on contest
     useEffect(() => {
         if (contestService.status === "loaded" && gameReady) {
             // get map from contest information
@@ -139,6 +141,11 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
 
             // this will remove the loading screen
             setMapLoaded(true);
+
+            if (contestService.payload.startDate) {
+                setShowCountdown(moment(contestService.payload.startDate).isAfter(moment()));
+            }
+            
         } else if (contestService.status === "error") {
             setMapLoaded(true);
         }
@@ -158,12 +165,20 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
     };
 
     return (
-        <div style={{ height: "100vh", width: "100vw", position: gameOver ? "absolute" : "static", zIndex: 1 }}>
+        <div style={{ height: "100vh", width: "100vw", position: gameOver || showCountdown ? "absolute" : "static", zIndex: 1 }}>
             {!mapLoaded && <Loading />}
-            <Backdrop open={!!gameOver}>
+            <Backdrop open={!!gameOver || showCountdown}>
+                {contestService.status === 'loaded' && showCountdown &&
+                <Layover>
+                    <Grid container direction="column" justify="flex-start" alignItems="center" spacing={4}>
+                        <Grid item><LayoverTitle>{contestService.payload.name} starts in:</LayoverTitle></Grid>
+                        <Grid item><Countdown date={moment(contestService.payload.startDate).toDate()} /></Grid>
+                    </Grid>
+                </Layover>
+                }
                 {contestService.status === 'loaded' && gameOver && (
                 <Layover>
-                    <Formik
+                    {!!gameOver && <Formik
                         initialValues={{ contestantId: '' }}
                         validate={validate('^\\d{8}$')}
                         onSubmit={submit}
@@ -198,7 +213,7 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
                                 </Grid>
                             </Form>
                         )}
-                    </Formik>
+                    </Formik>}
                 </Layover>
                 )}
             </Backdrop>

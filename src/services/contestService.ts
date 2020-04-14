@@ -22,6 +22,7 @@ export interface Contest {
     contestantLabel: string;
     map: string;
     logo?: string;
+    startDate?: string;
     deadline?: string;
 }
 
