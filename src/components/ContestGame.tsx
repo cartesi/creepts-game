@@ -171,7 +171,7 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
                 {contestService.status === 'loaded' && showCountdown &&
                 <Layover>
                     <Grid container direction="column" justify="flex-start" alignItems="center" spacing={4}>
-                        <Grid item><LayoverTitle>{contestService.payload.name} starts in:</LayoverTitle></Grid>
+                        <Grid item>{contestService.payload.logo && <img height='60px' src={contestService.payload.logo} />}</Grid>
                         <Grid item><Countdown date={moment.utc(contestService.payload.startDate).toDate()} /></Grid>
                     </Grid>
                 </Layover>
