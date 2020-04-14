@@ -143,7 +143,7 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
             setMapLoaded(true);
 
             if (contestService.payload.startDate) {
-                setShowCountdown(moment(contestService.payload.startDate).isAfter(moment()));
+                setShowCountdown(moment.utc(contestService.payload.startDate).isAfter(moment.utc()));
             }
             
         } else if (contestService.status === "error") {
@@ -172,7 +172,7 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
                 <Layover>
                     <Grid container direction="column" justify="flex-start" alignItems="center" spacing={4}>
                         <Grid item><LayoverTitle>{contestService.payload.name} starts in:</LayoverTitle></Grid>
-                        <Grid item><Countdown date={moment(contestService.payload.startDate).toDate()} /></Grid>
+                        <Grid item><Countdown date={moment.utc(contestService.payload.startDate).toDate()} /></Grid>
                     </Grid>
                 </Layover>
                 }
