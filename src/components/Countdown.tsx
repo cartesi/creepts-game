@@ -46,7 +46,7 @@ export const Countdown: React.FC<IProps> = ({ date }) => {
                 <Typography variant="h6" className={classes.countdown}>hours</Typography>
               </div>
             </Grid>
-            <Grid item alignItems="center">
+            <Grid item>
               <div>
                 <Typography variant="h2" className={classes.countdown}>
                   <Timer.Minutes formatValue={format} />
