@@ -35,10 +35,9 @@ export const Countdown: React.FC<IProps> = ({ date }) => {
     >
       {() => (
         <React.Fragment>
-          <Grid container spacing={4}>
             <Grid item>
               <div>
-                <Typography variant="h3" className={classes.countdown}>
+                <Typography variant="h2" className={classes.countdown}>
                   <Timer.Hours formatValue={format} />
                 </Typography>
               </div>
@@ -48,7 +47,7 @@ export const Countdown: React.FC<IProps> = ({ date }) => {
             </Grid>
             <Grid item>
               <div>
-                <Typography variant="h3" className={classes.countdown}>
+                <Typography variant="h2" className={classes.countdown}>
                   <Timer.Minutes formatValue={format} />
                 </Typography>
               </div>
@@ -58,7 +57,7 @@ export const Countdown: React.FC<IProps> = ({ date }) => {
             </Grid>
             <Grid item>
               <div>
-                <Typography variant="h3" className={classes.countdown}>
+                <Typography variant="h2" className={classes.countdown}>
                   <Timer.Seconds formatValue={format} />
                 </Typography>
               </div>
@@ -66,7 +65,6 @@ export const Countdown: React.FC<IProps> = ({ date }) => {
                 <Typography variant="h6" className={classes.countdown}>seconds</Typography>
               </div>
             </Grid>
-          </Grid>
         </React.Fragment>
       )}
     </Timer>

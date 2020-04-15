@@ -170,9 +170,11 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
             <Backdrop open={!!gameOver || showCountdown}>
                 {contestService.status === 'loaded' && showCountdown &&
                 <Layover>
-                    <Grid container direction="column" justify="flex-start" alignItems="center" spacing={4}>
+                    <Grid container direction="column" justify="center" alignItems="center" spacing={4}>
                         <Grid item>{contestService.payload.logo && <img height='60px' src={contestService.payload.logo} />}</Grid>
-                        <Grid item><Countdown date={moment.utc(contestService.payload.startDate).toDate()} /></Grid>
+                        <Grid item container direction="row" spacing={4} alignItems="center" justify="center">
+                            <Countdown date={moment.utc(contestService.payload.startDate).toDate()} />
+                        </Grid>
                     </Grid>
                 </Layover>
                 }
