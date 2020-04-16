@@ -52,7 +52,10 @@ export const LocalReplay: React.FC<IProps> = () => {
 
                 try {
                     // log from file
-                    const log = JSON.parse(content.toString());
+                    const payload = JSON.parse(content.toString());
+
+                    // support two file formats, only the log, and log as one of the keys
+                    const log = payload.log || payload;
 
                     // load map
                     const map = loadMap(mapName);

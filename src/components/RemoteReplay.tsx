@@ -34,13 +34,16 @@ export const RemoteReplay: React.FC<IProps> = () => {
         setLoading(true);
         fetch(logUrl)
             .then(resp => resp.json())
-            .then(log => {
+            .then(payload => {
                 try {
                     if (!mapName) {
                         // map must be defined
                         throw new Error("Undefined map");
                     }
 
+                    // support two file formats, only the log, and log as one of the keys
+                    const log = payload.log || payload;
+                    
                     const map = loadMap(mapName);
 
                     // build level object from map
