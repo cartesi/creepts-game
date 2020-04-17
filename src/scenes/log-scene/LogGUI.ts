@@ -157,7 +157,7 @@ export class LogGUI extends Phaser.GameObjects.Container {
 
     private onClickBack(): void {
 
-        GameManager.enterLogScene(GameVars.initialLogsObjects, GameVars.levelObject);
+        GameManager.enterLogScene(0, GameVars.initialLogsObjects, GameVars.levelObject);
     }
 
     private onClickExit(): void {

@@ -41,6 +41,17 @@ export const LocalReplay: React.FC<IProps> = () => {
 
     const [mapName, setMapName] = useState('');
 
+    const maps = [
+        "original",
+        "waiting_line",
+        "turn_round",
+        "hurry",
+        "civyshk_yard",
+        "civyshk_2y",
+        "civyshk_line5",
+        "civyshk_labyrinth",
+    ];
+
     const load = (file: Blob) => {
         try {
             setError(undefined);
@@ -68,7 +79,7 @@ export const LocalReplay: React.FC<IProps> = () => {
                     setLoaded(true);
 
                     // open game log replay screen
-                    GameManager.enterLogScene(log, level);
+                    GameManager.enterLogScene(maps.indexOf(mapName), log, level);
                 } catch (e) {
                     setLoading(false);
                     setError(e);
@@ -89,17 +100,6 @@ export const LocalReplay: React.FC<IProps> = () => {
         return () => GameManager.events.removeListener("exit", exitHandler);
     }, []);
     
-    const maps = [
-        "original",
-        "waiting_line",
-        "turn_round",
-        "hurry",
-        "civyshk_yard",
-        "civyshk_2y",
-        "civyshk_line5",
-        "civyshk_labyrinth",
-    ];
-
     return (
         <div style={{ height: "100vh", width: "100vw", position: "absolute", zIndex: 1 }}>
             {loading && <Loading />}

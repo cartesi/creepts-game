@@ -115,11 +115,13 @@ export class GameManager {
         GameVars.currentScene.scene.start("BattleScene");
     }
 
-    public static enterLogScene(log: LogsObject, level: LevelObject): void {
+    public static enterLogScene(mapIndex: number, log: LogsObject, level: LevelObject): void {
 
         GameVars.logsObject = log;
         GameVars.initialLogsObjects = JSON.parse(JSON.stringify(GameVars.logsObject));
         GameVars.levelObject = level;
+        GameVars.currentMapData = GameVars.mapsData[mapIndex];
+        GameVars.gameData.currentMapIndex = mapIndex;
 
         GameVars.currentScene.scene.start("LogScene");
     }

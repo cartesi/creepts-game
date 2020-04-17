@@ -22,6 +22,17 @@ interface IProps { };
 
 export const RemoteReplay: React.FC<IProps> = () => {
 
+    const maps = [
+        "original",
+        "waiting_line",
+        "turn_round",
+        "hurry",
+        "civyshk_yard",
+        "civyshk_2y",
+        "civyshk_line5",
+        "civyshk_labyrinth",
+    ];
+
     const [queryParams] = useQueryParams();
     const logUrl = queryParams.log;
     const mapName = queryParams.map;
@@ -53,7 +64,7 @@ export const RemoteReplay: React.FC<IProps> = () => {
                     setError(undefined);
 
                     // open game log replay screen
-                    GameManager.enterLogScene(log, level);
+                    GameManager.enterLogScene(maps.indexOf(mapName), log, level);
                 } catch (e) {
                     setLoading(false);
                     setError(e);

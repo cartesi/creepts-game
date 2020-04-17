@@ -23,6 +23,7 @@ export class LogScene extends Phaser.Scene {
     public hud: HUD;
     public gui: LogGUI;
     public boardContainer: BoardContainer;
+    private i: number;
 
     constructor() {
 
@@ -46,14 +47,22 @@ export class LogScene extends Phaser.Scene {
 
         this.gui = new LogGUI(this);
         this.add.existing(this.gui);
+        this.i = 0;
     }
 
     public update(time: number, delta: number): void {
 
-        while (GameVars.logsObject.actions.length && GameVars.logsObject.actions[0].tick === BattleManager.engine.ticksCounter) {
+        const engine = BattleManager.engine;
+        const log = GameVars.logsObject;
 
-            var action = GameVars.logsObject.actions.shift();
-    
+        let action = null;
+        if (this.i < log.actions.length) {
+            action = log.actions[this.i];
+        }
+
+        if (action && engine.ticksCounter == action.tick) {
+            // we have an action, and it's time to apply it
+            console.log(this.i, log.actions.length, action, engine.ticksCounter);
             switch (action.type) {
                 case Creepts.GameConstants.ACTION_TYPE_NEXT_WAVE:
                     BattleManager.newWave();
@@ -79,9 +88,13 @@ export class LogScene extends Phaser.Scene {
                 default:
                     break;
             }
+            this.i++;
+        } else {
+            // update game, if it's not over
+            if (!engine.gameOver) {
+                BattleManager.update(time, delta);
+            }            
         }
-
-        BattleManager.update(time, delta);
 
         this.boardContainer.update(time, delta);
         this.hud.update(time, delta);
