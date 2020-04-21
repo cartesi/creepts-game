@@ -30,10 +30,12 @@ export class LogGUI extends Phaser.GameObjects.Container {
     private backImage: Phaser.GameObjects.Image;
     private soundImage: Phaser.GameObjects.Image;
     private progressBar: ProgressBar;
+    private mapIndex: number;
 
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Phaser.Scene, mapIndex: number) {
 
         super(scene);
+        this.mapIndex = mapIndex;
 
         // this.scaleX = GameVars.scaleCorrectionFactor;
         this.scaleY = GameVars.scaleY;
@@ -161,8 +163,7 @@ export class LogGUI extends Phaser.GameObjects.Container {
     }
 
     private onClickBack(): void {
-
-        GameManager.enterLogScene(0, GameVars.initialLogsObjects, GameVars.levelObject);
+        GameManager.enterLogScene(this.mapIndex, GameVars.initialLogsObjects, GameVars.levelObject);
     }
 
     private onClickExit(): void {

@@ -20,6 +20,7 @@ import { BoardContainer } from "./BoardContainer";
 import { GameManager } from "../../GameManager";
 import { AudioManager } from "../../AudioManager";
 import { saveAs } from "file-saver";
+import { Action } from "@cartesi/creepts-engine/build/main/lib/Types";
 
 export class BattleManager {
 
@@ -285,9 +286,11 @@ export class BattleManager {
         BoardContainer.currentInstance.hideTurretMenu();
     }
 
-    private static addAction(action): void {
+    private static addAction(action: Action): void {
 
-        GameVars.logsObject.actions.push(action);
+        if (GameVars.currentScene === BattleScene.currentInstance) {
+            GameVars.logsObject.actions.push(action);
+        }        
     }
 
     private static onEnemySpawned(enemy: Creepts.Enemy, p: {r: number, c: number} ): void {

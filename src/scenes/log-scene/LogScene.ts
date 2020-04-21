@@ -19,6 +19,7 @@ import { LogGUI } from "./LogGUI";
 export class LogScene extends Phaser.Scene {
 
     public static currentInstance: LogScene;
+    private mapIndex: number;
 
     public hud: HUD;
     public gui: LogGUI;
@@ -29,6 +30,10 @@ export class LogScene extends Phaser.Scene {
 
         super("LogScene");
         LogScene.currentInstance = this;
+    }
+
+    public init(data: any): void {
+        this.mapIndex = data.mapIndex;
     }
 
     public create(): void {
@@ -45,7 +50,7 @@ export class LogScene extends Phaser.Scene {
         this.hud = new HUD(this);
         this.add.existing(this.hud);
 
-        this.gui = new LogGUI(this);
+        this.gui = new LogGUI(this, this.mapIndex);
         this.add.existing(this.gui);
         this.i = 0;
     }
@@ -62,7 +67,7 @@ export class LogScene extends Phaser.Scene {
 
         if (action && engine.ticksCounter == action.tick && !GameVars.paused) {
             // we have an action, and it's time to apply it
-            this.gui.setProgress(this.i / log.actions.length);
+            this.gui.setProgress((this.i + 1) / log.actions.length);
             // console.log(this.i, log.actions.length, action, engine.ticksCounter);
             switch (action.type) {
                 case Creepts.GameConstants.ACTION_TYPE_NEXT_WAVE:

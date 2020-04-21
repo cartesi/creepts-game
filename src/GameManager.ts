@@ -98,7 +98,6 @@ export class GameManager {
         AudioManager.init();
 
         GameManager.enterBattleScene();
-        // GameManager.enterLogScene();
     }
 
     public static mapSelected(index: number): void {
@@ -123,7 +122,7 @@ export class GameManager {
         GameVars.currentMapData = GameVars.mapsData[mapIndex];
         GameVars.gameData.currentMapIndex = mapIndex;
 
-        GameVars.currentScene.scene.start("LogScene");
+        GameVars.currentScene.scene.start("LogScene", { mapIndex });
     }
 
     public static enterMapScene(): void {
