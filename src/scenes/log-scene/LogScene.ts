@@ -60,9 +60,10 @@ export class LogScene extends Phaser.Scene {
             action = log.actions[this.i];
         }
 
-        if (action && engine.ticksCounter == action.tick) {
+        if (action && engine.ticksCounter == action.tick && !GameVars.paused) {
             // we have an action, and it's time to apply it
-            console.log(this.i, log.actions.length, action, engine.ticksCounter);
+            this.gui.setProgress(this.i / log.actions.length);
+            // console.log(this.i, log.actions.length, action, engine.ticksCounter);
             switch (action.type) {
                 case Creepts.GameConstants.ACTION_TYPE_NEXT_WAVE:
                     BattleManager.newWave();
@@ -91,7 +92,7 @@ export class LogScene extends Phaser.Scene {
             this.i++;
         } else {
             // update game, if it's not over
-            if (!engine.gameOver) {
+            if (!engine.gameOver && !GameVars.paused) {
                 BattleManager.update(time, delta);
             }            
         }

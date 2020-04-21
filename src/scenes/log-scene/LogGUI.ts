@@ -15,6 +15,7 @@ import { GameVars } from "../../GameVars";
 import { BattleManager } from "../battle-scene/BattleManager";
 import { GameConstants } from '../../GameConstants';
 import { AudioManager } from '../../AudioManager';
+import { ProgressBar } from './ProgressBar';
 
 export class LogGUI extends Phaser.GameObjects.Container {
 
@@ -28,6 +29,7 @@ export class LogGUI extends Phaser.GameObjects.Container {
     private playImage: Phaser.GameObjects.Image;
     private backImage: Phaser.GameObjects.Image;
     private soundImage: Phaser.GameObjects.Image;
+    private progressBar: ProgressBar;
 
     constructor(scene: Phaser.Scene) {
 
@@ -131,6 +133,9 @@ export class LogGUI extends Phaser.GameObjects.Container {
         } else {
             this.soundImage.setFrame("btn_sound_on");
         }
+
+        this.progressBar = new ProgressBar(scene, 0, 85, GameConstants.GAME_WIDTH, 3);
+        this.add(this.progressBar);
     }
 
     private onClickPlay(): void {
@@ -188,5 +193,9 @@ export class LogGUI extends Phaser.GameObjects.Container {
         if (btn.alpha === 1) {
             btn.setScale(1);
         }
+    }
+
+    public setProgress(progress: number) {
+        this.progressBar.setProgress(progress);
     }
 }
