@@ -74,6 +74,8 @@ export class PreloadScene extends Phaser.Scene {
 
         let musicJson = this.cache.json.get("music");
         musicJson = JSON.parse(JSON.stringify(musicJson).replace("urls", "src"));
+        // XXX: for some reason music loading fails on Safari. Check why.
+        musicJson.autoplay = true;
 
         AudioManager.music = new Howl(musicJson);
     
