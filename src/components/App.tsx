@@ -20,6 +20,7 @@ import { Index } from "./Index";
 import { TournamentContainer } from "./TournamentContainer";
 import { TournamentReplay } from "./TournamentReplay";
 import { Replay } from "./Replay";
+import { MapSelection } from "./MapSelection";
 import { SimpleGame } from "./SimpleGame";
 import { ContestGame } from "./ContestGame";
 import GameContainer from "./GameContainer";
@@ -27,7 +28,8 @@ import '../styles/menu.css';
 
 const routes = {
     "/": () => <Index />,
-    "/map/:map": ({ map }) => <SimpleGame map={map} />,
+    "/maps": () => <MapSelection />,
+    "/maps/:map": ({ map }) => <SimpleGame map={map} />,
     "/contest/:id": ({ id }) => <ContestGame id={id} />,
     "/tournaments/:id": ({id}) => <TournamentContainer id={id} />,
     "/tournaments/:tournamentId/scores/:id": ({ tournamentId, id }) => <TournamentReplay tournamentId={ tournamentId } id={ id } />,
@@ -112,6 +114,7 @@ export const App = () => {
     
     // TODO: create <NotFoundPage />
     const match = useRoutes(routes);
+    console.log(match);
     const gameVisible = 
         __GAME_ONLY__ || 
         match.type === TournamentContainer || 
