@@ -28,7 +28,7 @@ import GameContainer from "./GameContainer";
 import '../styles/menu.css';
 
 const routes = {
-    "/": () => <Index />,
+    "/": () => <MapSelection />,
     "/maps": () => <MapSelection />,
     "/maps/:map": ({ map }) => <SimpleGame map={map} />,
     "/contests": () => <ContestSelection />,
