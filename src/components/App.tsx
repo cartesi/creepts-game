@@ -21,6 +21,7 @@ import { TournamentContainer } from "./TournamentContainer";
 import { TournamentReplay } from "./TournamentReplay";
 import { Replay } from "./Replay";
 import { MapSelection } from "./MapSelection";
+import { ContestSelection } from "./ContestSelection";
 import { SimpleGame } from "./SimpleGame";
 import { ContestGame } from "./ContestGame";
 import GameContainer from "./GameContainer";
@@ -30,7 +31,8 @@ const routes = {
     "/": () => <Index />,
     "/maps": () => <MapSelection />,
     "/maps/:map": ({ map }) => <SimpleGame map={map} />,
-    "/contest/:id": ({ id }) => <ContestGame id={id} />,
+    "/contests": () => <ContestSelection />,
+    "/contests/:id": ({ id }) => <ContestGame id={id} />,
     "/tournaments/:id": ({id}) => <TournamentContainer id={id} />,
     "/tournaments/:tournamentId/scores/:id": ({ tournamentId, id }) => <TournamentReplay tournamentId={ tournamentId } id={ id } />,
     "/replay": () => <Replay />

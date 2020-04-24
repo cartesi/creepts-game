@@ -26,6 +26,11 @@ export interface Contest {
     deadline?: string;
 }
 
+const getContests = () => {
+    const url = `${contestUrl}`;
+    return get<Contest[]>(url);
+};
+
 export const getContest = (id: string) => {
     const url = `${contestUrl}/${id}`;
     return get<Contest>(url);
@@ -49,3 +54,17 @@ export const useContestService = (id: string) => {
 
     return result;
 };
+
+export const useContestsService = () => {
+    const [result, setResult] = useState<Service<Contest[]>>({
+        status: "loading"
+    });
+
+    useEffect(() => {
+        getContests()
+            .then(response => setResult({ status: "loaded", payload: response.parsedBody }))
+            .catch(error => setResult({ status: "error", error }));
+    }, []);
+
+    return result;
+}
