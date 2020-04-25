@@ -116,7 +116,6 @@ export const App = () => {
     
     // TODO: create <NotFoundPage />
     const match = useRoutes(routes);
-    console.log(match);
     const gameVisible = 
         __GAME_ONLY__ || 
         match.type === TournamentContainer || 
@@ -131,7 +130,7 @@ export const App = () => {
                 <div className={'menu-container'}>
                     {__GAME_ONLY__ && match.type !== Replay ? <div/> : match}
                 </div>
-                <GameContainer visible={gameVisible} />
+                {gameVisible && <GameContainer visible={gameVisible} />}
             </div>
         </ThemeProvider>
     );
