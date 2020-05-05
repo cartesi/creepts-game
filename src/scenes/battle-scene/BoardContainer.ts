@@ -33,6 +33,7 @@ import { PauseMenu } from "./PauseMenu";
 import { GlueBulletActor } from "./turret-actors/GlueBulletActor";
 import { AudioManager } from "../../AudioManager";
 import { RoundCompletedLayer } from "./RoundCompletedLayer";
+import { DebugContainer } from "./debug/DebugContainer";
 
 export class BoardContainer extends Phaser.GameObjects.Container {
 
@@ -59,6 +60,7 @@ export class BoardContainer extends Phaser.GameObjects.Container {
     private glueCirclesContainer: Phaser.GameObjects.Container;
     private circlesContainer: Phaser.GameObjects.Container;
     private actorsContainer: Phaser.GameObjects.Container;
+    private debugContainer: DebugContainer;
 
     private gluePools: GluePool[];
 
@@ -89,10 +91,6 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.board = new Board(this.scene);
         this.add(this.board);
 
-        if (GameConstants.SHOW_DEBUG_GEOMETRY) {
-            this.drawDebugGeometry();
-        }
-
         this.pointerContainer = new Phaser.GameObjects.Container(this.scene);
         this.board.add(this.pointerContainer);
 
@@ -109,6 +107,11 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         this.board.add(this.circlesContainer);
 
         this.createAnimations();
+
+        if (GameConstants.SHOW_DEBUG_GEOMETRY) {
+            this.debugContainer = new DebugContainer(scene);
+            this.board.add(this.debugContainer);
+        }
     }
 
     public addInitialTowers(): void {
@@ -263,7 +266,8 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         
         this.actorsContainer.add(turretActor);
         this.turretActors.push(turretActor);
-        
+
+        if (this.debugContainer) this.debugContainer.resetCheckpoints();
     }
 
     public removeTurret(id: number): void {
@@ -284,6 +288,8 @@ export class BoardContainer extends Phaser.GameObjects.Container {
             this.turretActors.splice(i, 1);
             turret.destroy();
         }
+
+        if (this.debugContainer) this.debugContainer.resetCheckpoints();
     }
 
     public addBullet(bullet: Creepts.Bullet, projectileTurret: Creepts.ProjectileTurret): void {
@@ -501,12 +507,14 @@ export class BoardContainer extends Phaser.GameObjects.Container {
         
         const turretActor = this.getTurretActorByID(id);
         turretActor.upgrade();
+        if (this.debugContainer) this.debugContainer.resetCheckpoints();
     }
 
     public improveTurret(id: number): void {
         
         const turretActor = this.getTurretActorByID(id);
         turretActor.improve();
+        if (this.debugContainer) this.debugContainer.resetCheckpoints();
     }
     
     public getTurretActorByID(id: number): TurretActor {
@@ -622,30 +630,6 @@ export class BoardContainer extends Phaser.GameObjects.Container {
 
         this.remove(this.roundCompletedLayer);
         this.roundCompletedLayer = null;
-    }
-
-    private drawDebugGeometry(): void {
-        
-        const path = new Phaser.GameObjects.Graphics(this.scene);
-
-        path.lineStyle(2, 0xFFA500);
-
-        for (let i = 0; i < GameVars.enemiesPathCells.length - 1; i ++) {
-
-            let x = (GameVars.enemiesPathCells[i].c + .5) * GameConstants.CELLS_SIZE;
-            let y = (GameVars.enemiesPathCells[i].r + .5) * GameConstants.CELLS_SIZE;
-            
-            path.moveTo(x, y);
-
-            x = (GameVars.enemiesPathCells[i + 1].c + .5) * GameConstants.CELLS_SIZE;
-            y = (GameVars.enemiesPathCells[i + 1].r + .5) * GameConstants.CELLS_SIZE;
-
-            path.lineTo(x, y);
-
-            path.stroke();
-        }
-
-        this.board.add(path);
     }
 
     private onPointerDown(): void {

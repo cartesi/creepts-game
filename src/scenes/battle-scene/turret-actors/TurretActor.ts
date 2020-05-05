@@ -87,18 +87,7 @@ export class TurretActor extends Phaser.GameObjects.Container {
 
     public update(time: number, delta: number): void {
         
-        let enemiesWithinRange = this.turret.getEnemiesWithinRange();
-
-        if (this.turret.fixedTarget) {
-            if (enemiesWithinRange.length > 0) {
-                if (enemiesWithinRange.indexOf(this.followedEnemy) === -1) {
-                    this.followedEnemy = enemiesWithinRange[0];
-                }
-            }
-        } else if (enemiesWithinRange.length > 0) {
-            this.followedEnemy = enemiesWithinRange[0];
-        }
-
+        this.followedEnemy = this.turret.followedEnemy;
         if (this.followedEnemy) {
             const followedEnemyActor = BoardContainer.currentInstance.getEnemyActorByID(this.followedEnemy.id);
 
