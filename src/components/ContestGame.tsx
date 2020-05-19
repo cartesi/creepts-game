@@ -158,7 +158,7 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
         } else if (pattern) {
             const regex = new RegExp(pattern);
             if (!regex.test(values.contestantId)) {
-                return { contestantId: 'Invalid Binance Referral ID' };
+                return { contestantId: 'Invalid ID' };
             }
         }
         return {};
@@ -204,7 +204,7 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
                                                 label={contestService.payload.contestantLabel}
                                                 variant="filled"
                                                 size="small"
-                                                helperText={<span>Get your Binance Referral ID <a style={{ color: '#fff' }} href='https://www.binance.com/en/activity/referral' target='_blank'>here</a></span>}
+                                                helperText={contestService.payload.helperText}
                                             />
                                         </Grid>
                                         <Grid item>

@@ -20,6 +20,7 @@ export interface Contest {
     id: string;
     name: string;
     contestantLabel: string;
+    helperText: string;
     map: string;
     logo?: string;
     startDate?: string;
