@@ -11,7 +11,7 @@
 
 
 import { LevelObject, LogsObject } from "@cartesi/creepts-engine";
-import { loadMap } from "@cartesi/creepts-mappack";
+import { loadMap, maps } from "@cartesi/creepts-mappack";
 import { GameConstants } from "./GameConstants";
 import { GameVars } from "./GameVars";
 import { AudioManager } from "./AudioManager";
@@ -31,17 +31,7 @@ export class GameManager {
     public static init(): void {
 
         // load all maps
-        const maps = [
-            "original",
-            "waiting_line",
-            "turn_round",
-            "hurry",
-            "civyshk_yard",
-            "civyshk_2y",
-            "civyshk_line5",
-            "civyshk_labyrinth",
-        ];
-        GameVars.mapsData = maps.map(loadMap);
+        GameVars.mapsData = maps().map(loadMap);
 
         if (GameVars.currentScene.sys.game.device.os.desktop) {
             GameVars.scaleY = 1;

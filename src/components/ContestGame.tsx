@@ -22,6 +22,7 @@ import { Loading } from "./Loading";
 import { Countdown } from "./Countdown";
 import { Layover, LayoverTitle, LayoverHeading } from "./GameComponents";
 import { GameManager } from "../GameManager";
+import { maps } from "@cartesi/creepts-mappack";
 import { LevelObject, LogsObject } from "@cartesi/creepts-engine";
 import { GameVars } from "../GameVars";
 
@@ -36,17 +37,6 @@ interface GameOverProps {
 };
 
 export const ContestGame: React.FC<IProps> = ({ id }) => {
-
-    const maps = [
-        "original",
-        "waiting_line",
-        "turn_round",
-        "hurry",
-        "civyshk_yard",
-        "civyshk_2y",
-        "civyshk_line5",
-        "civyshk_labyrinth",
-    ];
 
     // control variables
     const [gameReady, setGameReady] = useState(false);
@@ -137,7 +127,7 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
             const map = contestService.payload.map;
             
             // select the map of the contest
-            GameManager.mapSelected(maps.indexOf(map));
+            GameManager.mapSelected(maps().indexOf(map));
 
             // this will remove the loading screen
             setMapLoaded(true);

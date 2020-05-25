@@ -15,23 +15,12 @@ import { Loading } from "./Loading";
 import { FullScreenMessage } from "./FullScreenMessage";
 import { navigate } from "hookrouter";
 import { GameManager } from "../GameManager";
-import { loadLevel, loadMap } from "@cartesi/creepts-mappack";
+import { loadLevel, loadMap, maps } from "@cartesi/creepts-mappack";
 import { useQueryParams } from "hookrouter";
 
 interface IProps { };
 
 export const RemoteReplay: React.FC<IProps> = () => {
-
-    const maps = [
-        "original",
-        "waiting_line",
-        "turn_round",
-        "hurry",
-        "civyshk_yard",
-        "civyshk_2y",
-        "civyshk_line5",
-        "civyshk_labyrinth",
-    ];
 
     const [queryParams] = useQueryParams();
     const logUrl = queryParams.log;
@@ -64,7 +53,7 @@ export const RemoteReplay: React.FC<IProps> = () => {
                     setError(undefined);
 
                     // open game log replay screen
-                    GameManager.enterLogScene(maps.indexOf(mapName), log, level);
+                    GameManager.enterLogScene(maps().indexOf(mapName), log, level);
                 } catch (e) {
                     setLoading(false);
                     setError(e);

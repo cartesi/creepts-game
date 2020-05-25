@@ -16,22 +16,11 @@ import { FullScreenMessage } from "./FullScreenMessage";
 import { useScoreService } from "../services/scoreService";
 import { navigate } from "hookrouter";
 import { GameManager } from "../GameManager";
-import { loadLevel, loadMap } from "@cartesi/creepts-mappack";
+import { loadLevel, loadMap, maps } from "@cartesi/creepts-mappack";
 
 interface ReplayProps { tournamentId: string, id: string };
 
 export const TournamentReplay: React.FC<ReplayProps> = ({ tournamentId, id }) => {
-
-    const maps = [
-        "original",
-        "waiting_line",
-        "turn_round",
-        "hurry",
-        "civyshk_yard",
-        "civyshk_2y",
-        "civyshk_line5",
-        "civyshk_labyrinth",
-    ];
 
     // get the score with log from server
     const service = useScoreService(tournamentId, id);
@@ -49,7 +38,7 @@ export const TournamentReplay: React.FC<ReplayProps> = ({ tournamentId, id }) =>
             const log = service.payload[1].log;
 
             // open game log replay screen
-            GameManager.enterLogScene(maps.indexOf(mapName), log, level);
+            GameManager.enterLogScene(maps().indexOf(mapName), log, level);
         }
 
     }, [service.status]);

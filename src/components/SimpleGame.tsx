@@ -11,6 +11,7 @@
 
 
 import React, { useEffect, useState } from "react";
+import { maps } from "@cartesi/creepts-mappack";
 import { navigate } from "hookrouter";
 import { Loading } from "./Loading";
 import { GameManager } from "../GameManager";
@@ -20,17 +21,6 @@ interface IProps {
 };
 
 export const SimpleGame: React.FC<IProps> = ({ map }) => {
-
-    const maps = [
-        "original",
-        "waiting_line",
-        "turn_round",
-        "hurry",
-        "civyshk_yard",
-        "civyshk_2y",
-        "civyshk_line5",
-        "civyshk_labyrinth",
-    ];
 
     // control variables
     const [gameReady, setGameReady] = useState(false);
@@ -56,7 +46,7 @@ export const SimpleGame: React.FC<IProps> = ({ map }) => {
     useEffect(() => {
         if (gameReady) {
             // select the map of the contest
-            GameManager.mapSelected(maps.indexOf(map));
+            GameManager.mapSelected(maps().indexOf(map));
         }
     }, [gameReady]);
 

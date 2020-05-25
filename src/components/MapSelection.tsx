@@ -13,30 +13,18 @@
 import React from "react";
 import { Grid, Typography } from "@material-ui/core";
 import { MapThumbnail } from "./MapThumbnail";
-import { loadMap } from "@cartesi/creepts-mappack";
+import { loadMap, maps } from "@cartesi/creepts-mappack";
 
 interface IProps {
 };
 
 export const MapSelection: React.FC<IProps> = () => {
 
-    // XXX: get list of maps from mappack
-    const maps = [
-        "original",
-        "waiting_line",
-        "turn_round",
-        "hurry",
-        "civyshk_yard",
-        "civyshk_2y",
-        "civyshk_line5",
-        "civyshk_labyrinth",
-    ];
-
     return (
         <Grid container direction="column" spacing={4} alignItems="center">
             <Grid item><Typography variant="h3">Select Map</Typography></Grid>
             <Grid item container spacing={4} justify="center">
-                {maps.map(mapName => {
+                {maps().map(mapName => {
                     const map = loadMap(mapName);
                     return (
                         <Grid item key={mapName}>

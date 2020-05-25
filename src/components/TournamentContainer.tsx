@@ -12,6 +12,7 @@
 
 import React, { useEffect, useState } from "react";
 import { LevelObject, LogsObject } from "@cartesi/creepts-engine";
+import { maps } from "@cartesi/creepts-mappack";
 import { GameManager } from "../GameManager";
 import { navigate } from "hookrouter";
 import { Loading } from "./Loading";
@@ -22,17 +23,6 @@ import { putScore } from "../services/scoreService";
 interface IProps { id: string }
 
 export const TournamentContainer: React.FC<IProps> = ({ id }) => {
-
-    const maps = [
-        "original",
-        "waiting_line",
-        "turn_round",
-        "hurry",
-        "civyshk_yard",
-        "civyshk_2y",
-        "civyshk_line5",
-        "civyshk_labyrinth",
-    ];
 
     // this will control a loading screen
     const [mapLoaded, setMapLoaded] = useState(false);
@@ -49,7 +39,7 @@ export const TournamentContainer: React.FC<IProps> = ({ id }) => {
             const { map } = tournament;
 
             // select the map of the tournament
-            GameManager.mapSelected(maps.indexOf(map));
+            GameManager.mapSelected(maps().indexOf(map));
 
             // this will remove the loading screen
             setMapLoaded(true);

@@ -15,7 +15,7 @@ import { Loading } from "./Loading";
 import { FullScreenMessage } from "./FullScreenMessage";
 import { navigate } from "hookrouter";
 import { GameManager } from "../GameManager";
-import { loadLevel, loadMap } from "@cartesi/creepts-mappack";
+import { loadLevel, loadMap, maps } from "@cartesi/creepts-mappack";
 import { Backdrop, FormControl, FormHelperText, MenuItem, Select, Input, InputLabel, Paper } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import { MapThumbnail } from './MapThumbnail';
@@ -40,17 +40,6 @@ export const LocalReplay: React.FC<IProps> = () => {
     const classes = useStyles();
 
     const [mapName, setMapName] = useState('');
-
-    const maps = [
-        "original",
-        "waiting_line",
-        "turn_round",
-        "hurry",
-        "civyshk_yard",
-        "civyshk_2y",
-        "civyshk_line5",
-        "civyshk_labyrinth",
-    ];
 
     const load = (file: Blob) => {
         try {
@@ -79,7 +68,7 @@ export const LocalReplay: React.FC<IProps> = () => {
                     setLoaded(true);
 
                     // open game log replay screen
-                    GameManager.enterLogScene(maps.indexOf(mapName), log, level);
+                    GameManager.enterLogScene(maps().indexOf(mapName), log, level);
                 } catch (e) {
                     setLoading(false);
                     setError(e);
@@ -121,7 +110,7 @@ export const LocalReplay: React.FC<IProps> = () => {
                                 value={mapName}
                                 className={classes.selectEmpty}
                                 onChange={e => setMapName(e.target.value.toString())}>
-                                {maps.map(mapName =>
+                                {maps().map(mapName =>
                                     <MenuItem key={mapName} value={mapName}>
                                         <MapThumbnail map={mapName} width={50} height={60} />
                                         <span>{mapName}</span>
