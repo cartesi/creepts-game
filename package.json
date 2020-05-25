@@ -36,8 +36,8 @@
         "webpack-merge": "^4.2.2"
     },
     "dependencies": {
-        "@cartesi/creepts-engine": "^0.1.0",
-        "@cartesi/creepts-mappack": "^0.1.0",
+        "@cartesi/creepts-engine": "^0.2.0",
+        "@cartesi/creepts-mappack": "^0.4.0",
         "@material-ui/core": "^4.9.3",
         "@material-ui/icons": "^4.9.1",
         "@material-ui/lab": "^4.0.0-alpha.43",
