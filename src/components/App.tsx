@@ -28,7 +28,7 @@ import GameContainer from "./GameContainer";
 import '../styles/menu.css';
 
 const routes = {
-    "/": () => <MapSelection />,
+    "/": () => <ContestGame id="upbit" />,
     "/maps": () => <MapSelection />,
     "/maps/:map": ({ map }) => <SimpleGame map={map} />,
     "/contests": () => <ContestSelection />,
