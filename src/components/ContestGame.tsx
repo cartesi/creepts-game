@@ -172,7 +172,7 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
                 <Layover>
                     {!!gameOver && <Formik
                         initialValues={{ contestantId: '' }}
-                        validate={validate('^\\d{8}$')}
+                        validate={validate('^0x[a-fA-F0-9]{40}$')}
                         onSubmit={submit}
                     >
                         {({ submitForm, isSubmitting, errors }) => (
