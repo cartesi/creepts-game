@@ -24,11 +24,12 @@ import { MapSelection } from "./MapSelection";
 import { ContestSelection } from "./ContestSelection";
 import { SimpleGame } from "./SimpleGame";
 import { ContestGame } from "./ContestGame";
+import { ContestGameCountdown } from "./ContestGameCountdown";
 import GameContainer from "./GameContainer";
 import '../styles/menu.css';
 
 const routes = {
-    "/": () => <ContestGame id="upbit" />,
+    "/": () => <ContestGameCountdown id="upbit" />,
     "/maps": () => <MapSelection />,
     "/maps/:map": ({ map }) => <SimpleGame map={map} />,
     "/contests": () => <ContestSelection />,
