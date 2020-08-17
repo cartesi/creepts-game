@@ -25,6 +25,16 @@ import { GameManager } from "../GameManager";
 import { maps } from "@cartesi/creepts-mappack";
 import { LevelObject, LogsObject } from "@cartesi/creepts-engine";
 import { GameVars } from "../GameVars";
+import {
+    FacebookShareButton,
+    TelegramShareButton,
+    TwitterShareButton,
+    RedditShareButton,
+    FacebookIcon,
+    TwitterIcon,
+    TelegramIcon,
+    RedditIcon
+} from "react-share";
 
 interface IProps {
     id: string;
@@ -154,6 +164,9 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
         return {};
     };
 
+    const shareUrl = "https://upbit.creepts.io";
+    const title = (score: number) => `I just scored ${score.toLocaleString()} on Creepts! @cartesiproject @upbitglobal #creepts $CTSI`;
+
     return (
         <div style={{ height: "100vh", width: "100vw", position: gameOver || showCountdown ? "absolute" : "static", zIndex: 1 }}>
             {!mapLoaded && <Loading />}
@@ -182,7 +195,28 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
                                     <Grid item><LayoverHeading>SCORE: {gameOver.score.toLocaleString()}</LayoverHeading></Grid>
                                     <Grid item>{contestService.payload.logo && <img height='60px' src={contestService.payload.logo} />}</Grid>
                                     <Grid item><LinearProgress color="secondary" style={{ width: '100vw', visibility: isSubmitting ? "visible" : "hidden" }} /></Grid>
-                                    {submitted && <Grid item><Alert severity="success" variant="outlined">Score submitted!</Alert></Grid>}
+                                    {submitted &&
+                                    <Grid item>
+                                        <Alert severity="success" variant="outlined">Score submitted!</Alert>
+                                    </Grid>}
+                                    <Grid item spacing={2}>
+                                        <FacebookShareButton
+                                            url={shareUrl}
+                                            translate={""}
+                                            quote={title(gameOver.score)}
+                                            >
+                                            <FacebookIcon size={48} round crossOrigin path={""} />
+                                        </FacebookShareButton>
+                                        <TwitterShareButton url={shareUrl} translate={"Hello"} related={["@cartesiproject"]} title={title(gameOver.score)}>
+                                            <TwitterIcon size={48} round crossOrigin path={""} />
+                                        </TwitterShareButton>
+                                        <TelegramShareButton url={shareUrl} translate={""} title={title(gameOver.score)}>
+                                            <TelegramIcon size={48} round crossOrigin path={""} />
+                                        </TelegramShareButton>
+                                        <RedditShareButton url={shareUrl} translate={""}>
+                                            <RedditIcon size={48} round crossOrigin path={""} />
+                                        </RedditShareButton>
+                                    </Grid>
                                     {error && <Grid item><Alert severity="error" variant="outlined">{error}</Alert></Grid>}
                                     {!submitted && (<Grid item container justify='center' alignItems='flex-start' spacing={2}>
                                         <Grid item>
