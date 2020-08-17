@@ -162,7 +162,7 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
         return {};
     };
 
-    const shareUrl = "https://upbit.creepts.io";
+    const shareUrl = "https://creepts.cartesi.io/contest/upbit/";
     const title = (score: number) => `I just scored ${score.toLocaleString()} on Creepts! @cartesiproject @upbitglobal #creepts $CTSI`;
 
     return (
