@@ -27,12 +27,10 @@ import { LevelObject, LogsObject } from "@cartesi/creepts-engine";
 import { GameVars } from "../GameVars";
 import {
     FacebookShareButton,
-    TelegramShareButton,
     TwitterShareButton,
     RedditShareButton,
     FacebookIcon,
     TwitterIcon,
-    TelegramIcon,
     RedditIcon
 } from "react-share";
 
@@ -210,9 +208,6 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
                                         <TwitterShareButton url={shareUrl} translate={"Hello"} related={["@cartesiproject"]} title={title(gameOver.score)}>
                                             <TwitterIcon size={48} round crossOrigin path={""} />
                                         </TwitterShareButton>
-                                        <TelegramShareButton url={shareUrl} translate={""} title={title(gameOver.score)}>
-                                            <TelegramIcon size={48} round crossOrigin path={""} />
-                                        </TelegramShareButton>
                                         <RedditShareButton url={shareUrl} translate={""}>
                                             <RedditIcon size={48} round crossOrigin path={""} />
                                         </RedditShareButton>
