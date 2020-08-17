@@ -29,9 +29,11 @@ import {
     FacebookShareButton,
     TwitterShareButton,
     RedditShareButton,
+    WhatsappShareButton,
     FacebookIcon,
     TwitterIcon,
-    RedditIcon
+    RedditIcon,
+    WhatsappIcon
 } from "react-share";
 
 interface IProps {
@@ -208,6 +210,9 @@ export const ContestGame: React.FC<IProps> = ({ id }) => {
                                         <TwitterShareButton url={shareUrl} translate={"Hello"} related={["@cartesiproject"]} title={title(gameOver.score)}>
                                             <TwitterIcon size={48} round crossOrigin path={""} />
                                         </TwitterShareButton>
+                                        <WhatsappShareButton url={shareUrl} translate={"Hello"} title={title(gameOver.score)}>
+                                            <WhatsappIcon size={48} round crossOrigin path={""} />
+                                        </WhatsappShareButton>
                                         <RedditShareButton url={shareUrl} translate={""}>
                                             <RedditIcon size={48} round crossOrigin path={""} />
                                         </RedditShareButton>
