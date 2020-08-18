@@ -29,7 +29,7 @@ import GameContainer from "./GameContainer";
 import '../styles/menu.css';
 
 const routes = {
-    "/": () => <ContestGameCountdown id="upbit" />,
+    "/": () => <ContestGame id="upbit" />,
     "/maps": () => <MapSelection />,
     "/maps/:map": ({ map }) => <SimpleGame map={map} />,
     "/contests": () => <ContestSelection />,
