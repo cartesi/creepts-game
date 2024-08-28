@@ -28,7 +28,7 @@
         "style-loader": "1.0.0",
         "ts-loader": "6.0.4",
         "typescript": "3.6.2",
-        "webpack": "4.35.3",
+        "webpack": "5.94.0",
         "webpack-bundle-analyzer": "^3.5.2",
         "webpack-bundle-tracker": "^0.4.3",
         "webpack-cli": "3.3.5",
